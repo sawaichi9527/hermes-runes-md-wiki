@@ -1,37 +1,15 @@
 import argparse
 import json
-import os
-from pathlib import Path
 
 import psycopg
 from sentence_transformers import SentenceTransformer
+
+from db_config import build_conninfo
 
 
 MODEL_NAME = "BAAI/bge-base-en-v1.5"
 EXPECTED_DIM = 768
 DEFAULT_SCHEMA = "public"
-
-
-def load_env(path: Path) -> None:
-    if not path.exists():
-        return
-
-    for line in path.read_text(encoding="utf-8").splitlines():
-        line = line.strip()
-        if not line or line.startswith("#") or "=" not in line:
-            continue
-        key, value = line.split("=", 1)
-        os.environ.setdefault(key.strip(), value.strip())
-
-
-def build_conninfo() -> str:
-    return (
-        f"host={os.environ['PGHOST']} "
-        f"port={os.environ['PGPORT']} "
-        f"dbname={os.environ['PGDATABASE']} "
-        f"user={os.environ['PGUSER']} "
-        f"password={os.environ['PGPASSWORD']}"
-    )
 
 
 def vector_literal(values: list[float]) -> str:
@@ -50,8 +28,6 @@ def main() -> None:
     parser.add_argument("--max-content-length", type=int, default=500)
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args()
-
-    load_env(Path("tools/importer/.env"))
 
     model = SentenceTransformer(MODEL_NAME)
 
