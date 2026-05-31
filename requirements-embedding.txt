@@ -1,0 +1,4 @@
+# Hermes Runes MD Wiki - optional local embedding dependencies
+# Install this only when local vector embedding is needed.
+
+sentence-transformers==5.5.1
