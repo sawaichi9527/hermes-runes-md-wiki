@@ -57,7 +57,7 @@ The environment variable is still named `HERMES_MEMORY_ROOT` for compatibility w
 
 # 3. Python Virtual Environment
 
-Create the virtual environment under `tools/importer`, then install dependencies from the repository root requirements file:
+Create the virtual environment under `tools/importer`, then install the lightweight core dependencies from the repository root requirements file:
 
 ```bash
 cd "${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-runes-md-wiki}"
@@ -69,6 +69,14 @@ source .venv/bin/activate
 
 python -m pip install --upgrade pip
 pip install -r ../../requirements.txt
+```
+
+The core dependency profile intentionally avoids the local embedding stack so a fresh clone does not immediately install large PyTorch / CUDA packages.
+
+If local vector embedding is needed, install the optional embedding profile:
+
+```bash
+pip install -r ../../requirements-embedding.txt
 ```
 
 ---
