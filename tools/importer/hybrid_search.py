@@ -1,58 +1,16 @@
 import argparse
 from retrieval_profiles import select_retrieval_profile
 import json
-import os
-from pathlib import Path
 
 import psycopg
 from sentence_transformers import SentenceTransformer
+
+from db_config import build_conninfo
 
 
 MODEL_NAME = "BAAI/bge-base-en-v1.5"
 EXPECTED_DIM = 768
 DEFAULT_SCHEMA = "public"
-
-
-def load_env(path: Path) -> None:
-    if not path.exists():
-        return
-
-    for line in path.read_text(encoding="utf-8").splitlines():
-        line = line.strip()
-        if not line or line.startswith("#") or "=" not in line:
-            continue
-        key, value = line.split("=", 1)
-        os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
-
-
-def load_default_env_files() -> None:
-    here = Path(__file__).resolve()
-    root = here.parents[2]
-    load_env(root / ".env")
-    load_env(root / "tools/importer/.env")
-
-
-def build_conninfo() -> str:
-    database_url = os.environ.get("HERMES_MEMORY_DATABASE_URL")
-    if database_url:
-        return database_url
-
-    required = ["PGHOST", "PGPORT", "PGDATABASE", "PGUSER", "PGPASSWORD"]
-    missing = [key for key in required if not os.environ.get(key)]
-    if missing:
-        raise SystemExit(
-            "Missing database configuration: "
-            + ", ".join(missing)
-            + ". Set HERMES_MEMORY_DATABASE_URL or PG* variables."
-        )
-
-    return (
-        f"host={os.environ['PGHOST']} "
-        f"port={os.environ['PGPORT']} "
-        f"dbname={os.environ['PGDATABASE']} "
-        f"user={os.environ['PGUSER']} "
-        f"password={os.environ['PGPASSWORD']}"
-    )
 
 
 def vector_literal(values: list[float]) -> str:
@@ -92,7 +50,6 @@ def build_citation(path: str, section_heading: str | None, chunk_index: int, chu
     }
 
 
-
 def main() -> None:
     parser = argparse.ArgumentParser(
         description="Hybrid FTS + pgvector search for Hermes memory chunks."
@@ -118,8 +75,6 @@ def main() -> None:
             args.query_type
         )
     )
-
-    load_default_env_files()
 
     model = SentenceTransformer(MODEL_NAME)
     emb = model.encode(args.query, normalize_embeddings=True).tolist()
@@ -186,7 +141,7 @@ def main() -> None:
                           +
                           (
                             SELECT count(*)::float
-                            FROM regexp_split_to_table(q.raw_query, '\\s+') AS token
+                            FROM regexp_split_to_table(q.raw_query, '\s+') AS token
                             WHERE length(token) >= 3
                               AND (
                                 c.content ILIKE '%%' || token || '%%'
@@ -201,7 +156,7 @@ def main() -> None:
                       +
                       (
                         SELECT count(*)::float
-                        FROM regexp_split_to_table(q.raw_query, '\\s+') AS token
+                        FROM regexp_split_to_table(q.raw_query, '\s+') AS token
                         WHERE length(token) >= 3
                           AND (
                             c.content ILIKE '%%' || token || '%%'
@@ -220,7 +175,7 @@ def main() -> None:
                       q.tsq @@ to_tsvector('simple', c.content)
                       OR EXISTS (
                         SELECT 1
-                        FROM regexp_split_to_table(%s::text, '\\s+') AS token
+                        FROM regexp_split_to_table(%s::text, '\s+') AS token
                         WHERE length(token) >= 3
                           AND (
                             c.content ILIKE '%%' || token || '%%'
