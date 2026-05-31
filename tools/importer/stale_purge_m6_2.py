@@ -3,49 +3,20 @@ import argparse
 import json
 import os
 import re
-from pathlib import Path
 
 import psycopg
 
-try:
-    from dotenv import load_dotenv
-except Exception:
-    load_dotenv = None
+from db_config import build_conninfo
+from root_resolver import resolve_root
 
 
-ROOT = Path(os.getenv("HERMES_MEMORY_ROOT", str(Path.home() / "workspace" / "hermes-memory"))).resolve()
-IMPORTER_DIR = ROOT / "tools" / "importer"
-ENV_FILE = IMPORTER_DIR / ".env"
-
-if load_dotenv is not None and ENV_FILE.exists():
-    load_dotenv(ENV_FILE)
+ROOT = resolve_root()
 
 
 def safe_ident(value: str) -> str:
     if not re.match(r"^[A-Za-z_][A-Za-z0-9_]*$", value):
         raise ValueError(f"unsafe SQL identifier: {value}")
     return value
-
-
-def get_dsn() -> str:
-    for key in ("DATABASE_URL", "POSTGRES_DSN", "PG_DSN", "HERMES_MEMORY_DATABASE_URL"):
-        value = os.getenv(key)
-        if value:
-            return value
-
-    host = os.getenv("PGHOST") or os.getenv("POSTGRES_HOST")
-    port = os.getenv("PGPORT") or os.getenv("POSTGRES_PORT") or "5432"
-    dbname = os.getenv("PGDATABASE") or os.getenv("POSTGRES_DB")
-    user = os.getenv("PGUSER") or os.getenv("POSTGRES_USER")
-    password = os.getenv("PGPASSWORD") or os.getenv("POSTGRES_PASSWORD")
-
-    if host and dbname and user:
-        parts = [f"host={host}", f"port={port}", f"dbname={dbname}", f"user={user}"]
-        if password:
-            parts.append(f"password={password}")
-        return " ".join(parts)
-
-    raise RuntimeError("No PostgreSQL DSN found")
 
 
 def table_exists(cur, schema: str, table: str) -> bool:
@@ -88,7 +59,7 @@ def main() -> int:
     args = parser.parse_args()
 
     schema = safe_ident(os.getenv("HERMES_MEMORY_SCHEMA", "public"))
-    dsn = get_dsn()
+    dsn = build_conninfo()
 
     report = {
         "suite": "M6.2c stale purge",
