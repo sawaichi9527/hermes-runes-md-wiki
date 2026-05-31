@@ -1,13 +1,22 @@
+import os
 from pathlib import Path
+
 import yaml
 
 
-ROOT = Path.home() / "workspace/hermes-memory"
-DEFAULT_CONFIG = ROOT / "config/model_profiles.yaml"
+def resolve_root() -> Path:
+    env_root = os.environ.get("HERMES_MEMORY_ROOT")
+    if env_root:
+        return Path(env_root).expanduser().resolve()
+    return Path(__file__).resolve().parents[2]
 
 
-def load_model_profiles(path=DEFAULT_CONFIG):
-    data = yaml.safe_load(Path(path).read_text(encoding="utf-8"))
+DEFAULT_CONFIG = resolve_root() / "config/model_profiles.yaml"
+
+
+def load_model_profiles(path=None):
+    config_path = Path(path) if path else DEFAULT_CONFIG
+    data = yaml.safe_load(config_path.read_text(encoding="utf-8"))
     return data
 
 
