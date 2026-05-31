@@ -1,22 +1,14 @@
 import os
 import sys
-from pathlib import Path
 
 import psycopg
 from sentence_transformers import SentenceTransformer
 
+from db_config import build_conninfo
+
 
 MODEL_NAME = "BAAI/bge-base-en-v1.5"
 TOP_K = 5
-
-
-def load_env(path: Path) -> None:
-    for line in path.read_text(encoding="utf-8").splitlines():
-        line = line.strip()
-        if not line or line.startswith("#") or "=" not in line:
-            continue
-        key, value = line.split("=", 1)
-        os.environ.setdefault(key.strip(), value.strip())
 
 
 def vector_literal(values: list[float]) -> str:
@@ -48,15 +40,7 @@ def main() -> None:
         sys.exit(1)
 
     query = " ".join(sys.argv[1:]).strip()
-    load_env(Path(".env"))
-
-    conninfo = (
-        f"host={os.environ['PGHOST']} "
-        f"port={os.environ['PGPORT']} "
-        f"dbname={os.environ['PGDATABASE']} "
-        f"user={os.environ['PGUSER']} "
-        f"password={os.environ['PGPASSWORD']}"
-    )
+    conninfo = build_conninfo()
 
     print(f"query: {query}")
 
