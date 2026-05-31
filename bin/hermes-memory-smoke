@@ -13,13 +13,14 @@ if [ -d ".venv" ]; then
 fi
 
 python smoke/eval_smoke_core_fts.py
-python smoke/eval_smoke_m10_observation.py
-python smoke/eval_smoke_m11_observation_summary.py
-python smoke/eval_smoke_m11_6_sample_project.py
 
 if python -c "import sentence_transformers" >/dev/null 2>&1; then
-  echo "Embedding profile detected: running hybrid smoke suite"
+  echo "Embedding profile detected: running full smoke suite"
   python smoke/eval_smoke_m5_2.py
+  python smoke/eval_smoke_m10_observation.py
+  python smoke/eval_smoke_m11_observation_summary.py
+  python smoke/eval_smoke_m11_6_sample_project.py
 else
-  echo "Embedding profile not installed: skipping hybrid smoke suite"
+  echo "Embedding profile not installed: skipping hybrid and answer-generation smoke suites"
+  echo "Install requirements-embedding.txt to run the full smoke suite"
 fi
