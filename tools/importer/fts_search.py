@@ -18,10 +18,30 @@ def load_env(path: Path) -> None:
         if not line or line.startswith("#") or "=" not in line:
             continue
         key, value = line.split("=", 1)
-        os.environ.setdefault(key.strip(), value.strip())
+        os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
+
+
+def load_default_env_files() -> None:
+    here = Path(__file__).resolve()
+    root = here.parents[2]
+    load_env(root / ".env")
+    load_env(root / "tools/importer/.env")
 
 
 def build_conninfo() -> str:
+    database_url = os.environ.get("HERMES_MEMORY_DATABASE_URL")
+    if database_url:
+        return database_url
+
+    required = ["PGHOST", "PGPORT", "PGDATABASE", "PGUSER", "PGPASSWORD"]
+    missing = [key for key in required if not os.environ.get(key)]
+    if missing:
+        raise SystemExit(
+            "Missing database configuration: "
+            + ", ".join(missing)
+            + ". Set HERMES_MEMORY_DATABASE_URL or PG* variables."
+        )
+
     return (
         f"host={os.environ['PGHOST']} "
         f"port={os.environ['PGPORT']} "
@@ -44,7 +64,7 @@ def main() -> None:
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args()
 
-    load_env(Path("tools/importer/.env"))
+    load_default_env_files()
 
     result = {
         "status": "started",
