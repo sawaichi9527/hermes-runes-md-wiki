@@ -1,10 +1,10 @@
 import argparse
 import json
-import os
-from pathlib import Path
 
 import psycopg
 from sentence_transformers import SentenceTransformer
+
+from db_config import build_conninfo
 
 
 MODEL_NAME = "BAAI/bge-base-en-v1.5"
@@ -12,30 +12,8 @@ EXPECTED_DIM = 768
 DEFAULT_SCHEMA = "public"
 
 
-def load_env(path: Path) -> None:
-    if not path.exists():
-        return
-
-    for line in path.read_text(encoding="utf-8").splitlines():
-        line = line.strip()
-        if not line or line.startswith("#") or "=" not in line:
-            continue
-        key, value = line.split("=", 1)
-        os.environ.setdefault(key.strip(), value.strip())
-
-
 def vector_literal(values: list[float]) -> str:
     return "[" + ",".join(f"{v:.8f}" for v in values) + "]"
-
-
-def build_conninfo() -> str:
-    return (
-        f"host={os.environ['PGHOST']} "
-        f"port={os.environ['PGPORT']} "
-        f"dbname={os.environ['PGDATABASE']} "
-        f"user={os.environ['PGUSER']} "
-        f"password={os.environ['PGPASSWORD']}"
-    )
 
 
 def main() -> None:
@@ -47,8 +25,6 @@ def main() -> None:
     parser.add_argument("--missing-only", action="store_true")
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args()
-
-    load_env(Path("tools/importer/.env"))
 
     conninfo = build_conninfo()
     schema = args.schema
@@ -72,7 +48,7 @@ def main() -> None:
 
     with psycopg.connect(conninfo) as conn:
         with conn.cursor() as cur:
-            where = [f"d.project = %s"]
+            where = ["d.project = %s"]
             params = [args.project]
 
             if args.missing_only:
