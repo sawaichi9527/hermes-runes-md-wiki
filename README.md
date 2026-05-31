@@ -184,6 +184,14 @@ vi tools/importer/.env
 
 A root `.env` is not required for the normal deployment flow. Keeping the active runtime config under `tools/importer/` avoids ambiguity between multiple environment files.
 
+Database connection resolution is centralized in:
+
+```text
+tools/importer/db_config.py
+```
+
+Core importer, FTS, hybrid, vector, embedding, legacy search, metadata inspection, stale report, and stale purge tools use the shared database config helper.
+
 ---
 
 # Example Knowledge Layout
@@ -233,7 +241,12 @@ M11 Observation Summary Baseline             PASS
 M11.6 Repository Portability Baseline        PASS
 M11.6 Sample Public Fixture Baseline         PASS
 M12.1 Requirements Baseline                  PASS
+M12.2 Importer-local Environment Layout      PASS
+M12.3 Runtime Safety Audit                   PASS
+M12.3a DB Config Portability Cleanup         PASS
 ```
+
+M12.3 local-only LM Studio token exposure is accepted/deferred because it is LAN-only, not committed to GitHub, and can be rotated before long-term production use.
 
 ---
 
