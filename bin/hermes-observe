@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+ROOT="${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-memory}"
+SCRIPT="$ROOT/tools/importer/hermes_observe.py"
+exec python "$SCRIPT" "$@"

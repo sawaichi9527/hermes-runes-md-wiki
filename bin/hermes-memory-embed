@@ -1,0 +1,24 @@
+#!/usr/bin/env python3
+import sys
+from hermes_memory_common import *
+
+def main():
+    parser = base_parser("hermes-memory-embed placeholder")
+    parser.add_argument("--dry-run", action="store_true", help="preview only")
+    parser.add_argument("--force", action="store_true", help="required for dangerous operations")
+    args = parser.parse_args()
+    if args.version:
+        print(VERSION)
+        return EXIT_OK
+    try:
+        pcfg = get_project_cfg(args)
+        project = pcfg["project"]
+    except Exception:
+        project = args.project or "unknown"
+    obj = result("hermes-memory-embed", project, "FAIL", EXIT_GENERAL_FAIL,
+                 warnings=[{"code": "NOT_IMPLEMENTED", "message": "hermes-memory-embed is reserved for later M3.x implementation."}])
+    emit(obj, args.json, args.quiet)
+    return EXIT_GENERAL_FAIL
+
+if __name__ == "__main__":
+    sys.exit(main())

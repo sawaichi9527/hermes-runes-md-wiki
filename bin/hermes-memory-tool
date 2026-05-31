@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-memory}"
+
+cd "$ROOT/tools/local_tools"
+
+python hermes_memory_tools.py "$@"

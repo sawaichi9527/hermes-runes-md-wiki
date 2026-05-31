@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-memory}"
+IMPORTER_DIR="$ROOT/tools/importer"
+
+cd "$IMPORTER_DIR"
+
+if [ -d ".venv" ]; then
+  # shellcheck disable=SC1091
+  source ".venv/bin/activate"
+fi
+
+python smoke/eval_smoke_m5_2.py
+python smoke/eval_smoke_m10_observation.py
+python smoke/eval_smoke_m11_observation_summary.py
+python smoke/eval_smoke_m11_6_sample_project.py

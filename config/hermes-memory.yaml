@@ -1,0 +1,18 @@
+version: 1
+
+default_project: k6-freelancer
+
+projects:
+  k6-freelancer:
+    root: /home/eye/workspace/hermes-memory
+    source_paths:
+      - wiki/k6-freelancer
+      - imports
+    eval_path: eval/k6-freelancer
+    backup_path: backups
+    database:
+      url_env: HERMES_MEMORY_DATABASE_URL
+    embedding:
+      provider: local
+      model: default
+      dimension: 384

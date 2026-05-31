@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-memory}"
+IMPORTER_DIR="$ROOT/tools/importer"
+WIKI_DIR="$ROOT/wiki/k6-freelancer"
+
+echo "== Hermes Memory Check =="
+
+echo "[1/8] root"
+test -d "$ROOT"
+echo "PASS root=$ROOT"
+
+echo "[2/8] importer"
+test -d "$IMPORTER_DIR"
+echo "PASS importer=$IMPORTER_DIR"
+
+echo "[3/8] venv"
+test -d "$IMPORTER_DIR/.venv"
+echo "PASS venv=$IMPORTER_DIR/.venv"
+
+echo "[4/8] env"
+test -f "$IMPORTER_DIR/.env"
+echo "PASS env=$IMPORTER_DIR/.env"
+
+echo "[5/8] wiki"
+test -d "$WIKI_DIR"
+echo "PASS wiki=$WIKI_DIR"
+
+echo "[6/8] required scripts"
+test -f "$IMPORTER_DIR/importer.py"
+test -f "$IMPORTER_DIR/delete_source.py"
+test -f "$IMPORTER_DIR/smoke/eval_all.py"
+test -f "$IMPORTER_DIR/smoke/eval_smoke_m5_2.py"
+test -f "$IMPORTER_DIR/smoke/eval_smoke_m6_6.py"
+test -f "$IMPORTER_DIR/smoke/eval_smoke_m6_7_2_backup.py"
+test -f "$IMPORTER_DIR/smoke/eval_smoke_m6_7_3_restore.py"
+echo "PASS scripts"
+
+echo "[7/8] commands"
+command -v hermes-memory-sync >/dev/null
+command -v hermes-memory-check >/dev/null
+command -v hermes-memory-eval >/dev/null
+command -v hermes-memory-backup >/dev/null
+command -v hermes-memory-restore >/dev/null
+command -v hermes-memory-import >/dev/null
+echo "PASS commands"
+
+echo "[8/8] database/schema probe"
+cd "$IMPORTER_DIR"
+
+if [ -d ".venv" ]; then
+  # shellcheck disable=SC1091
+  source ".venv/bin/activate"
+fi
+
+python delete_source.py \
+  --project k6-freelancer \
+  --path __hermes_memory_check_probe_not_exist__.md \
+  --json >/tmp/hermes-memory-check-delete-probe.json
+
+grep -q '"status": "not_found"' /tmp/hermes-memory-check-delete-probe.json
+grep -q '"documents_path": "source_path"' /tmp/hermes-memory-check-delete-probe.json
+grep -q '"chunks_document_fk": "document_id"' /tmp/hermes-memory-check-delete-probe.json
+echo "PASS database/schema probe"
+
+echo "status=PASS"

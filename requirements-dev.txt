@@ -1,0 +1,5 @@
+# Hermes Runes MD Wiki - development dependencies
+-r requirements.txt
+
+# Currently no extra dev-only dependencies are required.
+# Add pytest/ruff/mypy later only when used by the repo.

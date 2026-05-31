@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-memory}"
+IMPORTER_DIR="$ROOT/tools/importer"
+
+cd "$IMPORTER_DIR"
+
+if [ -d ".venv" ]; then
+  # shellcheck disable=SC1091
+  source ".venv/bin/activate"
+fi
+
+python stale_report_m6_2.py

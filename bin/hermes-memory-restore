@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-memory}"
+BACKUP_DIR="${1:-}"
+PG_CONTAINER="${PG_CONTAINER:-hermes-memory-postgres}"
+
+usage() {
+  cat <<EOF
+Usage:
+  hermes-memory-restore <backup_dir> --dry-run
+
+Example:
+  hermes-memory-restore ~/workspace/hermes-memory/backups/hermes-memory-backup-YYYYMMDD-HHMMSS --dry-run
+
+Notes:
+  This M6.7.3 version only supports --dry-run.
+  It verifies backup artifacts and pg_restore readability.
+  It does not overwrite wiki or database.
+EOF
+}
+
+if [ -z "$BACKUP_DIR" ] || [ "${2:-}" != "--dry-run" ]; then
+  usage
+  exit 2
+fi
+
+BACKUP_DIR="${BACKUP_DIR/#\~/$HOME}"
+
+echo "== Hermes Memory Restore Dry Run =="
+echo "backup_dir=$BACKUP_DIR"
+echo "pg_container=$PG_CONTAINER"
+
+echo "[1/5] check backup directory"
+test -d "$BACKUP_DIR"
+echo "PASS backup directory"
+
+echo "[2/5] check required files"
+test -s "$BACKUP_DIR/wiki.tgz"
+test -s "$BACKUP_DIR/tools-importer-smoke.tgz"
+test -s "$BACKUP_DIR/postgres.dump"
+test -s "$BACKUP_DIR/manifest.txt"
+echo "PASS required files"
+
+echo "[3/5] verify tar archives"
+tar -tzf "$BACKUP_DIR/wiki.tgz" >/dev/null
+tar -tzf "$BACKUP_DIR/tools-importer-smoke.tgz" >/dev/null
+echo "PASS tar archives"
+
+echo "[4/5] verify manifest"
+grep -q "contains=wiki.tgz" "$BACKUP_DIR/manifest.txt"
+grep -q "postgres.dump" "$BACKUP_DIR/manifest.txt"
+grep -q "tools-importer-smoke.tgz" "$BACKUP_DIR/manifest.txt"
+echo "PASS manifest"
+
+echo "[5/5] verify postgres dump readability"
+
+if docker ps --format '{{.Names}}' | grep -qx "$PG_CONTAINER"; then
+  docker exec -i "$PG_CONTAINER" pg_restore --list < "$BACKUP_DIR/postgres.dump" >/dev/null
+  echo "PASS postgres.dump readable via docker container=$PG_CONTAINER"
+elif command -v pg_restore >/dev/null 2>&1; then
+  pg_restore --list "$BACKUP_DIR/postgres.dump" >/dev/null
+  echo "PASS postgres.dump readable via host pg_restore"
+else
+  echo "FAIL no usable pg_restore"
+  exit 1
+fi
+
+echo "status=PASS"

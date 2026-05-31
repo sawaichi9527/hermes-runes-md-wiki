@@ -1,0 +1,60 @@
+version: 1
+project: k6-freelancer
+cases:
+- id: eval-telegram-001
+  type: service_lookup
+  question: Telegram integration 是什麼？
+  project: k6-freelancer
+  path: services.md
+  heading: Telegram
+  expected_path: wiki/k6-freelancer/services.md
+  expected_profile: qwen-forced-thinking
+  must_contain_any:
+  - - 入口
+    - 輸入通道
+    - ingress channel
+  - - Telegram
+- id: eval-m8-governance-001
+  type: baseline_lookup
+  question: M8 Local Agentic RAG Governance Baseline 是什麼？
+  project: k6-freelancer
+  path: baselines.md
+  heading: M8
+  expected_path: wiki/k6-freelancer/baselines.md
+  must_contain_any:
+  - - FROZEN
+    - 凍結
+  - - M8.3
+    - M8.3 ~ M8.5
+    - M8.3 至 M8.5
+- id: eval-m85-quality-001
+  type: verification_lookup
+  question: M8.5.2c 如何區分 quality issues 與 risk signals？
+  project: k6-freelancer
+  path: verification.md
+  heading: M8.5.2c
+  expected_path: wiki/k6-freelancer/verification.md
+  must_contain_any:
+  - - quality_issues
+    - Quality issues
+    - 品質問題
+  - - risk_signals
+    - Risk signals
+    - 風險訊號
+  - - retry_should_run
+    - retry
+    - 重試
+- id: eval-m9-citation-001
+  type: next_action_lookup
+  question: M9.3 Citation Integrity Checker 要解決什麼問題？
+  project: k6-freelancer
+  path: next-actions.md
+  heading: M9.3
+  expected_path: wiki/k6-freelancer/next-actions.md
+  must_contain_any:
+  - - dangling citation
+    - 懸空引用
+    - 懸空或格式錯誤的引用
+    - 格式錯誤引用
+    - 格式錯誤的引用
+    - 殘留引用

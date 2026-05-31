@@ -1,0 +1,64 @@
+# Hermes Memory M8.4 Multi-model Governance Baseline
+# Purpose:
+# - Describe model behavior differences explicitly.
+# - Let sanitizer / extraction policy become model-aware later.
+# - Avoid global hardcode heuristics.
+
+version: 1
+default_profile: default
+
+profiles:
+  qwen-forced-thinking:
+    match:
+      model_contains:
+        - qwen
+    behavior:
+      reasoning_leak_risk: high
+      answer_may_hide_in_reasoning_content: true
+      instruction_following: variable
+    extraction:
+      strip_think_blocks: true
+      prefer_final_content: true
+      allow_reasoning_fallback: true
+      max_reasoning_fallback_chars: 1200
+
+  gemma-clean-structured:
+    match:
+      model_contains:
+        - gemma
+    behavior:
+      reasoning_leak_risk: low
+      structured_output_stability: high
+      instruction_following: good
+    extraction:
+      strip_think_blocks: true
+      prefer_final_content: true
+      allow_reasoning_fallback: false
+      max_reasoning_fallback_chars: 0
+
+  llama-instruction-following:
+    match:
+      model_contains:
+        - llama
+    behavior:
+      reasoning_leak_risk: medium
+      structured_output_stability: medium
+      instruction_following: good
+    extraction:
+      strip_think_blocks: true
+      prefer_final_content: true
+      allow_reasoning_fallback: false
+      max_reasoning_fallback_chars: 0
+
+  default:
+    match:
+      model_contains: []
+    behavior:
+      reasoning_leak_risk: unknown
+      structured_output_stability: unknown
+      instruction_following: unknown
+    extraction:
+      strip_think_blocks: true
+      prefer_final_content: true
+      allow_reasoning_fallback: false
+      max_reasoning_fallback_chars: 0

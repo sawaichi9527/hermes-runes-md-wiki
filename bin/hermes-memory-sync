@@ -1,0 +1,82 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-memory}"
+IMPORTER_DIR="$ROOT/tools/importer"
+RUN_SMOKE=0
+RUN_SECURE=0
+
+usage() {
+  cat <<'EOF'
+hermes-memory-sync
+
+Sync Markdown wiki content into Hermes Memory PostgreSQL index.
+
+Usage:
+  hermes-memory-sync
+  hermes-memory-sync --smoke
+  hermes-memory-sync --secure
+  hermes-memory-sync --secure --smoke
+  hermes-memory-sync --help
+
+Options:
+  --secure  Run security scan before importer and block sync if findings exist.
+  --smoke   Run hermes-memory-smoke after importer completes.
+  --help    Show this help message.
+
+Notes:
+  - This is the Phase3 M6 sync entrypoint.
+  - Default behavior only runs importer.py.
+  - --secure protects long-term memory from importing real secrets.
+  - --smoke validates recall/RAG behavior after sync.
+EOF
+}
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --secure)
+      RUN_SECURE=1
+      shift
+      ;;
+    --smoke)
+      RUN_SMOKE=1
+      shift
+      ;;
+    --help|-h)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "ERROR: unknown argument: $1" >&2
+      usage >&2
+      exit 2
+      ;;
+  esac
+done
+
+if [ ! -d "$IMPORTER_DIR" ]; then
+  echo "ERROR: importer directory not found: $IMPORTER_DIR" >&2
+  exit 1
+fi
+
+cd "$IMPORTER_DIR"
+
+if [ -d ".venv" ]; then
+  # shellcheck disable=SC1091
+  source ".venv/bin/activate"
+fi
+
+if [ "$RUN_SECURE" -eq 1 ]; then
+  echo "[hermes-memory-sync] running security scan..."
+  python security_scan_m6_3.py --fail-on-findings
+fi
+
+echo "[hermes-memory-sync] running importer..."
+python importer.py
+
+if [ "$RUN_SMOKE" -eq 1 ]; then
+  echo "[hermes-memory-sync] running smoke test..."
+  hermes-memory-smoke
+fi
+
+echo "[hermes-memory-sync] done"

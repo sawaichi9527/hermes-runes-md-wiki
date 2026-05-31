@@ -1,0 +1,163 @@
+import re
+
+
+META_SECTION_PATTERNS = [
+    r'^\s*(?:\d+\.\s*)?Check against Rules\s*:.*$',
+    r'^\s*Final Review\s*:.*$',
+    r'^\s*Self-Correction\s*:.*$',
+]
+
+ARTIFACT_LINE_PATTERNS = [
+    r'^\s*Draft\s*:\s*$',
+    r'^\s*in Traditional Chinese\s*:\s*$',
+    r'^\s*Final Answer\s*:\s*$',
+]
+
+
+def normalize_citations(text: str) -> str:
+    return re.sub(r'\[Source\s*(\d+)\]', r'[Source \1]', text)
+
+
+def strip_artifact_lines(text: str) -> str:
+    kept = []
+    for line in text.splitlines():
+        if any(re.match(p, line, flags=re.IGNORECASE) for p in ARTIFACT_LINE_PATTERNS):
+            continue
+        kept.append(line)
+    return "\n".join(kept)
+
+
+def trim_meta_sections(text: str) -> str:
+    kept = []
+    for line in text.splitlines():
+        if any(re.match(p, line, flags=re.IGNORECASE) for p in META_SECTION_PATTERNS):
+            break
+        kept.append(line)
+    return "\n".join(kept)
+
+
+def remove_duplicated_regeneration(text: str) -> str:
+    markers = [
+        r'\n\s*Final Answer\s*:\s*',
+        r'\n\s*Revised Answer\s*:\s*',
+        r'\n\s*(?:\d+\.\s*)?\*?\*?Draft Answer.*?:\*?\*?\s*',
+        r'\n\s*(?:\d+\.\s*)?\*?\*?Draft Response.*?:\*?\*?\s*',
+        r'\n\s*(?:\d+\.\s*)?\*?\*?\(Internal Refinement\).*',
+        r'\n\s*(?:\d+\.\s*)?\*?\*?\(Internal Translation.*?\).*',
+        r'\n\s*(?:\d+\.\s*)?Check against Rules\s*:',
+    ]
+
+    earliest = None
+    for pattern in markers:
+        m = re.search(pattern, text, flags=re.IGNORECASE)
+        if not m:
+            continue
+        if m.start() < 20:
+            continue
+        if earliest is None or m.start() < earliest:
+            earliest = m.start()
+
+    if earliest is not None:
+        return text[:earliest].rstrip()
+
+    return text
+
+
+def collapse_blank_lines(text: str) -> str:
+    return re.sub(r'\n{3,}', '\n\n', text).strip()
+
+
+def sanitize_answer(text: str) -> str:
+    if not text:
+        return ""
+
+    text = text.replace("\r\n", "\n").replace("\r", "\n")
+    text = trim_meta_sections(text)
+    text = remove_duplicated_regeneration(text)
+    text = strip_artifact_lines(text)
+    text = normalize_citations(text)
+    text = collapse_blank_lines(text)
+    return text
+
+# M9.7 hotfix: override duplicated regeneration detector.
+# Keep this at file end so sanitize_answer() resolves this function at runtime.
+def remove_duplicated_regeneration(text: str) -> str:
+    markers = [
+        "\nFinal Answer:",
+        "\nRevised Answer:",
+        "\nDraft Answer:",
+        "\nDraft Response:",
+        "\n4. Draft Answer",
+        "\n4. Draft Response",
+        "\n(Internal Refinement",
+        "\n(Internal Translation",
+    ]
+
+    earliest = None
+    for marker in markers:
+        pos = text.lower().find(marker.lower())
+        if pos >= 20 and (earliest is None or pos < earliest):
+            earliest = pos
+
+    if earliest is not None:
+        return text[:earliest].rstrip()
+
+    return text
+
+# M9.7 hotfix: override final sanitizer pipeline.
+def sanitize_answer(text: str) -> str:
+    if not text:
+        return ""
+
+    text = text.replace("\r\n", "\n").replace("\r", "\n")
+
+    # Must run before strip_artifact_lines(), otherwise "Final Answer:" line is removed
+    # and the duplicated regenerated body remains.
+    text = remove_duplicated_regeneration(text)
+
+    text = trim_meta_sections(text)
+    text = strip_artifact_lines(text)
+    text = normalize_citations(text)
+    text = collapse_blank_lines(text)
+
+    return text
+
+# M9.7 hotfix v2: marker search without leading-newline dependency.
+def remove_duplicated_regeneration(text: str) -> str:
+    markers = [
+        "Final Answer:",
+        "Revised Answer:",
+        "Draft Answer:",
+        "Draft Response:",
+        "4. Draft Answer",
+        "4. Draft Response",
+        "(Internal Refinement",
+        "(Internal Translation",
+    ]
+
+    lower = text.lower()
+    earliest = None
+
+    for marker in markers:
+        pos = lower.find(marker.lower())
+        if pos >= 20 and (earliest is None or pos < earliest):
+            earliest = pos
+
+    if earliest is not None:
+        return text[:earliest].rstrip()
+
+    return text
+
+
+# M9.7 hotfix v2: final sanitizer pipeline.
+def sanitize_answer(text: str) -> str:
+    if not text:
+        return ""
+
+    text = text.replace("\r\n", "\n").replace("\r", "\n")
+    text = remove_duplicated_regeneration(text)
+    text = trim_meta_sections(text)
+    text = strip_artifact_lines(text)
+    text = normalize_citations(text)
+    text = collapse_blank_lines(text)
+    return text

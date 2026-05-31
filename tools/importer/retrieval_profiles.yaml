@@ -1,0 +1,64 @@
+profiles:
+
+  default:
+    description: Generic hybrid retrieval fallback.
+    min_rerank_score: 8.0
+    prefer_recent: false
+    prefer_short_chunks: false
+    prefer_exact_keyword: false
+    heading_bias: []
+
+  baseline_lookup:
+    description: Baseline / frozen architecture lookup.
+    min_rerank_score: 10.0
+    prefer_recent: false
+    prefer_short_chunks: true
+    prefer_exact_keyword: true
+    heading_bias:
+      - "B-"
+      - "Baseline"
+      - "FROZEN"
+
+  verification_lookup:
+    description: Verification / PASS validation lookup.
+    min_rerank_score: 8.0
+    prefer_recent: true
+    prefer_short_chunks: true
+    prefer_exact_keyword: true
+    heading_bias:
+      - "V-"
+      - "Verified"
+      - "PASS"
+
+  decision_lookup:
+    description: Architecture decision and rationale lookup.
+    min_rerank_score: 9.0
+    prefer_recent: false
+    prefer_short_chunks: false
+    prefer_exact_keyword: true
+    heading_bias:
+      - "D-"
+      - "Decision"
+      - "Rationale"
+
+  next_action_lookup:
+    description: Future roadmap and open tasks.
+    min_rerank_score: 7.0
+    prefer_recent: true
+    prefer_short_chunks: false
+    prefer_exact_keyword: false
+    heading_bias:
+      - "N-"
+      - "OPEN"
+      - "Next"
+
+  service_lookup:
+    description: Service capability and operational lookup.
+    min_rerank_score: 8.0
+    prefer_recent: false
+    prefer_short_chunks: false
+    prefer_exact_keyword: true
+    heading_bias:
+      - "Service"
+      - "Integration"
+      - "Operation"

@@ -1,0 +1,122 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$HOME/workspace/hermes-memory"
+
+PROJECT="k6-freelancer"
+SCHEMA="public"
+MODE="hybrid"
+LIMIT="5"
+CANDIDATE_LIMIT="20"
+MAX_CONTENT_LENGTH="800"
+PATH_FILTER=""
+HEADING_FILTER=""
+JSON=""
+
+usage() {
+  cat <<'USAGE'
+Usage:
+  hermes-recall <query> [options]
+
+Options:
+  --project <name>              Project name. Default: k6-freelancer
+  --schema <name>               PostgreSQL schema. Default: public
+  --mode <hybrid|vector|fts>     Search mode. Default: hybrid
+  --limit <n>                   Final result limit. Default: 5
+  --candidate-limit <n>         Hybrid candidate limit. Default: 20
+  --max-content-length <n>      Max content length per result. Default: 800
+  --path <text>                  Filter source_path by substring
+  --heading <text>               Filter section_heading by substring, hybrid mode only
+  --json                        Output JSON
+  --no-warn-hf                  Reduce Hugging Face warning noise
+  -h, --help                    Show help
+USAGE
+}
+
+if [[ $# -lt 1 ]]; then
+  usage
+  exit 1
+fi
+
+QUERY=""
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --project)
+      PROJECT="$2"; shift 2 ;;
+    --schema)
+      SCHEMA="$2"; shift 2 ;;
+    --mode)
+      MODE="$2"; shift 2 ;;
+    --limit)
+      LIMIT="$2"; shift 2 ;;
+    --candidate-limit)
+      CANDIDATE_LIMIT="$2"; shift 2 ;;
+    --max-content-length)
+      MAX_CONTENT_LENGTH="$2"; shift 2 ;;
+    --path)
+      PATH_FILTER="$2"; shift 2 ;;
+    --heading)
+      HEADING_FILTER="$2"; shift 2 ;;
+    --json)
+      JSON="--json"; shift ;;
+    --no-warn-hf)
+      export HF_HUB_DISABLE_IMPLICIT_TOKEN=1
+      export TOKENIZERS_PARALLELISM=false
+      shift ;;
+    -h|--help)
+      usage; exit 0 ;;
+    *)
+      if [[ -z "$QUERY" ]]; then
+        QUERY="$1"
+      else
+        QUERY="$QUERY $1"
+      fi
+      shift ;;
+  esac
+done
+
+if [[ -z "$QUERY" ]]; then
+  echo "ERROR: query is required" >&2
+  exit 1
+fi
+
+case "$MODE" in
+  hybrid)
+    "$ROOT/tools/importer/hermes-memory-hybrid-search" \
+      "$QUERY" \
+      --project "$PROJECT" \
+      --schema "$SCHEMA" \
+      --limit "$LIMIT" \
+      --candidate-limit "$CANDIDATE_LIMIT" \
+      --max-content-length "$MAX_CONTENT_LENGTH" \
+      ${PATH_FILTER:+--path "$PATH_FILTER"} \
+      ${HEADING_FILTER:+--heading "$HEADING_FILTER"} \
+      $JSON
+    ;;
+  vector)
+    "$ROOT/tools/importer/hermes-memory-vector-search" \
+      "$QUERY" \
+      --project "$PROJECT" \
+      --schema "$SCHEMA" \
+      --limit "$LIMIT" \
+      --max-content-length "$MAX_CONTENT_LENGTH" \
+      ${PATH_FILTER:+--path "$PATH_FILTER"} \
+      $JSON
+    ;;
+  fts)
+    "$ROOT/tools/importer/hermes-memory-fts-search" \
+      "$QUERY" \
+      --project "$PROJECT" \
+      --schema "$SCHEMA" \
+      --limit "$LIMIT" \
+      --max-content-length "$MAX_CONTENT_LENGTH" \
+      ${PATH_FILTER:+--path "$PATH_FILTER"} \
+      $JSON
+    ;;
+  *)
+    echo "ERROR: unsupported mode: $MODE" >&2
+    echo "Allowed modes: hybrid, vector, fts" >&2
+    exit 1
+    ;;
+esac
