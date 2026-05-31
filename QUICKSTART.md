@@ -57,6 +57,8 @@ The environment variable is still named `HERMES_MEMORY_ROOT` for compatibility w
 
 # 3. Python Virtual Environment
 
+Create the virtual environment under `tools/importer`, then install dependencies from the repository root requirements file:
+
 ```bash
 cd "${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-runes-md-wiki}"
 
@@ -66,7 +68,7 @@ python3 -m venv .venv
 source .venv/bin/activate
 
 python -m pip install --upgrade pip
-pip install -r requirements.txt
+pip install -r ../../requirements.txt
 ```
 
 ---
