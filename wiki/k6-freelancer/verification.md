@@ -396,3 +396,50 @@ Result:
 - Governed output baseline is usable and frozen for next-stage observation.
 
 ---
+
+## V-20260601-M12 Repository Runtime Safety Baseline
+
+Status: PASS
+Scope: GitHub-first repository portability, runtime safety, importer-local configuration, DB config portability
+
+Verified:
+- M12.1 Requirements split: PASS.
+- M12.2 Importer-local environment layout: PASS.
+- M12.3 Runtime safety audit: PASS.
+- M12.3a DB config portability cleanup: PASS.
+- Core-only FTS smoke baseline: PASS.
+- Full embedding smoke suite: PASS.
+- Markdown importer incremental run: PASS.
+- Sample project FTS recall: PASS.
+- Metadata inspection maintenance tool: PASS.
+- Stale report maintenance tool: PASS.
+- Stale purge dry-run maintenance tool: PASS.
+
+Runtime layout:
+- Public template: `tools/importer/.env.example`.
+- Local runtime config: `tools/importer/.env`.
+- Root `.env` is not required for normal quickstart.
+- `tools/importer/.env` is ignored and must not be committed.
+
+DB config policy:
+- `tools/importer/db_config.py` is the shared database connection helper.
+- Core importer/search/retrieval tools use the shared DB config helper.
+- Maintenance tools use the shared DB config helper.
+- Direct `PGPASSWORD` fallback is retained only inside `db_config.py` as compatibility behavior.
+
+Safety audit result:
+- `logs/` ignored: PASS.
+- `tools/importer/.env` ignored: PASS.
+- `tools/importer/.venv/` ignored: PASS.
+- Real secrets are not tracked in GitHub: PASS.
+- Placeholder secret strings remain only in documentation, test fixtures, and the shared scanner rule.
+
+Accepted local-only risk:
+- A LAN-only LM Studio API token was exposed in chat output but was not committed to GitHub.
+- Risk is accepted/deferred for the current local-only private LAN service.
+- Rotate before long-term production use if needed.
+
+Result:
+- M12 repository runtime safety and DB config portability baseline is considered stable.
+
+---
