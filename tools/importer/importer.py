@@ -1,4 +1,3 @@
-import os
 import re
 import json
 import hashlib
@@ -8,6 +7,8 @@ from root_resolver import resolve_root
 from datetime import datetime, timezone
 
 import psycopg
+
+from db_config import build_conninfo
 
 
 ROOT = resolve_root()
@@ -20,19 +21,6 @@ CHUNK_TARGET_CHARS = 1600
 CHUNK_OVERLAP_CHARS = 240
 CHUNK_MIN_CHARS = 300
 CHUNK_MAX_CHARS = 2200
-
-
-def load_env(path: Path) -> None:
-    if not path.exists():
-        return
-
-    for line in path.read_text(encoding="utf-8").splitlines():
-        line = line.strip()
-        if not line or line.startswith("#") or "=" not in line:
-            continue
-
-        key, value = line.split("=", 1)
-        os.environ.setdefault(key.strip(), value.strip())
 
 
 def sha256_text(text: str) -> str:
@@ -265,27 +253,6 @@ def chunk_markdown(text: str) -> list[tuple[str | None, str]]:
             start = max(end - CHUNK_OVERLAP_CHARS, start + 1)
 
     return chunks
-
-
-def build_conninfo() -> str:
-    """Build psycopg connection string.
-
-    Priority:
-    1. HERMES_MEMORY_DATABASE_URL
-    2. DATABASE_URL
-    3. PGHOST/PGPORT/PGDATABASE/PGUSER/PGPASSWORD from tools/importer/.env
-    """
-    url = os.environ.get("HERMES_MEMORY_DATABASE_URL") or os.environ.get("DATABASE_URL")
-    if url:
-        return url
-
-    return (
-        f"host={os.environ['PGHOST']} "
-        f"port={os.environ['PGPORT']} "
-        f"dbname={os.environ['PGDATABASE']} "
-        f"user={os.environ['PGUSER']} "
-        f"password={os.environ['PGPASSWORD']}"
-    )
 
 
 def schema_mode(conn) -> str:
@@ -591,8 +558,6 @@ def import_memory_legacy(cur, project: str, rel_path: str, title: str, checksum:
 
 
 def main() -> None:
-    load_env(Path(".env"))
-
     conninfo = build_conninfo()
     md_files = sorted(WIKI_ROOT.rglob("*.md"))
 
