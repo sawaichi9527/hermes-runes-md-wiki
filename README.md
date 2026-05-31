@@ -154,14 +154,35 @@ Potential integrations include:
 # Repository Layout
 
 ```text
-wiki/                       Markdown source-of-truth
-tools/importer/             Import / retrieval / governance pipeline
-tools/importer/smoke/       Smoke and regression tests
-bin/                        CLI wrappers
-archive/                    Historical prototype artifacts
-logs/                       Local runtime logs (gitignored)
-backups/                    Local backups (gitignored)
+wiki/                         Markdown source-of-truth
+tools/importer/               Import / retrieval / governance pipeline
+tools/importer/.env.example   Importer runtime env template
+tools/importer/.env           Local runtime env, gitignored
+bin/                          CLI wrappers
+archive/                      Historical prototype artifacts
+logs/                         Local runtime logs, gitignored
+backups/                      Local backups, gitignored
 ```
+
+---
+
+# Runtime Environment
+
+The normal quickstart uses an importer-local environment file:
+
+```text
+tools/importer/.env.example  # public template, tracked by git
+tools/importer/.env          # local runtime config, never committed
+```
+
+Create it with:
+
+```bash
+cp tools/importer/.env.example tools/importer/.env
+vi tools/importer/.env
+```
+
+A root `.env` is not required for the normal deployment flow. Keeping the active runtime config under `tools/importer/` avoids ambiguity between multiple environment files.
 
 ---
 
@@ -250,7 +271,7 @@ Planned future areas include:
 
 # Security Principles
 
-Real secrets must never be committed into Markdown memory.
+Real secrets must never be committed into Markdown memory or repository-tracked files.
 
 This includes:
 
@@ -263,7 +284,7 @@ This includes:
 Secrets belong in:
 
 ```text
-.env
+tools/importer/.env
 local secret stores
 runtime configuration
 ```
