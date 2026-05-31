@@ -61,7 +61,6 @@ Create the virtual environment under `tools/importer`, then install the lightwei
 
 ```bash
 cd "${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-runes-md-wiki}"
-
 cd tools/importer
 
 python3 -m venv .venv
@@ -83,12 +82,21 @@ pip install -r ../../requirements-embedding.txt
 
 # 4. Environment Configuration
 
-Copy the example environment file into the importer runtime location:
+The importer runtime environment lives beside the importer tools.
+
+Use this pair:
+
+```text
+tools/importer/.env.example  # public template, tracked by git
+tools/importer/.env          # local runtime config, never committed
+```
+
+Create your local runtime config:
 
 ```bash
 cd "${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-runes-md-wiki}"
 
-cp .env.example tools/importer/.env
+cp tools/importer/.env.example tools/importer/.env
 vi tools/importer/.env
 ```
 
@@ -102,6 +110,8 @@ OPENAI_BASE_URL=http://127.0.0.1:1234/v1
 OPENAI_MODEL=your-local-model-name
 OPENAI_API_KEY=not-set
 ```
+
+Do not create a root `.env` for the normal quickstart flow. Keep the active runtime config at `tools/importer/.env` so there is only one authoritative local environment file.
 
 Never commit real `.env` files.
 
@@ -134,7 +144,7 @@ Typical database URL format:
 postgresql://USER:PASSWORD@HOST:PORT/DBNAME
 ```
 
-Keep the actual value only in your local `.env` file.
+Keep the actual value only in your local `tools/importer/.env` file.
 
 ---
 
@@ -176,7 +186,6 @@ Run the importer:
 
 ```bash
 cd "${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-runes-md-wiki}/tools/importer"
-
 source .venv/bin/activate
 
 python importer.py
@@ -192,7 +201,7 @@ PASS: Markdown incremental import completed
 
 # 8. Run Smoke Tests
 
-Run the full smoke baseline:
+Run the smoke baseline:
 
 ```bash
 cd "${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-runes-md-wiki}"
@@ -206,13 +215,17 @@ If you installed the wrapper into `~/.local/bin`, this should also work:
 hermes-memory-smoke
 ```
 
-Expected baseline:
+Expected full embedding baseline:
 
 ```text
+Core FTS Smoke Test: PASS
 M5.2 Evaluation Smoke Test: PASS
 M10 Observation Log Smoke Test: PASS
 M11 Observation Summary Smoke Test: PASS
+M11.6 Sample Project Smoke Test: PASS
 ```
+
+If only the core dependencies are installed, the smoke wrapper should run the core FTS test and skip embedding-dependent suites.
 
 ---
 
@@ -310,6 +323,7 @@ git status --ignored
 
 Confirm that the following are not tracked:
 
+- `tools/importer/.env`
 - `.env`
 - `.venv/`
 - `logs/`
