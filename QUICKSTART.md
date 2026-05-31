@@ -113,6 +113,14 @@ OPENAI_API_KEY=not-set
 
 Do not create a root `.env` for the normal quickstart flow. Keep the active runtime config at `tools/importer/.env` so there is only one authoritative local environment file.
 
+Database connection handling is centralized in:
+
+```text
+tools/importer/db_config.py
+```
+
+Normal tools should use `HERMES_MEMORY_DATABASE_URL` through this shared helper instead of each script independently parsing PostgreSQL password variables.
+
 Never commit real `.env` files.
 
 ---
@@ -332,6 +340,17 @@ Confirm that the following are not tracked:
 - private observation logs
 - private user memory
 
+Current safety baseline:
+
+```text
+M12.1 Requirements split: PASS
+M12.2 Importer-local environment layout: PASS
+M12.3 Runtime safety audit: PASS
+M12.3a DB config portability cleanup: PASS
+```
+
+The only expected database-password-related code reference is the shared compatibility fallback in `tools/importer/db_config.py`; test fixtures and documentation placeholders may also mention placeholder password strings.
+
 ---
 
 # 13. Re-clone Migration Check
@@ -364,6 +383,10 @@ Governed Local RAG Baseline: PASS
 Observable Local RAG Baseline: PASS
 Repository Readiness Policies: Draft Baseline
 Portable Root Resolver: PASS
+Requirements Split: PASS
+Importer-local Environment Layout: PASS
+Runtime Safety Audit: PASS
+DB Config Portability Cleanup: PASS
 ```
 
 ---
