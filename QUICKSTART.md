@@ -2,7 +2,7 @@
 
 Hermes Runes MD Wiki is a local-first Markdown wiki source-of-truth for governed local RAG memory.
 
-This quickstart describes a generic local deployment flow for a single-user environment.
+This quickstart describes a generic local deployment flow for a single-user environment and is written for a fresh GitHub clone.
 
 ---
 
@@ -33,8 +33,8 @@ Recommended default path:
 mkdir -p ~/workspace
 cd ~/workspace
 
-git clone <repository-url> hermes-memory
-cd hermes-memory
+git clone https://github.com/sawaichi9527/hermes-runes-md-wiki.git hermes-runes-md-wiki
+cd hermes-runes-md-wiki
 ```
 
 Hermes Runes does not require this exact path.
@@ -45,18 +45,20 @@ To use a custom path, set:
 export HERMES_MEMORY_ROOT="/your/custom/path"
 ```
 
-Example:
+Recommended default for this repository:
 
 ```bash
-export HERMES_MEMORY_ROOT="$HOME/projects/hermes-runes-md-wiki"
+export HERMES_MEMORY_ROOT="$HOME/workspace/hermes-runes-md-wiki"
 ```
+
+The environment variable is still named `HERMES_MEMORY_ROOT` for compatibility with existing importer, retrieval, and smoke-test tooling.
 
 ---
 
 # 3. Python Virtual Environment
 
 ```bash
-cd "${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-memory}"
+cd "${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-runes-md-wiki}"
 
 cd tools/importer
 
@@ -64,40 +66,31 @@ python3 -m venv .venv
 source .venv/bin/activate
 
 python -m pip install --upgrade pip
-```
-
-Install project dependencies according to the repository dependency file when available.
-
-Example:
-
-```bash
 pip install -r requirements.txt
 ```
-
-If no dependency file exists yet, install the currently required packages manually according to the deployment notes.
 
 ---
 
 # 4. Environment Configuration
 
-Copy the example environment file:
+Copy the example environment file into the importer runtime location:
 
 ```bash
-cd "${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-memory}"
+cd "${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-runes-md-wiki}"
 
 cp .env.example tools/importer/.env
 vi tools/importer/.env
 ```
 
-Required values:
+Required local values:
 
 ```bash
-HERMES_MEMORY_ROOT=~/workspace/hermes-memory
-HERMES_MEMORY_DATABASE_URL=postgresql://hermes_memory_user:replace-with-local-password@127.0.0.1:5432/hermes_memory
+HERMES_MEMORY_ROOT=~/workspace/hermes-runes-md-wiki
+HERMES_MEMORY_DATABASE_URL=postgresql://DB_USER:DB_PASSWORD@DB_HOST:DB_PORT/DB_NAME
 
 OPENAI_BASE_URL=http://127.0.0.1:1234/v1
-OPENAI_MODEL=replace-with-local-model-name
-OPENAI_API_KEY=replace-with-local-secret-or-not-needed
+OPENAI_MODEL=your-local-model-name
+OPENAI_API_KEY=not-set
 ```
 
 Never commit real `.env` files.
@@ -131,11 +124,7 @@ Typical database URL format:
 postgresql://USER:PASSWORD@HOST:PORT/DBNAME
 ```
 
-Example:
-
-```text
-postgresql://hermes_memory_user:replace-with-local-password@127.0.0.1:5432/hermes_memory
-```
+Keep the actual value only in your local `.env` file.
 
 ---
 
@@ -143,7 +132,13 @@ postgresql://hermes_memory_user:replace-with-local-password@127.0.0.1:5432/herme
 
 The Markdown wiki is the curated source-of-truth.
 
-Current engineering baseline example:
+Public-safe sample baseline:
+
+```text
+wiki/sample-project/
+```
+
+Private engineering baseline example:
 
 ```text
 wiki/k6-freelancer/
@@ -170,7 +165,7 @@ Small personal knowledge areas may use flat filenames until they grow large enou
 Run the importer:
 
 ```bash
-cd "${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-memory}/tools/importer"
+cd "${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-runes-md-wiki}/tools/importer"
 
 source .venv/bin/activate
 
@@ -190,8 +185,14 @@ PASS: Markdown incremental import completed
 Run the full smoke baseline:
 
 ```bash
-cd "${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-memory}"
+cd "${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-runes-md-wiki}"
 
+./bin/hermes-memory-smoke
+```
+
+If you installed the wrapper into `~/.local/bin`, this should also work:
+
+```bash
 hermes-memory-smoke
 ```
 
@@ -207,30 +208,40 @@ M11 Observation Summary Smoke Test: PASS
 
 # 9. First Recall Query
 
-Example recall query:
+Public-safe recall query:
 
 ```bash
-hermes-recall "Telegram integration" --project k6-freelancer --mode hybrid --limit 5
+./bin/hermes-recall "sample project" --project sample-project --mode hybrid --limit 5
 ```
 
 Or directly through importer tools:
 
 ```bash
-cd "${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-memory}/tools/importer"
+cd "${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-runes-md-wiki}/tools/importer"
 
-python context_builder.py   "Telegram integration"   --project k6-freelancer   --json
+python context_builder.py "sample project" --project sample-project --json
+```
+
+Private engineering recall example, only if `wiki/k6-freelancer/` exists locally:
+
+```bash
+./bin/hermes-recall "Telegram integration" --project k6-freelancer --mode hybrid --limit 5
 ```
 
 ---
 
 # 10. First Governed Answer
 
-Example:
+Public-safe example:
 
 ```bash
-cd "${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-memory}/tools/importer"
+cd "${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-runes-md-wiki}/tools/importer"
 
-python answer_generator.py   "Telegram integration 是什麼？"   --project k6-freelancer   --path services.md   --heading Telegram   --max-tokens 512   --json
+python answer_generator.py \
+  "What is the sample project?" \
+  --project sample-project \
+  --max-tokens 512 \
+  --json
 ```
 
 This should produce a governed answer with metadata such as:
@@ -251,7 +262,7 @@ Observation logs are local runtime data.
 Run summary:
 
 ```bash
-cd "${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-memory}/tools/importer"
+cd "${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-runes-md-wiki}/tools/importer"
 
 python observation_summary.py --days 1 --json
 ```
@@ -288,7 +299,28 @@ Confirm that the following are not tracked:
 
 ---
 
-# 13. Current Baseline
+# 13. Re-clone Migration Check
+
+For validating the GitHub-first external-user flow, move the old local working tree aside and clone into the new repository-named path:
+
+```bash
+cd ~/workspace
+
+mv hermes-memory hermes-memory.local-backup-$(date +%Y%m%d-%H%M%S)
+
+git clone https://github.com/sawaichi9527/hermes-runes-md-wiki.git hermes-runes-md-wiki
+cd hermes-runes-md-wiki
+
+export HERMES_MEMORY_ROOT="$HOME/workspace/hermes-runes-md-wiki"
+```
+
+Then continue from section 3.
+
+Do not delete the old backup until the new clone has passed import, smoke, recall, and governed-answer checks.
+
+---
+
+# 14. Current Baseline
 
 Current expected baseline:
 
@@ -301,21 +333,23 @@ Portable Root Resolver: PASS
 
 ---
 
-# 14. Next Steps
+# 15. Next Steps
 
 Planned future work:
 
+- License selection
+- release tag
+- issue roadmap
 - Hermes Agent integration adapter
 - OpenClaw / generic agent adapter
 - MCP-compatible interface
 - retrieval / rerank quality improvements
 - deployment documentation
-- sample wiki content
 - packaging cleanup
 
 ---
 
-# 15. Guiding Principle
+# 16. Guiding Principle
 
 A local-first project may have a friendly default path.
 
