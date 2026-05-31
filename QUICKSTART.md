@@ -218,9 +218,20 @@ M11 Observation Summary Smoke Test: PASS
 
 # 9. First Recall Query
 
-Public-safe recall query:
+Core-only public-safe recall query using FTS:
 
 ```bash
+./bin/hermes-recall "sample project" --project sample-project --mode fts --limit 5
+```
+
+Hybrid or vector recall requires the optional embedding profile:
+
+```bash
+cd "${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-runes-md-wiki}/tools/importer"
+source .venv/bin/activate
+pip install -r ../../requirements-embedding.txt
+
+cd "${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-runes-md-wiki}"
 ./bin/hermes-recall "sample project" --project sample-project --mode hybrid --limit 5
 ```
 
