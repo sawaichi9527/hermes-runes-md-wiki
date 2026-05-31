@@ -141,7 +141,7 @@ def main() -> None:
                           +
                           (
                             SELECT count(*)::float
-                            FROM regexp_split_to_table(q.raw_query, '\s+') AS token
+                            FROM regexp_split_to_table(q.raw_query, '\\s+') AS token
                             WHERE length(token) >= 3
                               AND (
                                 c.content ILIKE '%%' || token || '%%'
@@ -156,7 +156,7 @@ def main() -> None:
                       +
                       (
                         SELECT count(*)::float
-                        FROM regexp_split_to_table(q.raw_query, '\s+') AS token
+                        FROM regexp_split_to_table(q.raw_query, '\\s+') AS token
                         WHERE length(token) >= 3
                           AND (
                             c.content ILIKE '%%' || token || '%%'
@@ -175,7 +175,7 @@ def main() -> None:
                       q.tsq @@ to_tsvector('simple', c.content)
                       OR EXISTS (
                         SELECT 1
-                        FROM regexp_split_to_table(%s::text, '\s+') AS token
+                        FROM regexp_split_to_table(%s::text, '\\s+') AS token
                         WHERE length(token) >= 3
                           AND (
                             c.content ILIKE '%%' || token || '%%'
