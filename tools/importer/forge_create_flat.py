@@ -6,8 +6,12 @@ import json
 import re
 from pathlib import Path
 
-from operation_manifest import build_manifest
-from write_guard import assert_p0_write_allowed, new_operation_id
+from operation_manifest import build_manifest, write_manifest
+from write_guard import (
+    assert_p0_write_allowed,
+    file_lock,
+    new_operation_id,
+)
 
 
 def slugify(title: str) -> str:
@@ -19,6 +23,7 @@ def slugify(title: str) -> str:
 
 def build_content(*, title: str, project: str, operation_id: str, body: str) -> str:
     body = body.strip() or "TODO: fill content."
+
     return f"""---
 title: {title}
 project: {project}
@@ -35,18 +40,34 @@ operation_id: {operation_id}
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="P0 forge create-flat MVP")
+
     parser.add_argument("--project", required=True)
     parser.add_argument("--title", required=True)
     parser.add_argument("--body", default="")
     parser.add_argument("--root", default=str(Path.cwd()))
+
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--write", action="store_true")
     parser.add_argument("--json", action="store_true")
+
     args = parser.parse_args()
 
+    if args.dry_run and args.write:
+        raise SystemExit("cannot use --dry-run and --write together")
+
     root = Path(args.root).resolve()
+
     op_id = new_operation_id("forge")
+
     slug = slugify(args.title)
-    target = root / "wiki" / args.project / "forge-inbox" / f"{slug}-{op_id}.md"
+
+    target = (
+        root
+        / "wiki"
+        / args.project
+        / "forge-inbox"
+        / f"{slug}-{op_id}.md"
+    )
 
     assert_p0_write_allowed(root, target, args.project)
 
@@ -57,41 +78,74 @@ def main() -> int:
         body=args.body,
     )
 
-    manifest = build_manifest(
-        operation_id=op_id,
-        operation="forge.create-flat",
-        project=args.project,
-        write=False,
-        target_path=str(target.relative_to(root)),
-        status="DRY_RUN",
-        extra={
-            "title": args.title,
-            "slug": slug,
-            "content_chars": len(content),
-        },
-    )
+    if args.dry_run:
+        manifest = build_manifest(
+            operation_id=op_id,
+            operation="forge.create-flat",
+            project=args.project,
+            write=False,
+            target_path=str(target.relative_to(root)),
+            status="DRY_RUN",
+            extra={
+                "title": args.title,
+                "slug": slug,
+                "content_chars": len(content),
+            },
+        )
+
+        result = {
+            "status": "PASS",
+            "operation": "forge.create-flat",
+            "write": False,
+            "dry_run": True,
+            "operation_id": op_id,
+            "planned_path": str(target.relative_to(root)),
+            "planned_content_preview": content,
+            "manifest_preview": manifest,
+        }
+
+        print(json.dumps(result, ensure_ascii=False, indent=2))
+        return 0
+
+    if not args.write:
+        raise SystemExit("must specify either --dry-run or --write")
+
+    lock_path = root / "var" / "locks" / "forge.lock"
+
+    with file_lock(lock_path):
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(content, encoding="utf-8")
+
+        manifest = build_manifest(
+            operation_id=op_id,
+            operation="forge.create-flat",
+            project=args.project,
+            write=True,
+            target_path=str(target.relative_to(root)),
+            status="PASS",
+            extra={
+                "title": args.title,
+                "slug": slug,
+                "content_chars": len(content),
+            },
+        )
+
+        manifest_path = write_manifest(root, manifest)
 
     result = {
         "status": "PASS",
         "operation": "forge.create-flat",
-        "write": False,
-        "dry_run": True,
+        "write": True,
+        "dry_run": False,
         "operation_id": op_id,
-        "planned_path": str(target.relative_to(root)),
-        "planned_content_preview": content,
-        "manifest_preview": manifest,
+        "written_path": str(target.relative_to(root)),
+        "manifest_path": str(manifest_path.relative_to(root)),
     }
-
-    if not args.dry_run:
-        result["status"] = "FAIL"
-        result["error"] = "M18.2 supports --dry-run only"
-        print(json.dumps(result, ensure_ascii=False, indent=2))
-        return 2
 
     if args.json:
         print(json.dumps(result, ensure_ascii=False, indent=2))
     else:
-        print(f"PASS dry-run planned_path={result['planned_path']}")
+        print(f"PASS wrote {result['written_path']}")
 
     return 0
 
