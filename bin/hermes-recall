@@ -15,10 +15,11 @@ def repo_root() -> Path:
 
 def main() -> int:
     parser = argparse.ArgumentParser(prog="hermes-recall")
-    parser.add_argument("query", nargs="+")
+    parser.add_argument("query", nargs="*")
     parser.add_argument("--project", default="k6-freelancer")
     parser.add_argument("--schema", default="public")
     parser.add_argument("--mode", choices=["hybrid", "vector", "fts"], default="hybrid")
+    parser.add_argument("--diagnose", action="store_true")
     parser.add_argument("--limit", default="5")
     parser.add_argument("--candidate-limit", default="20")
     parser.add_argument("--max-content-length", default="800")
@@ -29,31 +30,53 @@ def main() -> int:
     args = parser.parse_args()
 
     root = repo_root()
-    script_map = {
-        "hybrid": root / "tools/importer/hermes-memory-hybrid-search",
-        "vector": root / "tools/importer/hermes-memory-vector-search",
-        "fts": root / "tools/importer/hermes-memory-fts-search",
-    }
 
-    cmd = [
-        str(script_map[args.mode]),
-        " ".join(args.query),
-        "--project", args.project,
-        "--schema", args.schema,
-        "--limit", str(args.limit),
-        "--max-content-length", str(args.max_content_length),
-    ]
+    if args.diagnose:
+        script = root / "tools/importer/retrieval_diagnostics.py"
 
-    if args.mode == "hybrid":
-        cmd.extend(["--candidate-limit", str(args.candidate_limit)])
-        if args.heading_filter:
-            cmd.extend(["--heading", args.heading_filter])
+        cmd = [
+            sys.executable,
+            str(script),
+            "--project", args.project,
+            "--schema", args.schema,
+            "--limit", str(args.candidate_limit),
+        ]
 
-    if args.path_filter:
-        cmd.extend(["--path", args.path_filter])
+        if args.path_filter:
+            cmd.extend(["--path", args.path_filter])
 
-    if args.json:
-        cmd.append("--json")
+        if args.json:
+            cmd.append("--json")
+
+    else:
+        if not args.query:
+            parser.error("query is required unless --diagnose is used")
+
+        script_map = {
+            "hybrid": root / "tools/importer/hermes-memory-hybrid-search",
+            "vector": root / "tools/importer/hermes-memory-vector-search",
+            "fts": root / "tools/importer/hermes-memory-fts-search",
+        }
+
+        cmd = [
+            str(script_map[args.mode]),
+            " ".join(args.query),
+            "--project", args.project,
+            "--schema", args.schema,
+            "--limit", str(args.limit),
+            "--max-content-length", str(args.max_content_length),
+        ]
+
+        if args.mode == "hybrid":
+            cmd.extend(["--candidate-limit", str(args.candidate_limit)])
+            if args.heading_filter:
+                cmd.extend(["--heading", args.heading_filter])
+
+        if args.path_filter:
+            cmd.extend(["--path", args.path_filter])
+
+        if args.json:
+            cmd.append("--json")
 
     env = os.environ.copy()
     if args.no_warn_hf:
