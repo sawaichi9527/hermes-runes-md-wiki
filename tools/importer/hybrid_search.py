@@ -203,6 +203,7 @@ def main() -> None:
                   d.source_path AS path,
                   c.chunk_index,
                   c.section_heading,
+                  c.metadata AS chunk_metadata,
                   fused.hybrid_score,
                   fused.vector_rank,
                   fused.vector_score,
@@ -247,6 +248,7 @@ def main() -> None:
         path,
         chunk_index,
         section_heading,
+        chunk_metadata,
         hybrid_score,
         vector_rank,
         vector_score,
@@ -255,6 +257,7 @@ def main() -> None:
         content,
     ) in rows:
         citation = build_citation(path, section_heading, chunk_index, chunk_id)
+        forge_metadata = (chunk_metadata or {}).get("forge", {})
 
         result["results"].append(
             {
@@ -263,6 +266,7 @@ def main() -> None:
                 "chunk_index": chunk_index,
                 "section_heading": section_heading,
                 "citation": citation,
+                "forge": forge_metadata,
                 "hybrid_score": float(hybrid_score),
                 "profile_bias": 0,
                 "vector_rank": vector_rank,
