@@ -1,10 +1,22 @@
 # Manual Importer Wrapper Plan
 
-Status: M16.6 planning baseline
+Status: M16.7 frozen planning baseline
 
 This document defines the intended design for a future manual importer wrapper.
 
-The wrapper is not implemented in M16.6.
+The wrapper is not implemented in M16.7.
+
+## Baseline verification
+
+Verified:
+
+- importer preview helper exists
+- changed-files preview smoke passed
+- importer preview remains read-only
+- no DB writes occur during preview
+- no chunk creation occurs during preview
+- no index update occurs during preview
+- working tree remained clean after smoke verification
 
 ## Goal
 
@@ -26,7 +38,7 @@ optional git commit / push
 
 ## Non-goals
 
-M16.6 does not introduce:
+M16.7 does not introduce:
 
 - automatic importer execution
 - automatic index update
