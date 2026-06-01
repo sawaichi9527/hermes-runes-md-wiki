@@ -92,3 +92,7 @@ exports/
 
 # Legacy backup snapshots
 archive/legacy-baks/
+
+# Local runtime operation artifacts
+var/locks/
+var/operations/
