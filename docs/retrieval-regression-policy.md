@@ -1,8 +1,23 @@
 # Retrieval Regression Policy
 
-Status: M17.1 planning baseline
+Status: M17.4 frozen planning baseline
 
 This policy defines the minimum regression checks required after importer-related operations.
+
+## Baseline verification
+
+M17.1 through M17.4 status: PASS
+
+Verified baseline:
+
+- M17.1 retrieval regression policy: PASS
+- M17.2 sample-project retrieval smoke plan: PASS
+- M17.3 k6 protected retrieval regression plan: PASS
+- M17.4 baseline freeze documentation: PASS
+
+No automatic retrieval regression runner exists yet.
+
+All regression checks remain manual and human-reviewed.
 
 ## Goal
 
@@ -22,7 +37,7 @@ The regression policy exists to ensure that:
 
 ## Current baseline
 
-M17.1 is planning-only.
+M17 is planning-only.
 
 No automatic retrieval regression runner exists yet.
 
@@ -133,4 +148,4 @@ A future regression helper may be added later, for example:
 python tools/importer/retrieval_regression_smoke.py --json
 ```
 
-But M17.1 remains planning-only.
+But M17.4 remains planning-only.
