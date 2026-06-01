@@ -20,20 +20,37 @@ def main() -> int:
     parser.add_argument("--schema", default="public")
     parser.add_argument("--mode", choices=["hybrid", "vector", "fts"], default="hybrid")
     parser.add_argument("--diagnose", action="store_true")
+    parser.add_argument("--diagnose-context", action="store_true")
     parser.add_argument("--embed-missing", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--limit", default="5")
     parser.add_argument("--candidate-limit", default="20")
     parser.add_argument("--batch-size", default="16")
     parser.add_argument("--max-content-length", default="800")
+    parser.add_argument("--max-chars", default="8000")
+    parser.add_argument("--per-chunk-chars", default="2500")
+    parser.add_argument("--max-source-chunks", default="2")
+    parser.add_argument("--min-rerank-score", default="1.0")
     parser.add_argument("--path", dest="path_filter", default=None)
     parser.add_argument("--heading", dest="heading_filter", default=None)
+    parser.add_argument("--no-merge-adjacent-chunks", dest="merge_adjacent_chunks", action="store_false")
+    parser.set_defaults(merge_adjacent_chunks=True)
     parser.add_argument("--json", action="store_true")
     parser.add_argument("--no-warn-hf", action="store_true")
     args = parser.parse_args()
 
-    if args.diagnose and args.embed_missing:
-        parser.error("--diagnose and --embed-missing cannot be used together")
+    active_modes = sum(
+        [
+            bool(args.diagnose),
+            bool(args.diagnose_context),
+            bool(args.embed_missing),
+        ]
+    )
+
+    if active_modes > 1:
+        parser.error(
+            "--diagnose, --diagnose-context, and --embed-missing are mutually exclusive"
+        )
 
     root = repo_root()
 
@@ -50,6 +67,38 @@ def main() -> int:
 
         if args.path_filter:
             cmd.extend(["--path", args.path_filter])
+
+        if args.json:
+            cmd.append("--json")
+
+    elif args.diagnose_context:
+        if not args.query:
+            parser.error("query is required for --diagnose-context")
+
+        script = root / "tools/importer/context_diagnostics.py"
+
+        cmd = [
+            sys.executable,
+            str(script),
+            " ".join(args.query),
+            "--project", args.project,
+            "--schema", args.schema,
+            "--limit", str(args.limit),
+            "--candidates", str(args.candidate_limit),
+            "--max-chars", str(args.max_chars),
+            "--per-chunk-chars", str(args.per_chunk_chars),
+            "--max-source-chunks", str(args.max_source_chunks),
+            "--min-rerank-score", str(args.min_rerank_score),
+        ]
+
+        if args.path_filter:
+            cmd.extend(["--path", args.path_filter])
+
+        if args.heading_filter:
+            cmd.extend(["--heading", args.heading_filter])
+
+        if not args.merge_adjacent_chunks:
+            cmd.append("--no-merge-adjacent-chunks")
 
         if args.json:
             cmd.append("--json")
@@ -78,7 +127,7 @@ def main() -> int:
     else:
         if not args.query:
             parser.error(
-                "query is required unless --diagnose or --embed-missing is used"
+                "query is required unless a diagnostics or embedding mode is used"
             )
 
         script_map = {
