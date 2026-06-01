@@ -1,12 +1,12 @@
 # Importer Preview Policy
 
-Status: M16.5 read-only preview baseline
+Status: M16.7 frozen read-only preview baseline
 
 This policy defines the preview behavior before importer/index execution.
 
 ## Baseline verification
 
-M16.1 through M16.4 status: PASS
+M16.1 through M16.7 status: PASS
 
 Verified baseline:
 
@@ -14,6 +14,9 @@ Verified baseline:
 - M16.2 importer preview policy: PASS
 - M16.3 importer_preview.py read-only helper: PASS
 - M16.4 changed-files preview smoke: PASS
+- M16.5 preview baseline freeze: PASS
+- M16.6 manual importer wrapper plan: PASS
+- M16.7 full smoke verification: PASS
 
 ## Goal
 
@@ -39,6 +42,14 @@ Supported modes:
 - `--json`
 
 The helper reports preview decisions only.
+
+Verified behavior:
+
+- no DB write
+- no chunk creation
+- no index update
+- no git commit/push
+- repeated execution remains safe
 
 ## Desired preview inputs
 
