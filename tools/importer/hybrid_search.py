@@ -36,6 +36,47 @@ def slugify_heading(value: str | None) -> str:
     return slug or "no-section"
 
 
+
+TRUST_POLICY_NAME = "m19.2c-soft-bias-v1"
+
+
+def compute_trust_bias(forge: dict) -> int:
+    if not forge:
+        return 0
+
+    status = str(forge.get("status", "")).lower()
+    trust_class = str(forge.get("trust_class", "")).lower()
+    proposed_by = str(forge.get("proposed_by", "")).lower()
+    provenance = str(forge.get("provenance", "")).lower()
+    proposal_type = str(forge.get("proposal_type", "")).lower()
+
+    if status in {"draft", "rejected"}:
+        return -99
+
+    bias = 0
+
+    if status == "approved":
+        bias += 1
+
+    if trust_class == "human-reviewed":
+        bias += 2
+    elif trust_class == "unverified":
+        bias -= 1
+
+    if proposed_by == "human":
+        bias += 1
+    elif "agent" in proposed_by:
+        bias -= 1
+
+    if provenance == "manual_cli":
+        bias += 1
+
+    if proposal_type == "agent_memory":
+        bias -= 1
+
+    return bias
+
+
 def build_citation(path: str, section_heading: str | None, chunk_index: int, chunk_id: int) -> dict:
     section = section_heading or ""
     section_slug = slugify_heading(section_heading)
@@ -258,6 +299,7 @@ def main() -> None:
     ) in rows:
         citation = build_citation(path, section_heading, chunk_index, chunk_id)
         forge_metadata = (chunk_metadata or {}).get("forge", {})
+        trust_bias = compute_trust_bias(forge_metadata)
 
         result["results"].append(
             {
@@ -267,6 +309,8 @@ def main() -> None:
                 "section_heading": section_heading,
                 "citation": citation,
                 "forge": forge_metadata,
+                "trust_bias": trust_bias,
+                "trust_policy": TRUST_POLICY_NAME,
                 "hybrid_score": float(hybrid_score),
                 "profile_bias": 0,
                 "vector_rank": vector_rank,
@@ -299,6 +343,7 @@ def main() -> None:
     result["results"].sort(
         key=lambda x: (
             x.get("profile_bias", 0),
+            x.get("trust_bias", 0),
             x.get("hybrid_score", 0),
         ),
         reverse=True,
