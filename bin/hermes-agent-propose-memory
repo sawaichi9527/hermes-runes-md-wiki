@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-runes-md-wiki}"
+
+cd "$ROOT"
+
+exec ./bin/hermes-forge create-flat \
+  --proposal-type agent_memory \
+  --proposed-by hermes-agent \
+  --provenance agent_cli \
+  --confidence "${HERMES_AGENT_PROPOSAL_CONFIDENCE:-0.50}" \
+  --trust-class unverified \
+  "$@"
