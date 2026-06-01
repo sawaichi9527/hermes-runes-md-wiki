@@ -50,6 +50,65 @@ def should_ingest_forge_doc(path_str: str, content: str) -> tuple[bool, str]:
     return False, f"forge-status-{status}"
 
 
+
+FRONT_MATTER_PATTERN = re.compile(
+    r"\A---\s*\n(?P<body>.*?)\n---\s*",
+    re.DOTALL,
+)
+
+
+FORGE_METADATA_KEYS = (
+    "status",
+    "source",
+    "operation_id",
+    "proposal_type",
+    "proposed_by",
+    "provenance",
+    "confidence",
+    "trust_class",
+    "reject_reason",
+)
+
+
+def extract_front_matter_fields(content: str) -> dict[str, str]:
+    match = FRONT_MATTER_PATTERN.search(content)
+
+    if not match:
+        return {}
+
+    fields: dict[str, str] = {}
+
+    for line in match.group("body").splitlines():
+        if ":" not in line:
+            continue
+
+        key, value = line.split(":", 1)
+        key = key.strip()
+        value = value.strip()
+
+        if key:
+            fields[key] = value
+
+    return fields
+
+
+def forge_metadata_from_content(path_str: str, content: str) -> dict[str, str | bool]:
+    if "/forge-inbox/" not in path_str:
+        return {}
+
+    fields = extract_front_matter_fields(content)
+
+    metadata: dict[str, str | bool] = {
+        "is_forge": True,
+        "forge_path": path_str,
+    }
+
+    for key in FORGE_METADATA_KEYS:
+        if key in fields:
+            metadata[key] = fields[key]
+
+    return metadata
+
 PARSER_NAME = "markdown_conservative_recursive"
 PARSER_VERSION = "0.3.0-m3.1"
 
@@ -311,7 +370,7 @@ def schema_mode(conn) -> str:
 def import_public(cur, project: str, rel_path: str, title: str, checksum: str, normalized: str, md: Path) -> tuple[int, int, str]:
     cur.execute(
         """
-        SELECT id, sha256
+        SELECT id, sha256, metadata
         FROM public.documents
         WHERE project = %s
           AND source_path = %s
@@ -323,9 +382,14 @@ def import_public(cur, project: str, rel_path: str, title: str, checksum: str, n
     row = cur.fetchone()
 
     if row is not None:
-        doc_id, old_checksum = row
+        doc_id, old_checksum, old_metadata = row
 
-        if old_checksum == checksum:
+        forge_metadata_missing = (
+            "/forge-inbox/" in rel_path
+            and not (old_metadata or {}).get("forge", {}).get("is_forge")
+        )
+
+        if old_checksum == checksum and not forge_metadata_missing:
             return doc_id, 0, "skipped"
     else:
         doc_id = None
@@ -352,6 +416,7 @@ def import_public(cur, project: str, rel_path: str, title: str, checksum: str, n
             "project_scope": project,
             "source_preserved": True,
             "ingested_at": now,
+            "forge": forge_metadata_from_content(rel_path, normalized),
         },
         ensure_ascii=False,
     )
@@ -444,6 +509,7 @@ def import_public(cur, project: str, rel_path: str, title: str, checksum: str, n
                 "source_sha256": checksum,
                 "heading": heading,
                 "chunk_chars": len(chunk),
+                "forge": forge_metadata_from_content(rel_path, normalized),
                 "chunk_policy": {
                     "strategy": PARSER_NAME,
                     "target_chars": CHUNK_TARGET_CHARS,
