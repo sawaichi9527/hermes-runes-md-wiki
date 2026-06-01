@@ -23,7 +23,7 @@ def main() -> int:
             sys.executable,
             str(ROOT / "tools" / "importer" / "forge" / "create_flat.py"),
             "--project", "sample-project",
-            "--title", "Sample Project",
+            "--title", "M15 5 Dry Run Smoke",
             "--domain", "project",
             "--note-type", "overview",
             "--manifest-dir", str(manifest_dir),
@@ -44,7 +44,7 @@ def main() -> int:
 
         assert data["status"] == "PASS"
         assert data["mode"] == "dry-run"
-        assert data["plan"]["planned_path"] == "wiki/sample-project/project-sample-project-overview.md"
+        assert data["plan"]["planned_path"] == "wiki/sample-project/project-m15-5-dry-run-smoke-overview.md"
         assert data["plan"]["wiki_write"] is False
         assert data["plan"]["index_update"] is False
         assert data["plan"]["note_create"] is False
