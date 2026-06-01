@@ -20,14 +20,20 @@ def main() -> int:
     parser.add_argument("--schema", default="public")
     parser.add_argument("--mode", choices=["hybrid", "vector", "fts"], default="hybrid")
     parser.add_argument("--diagnose", action="store_true")
+    parser.add_argument("--embed-missing", action="store_true")
+    parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--limit", default="5")
     parser.add_argument("--candidate-limit", default="20")
+    parser.add_argument("--batch-size", default="16")
     parser.add_argument("--max-content-length", default="800")
     parser.add_argument("--path", dest="path_filter", default=None)
     parser.add_argument("--heading", dest="heading_filter", default=None)
     parser.add_argument("--json", action="store_true")
     parser.add_argument("--no-warn-hf", action="store_true")
     args = parser.parse_args()
+
+    if args.diagnose and args.embed_missing:
+        parser.error("--diagnose and --embed-missing cannot be used together")
 
     root = repo_root()
 
@@ -48,9 +54,32 @@ def main() -> int:
         if args.json:
             cmd.append("--json")
 
+    elif args.embed_missing:
+        script = root / "tools/importer/embed_missing.py"
+
+        cmd = [
+            sys.executable,
+            str(script),
+            "--project", args.project,
+            "--schema", args.schema,
+            "--limit", str(args.candidate_limit),
+            "--batch-size", str(args.batch_size),
+        ]
+
+        if args.path_filter:
+            cmd.extend(["--path", args.path_filter])
+
+        if args.dry_run:
+            cmd.append("--dry-run")
+
+        if args.json:
+            cmd.append("--json")
+
     else:
         if not args.query:
-            parser.error("query is required unless --diagnose is used")
+            parser.error(
+                "query is required unless --diagnose or --embed-missing is used"
+            )
 
         script_map = {
             "hybrid": root / "tools/importer/hermes-memory-hybrid-search",
