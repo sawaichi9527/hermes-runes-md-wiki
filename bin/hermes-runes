@@ -1,0 +1,239 @@
+#!/usr/bin/env python3
+import argparse
+import hashlib
+import json
+import os
+import sys
+from pathlib import Path
+
+
+POLICY_FILES = [
+    "wiki/_system/README.md",
+    "wiki/_system/memory-policy.md",
+    "wiki/_system/source-priority.md",
+    "wiki/_system/access-boundary.md",
+    "wiki/_system/wiki-operation-policy.md",
+    "wiki/_system/agent-operation-guide.md",
+    "wiki/_system/ingestion-policy.md",
+    "wiki/_system/security-policy.md",
+    "wiki/_system/observation-policy.md",
+    "wiki/_system/developer-policy.md",
+    "wiki/_system/change-history.md",
+    "wiki/_system/operations.md",
+    "wiki/README.md",
+    "wiki/long-term-objectives-index.md",
+]
+
+CATEGORY_INDEXES = [
+    "wiki/specs-index.md",
+    "wiki/engineering-index.md",
+    "wiki/products-index.md",
+    "wiki/operations-index.md",
+    "wiki/references-index.md",
+    "wiki/personal-index.md",
+]
+
+POLICY_BUNDLE_VERSION = "M15.3-readonly-scaffold"
+
+
+def repo_root() -> Path:
+    env_root = os.environ.get("HERMES_MEMORY_ROOT")
+    if env_root:
+        return Path(env_root).expanduser().resolve()
+    return Path(__file__).resolve().parents[1]
+
+
+def read_text(path: Path) -> str:
+    return path.read_text(encoding="utf-8")
+
+
+def sha256_text(text: str) -> str:
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def file_record(root: Path, rel_path: str) -> dict:
+    path = root / rel_path
+    if not path.exists():
+        return {
+            "path": rel_path,
+            "exists": False,
+            "sha256": None,
+            "bytes": 0,
+        }
+
+    content = read_text(path)
+    return {
+        "path": rel_path,
+        "exists": True,
+        "sha256": sha256_text(content),
+        "bytes": len(content.encode("utf-8")),
+    }
+
+
+def policy_records(root: Path) -> list[dict]:
+    return [file_record(root, path) for path in POLICY_FILES]
+
+
+def bundle_hash(records: list[dict]) -> str:
+    payload = json.dumps(records, ensure_ascii=False, sort_keys=True)
+    return sha256_text(payload)
+
+
+def latest_chronicle_entry(root: Path) -> str | None:
+    path = root / "wiki/_system/change-history.md"
+    if not path.exists():
+        return None
+
+    lines = read_text(path).splitlines()
+    entries = [line.strip() for line in lines if line.startswith("[")]
+    return entries[-1] if entries else None
+
+
+def output_json(payload: dict, as_json: bool) -> None:
+    if as_json:
+        print(json.dumps(payload, ensure_ascii=False, indent=2))
+        return
+
+    status = payload.get("status", "unknown")
+    print(f"status: {status}")
+
+    if "policy_bundle_version" in payload:
+        print(f"policy_bundle_version: {payload['policy_bundle_version']}")
+    if "policy_bundle_hash" in payload:
+        print(f"policy_bundle_hash: {payload['policy_bundle_hash']}")
+    if "latest_change_history_entry" in payload:
+        print(f"latest_change_history_entry: {payload['latest_change_history_entry']}")
+
+    if payload.get("issues"):
+        print("issues:")
+        for issue in payload["issues"]:
+            print(f"- {issue}")
+
+    if payload.get("files"):
+        print("files:")
+        for item in payload["files"]:
+            marker = "PASS" if item.get("exists") else "MISSING"
+            print(f"- {marker} {item['path']}")
+
+    if payload.get("content"):
+        print()
+        print(payload["content"])
+
+
+def cmd_decipher(args: argparse.Namespace) -> int:
+    root = repo_root()
+
+    if args.target == "policy":
+        records = policy_records(root)
+        issues = [f"missing policy file: {item['path']}" for item in records if not item["exists"]]
+        content_parts = []
+
+        if args.content:
+            for item in records:
+                if item["exists"]:
+                    rel = item["path"]
+                    content_parts.append(f"\n\n<!-- BEGIN {rel} -->\n")
+                    content_parts.append(read_text(root / rel))
+                    content_parts.append(f"\n<!-- END {rel} -->\n")
+
+        payload = {
+            "status": "pass" if not issues else "warn",
+            "command": "decipher policy",
+            "policy_bundle_version": POLICY_BUNDLE_VERSION,
+            "policy_bundle_hash": bundle_hash(records),
+            "latest_change_history_entry": latest_chronicle_entry(root),
+            "files": records,
+            "issues": issues,
+            "content": "".join(content_parts).strip() if args.content else None,
+        }
+        output_json(payload, args.json)
+        return 0 if not issues else 1
+
+    if args.target == "freshness":
+        records = policy_records(root)
+        issues = [f"missing policy file: {item['path']}" for item in records if not item["exists"]]
+        payload = {
+            "status": "pass" if not issues else "warn",
+            "command": "decipher freshness",
+            "policy_bundle_version": POLICY_BUNDLE_VERSION,
+            "policy_bundle_hash": bundle_hash(records),
+            "latest_change_history_entry": latest_chronicle_entry(root),
+            "needs_reload": bool(issues),
+            "issues": issues,
+        }
+        output_json(payload, args.json)
+        return 0 if not issues else 1
+
+    if args.target == "chronicle-head":
+        payload = {
+            "status": "pass",
+            "command": "decipher chronicle-head",
+            "latest_change_history_entry": latest_chronicle_entry(root),
+        }
+        output_json(payload, args.json)
+        return 0
+
+    raise SystemExit(f"unsupported decipher target: {args.target}")
+
+
+def cmd_probe(args: argparse.Namespace) -> int:
+    root = repo_root()
+
+    if args.target != "policy":
+        print(
+            f"probe {args.target!r} is planned but not implemented in the read-only scaffold",
+            file=sys.stderr,
+        )
+        return 2
+
+    required = POLICY_FILES + CATEGORY_INDEXES
+    records = [file_record(root, path) for path in required]
+    issues = [f"missing required file: {item['path']}" for item in records if not item["exists"]]
+
+    payload = {
+        "status": "pass" if not issues else "warn",
+        "command": "probe policy",
+        "checked_files": len(records),
+        "issues": issues,
+        "files": records,
+    }
+    output_json(payload, args.json)
+    return 0 if not issues else 1
+
+
+def planned_command(name: str) -> int:
+    print(f"hermes-runes {name} is planned but not implemented in M15.3 read-only scaffold")
+    return 2
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(prog="hermes-runes")
+    sub = parser.add_subparsers(dest="command", required=True)
+
+    decipher = sub.add_parser("decipher", help="deterministic policy/index reads")
+    decipher.add_argument("target", choices=["policy", "freshness", "chronicle-head"])
+    decipher.add_argument("--content", action="store_true", help="include policy file content")
+    decipher.add_argument("--json", action="store_true")
+
+    probe = sub.add_parser("probe", help="diagnostics and consistency checks")
+    probe.add_argument("target", choices=["policy", "indexes", "links", "objectives", "metadata", "lock", "retrieval", "context"])
+    probe.add_argument("--json", action="store_true")
+
+    sub.add_parser("forge", help="planned governed wiki write interface")
+    sub.add_parser("evoke", help="planned RAG recall alias/interface")
+    sub.add_parser("inscribe", help="planned import/embed/index lifecycle interface")
+
+    args = parser.parse_args()
+
+    if args.command == "decipher":
+        return cmd_decipher(args)
+    if args.command == "probe":
+        return cmd_probe(args)
+    if args.command in {"forge", "evoke", "inscribe"}:
+        return planned_command(args.command)
+
+    raise SystemExit(f"unsupported command: {args.command}")
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
