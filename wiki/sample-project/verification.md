@@ -64,3 +64,26 @@ Safety Notes:
 - M15.6 real-write is intentionally limited to sample content.
 - Real project namespaces must remain guarded until a separate enablement milestone.
 - Forge writer must not ingest generated manifests into RAG memory automatically.
+
+---
+
+## V-005: M15.8 Full Smoke Freeze
+
+Status: PASS
+
+Verified smoke suite:
+- M15.4b manifest helper smoke
+- M15.4b lock + manifest helper smoke
+- M15.5 create-flat dry-run smoke
+- M15.6a pre-write guard smoke
+- M15.6b real-write switch guard smoke
+- M15.6d real-write duplicate guard smoke
+- M15.7 namespace block smoke
+
+Verified behavior:
+- Dry-run mode does not create wiki notes.
+- Real-write requires double-confirm switches.
+- Duplicate path blocks second write.
+- `k6-freelancer` remains namespace-blocked.
+- Sample-project real-write remains limited to controlled smoke coverage.
+- All M15 governance baseline smoke tests passed together in one verification run.
