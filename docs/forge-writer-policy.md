@@ -1,8 +1,22 @@
 # Forge Writer Policy
 
-Status: M15.7c baseline
+Status: M15.8 frozen baseline
 
 This policy defines the allowed and blocked write behavior for the M15 forge writer baseline.
+
+## Baseline freeze
+
+M15.8 full smoke status: PASS
+
+Verified smoke coverage:
+
+- M15.4b manifest helper smoke
+- M15.4b lock + manifest helper smoke
+- M15.5 create-flat dry-run smoke
+- M15.6a pre-write guard smoke
+- M15.6b real-write switch guard smoke
+- M15.6d real-write duplicate guard smoke
+- M15.7 namespace block smoke
 
 ## Allowed in current baseline
 
