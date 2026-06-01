@@ -3,10 +3,14 @@ from __future__ import annotations
 import argparse
 import json
 import re
+from pathlib import Path
 
 from forge.file_lock import FileLock
 from forge.manifest_writer import write_manifest
 from forge.operation_id import new_operation_id
+
+
+ALLOWED_PROJECTS = {"sample-project", "k6-freelancer"}
 
 
 def slugify(text: str) -> str:
@@ -56,27 +60,56 @@ TBD.
     }
 
 
+def pre_write_guard(root: Path, plan: dict, project: str, execute: bool) -> dict:
+    planned_path = root / plan["planned_path"]
+    parent_dir = planned_path.parent
+
+    checks = {
+        "allowed_project": project in ALLOWED_PROJECTS,
+        "parent_dir_exists": parent_dir.exists(),
+        "planned_path_absent": not planned_path.exists(),
+        "execute_requested": execute,
+        "real_write_enabled": False,
+    }
+
+    return {
+        "checks": checks,
+        "ok_for_real_write": all([
+            checks["allowed_project"],
+            checks["parent_dir_exists"],
+            checks["planned_path_absent"],
+            checks["execute_requested"],
+            checks["real_write_enabled"],
+        ]),
+    }
+
+
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Forge flat note planner. Dry-run only.")
+    parser = argparse.ArgumentParser(description="Forge flat note planner. Dry-run by default.")
     parser.add_argument("--project", required=True)
     parser.add_argument("--title", required=True)
     parser.add_argument("--domain", required=True)
     parser.add_argument("--note-type", required=True)
     parser.add_argument("--manifest-dir", default="tmp/forge-manifests")
     parser.add_argument("--lock-path", default="tmp/forge.lock")
+    parser.add_argument("--execute", action="store_true", help="Request real-write mode. Currently guarded off.")
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args()
 
+    root = Path.cwd()
     op_id = new_operation_id()
     lock = FileLock(args.lock_path)
 
     lock.acquire(owner=op_id)
     try:
         plan = build_note_plan(args.project, args.title, args.domain, args.note_type)
+        guard = pre_write_guard(root, plan, args.project, args.execute)
+        plan["guard"] = guard
+
         manifest_path = write_manifest(
             manifest_dir=args.manifest_dir,
             operation_id=op_id,
-            action="forge.create-flat.dry-run",
+            action="forge.create-flat.pre-write-guard",
             payload=plan,
         )
 
