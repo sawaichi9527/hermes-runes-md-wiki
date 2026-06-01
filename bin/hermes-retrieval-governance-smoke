@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-runes-md-wiki}"
+
+cd "$ROOT"
+
+exec python tools/importer/retrieval_governance_smoke.py "$@"
