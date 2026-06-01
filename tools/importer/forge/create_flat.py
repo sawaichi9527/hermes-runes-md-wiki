@@ -12,6 +12,7 @@ from forge.operation_id import new_operation_id
 
 ALLOWED_PROJECTS = {"sample-project", "k6-freelancer"}
 REAL_WRITE_PROJECTS = {"sample-project"}
+BLOCKED_REAL_WRITE_PROJECTS = ALLOWED_PROJECTS - REAL_WRITE_PROJECTS
 
 
 def slugify(text: str) -> str:
@@ -70,11 +71,14 @@ def pre_write_guard(
 ) -> dict:
     planned_path = root / plan["planned_path"]
     parent_dir = planned_path.parent
-    real_write_enabled = execute and allow_real_write and project in REAL_WRITE_PROJECTS
+    real_write_project_allowed = project in REAL_WRITE_PROJECTS
+    real_write_blocked_by_namespace = project in BLOCKED_REAL_WRITE_PROJECTS
+    real_write_enabled = execute and allow_real_write and real_write_project_allowed
 
     checks = {
         "allowed_project": project in ALLOWED_PROJECTS,
-        "real_write_project_allowed": project in REAL_WRITE_PROJECTS,
+        "real_write_project_allowed": real_write_project_allowed,
+        "real_write_blocked_by_namespace": real_write_blocked_by_namespace,
         "parent_dir_exists": parent_dir.exists(),
         "planned_path_absent": not planned_path.exists(),
         "execute_requested": execute,
