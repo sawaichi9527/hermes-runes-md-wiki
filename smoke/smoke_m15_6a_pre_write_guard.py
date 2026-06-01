@@ -23,7 +23,7 @@ def main() -> int:
             sys.executable,
             str(ROOT / "tools" / "importer" / "forge" / "create_flat.py"),
             "--project", "sample-project",
-            "--title", "Sample Project",
+            "--title", "M15 6a Guard Smoke",
             "--domain", "project",
             "--note-type", "overview",
             "--manifest-dir", str(manifest_dir),
