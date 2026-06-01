@@ -1,8 +1,19 @@
 # Importer Preview Policy
 
-Status: M16.2 planning baseline
+Status: M16.5 read-only preview baseline
 
-This policy defines the desired preview behavior before importer/index execution.
+This policy defines the preview behavior before importer/index execution.
+
+## Baseline verification
+
+M16.1 through M16.4 status: PASS
+
+Verified baseline:
+
+- M16.1 importer trigger policy: PASS
+- M16.2 importer preview policy: PASS
+- M16.3 importer_preview.py read-only helper: PASS
+- M16.4 changed-files preview smoke: PASS
 
 ## Goal
 
@@ -18,9 +29,16 @@ The preview stage must help answer:
 
 ## Current baseline
 
-No automatic importer preview is implemented yet.
+`tools/importer/importer_preview.py` exists as a read-only helper.
 
-M16.2 is a planning baseline only.
+Supported modes:
+
+- `--changed-files`
+- `--project <name>`
+- `--path <markdown-path>`
+- `--json`
+
+The helper reports preview decisions only.
 
 ## Desired preview inputs
 
@@ -33,14 +51,16 @@ Possible preview inputs:
 
 ## Desired preview output
 
-Preview output should include:
+Preview output includes:
 
 - candidate file path
 - project namespace
 - include / exclude decision
 - reason for decision
-- expected importer mode
-- whether index update would be required later
+- preview-only mode
+- DB write flag
+- chunk creation flag
+- index update flag
 
 ## Include rules
 
@@ -52,7 +72,6 @@ A file may be included only if:
 - It is not a manifest file.
 - It is not under `tmp/`.
 - It is not an observation log.
-- It has been human-reviewed.
 
 ## Exclude rules
 
@@ -63,7 +82,6 @@ A file must be excluded if:
 - It is under `tmp/`.
 - It is a generated manifest.
 - It is an observation log.
-- It contains obvious secret placeholders or credentials.
 - It belongs to a blocked namespace.
 
 ## Safety invariants
@@ -74,19 +92,25 @@ A file must be excluded if:
 - Preview must not commit or push changes.
 - Preview must be safe to run repeatedly.
 
-## Future helper direction
-
-A future helper may be added, for example:
+## Helper usage
 
 ```bash
-python tools/importer/importer_preview.py --changed-files
+python tools/importer/importer_preview.py --changed-files --json
 ```
 
-Potential modes:
+```bash
+python tools/importer/importer_preview.py \
+  --path wiki/sample-project/project-first-real-write-overview.md \
+  --json
+```
 
-- `--changed-files`
-- `--project <name>`
-- `--path <markdown-path>`
-- `--json`
+## Future integration gates
 
-This helper should remain read-only until separately approved.
+Before moving beyond preview-only behavior, separately approve:
+
+- manual importer wrapper
+- changed-file import scope
+- importer dry-run mode
+- index update gating
+- rollback procedure
+- retrieval regression smoke
