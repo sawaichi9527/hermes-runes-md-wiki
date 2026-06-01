@@ -1,0 +1,185 @@
+# Wiki Operation Policy
+
+Status: P0 baseline
+
+## Purpose
+
+This document defines governed operations for the `wiki/` Markdown source-of-truth layer.
+
+The goal is:
+
+- keep local personal RAG simple
+- keep wiki structure understandable
+- prevent accidental corruption
+- preserve deterministic retrieval behavior
+- preserve relationship consistency
+
+## Structural Change vs Content Update
+
+### Structural change
+
+Structural changes affect wiki relationships.
+
+Examples:
+
+- create file
+- create objective namespace
+- create objective file
+- rename file
+- move file
+- archive file
+- delete file
+- promote flat file to objective
+- split file
+- merge files
+- index repair
+
+Structural changes may require:
+
+- index update
+- objective README update
+- change-history update
+- import/index refresh
+- consistency probes
+
+### Content update
+
+Content updates modify existing memory content without changing structure.
+
+Examples:
+
+- update Canonical Memory
+- update Summary
+- update Evidence section
+- update Open Questions
+- update Last reviewed
+
+Content updates normally do not require structural index updates.
+
+## Forge Vocabulary
+
+| Operation | Status |
+|---|---|
+| create-flat | P0 |
+| create-objective | P0 |
+| create-objective-file | P0 |
+| update-content | P0 |
+| rename | P0 |
+| archive | P0 |
+| move | Reserved / P1 |
+| promote | Reserved / P1 |
+| restore | Reserved / P1 |
+| purge | Reserved / P1 |
+| resolve-conflict | Reserved / P1 |
+| split | Reserved / P2 |
+| merge | Reserved / P2 |
+
+## Flat-first Naming
+
+Baseline format:
+
+```text
+wiki/<category>-<topic>-<note_type>.md
+```
+
+Baseline categories:
+
+```text
+specs
+engineering
+products
+operations
+references
+personal
+```
+
+## Objective Namespace
+
+Long-running engineering/project/domain knowledge may use:
+
+```text
+wiki/<objective-slug>/
+```
+
+Every objective namespace must include:
+
+```text
+wiki/<objective-slug>/README.md
+```
+
+Objective README files act as local relationship indexes.
+
+## Index Consistency
+
+Structural changes should update affected:
+
+- category indexes
+- long-term-objectives index
+- objective README references
+- change-history
+
+Broken relationships should be detectable by `probe`.
+
+## Path Safety
+
+Governed operations must reject:
+
+- `../`
+- absolute paths
+- symlink escape
+- writes outside repository wiki scope
+
+Reserved namespaces:
+
+```text
+wiki/_system/
+```
+
+must not be treated as normal user knowledge.
+
+## Change History
+
+Structural changes should append entries to:
+
+```text
+wiki/_system/change-history.md
+```
+
+Normal retrieval and ordinary answers must not append change-history.
+
+## Approval Boundary
+
+User approval is required before:
+
+- creating objective namespace
+- creating new flat-first memory
+- archiving/deleting memory
+- importing external memory as canonical memory
+- resolving memory conflicts
+
+## Probe Expectations
+
+Consistency probes should eventually support:
+
+- missing index references
+- missing objective references
+- broken links
+- invalid metadata references
+- invalid path layout
+- missing required policy files
+
+## Non-goals
+
+This policy is intentionally simpler than enterprise CMS systems.
+
+Hermes Runes should remain:
+
+- local-first
+- personal-RAG-oriented
+- inspectable
+- Git-friendly
+- easy to maintain
+
+## Change Log
+
+- 2026-06-01: Initial wiki operation policy.
