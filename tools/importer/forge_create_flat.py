@@ -21,7 +21,18 @@ def slugify(title: str) -> str:
     return text or "untitled"
 
 
-def build_content(*, title: str, project: str, operation_id: str, body: str) -> str:
+def build_content(
+    *,
+    title: str,
+    project: str,
+    operation_id: str,
+    body: str,
+    proposal_type: str,
+    proposed_by: str,
+    provenance: str,
+    confidence: str,
+    trust_class: str,
+) -> str:
     body = body.strip() or "TODO: fill content."
 
     return f"""---
@@ -30,6 +41,11 @@ project: {project}
 status: draft
 source: forge.create-flat
 operation_id: {operation_id}
+proposal_type: {proposal_type}
+proposed_by: {proposed_by}
+provenance: {provenance}
+confidence: {confidence}
+trust_class: {trust_class}
 ---
 
 # {title}
@@ -44,6 +60,11 @@ def main() -> int:
     parser.add_argument("--project", required=True)
     parser.add_argument("--title", required=True)
     parser.add_argument("--body", default="")
+    parser.add_argument("--proposal-type", default="manual_note")
+    parser.add_argument("--proposed-by", default="human")
+    parser.add_argument("--provenance", default="manual_cli")
+    parser.add_argument("--confidence", default="1.0")
+    parser.add_argument("--trust-class", default="human-reviewed")
     parser.add_argument("--root", default=str(Path.cwd()))
 
     parser.add_argument("--dry-run", action="store_true")
@@ -76,6 +97,11 @@ def main() -> int:
         project=args.project,
         operation_id=op_id,
         body=args.body,
+        proposal_type=args.proposal_type,
+        proposed_by=args.proposed_by,
+        provenance=args.provenance,
+        confidence=args.confidence,
+        trust_class=args.trust_class,
     )
 
     if args.dry_run:
@@ -90,6 +116,11 @@ def main() -> int:
                 "title": args.title,
                 "slug": slug,
                 "content_chars": len(content),
+                "proposal_type": args.proposal_type,
+                "proposed_by": args.proposed_by,
+                "provenance": args.provenance,
+                "confidence": args.confidence,
+                "trust_class": args.trust_class,
             },
         )
 
@@ -127,6 +158,11 @@ def main() -> int:
                 "title": args.title,
                 "slug": slug,
                 "content_chars": len(content),
+                "proposal_type": args.proposal_type,
+                "proposed_by": args.proposed_by,
+                "provenance": args.provenance,
+                "confidence": args.confidence,
+                "trust_class": args.trust_class,
             },
         )
 
