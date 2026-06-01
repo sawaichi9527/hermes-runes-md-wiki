@@ -46,6 +46,23 @@ Hermes-agent must not directly:
 - write PostgreSQL / FTS / pgvector records
 - mutate importer artifacts or trusted memory state
 
+### Canonical P0 Markdown architecture
+
+P0 / trial run must use the canonical Markdown architecture files defined by this roadmap, not incidental local wiki documents accumulated during development.
+
+Canonical P0 / trial run files:
+
+```text
+wiki/hermes_runes_index.md
+wiki/_system/runes_shield_contract.md
+wiki/_system/runes_invocation_policy.md
+wiki/_system/runes_agent_guidance.md
+```
+
+Other local wiki files may exist and may be useful references, but they are not required P0 bootstrap dependencies unless explicitly promoted into this canonical architecture.
+
+Agents must not infer operational behavior from arbitrary wiki files.
+
 ### P0 allowed agent-facing capabilities
 
 The initial Runes Shield interface should expose only small, stable, JSON-friendly commands:
@@ -99,9 +116,11 @@ Goal:
 - Replace earlier Facade / Gate / Field naming with Runes Shield.
 - Document allowed and forbidden Hermes-agent behaviors.
 - Document human-only approval boundaries.
+- Establish the canonical P0 Markdown entry path instead of relying on incidental local wiki files.
 
 Planned files:
 
+- `wiki/hermes_runes_index.md`
 - `wiki/_system/runes_shield_contract.md`
 - `wiki/_system/runes_invocation_policy.md`
 - `wiki/_system/runes_agent_guidance.md`
@@ -110,6 +129,8 @@ Success criteria:
 
 - Hermes-agent can understand the Runes boundary without reading internal implementation code.
 - The contract clearly states that Hermes-agent must not directly operate internal wiki files, proposal states, database records, or importer artifacts.
+- P0 / trial run bootstrap can start from `wiki/hermes_runes_index.md` and the three canonical Runes Shield `_system` files.
+- P0 behavior does not depend on historical or incidental local wiki documents unless they are explicitly promoted into the canonical architecture.
 
 #### M21.2 Runes Shield capabilities / guidance CLI
 
@@ -229,6 +250,7 @@ M21 P0 is complete when Hermes-agent can:
 4. Create governed proposals only after user consent.
 5. Read proposal status and trusted recall evidence through Runes interfaces.
 6. Avoid direct manipulation of internal Markdown files, proposal state, importer artifacts, and database content.
-7. Pass the multi-proposal trial run with approved / rejected / draft isolation verified.
+7. Bootstrap from `wiki/hermes_runes_index.md` and the canonical Runes Shield `_system` files without depending on incidental local wiki documents.
+8. Pass the multi-proposal trial run with approved / rejected / draft isolation verified.
 
 ---
