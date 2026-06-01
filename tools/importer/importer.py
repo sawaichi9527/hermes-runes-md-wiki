@@ -367,6 +367,48 @@ def schema_mode(conn) -> str:
     raise RuntimeError("No documents table found in public or memory schema")
 
 
+
+def deindex_document_by_path(cur, project: str, rel_path: str) -> int:
+    cur.execute(
+        """
+        SELECT id
+        FROM public.documents
+        WHERE project = %s
+          AND source_path = %s;
+        """,
+        (project, rel_path),
+    )
+
+    row = cur.fetchone()
+
+    if row is None:
+        return 0
+
+    doc_id = row[0]
+
+    cur.execute(
+        """
+        DELETE FROM public.chunks
+        WHERE document_id = %s;
+        """,
+        (doc_id,),
+    )
+
+    cur.execute(
+        """
+        UPDATE public.documents
+        SET
+          is_deleted = true,
+          deleted_at = now(),
+          updated_at = now()
+        WHERE id = %s;
+        """,
+        (doc_id,),
+    )
+
+    return 1
+
+
 def import_public(cur, project: str, rel_path: str, title: str, checksum: str, normalized: str, md: Path) -> tuple[int, int, str]:
     cur.execute(
         """
@@ -683,11 +725,18 @@ def main() -> None:
                 )
 
                 if not allowed:
+                    deindexed = deindex_document_by_path(
+                        cur,
+                        project,
+                        rel_path,
+                    )
+
                     print(
                         f"skipped-forge-policy: "
                         f"project={project} "
                         f"path={rel_path} "
-                        f"reason={reason}"
+                        f"reason={reason} "
+                        f"deindexed={deindexed}"
                     )
                     continue
 
