@@ -11,6 +11,7 @@ from forge.operation_id import new_operation_id
 
 
 ALLOWED_PROJECTS = {"sample-project", "k6-freelancer"}
+REAL_WRITE_PROJECTS = {"sample-project"}
 
 
 def slugify(text: str) -> str:
@@ -69,10 +70,11 @@ def pre_write_guard(
 ) -> dict:
     planned_path = root / plan["planned_path"]
     parent_dir = planned_path.parent
-    real_write_enabled = execute and allow_real_write
+    real_write_enabled = execute and allow_real_write and project in REAL_WRITE_PROJECTS
 
     checks = {
         "allowed_project": project in ALLOWED_PROJECTS,
+        "real_write_project_allowed": project in REAL_WRITE_PROJECTS,
         "parent_dir_exists": parent_dir.exists(),
         "planned_path_absent": not planned_path.exists(),
         "execute_requested": execute,
@@ -84,12 +86,25 @@ def pre_write_guard(
         "checks": checks,
         "ok_for_real_write": all([
             checks["allowed_project"],
+            checks["real_write_project_allowed"],
             checks["parent_dir_exists"],
             checks["planned_path_absent"],
             checks["execute_requested"],
             checks["allow_real_write_requested"],
             checks["real_write_enabled"],
         ]),
+    }
+
+
+def apply_real_write(root: Path, plan: dict) -> dict:
+    planned_path = root / plan["planned_path"]
+    planned_path.write_text(plan["body_preview"], encoding="utf-8")
+    plan["wiki_write"] = True
+    plan["note_create"] = True
+    plan["index_update"] = False
+    return {
+        "written_path": str(planned_path.relative_to(root)),
+        "index_update": False,
     }
 
 
@@ -102,7 +117,7 @@ def main() -> int:
     parser.add_argument("--manifest-dir", default="tmp/forge-manifests")
     parser.add_argument("--lock-path", default="tmp/forge.lock")
     parser.add_argument("--execute", action="store_true", help="Request real-write mode.")
-    parser.add_argument("--allow-real-write", action="store_true", help="Second confirmation switch for future writes.")
+    parser.add_argument("--allow-real-write", action="store_true", help="Second confirmation switch for sample-project writes.")
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args()
 
@@ -122,18 +137,27 @@ def main() -> int:
         )
         plan["guard"] = guard
 
+        write_result = None
+        mode = "dry-run"
+        action = "forge.create-flat.real-write-switch-guard"
+        if guard["ok_for_real_write"]:
+            write_result = apply_real_write(root, plan)
+            mode = "real-write"
+            action = "forge.create-flat.real-write"
+
         manifest_path = write_manifest(
             manifest_dir=args.manifest_dir,
             operation_id=op_id,
-            action="forge.create-flat.real-write-switch-guard",
+            action=action,
             payload=plan,
         )
 
         result = {
             "status": "PASS",
-            "mode": "dry-run",
+            "mode": mode,
             "operation_id": op_id,
             "manifest_path": str(manifest_path),
+            "write_result": write_result,
             "plan": plan,
         }
 
