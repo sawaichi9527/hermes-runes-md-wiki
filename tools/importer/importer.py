@@ -14,6 +14,42 @@ from db_config import build_conninfo
 ROOT = resolve_root()
 WIKI_ROOT = ROOT / "wiki"
 
+
+import re
+
+
+FORGE_STATUS_PATTERN = re.compile(
+    r"^status:\s*(.+?)\s*$",
+    re.IGNORECASE | re.MULTILINE,
+)
+
+
+def should_ingest_forge_doc(path_str: str, content: str) -> tuple[bool, str]:
+    """
+    P0 forge governance rule.
+
+    forge-inbox:
+      approved => ingest
+      draft => skip
+      missing status => skip
+    """
+
+    if "/forge-inbox/" not in path_str:
+        return True, "non-forge-path"
+
+    match = FORGE_STATUS_PATTERN.search(content)
+
+    if not match:
+        return False, "forge-missing-status"
+
+    status = match.group(1).strip().lower()
+
+    if status == "approved":
+        return True, "forge-approved"
+
+    return False, f"forge-status-{status}"
+
+
 PARSER_NAME = "markdown_conservative_recursive"
 PARSER_VERSION = "0.3.0-m3.1"
 
@@ -572,9 +608,24 @@ def main() -> None:
         with conn.cursor() as cur:
             for md in md_files:
                 text = md.read_text(encoding="utf-8")
-                normalized = normalize_markdown(text)
 
                 rel_path = str(md.relative_to(ROOT))
+
+                allowed, reason = should_ingest_forge_doc(
+                    rel_path,
+                    text,
+                )
+
+                if not allowed:
+                    print(
+                        f"skipped-forge-policy: "
+                        f"project={project} "
+                        f"path={rel_path} "
+                        f"reason={reason}"
+                    )
+                    continue
+
+                normalized = normalize_markdown(text)
                 project = guess_project(md)
                 title = title_from_markdown(normalized, md.stem)
                 checksum = sha256_text(normalized)
