@@ -312,3 +312,38 @@ Next:
 
 - M25 Curated promotion patch preview / dry-run
 
+
+---
+
+## M25 Curated Promotion Patch Preview / Dry-run
+
+Status: DESIGN LOCK / DRY-RUN CLI BASELINE
+
+Verification record:
+
+- `wiki/k6-freelancer/verification-m25-curated-promotion-preview.md`
+
+Goal:
+
+Define and implement a preview-only curated promotion patch model that lets Hermes-agent recommend Markdown wiki changes without mutating trusted memory.
+
+Completed milestones:
+
+- M25.1 Curated Promotion Patch Design Lock: PASS
+- M25.2 Promotion Patch Dry-run CLI: PASS
+
+Locked boundaries:
+
+- proposal is not trusted memory
+- patch preview is not wiki mutation
+- forge preview is not promotion execution
+- no trusted wiki mutation
+- no proposal state mutation
+- no database mutation
+- no importer mutation
+- no autonomous promotion execution
+
+Next:
+
+- M25.3 Promotion patch smoke test
+

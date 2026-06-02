@@ -15,6 +15,7 @@ try:
     from offer_policy import classify_offer_intent, decision_to_dict
     from proposal_attunement_m23_2 import attunement_dry_run, print_readable_preview
     from attunement_trail_m24_2 import build_attunement_trail_dry_run, print_trail_preview, render_trail_markdown_preview
+    from promotion_patch_m25_2 import build_promotion_patch_preview, print_patch_preview, render_patch_markdown_preview
     from proposal_hygiene_m22_3 import hygiene_report
     from proposal_reader_m22_2 import list_proposals, show_proposal
     from proposal_writer_m22_1 import write_proposal
@@ -23,6 +24,7 @@ except ImportError:  # pragma: no cover
     from tools.runes.offer_policy import classify_offer_intent, decision_to_dict
     from tools.runes.proposal_attunement_m23_2 import attunement_dry_run, print_readable_preview
     from tools.runes.attunement_trail_m24_2 import build_attunement_trail_dry_run, print_trail_preview, render_trail_markdown_preview
+    from tools.runes.promotion_patch_m25_2 import build_promotion_patch_preview, print_patch_preview, render_patch_markdown_preview
     from tools.runes.proposal_hygiene_m22_3 import hygiene_report
     from tools.runes.proposal_reader_m22_2 import list_proposals, show_proposal
     from tools.runes.proposal_writer_m22_1 import write_proposal
@@ -159,6 +161,7 @@ def capabilities_payload(root: Path) -> dict[str, Any]:
                 "proposal_cleanup_plan",
                 "proposal_attunement_dry_run",
                 "attunement_trail_dry_run",
+                "promotion_patch_dry_run",
             ],
             "implemented_in_m21_3": ["capabilities", "guidance", "offer"],
             "implemented_in_m22_1": ["propose"],
@@ -168,6 +171,7 @@ def capabilities_payload(root: Path) -> dict[str, Any]:
             "implemented_in_m23_3": ["proposal_attunement_readable_preview"],
             "implemented_in_m24_2": ["attunement_trail_dry_run"],
             "implemented_in_m24_3": ["attunement_trail_markdown_preview"],
+            "implemented_in_m25_2": ["promotion_patch_dry_run"],
             "capabilities": [
                 {"name": "capabilities", "command": "runes capabilities --json", "write": False},
                 {"name": "guidance", "command": "runes guidance --json", "write": False},
@@ -181,6 +185,7 @@ def capabilities_payload(root: Path) -> dict[str, Any]:
                 {"name": "proposal_reject", "command": "runes proposal reject --id '<proposal_id>' --dry-run --json", "write": False, "p0_status": "m23_3_readable_dry_run_implemented"},
                 {"name": "proposal_supersede", "command": "runes proposal supersede --id '<old_id>' --superseded-by '<new_id>' --dry-run --json", "write": False, "p0_status": "m23_3_readable_dry_run_implemented"},
                 {"name": "attunement_trail", "command": "runes trail attunement --action attune --id '<proposal_id>' --dry-run --json|--markdown", "write": False, "p0_status": "m24_2_dry_run_implemented"},
+                {"name": "promotion_preview", "command": "runes promotion preview --proposal-id '<proposal_id>' --target-path wiki/k6-freelancer/services.md --heading '<heading>' --insert-text '<markdown>' --dry-run --json|--markdown", "write": False, "p0_status": "m25_2_dry_run_implemented"},
                 {"name": "recall", "command": "runes recall --json", "write": False, "p0_status": "planned_wrapper_not_implemented_in_m22_5"},
                 {"name": "smoke", "command": "runes smoke --json", "write": False, "p0_status": "planned_wrapper_not_implemented_in_m22_5"},
             ],
@@ -194,6 +199,7 @@ def capabilities_payload(root: Path) -> dict[str, Any]:
                 "M23.3 adds human-readable Runes Attunement dry-run previews.",
                 "M24.2 adds Runes Attunement trail dry-run previews.",
                 "M24.3 adds Markdown trail event previews.",
+                "M25.2 adds curated promotion patch dry-run previews.",
                 "Draft proposals are not trusted memory.",
             ],
         }
@@ -293,6 +299,19 @@ def build_parser() -> argparse.ArgumentParser:
     propose.add_argument("--output-root")
     propose.add_argument("--json", action="store_true")
 
+    promotion = subparsers.add_parser("promotion")
+    promotion_sub = promotion.add_subparsers(dest="promotion_command", required=True)
+    promotion_preview = promotion_sub.add_parser("preview")
+    promotion_preview.add_argument("--project", default="k6-freelancer")
+    promotion_preview.add_argument("--proposal-id", required=True)
+    promotion_preview.add_argument("--target-path", required=True)
+    promotion_preview.add_argument("--heading", required=True)
+    promotion_preview.add_argument("--insert-text", required=True)
+    promotion_preview.add_argument("--reason")
+    promotion_preview.add_argument("--dry-run", action="store_true", required=True)
+    promotion_preview.add_argument("--json", action="store_true")
+    promotion_preview.add_argument("--markdown", action="store_true")
+
     trail = subparsers.add_parser("trail")
     trail_sub = trail.add_subparsers(dest="trail_command", required=True)
 
@@ -370,6 +389,25 @@ def main() -> int:
                 print(f"reason={result.reason}")
             print("Use --json for details.")
         return 0 if result.status == "PASS" else 2
+    if args.command == "promotion":
+        if args.promotion_command == "preview":
+            payload = build_promotion_patch_preview(
+                root=root,
+                project=args.project,
+                proposal_id=args.proposal_id,
+                target_path=args.target_path,
+                heading=args.heading,
+                insert_text=args.insert_text,
+                reason=args.reason,
+            )
+            if args.json:
+                print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
+            elif args.markdown:
+                print(render_patch_markdown_preview(payload))
+            else:
+                print_patch_preview(payload)
+            return 0 if payload.get("status") == "PASS" else 2
+
     if args.command == "trail":
         if args.trail_command == "attunement":
             payload = build_attunement_trail_dry_run(
