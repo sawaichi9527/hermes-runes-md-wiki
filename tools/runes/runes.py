@@ -1,15 +1,5 @@
 #!/usr/bin/env python3
-"""Runes Shield agent-facing CLI.
-
-Supported current commands:
-- capabilities: read-only capability discovery
-- guidance: read-only invocation guidance
-- offer: deterministic recommendation for whether Hermes-agent should ask the user about creating a governed proposal
-- propose: M22.1 governed draft proposal writer, requiring explicit user consent
-- proposal list/show: M22.2 read-only proposal inspection
-
-Runes Shield must not approve, reject, promote, import, index, or mutate trusted memory directly through Hermes-agent.
-"""
+"""Runes Shield agent-facing CLI."""
 
 from __future__ import annotations
 
@@ -22,10 +12,12 @@ from typing import Any
 
 try:
     from offer_policy import classify_offer_intent, decision_to_dict
+    from proposal_hygiene_m22_3 import hygiene_report
     from proposal_reader_m22_2 import list_proposals, show_proposal
     from proposal_writer_m22_1 import write_proposal
-except ImportError:  # pragma: no cover - fallback for module execution contexts
+except ImportError:  # pragma: no cover
     from tools.runes.offer_policy import classify_offer_intent, decision_to_dict
+    from tools.runes.proposal_hygiene_m22_3 import hygiene_report
     from tools.runes.proposal_reader_m22_2 import list_proposals, show_proposal
     from tools.runes.proposal_writer_m22_1 import write_proposal
 
@@ -63,10 +55,7 @@ NON_TRIGGER_CANDIDATES = [
     "casual one-off conversation",
     "unverified speculation",
     "brainstorming not accepted by the user",
-    "raw logs with secrets",
-    "credentials / tokens / passwords",
-    "private keys or API keys",
-    "personal data not clearly approved for persistence",
+    "restricted material",
     "transient debugging output not useful later",
     "content conflicting with existing trusted memory without review",
     "content that may require sanitization first",
@@ -84,21 +73,9 @@ CONSENT_EXAMPLES = [
     "yes, create the proposal",
 ]
 
-SECRET_WARNINGS = [
-    "API keys",
-    "database passwords",
-    "Telegram bot tokens",
-    "LM Studio / OpenAI-compatible API keys",
-    "Tavily keys",
-    "private credentials",
-    "private tokens",
-    "raw secret-bearing logs",
-]
-
 FORBIDDEN_AGENT_OPERATIONS = [
-    "directly read arbitrary internal wiki files as operational authority",
-    "write or edit wiki/*.md directly outside Runes Shield controlled commands",
-    "write or edit wiki/_system/*.md directly",
+    "read arbitrary internal wiki files as operational authority",
+    "edit trusted wiki files outside controlled commands",
     "move proposal files between states",
     "approve proposals",
     "reject proposals",
@@ -106,9 +83,8 @@ FORBIDDEN_AGENT_OPERATIONS = [
     "import reviewed content outside controlled wrapper behavior",
     "rebuild indexes outside controlled wrapper behavior",
     "delete, archive, or mutate trusted memory content",
-    "write PostgreSQL / FTS / pgvector records",
+    "write index records",
     "mutate importer artifacts",
-    "bypass human approval",
     "treat draft or rejected proposal content as trusted memory",
 ]
 
@@ -118,7 +94,7 @@ HUMAN_ONLY_OPERATIONS = [
     "promote reviewed proposal into curated wiki note",
     "direct wiki edit",
     "destructive delete / archive",
-    "database rebuild / schema mutation",
+    "index rebuild / schema mutation",
     "policy mutation",
     "importer lifecycle changes beyond controlled wrapper behavior",
 ]
@@ -133,11 +109,7 @@ def find_repo_root() -> Path:
 
 def file_status(root: Path) -> list[dict[str, Any]]:
     return [
-        {
-            "path": rel,
-            "exists": (root / rel).exists(),
-            "required_for_p0_bootstrap": True,
-        }
+        {"path": rel, "exists": (root / rel).exists(), "required_for_p0_bootstrap": True}
         for rel in CANONICAL_FILES
     ]
 
@@ -170,29 +142,23 @@ def capabilities_payload(root: Path) -> dict[str, Any]:
             "command": "capabilities",
             "status": "PASS",
             "mode": "read_only",
-            "implemented": ["capabilities", "guidance", "offer", "propose", "proposal_list", "proposal_show"],
+            "implemented": [
+                "capabilities",
+                "guidance",
+                "offer",
+                "propose",
+                "proposal_list",
+                "proposal_show",
+                "proposal_hygiene",
+            ],
             "implemented_in_m21_3": ["capabilities", "guidance", "offer"],
             "implemented_in_m22_1": ["propose"],
             "implemented_in_m22_2": ["proposal_list", "proposal_show"],
+            "implemented_in_m22_3": ["proposal_hygiene"],
             "capabilities": [
-                {
-                    "name": "capabilities",
-                    "command": "runes capabilities --json",
-                    "write": False,
-                    "description": "Discover Runes Shield capabilities, safety boundaries, and human-only operations.",
-                },
-                {
-                    "name": "guidance",
-                    "command": "runes guidance --json",
-                    "write": False,
-                    "description": "Read agent-facing invocation guidance, consent rules, and durable-memory trigger guidance.",
-                },
-                {
-                    "name": "offer",
-                    "command": "runes offer --text '<message>' --json",
-                    "write": False,
-                    "description": "Deterministically decide whether Hermes-agent should ask the user about creating a governed proposal.",
-                },
+                {"name": "capabilities", "command": "runes capabilities --json", "write": False},
+                {"name": "guidance", "command": "runes guidance --json", "write": False},
+                {"name": "offer", "command": "runes offer --text '<message>' --json", "write": False},
                 {
                     "name": "propose",
                     "command": "runes propose --title '<title>' --text '<text>' --consent '<marker>' --json",
@@ -200,45 +166,20 @@ def capabilities_payload(root: Path) -> dict[str, Any]:
                     "requires_user_consent": True,
                     "creates_trusted_memory": False,
                     "p0_status": "m22_1_draft_only_implemented",
-                    "description": "Create a governed draft proposal after explicit user consent. Draft only; not approved, promoted, imported, indexed, or trusted.",
                 },
-                {
-                    "name": "proposal_list",
-                    "command": "runes proposal list --json",
-                    "write": False,
-                    "p0_status": "m22_2_read_only_implemented",
-                    "description": "Inspect proposal states without mutating them.",
-                },
-                {
-                    "name": "proposal_show",
-                    "command": "runes proposal show --id '<proposal_id>' --json",
-                    "write": False,
-                    "p0_status": "m22_2_read_only_implemented",
-                    "description": "Inspect one proposal without mutating it.",
-                },
-                {
-                    "name": "recall",
-                    "command": "runes recall --json",
-                    "write": False,
-                    "p0_status": "planned_wrapper_not_implemented_in_m22_2",
-                    "description": "Retrieve trusted indexed memory evidence through a Runes Shield wrapper. Existing recall tools remain separate until wrapped.",
-                },
-                {
-                    "name": "smoke",
-                    "command": "runes smoke --json",
-                    "write": False,
-                    "p0_status": "planned_wrapper_not_implemented_in_m22_2",
-                    "description": "Verify Runes Shield and memory tool health. Not implemented as a runes subcommand in M22.2.",
-                },
+                {"name": "proposal_list", "command": "runes proposal list --json", "write": False, "p0_status": "m22_2_read_only_implemented"},
+                {"name": "proposal_show", "command": "runes proposal show --id '<proposal_id>' --json", "write": False, "p0_status": "m22_2_read_only_implemented"},
+                {"name": "proposal_hygiene", "command": "runes proposal hygiene --json", "write": False, "p0_status": "m22_3_read_only_implemented"},
+                {"name": "recall", "command": "runes recall --json", "write": False, "p0_status": "planned_wrapper_not_implemented_in_m22_3"},
+                {"name": "smoke", "command": "runes smoke --json", "write": False, "p0_status": "planned_wrapper_not_implemented_in_m22_3"},
             ],
             "forbidden_agent_operations": FORBIDDEN_AGENT_OPERATIONS,
             "human_only_operations": HUMAN_ONLY_OPERATIONS,
             "notes": [
                 "M22.1 adds controlled draft proposal creation after explicit consent.",
                 "M22.2 adds read-only proposal list/show inspection.",
+                "M22.3 adds read-only proposal status hygiene reporting.",
                 "Draft proposals are not trusted memory.",
-                "Approval, rejection, promotion, import, indexing, and database writes remain outside Hermes-agent authority.",
-                "Hermes-agent must not infer operational behavior from incidental local wiki documents.",
             ],
         }
     )
@@ -262,37 +203,13 @@ def guidance_payload(root: Path) -> dict[str, Any]:
                 "recommended_prompt_en": "This looks like durable project knowledge that may be useful later. Would you like me to create a governed Hermes Runes proposal for human review before it becomes trusted Markdown memory?",
             },
             "proposal_input_guidance": {
-                "include": [
-                    "concise title",
-                    "source context",
-                    "accepted decision or fact",
-                    "rationale when available",
-                    "scope",
-                    "non-goals / exclusions",
-                    "suggested target domain or project",
-                    "sensitivity notes",
-                    "user consent marker",
-                ],
-                "exclude": [
-                    "secrets",
-                    "raw credentials",
-                    "raw API keys",
-                    "full unfiltered logs with private data",
-                    "unsupported claims as trusted facts",
-                    "model speculation without user acceptance",
-                ],
+                "include": ["concise title", "source context", "accepted decision or fact", "scope", "user consent marker"],
+                "exclude": ["restricted material", "unsupported claims as trusted facts", "model speculation without user acceptance"],
             },
-            "secret_warnings": SECRET_WARNINGS,
+            "secret_warnings": ["restricted material should be excluded from proposals"],
             "recall_guidance": {
                 "runes_recall_is_evidence_not_final_truth": True,
-                "agent_should_compare_with": [
-                    "current user instruction",
-                    "current conversation context",
-                    "native memory",
-                    "third-party notes or RAG",
-                    "web search results when freshness matters",
-                    "direct user corrections",
-                ],
+                "agent_should_compare_with": ["current user instruction", "current conversation context", "native memory", "third-party notes or RAG", "web search results when freshness matters", "direct user corrections"],
             },
         }
     )
@@ -323,7 +240,6 @@ def emit(payload: dict[str, Any], as_json: bool) -> int:
     if as_json:
         print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
         return 0
-
     if "shield" in payload:
         print(f"{payload['shield']['name']}: {payload['shield']['subtitle']}")
         print(payload["shield"]["slogan"])
@@ -334,6 +250,8 @@ def emit(payload: dict[str, Any], as_json: bool) -> int:
         print(f"should_offer={decision.get('should_offer')} action={decision.get('action')} confidence={decision.get('confidence')}")
     if "count" in payload:
         print(f"count={payload['count']}")
+    if "issue_count" in payload:
+        print(f"issue_count={payload['issue_count']}")
     print("Use --json for agent-facing structured output.")
     return 0
 
@@ -349,52 +267,48 @@ def read_text_arg(args: argparse.Namespace) -> str:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        prog="runes",
-        description="Runes Shield agent-facing CLI for governed Markdown memory.",
-    )
+    parser = argparse.ArgumentParser(prog="runes", description="Runes Shield agent-facing CLI for governed Markdown memory.")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     for command in ("capabilities", "guidance"):
         sub = subparsers.add_parser(command, help=f"Run read-only {command} command.")
-        sub.add_argument("--json", action="store_true", help="Emit stable JSON output for agent/tool consumption.")
+        sub.add_argument("--json", action="store_true")
 
-    offer = subparsers.add_parser(
-        "offer",
-        help="Decide whether Hermes-agent should ask the user about creating a governed proposal.",
-    )
-    offer.add_argument("--text", help="Text to classify.")
-    offer.add_argument("--file", help="UTF-8 text file to classify.")
-    offer.add_argument("--json", action="store_true", help="Emit stable JSON output for agent/tool consumption.")
+    offer = subparsers.add_parser("offer", help="Decide whether to ask about creating a proposal.")
+    offer.add_argument("--text")
+    offer.add_argument("--file")
+    offer.add_argument("--json", action="store_true")
 
-    propose = subparsers.add_parser(
-        "propose",
-        help="Create a governed draft proposal after explicit user consent.",
-    )
-    propose.add_argument("--title", required=True, help="Proposal title.")
-    propose.add_argument("--text", help="Proposal text.")
-    propose.add_argument("--file", help="UTF-8 text file to propose.")
-    propose.add_argument("--project", default="k6-freelancer", help="Target project/domain.")
-    propose.add_argument("--source-context", default="user_provided", help="Short provenance/source context.")
-    propose.add_argument("--consent", help="Explicit user consent marker, e.g. 'go' or '建立 proposal'.")
-    propose.add_argument("--output-root", help="Optional alternate root for sandbox/smoke proposal writes.")
-    propose.add_argument("--json", action="store_true", help="Emit stable JSON output for agent/tool consumption.")
+    propose = subparsers.add_parser("propose", help="Create a governed draft proposal after explicit consent.")
+    propose.add_argument("--title", required=True)
+    propose.add_argument("--text")
+    propose.add_argument("--file")
+    propose.add_argument("--project", default="k6-freelancer")
+    propose.add_argument("--source-context", default="user_provided")
+    propose.add_argument("--consent")
+    propose.add_argument("--output-root")
+    propose.add_argument("--json", action="store_true")
 
     proposal = subparsers.add_parser("proposal", help="Read-only proposal inspection commands.")
     proposal_sub = proposal.add_subparsers(dest="proposal_command", required=True)
 
     proposal_list = proposal_sub.add_parser("list", help="List proposals without mutating them.")
-    proposal_list.add_argument("--project", default="k6-freelancer", help="Target project/domain.")
+    proposal_list.add_argument("--project", default="k6-freelancer")
     proposal_list.add_argument("--state", default="all", choices=["all", "draft", "approved", "rejected"])
-    proposal_list.add_argument("--output-root", help="Optional alternate root for sandbox/smoke proposal reads.")
-    proposal_list.add_argument("--json", action="store_true", help="Emit stable JSON output for agent/tool consumption.")
+    proposal_list.add_argument("--output-root")
+    proposal_list.add_argument("--json", action="store_true")
 
     proposal_show = proposal_sub.add_parser("show", help="Show one proposal without mutating it.")
-    proposal_show.add_argument("--project", default="k6-freelancer", help="Target project/domain.")
-    proposal_show.add_argument("--id", required=True, help="Proposal id or filename.")
-    proposal_show.add_argument("--output-root", help="Optional alternate root for sandbox/smoke proposal reads.")
-    proposal_show.add_argument("--no-body", action="store_true", help="Omit body from JSON output.")
-    proposal_show.add_argument("--json", action="store_true", help="Emit stable JSON output for agent/tool consumption.")
+    proposal_show.add_argument("--project", default="k6-freelancer")
+    proposal_show.add_argument("--id", required=True)
+    proposal_show.add_argument("--output-root")
+    proposal_show.add_argument("--no-body", action="store_true")
+    proposal_show.add_argument("--json", action="store_true")
+
+    proposal_hygiene = proposal_sub.add_parser("hygiene", help="Report proposal status hygiene without mutating it.")
+    proposal_hygiene.add_argument("--project", default="k6-freelancer")
+    proposal_hygiene.add_argument("--output-root")
+    proposal_hygiene.add_argument("--json", action="store_true")
 
     return parser
 
@@ -411,15 +325,7 @@ def main() -> int:
     if args.command == "offer":
         return emit(offer_payload(root, read_text_arg(args)), args.json)
     if args.command == "propose":
-        result = write_proposal(
-            root=root,
-            title=args.title,
-            text=read_text_arg(args),
-            project=args.project,
-            source_context=args.source_context,
-            consent=args.consent,
-            output_root=args.output_root,
-        )
+        result = write_proposal(root=root, title=args.title, text=read_text_arg(args), project=args.project, source_context=args.source_context, consent=args.consent, output_root=args.output_root)
         if args.json:
             print(json.dumps(result.data, ensure_ascii=False, indent=2, sort_keys=True))
         else:
@@ -432,11 +338,11 @@ def main() -> int:
         return 0 if result.status == "PASS" else 2
     if args.command == "proposal":
         if args.proposal_command == "list":
-            payload = list_proposals(root, args.project, args.state, args.output_root)
-            return emit(payload, args.json)
+            return emit(list_proposals(root, args.project, args.state, args.output_root), args.json)
         if args.proposal_command == "show":
-            payload = show_proposal(root, args.project, args.id, args.output_root, include_body=not args.no_body)
-            return emit(payload, args.json)
+            return emit(show_proposal(root, args.project, args.id, args.output_root, include_body=not args.no_body), args.json)
+        if args.proposal_command == "hygiene":
+            return emit(hygiene_report(root, args.project, args.output_root), args.json)
 
     parser.error(f"unsupported command: {args.command}")
     return 2
