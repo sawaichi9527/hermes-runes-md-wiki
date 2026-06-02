@@ -476,3 +476,49 @@ Current milestone:
 
 - M26.1 Human-approved Promotion Apply Safety Design Lock: PASS / design locked
 
+
+---
+
+## M26.2 Apply Preflight Dry-run CLI
+
+Status: PASS / PREFLIGHT DRY-RUN BASELINE
+
+Verification target:
+
+- `tools/runes/promotion_apply_preflight_m26_2.py`
+
+CLI:
+
+```text
+runes promotion preflight \
+  --proposal-id '<proposal_id>' \
+  --target-path '<wiki/path.md>' \
+  --heading '<heading>' \
+  --insert-text '<markdown>' \
+  --dry-run
+```
+
+Scope:
+
+- target path containment check
+- wiki-only path policy
+- current target SHA256 evidence
+- optional expected pre-apply hash check
+- human confirmation token preview
+- candidate patch diff evidence
+- rollback plan preview
+- operation record preview
+- no trusted wiki mutation
+- no database mutation
+- no importer mutation
+- no operation record write
+- no rollback snapshot write
+
+Boundary:
+
+M26.2 is still preflight dry-run only. It does not apply any promotion patch.
+
+Next:
+
+- M26.3 Apply confirmation token preview / smoke lock
+

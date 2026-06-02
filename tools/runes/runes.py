@@ -16,6 +16,7 @@ try:
     from proposal_attunement_m23_2 import attunement_dry_run, print_readable_preview
     from attunement_trail_m24_2 import build_attunement_trail_dry_run, print_trail_preview, render_trail_markdown_preview
     from promotion_patch_m25_2 import build_promotion_patch_preview, print_patch_preview, render_patch_markdown_preview
+    from promotion_apply_preflight_m26_2 import build_apply_preflight, print_preflight, render_preflight_markdown
     from proposal_hygiene_m22_3 import hygiene_report
     from proposal_reader_m22_2 import list_proposals, show_proposal
     from proposal_writer_m22_1 import write_proposal
@@ -25,6 +26,7 @@ except ImportError:  # pragma: no cover
     from tools.runes.proposal_attunement_m23_2 import attunement_dry_run, print_readable_preview
     from tools.runes.attunement_trail_m24_2 import build_attunement_trail_dry_run, print_trail_preview, render_trail_markdown_preview
     from tools.runes.promotion_patch_m25_2 import build_promotion_patch_preview, print_patch_preview, render_patch_markdown_preview
+    from tools.runes.promotion_apply_preflight_m26_2 import build_apply_preflight, print_preflight, render_preflight_markdown
     from tools.runes.proposal_hygiene_m22_3 import hygiene_report
     from tools.runes.proposal_reader_m22_2 import list_proposals, show_proposal
     from tools.runes.proposal_writer_m22_1 import write_proposal
@@ -162,6 +164,7 @@ def capabilities_payload(root: Path) -> dict[str, Any]:
                 "proposal_attunement_dry_run",
                 "attunement_trail_dry_run",
                 "promotion_patch_dry_run",
+                "promotion_apply_preflight",
             ],
             "implemented_in_m21_3": ["capabilities", "guidance", "offer"],
             "implemented_in_m22_1": ["propose"],
@@ -172,6 +175,7 @@ def capabilities_payload(root: Path) -> dict[str, Any]:
             "implemented_in_m24_2": ["attunement_trail_dry_run"],
             "implemented_in_m24_3": ["attunement_trail_markdown_preview"],
             "implemented_in_m25_2": ["promotion_patch_dry_run"],
+            "implemented_in_m26_2": ["promotion_apply_preflight"],
             "capabilities": [
                 {"name": "capabilities", "command": "runes capabilities --json", "write": False},
                 {"name": "guidance", "command": "runes guidance --json", "write": False},
@@ -200,6 +204,7 @@ def capabilities_payload(root: Path) -> dict[str, Any]:
                 "M24.2 adds Runes Attunement trail dry-run previews.",
                 "M24.3 adds Markdown trail event previews.",
                 "M25.2 adds curated promotion patch dry-run previews.",
+                "M26.2 adds human-approved promotion apply preflight dry-run.",
                 "Draft proposals are not trusted memory.",
             ],
         }
@@ -312,6 +317,19 @@ def build_parser() -> argparse.ArgumentParser:
     promotion_preview.add_argument("--json", action="store_true")
     promotion_preview.add_argument("--markdown", action="store_true")
 
+    promotion_preflight = promotion_sub.add_parser("preflight")
+    promotion_preflight.add_argument("--project", default="k6-freelancer")
+    promotion_preflight.add_argument("--proposal-id", required=True)
+    promotion_preflight.add_argument("--target-path", required=True)
+    promotion_preflight.add_argument("--heading", required=True)
+    promotion_preflight.add_argument("--insert-text", required=True)
+    promotion_preflight.add_argument("--expected-pre-hash")
+    promotion_preflight.add_argument("--human-confirmation")
+    promotion_preflight.add_argument("--reason")
+    promotion_preflight.add_argument("--dry-run", action="store_true", required=True)
+    promotion_preflight.add_argument("--json", action="store_true")
+    promotion_preflight.add_argument("--markdown", action="store_true")
+
     trail = subparsers.add_parser("trail")
     trail_sub = trail.add_subparsers(dest="trail_command", required=True)
 
@@ -390,6 +408,26 @@ def main() -> int:
             print("Use --json for details.")
         return 0 if result.status == "PASS" else 2
     if args.command == "promotion":
+        if args.promotion_command == "preflight":
+            payload = build_apply_preflight(
+                root=root,
+                project=args.project,
+                proposal_id=args.proposal_id,
+                target_path=args.target_path,
+                heading=args.heading,
+                insert_text=args.insert_text,
+                expected_pre_hash=args.expected_pre_hash,
+                human_confirmation=args.human_confirmation,
+                reason=args.reason,
+            )
+            if args.json:
+                print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
+            elif args.markdown:
+                print(render_preflight_markdown(payload))
+            else:
+                print_preflight(payload)
+            return 0 if payload.get("status") == "PASS" else 2
+
         if args.promotion_command == "preview":
             payload = build_promotion_patch_preview(
                 root=root,
