@@ -273,3 +273,42 @@ Next:
 
 - M24.5 Roadmap / verification lock
 
+
+---
+
+## M24.5 Roadmap / Verification Lock
+
+Status: PASS / STABLE GOVERNED ATTUNEMENT-HISTORY BASELINE
+
+Locked milestones:
+
+- M24.1 Runes Attunement Trail Design Lock: PASS
+- M24.2 Attunement trail dry-run CLI: PASS
+- M24.3 Attunement trail Markdown preview: PASS
+- M24.4 Attunement trail smoke test: PASS
+- M24.5 Roadmap / verification lock: PASS
+
+Locked boundaries:
+
+- append-only design only
+- trail write execution: not implemented
+- approve execution: not implemented
+- reject execution: not implemented
+- supersede execution: not implemented
+- proposal mutation: forbidden
+- trusted wiki mutation: forbidden
+- direct database mutation: forbidden
+- importer mutation: forbidden
+- promotion execution: forbidden
+- autonomous attunement execution: forbidden
+- autonomous trusted-memory mutation: forbidden
+
+Current baseline:
+
+M24 Runes Attunement Trail / Dry-run:
+PASS / stable governed attunement-history baseline
+
+Next:
+
+- M25 Curated promotion patch preview / dry-run
+
