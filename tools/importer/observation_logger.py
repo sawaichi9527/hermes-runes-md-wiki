@@ -38,28 +38,52 @@ def write_observation(data: dict) -> None:
 
         log_path = month_dir / f"{now.strftime('%Y%m%d')}.jsonl"
 
-        answer = data.get("answer") or ""
+        if data.get("event"):
+            allowed_keys = {
+                "event",
+                "milestone",
+                "suite",
+                "status",
+                "failed",
+                "total",
+                "reviewed_proposal_visible",
+                "reviewed_trust_bias",
+                "trusted_wiki_outranks_reviewed",
+                "trusted_top_path",
+                "reviewed_proposal_path",
+                "trust_policy",
+            }
 
-        event = {
-            "ts": now.isoformat(timespec="seconds"),
-            "model": data.get("model"),
-            "selected_model_profile": data.get("selected_model_profile"),
-            "extraction_path": data.get("extraction_path"),
-            "finish_reason": data.get("finish_reason"),
-            "extraction_quality_ok": data.get("extraction_quality_ok"),
-            "quality_issues": data.get("quality_issues") or [],
-            "risk_signals": data.get("risk_signals") or [],
-            "completeness_ok": data.get("completeness_ok"),
-            "completeness_issues": data.get("completeness_issues") or [],
-            "citation_integrity_ok": data.get("citation_integrity_ok"),
-            "citation_issues": data.get("citation_issues") or [],
-            "retry_should_run": data.get("retry_should_run"),
-            "retry_reason": data.get("retry_reason"),
-            "retry_executed": data.get("retry_executed"),
-            "retry_success": data.get("retry_success"),
-            "answer_chars": len(answer),
-            "answer_preview": _safe_preview(answer),
-        }
+            event = {
+                "ts": now.isoformat(timespec="seconds"),
+            }
+
+            for key in allowed_keys:
+                if key in data:
+                    event[key] = data.get(key)
+        else:
+            answer = data.get("answer") or ""
+
+            event = {
+                "ts": now.isoformat(timespec="seconds"),
+                "model": data.get("model"),
+                "selected_model_profile": data.get("selected_model_profile"),
+                "extraction_path": data.get("extraction_path"),
+                "finish_reason": data.get("finish_reason"),
+                "extraction_quality_ok": data.get("extraction_quality_ok"),
+                "quality_issues": data.get("quality_issues") or [],
+                "risk_signals": data.get("risk_signals") or [],
+                "completeness_ok": data.get("completeness_ok"),
+                "completeness_issues": data.get("completeness_issues") or [],
+                "citation_integrity_ok": data.get("citation_integrity_ok"),
+                "citation_issues": data.get("citation_issues") or [],
+                "retry_should_run": data.get("retry_should_run"),
+                "retry_reason": data.get("retry_reason"),
+                "retry_executed": data.get("retry_executed"),
+                "retry_success": data.get("retry_success"),
+                "answer_chars": len(answer),
+                "answer_preview": _safe_preview(answer),
+            }
 
         with log_path.open("a", encoding="utf-8") as f:
             f.write(json.dumps(event, ensure_ascii=False) + "\n")

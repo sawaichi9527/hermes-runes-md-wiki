@@ -37,7 +37,7 @@ def slugify_heading(value: str | None) -> str:
 
 
 
-TRUST_POLICY_NAME = "m19.2c-soft-bias-v1"
+TRUST_POLICY_NAME = "m20.5-personal-governance-v1"
 
 
 def compute_trust_bias(forge: dict) -> int:
@@ -55,24 +55,22 @@ def compute_trust_bias(forge: dict) -> int:
 
     bias = 0
 
-    if status == "approved":
-        bias += 1
+    # M20.5 personal governance policy:
+    # - draft/rejected are handled as hard negative above.
+    # - approved+reviewed forge proposals are retrieval-visible but neutral.
+    # - normal wiki content remains the baseline source of truth by location.
+    # - keep provenance fields observable without turning them into enterprise-grade scoring.
+    if trust_class in {"unverified"}:
+        bias -= 2
 
-    if trust_class == "human-reviewed":
-        bias += 2
-    elif trust_class == "unverified":
-        bias -= 1
-
-    if proposed_by == "human":
-        bias += 1
-    elif "agent" in proposed_by:
-        bias -= 1
-
-    if provenance == "manual_cli":
-        bias += 1
+    if trust_class in {"reviewed", "human-reviewed"} and status == "approved":
+        bias += 0
 
     if proposal_type == "agent_memory":
-        bias -= 1
+        bias += 0
+
+    if proposed_by == "human" and provenance == "manual_cli":
+        bias += 0
 
     return bias
 
@@ -98,6 +96,12 @@ def main() -> None:
     parser.add_argument("query")
     parser.add_argument("--project", required=True)
     parser.add_argument("--schema", default=DEFAULT_SCHEMA)
+    parser.add_argument(
+        "--mode",
+        choices=["hybrid", "fts", "vector"],
+        default="hybrid",
+        help="Compatibility option. Current retrieval uses the default hybrid/RRF pipeline.",
+    )
     parser.add_argument("--limit", type=int, default=5)
     parser.add_argument("--path")
     parser.add_argument("--heading")
