@@ -6,8 +6,9 @@ This roadmap tracks near-term work for making Hermes Runes MD Wiki usable as a g
 
 ## M21 Runes Shield — P0 / Trial Run Agent-facing Boundary
 
-Status: Planned
+Status: PASS / P0 boundary baseline established
 Priority: P0
+Verification record: `wiki/k6-freelancer/verification-m21-runes-shield.md`
 
 ### Name
 
@@ -65,12 +66,21 @@ Agents must not infer operational behavior from arbitrary wiki files.
 
 ### P0 allowed agent-facing capabilities
 
-The initial Runes Shield interface should expose only small, stable, JSON-friendly commands:
+The initial Runes Shield interface exposes small, stable, JSON-friendly commands and scripts:
 
 - `runes capabilities --json`
   - discover available Runes capabilities and safety boundaries
 - `runes guidance --json`
   - read agent-facing policy, invocation rules, and usage guidance
+- `runes offer --text "..." --json`
+  - deterministically decide whether Hermes-agent should ask the user about creating a governed proposal
+- `tools/runes/trial_run_m21_4.py --json`
+  - run an isolated multi-proposal sandbox trial with approved / rejected / draft visibility checks
+- `tools/runes/promotion_plan_m21_5.py --json`
+  - generate a human-only curated promotion dry-run plan and preview
+
+Planned future commands remain outside the completed M21 P0 boundary baseline:
+
 - `runes propose --json`
   - create a governed draft proposal from user-provided material after user consent
 - `runes proposal list --json`
@@ -104,11 +114,13 @@ Example interaction:
 
 > 這段內容看起來像是後續會重複使用的專案知識。要不要我幫你建立一筆 Hermes Runes governed proposal，先放入待審核區，之後由你確認後再固化成 Markdown wiki？
 
-Hermes-agent should only call `runes propose` after user consent.
+Hermes-agent should only call future proposal-writing commands after user consent.
 
 ### M21 milestone breakdown
 
 #### M21.1 Runes Shield Contract
+
+Status: PASS
 
 Goal:
 
@@ -118,38 +130,44 @@ Goal:
 - Document human-only approval boundaries.
 - Establish the canonical P0 Markdown entry path instead of relying on incidental local wiki files.
 
-Planned files:
+Verified files:
 
 - `wiki/hermes_runes_index.md`
 - `wiki/_system/runes_shield_contract.md`
 - `wiki/_system/runes_invocation_policy.md`
 - `wiki/_system/runes_agent_guidance.md`
 
-Success criteria:
+Result:
 
-- Hermes-agent can understand the Runes boundary without reading internal implementation code.
-- The contract clearly states that Hermes-agent must not directly operate internal wiki files, proposal states, database records, or importer artifacts.
-- P0 / trial run bootstrap can start from `wiki/hermes_runes_index.md` and the three canonical Runes Shield `_system` files.
-- P0 behavior does not depend on historical or incidental local wiki documents unless they are explicitly promoted into the canonical architecture.
+- M21.1a Runes Shield `_system` documents: PASS.
+- M21.1b Canonical Runes Markdown Architecture: PASS.
 
 #### M21.2 Runes Shield capabilities / guidance CLI
+
+Status: PASS / read-only / smoke verified
 
 Goal:
 
 - Provide simple read-only CLI/JSON endpoints for agent discovery.
 - Keep implementation local, deterministic, and easy to inspect.
 
-Candidate commands:
+Verified commands:
 
-- `runes capabilities --json`
-- `runes guidance --json`
+```bash
+bin/runes capabilities --json
+bin/runes guidance --json
+python3 tools/runes/smoke_runes_shield.py
+```
 
 Success criteria:
 
 - Output is stable enough for Hermes-agent to consume.
 - Output includes capability list, safety boundaries, write limitations, and human-only operations.
+- No proposal creation, trusted memory mutation, or DB mutation occurs.
 
 #### M21.3 Agent interaction prompt pattern
+
+Status: PASS / read-only / smoke verified
 
 Goal:
 
@@ -176,56 +194,110 @@ Non-trigger candidates:
 - raw logs with private data
 - material that needs user review first
 
+Verified command:
+
+```bash
+bin/runes offer --text "..." --json
+python3 tools/runes/smoke_runes_shield.py
+```
+
 Success criteria:
 
 - Hermes-agent can proactively ask whether to create a governed proposal.
 - Hermes-agent does not silently persist knowledge.
-- User consent is required before `runes propose`.
+- User consent is required before future `runes propose`.
+- Casual chat, secret-bearing content, and unverified speculation do not trigger proposal offers.
 
 #### M21.4 Multi-proposal P0 trial run
 
+Status: PASS / sandbox-write-only / smoke verified
+
 Goal:
 
-- Validate the full governed proposal flow with mixed proposal states.
+- Validate the governed proposal flow with mixed proposal states without mutating real trusted wiki content or database state.
 
-Trial scenario:
+Verified command:
 
-1. Create proposal A.
-2. Create proposal B.
-3. Create proposal C.
-4. Human approves A.
-5. Human rejects B.
-6. C remains draft.
-7. Import reviewed/approved content.
-8. Recall approved content.
+```bash
+python3 tools/runes/trial_run_m21_4.py --json
+python3 tools/runes/smoke_runes_shield.py
+```
+
+Verified scenario:
+
+1. Create proposal A in sandbox.
+2. Create proposal B in sandbox.
+3. Create proposal C in sandbox.
+4. Approve A in sandbox.
+5. Reject B in sandbox.
+6. C remains draft in sandbox.
+7. Import approved A into sandbox trusted index.
+8. Recall approved content from sandbox trusted index.
 9. Verify rejected and draft content are not visible as trusted memory.
 10. Run smoke/regression checks.
 
 Success criteria:
 
-- Approved proposal becomes retrievable trusted evidence.
+- Approved proposal becomes retrievable sandbox trusted evidence.
 - Rejected proposal remains excluded.
 - Draft proposal remains excluded.
-- Trusted wiki ordering remains stable.
-- Smoke/regression remains PASS.
-- Observation remains lightweight and non-authoritative.
+- Trusted sandbox index contains only the approved proposal.
+- Real trusted wiki is not mutated.
+- Real database state is not mutated.
+- Real forge inbox is not mutated.
 
 #### M21.5 Human-only curated promotion path
 
+Status: PASS / dry-run-only / smoke verified
+
 Goal:
 
-- Define a manual or dry-run path for promoting reviewed proposals into curated wiki notes.
+- Define a dry-run path for promoting reviewed proposals into curated wiki notes.
 - Keep promotion human-controlled during P0.
 
-Planned behavior:
+Verified command:
 
-- Runes may generate a promotion plan or dry-run diff.
+```bash
+python3 tools/runes/promotion_plan_m21_5.py --workspace tmp/runes-trial/m21-4 --json
+python3 tools/runes/smoke_runes_shield.py
+```
+
+Verified behavior:
+
+- Runes may generate a promotion plan and preview.
 - Human performs or approves final promotion.
 - Hermes-agent may request status or evidence, but may not perform direct promotion.
 
 Success criteria:
 
-- Reviewed proposal can be converted into curated Markdown knowledge without giving Hermes-agent direct write authority over trusted wiki structure.
+- Approved proposal can be converted into a curated Markdown promotion plan without giving Hermes-agent direct write authority over trusted wiki structure.
+- `human_only: true`.
+- `agent_may_promote: false`.
+- `curated_write_performed: false`.
+- `database_mutated: false`.
+- `proposal_state_mutated: false`.
+
+#### M21.6 P0 status recap / roadmap lock
+
+Status: PASS / roadmap lock
+
+Goal:
+
+- Record M21.1 through M21.5 as the verified Runes Shield P0 / trial-run boundary baseline.
+- Link roadmap state to a dedicated verification record.
+- Make the next implementation stage explicit.
+
+Verified record:
+
+```text
+wiki/k6-freelancer/verification-m21-runes-shield.md
+```
+
+Result:
+
+- M21 Runes Shield P0 / trial-run boundary is established.
+- Hermes-agent can invoke Runes discovery, guidance, offer-policy, sandbox proposal trial, and human-only promotion dry-run capabilities.
+- Hermes-agent still cannot directly write trusted wiki content, approve / reject / promote proposals, mutate proposal states, mutate DB/index state, or treat draft / rejected content as trusted memory.
 
 ### Out of scope for M21 P0
 
@@ -242,15 +314,25 @@ Success criteria:
 
 ### P0 completion definition
 
-M21 P0 is complete when Hermes-agent can:
+M21 P0 is complete because Hermes-agent can:
 
 1. Discover Runes capabilities through Runes Shield.
 2. Understand the boundary between allowed invocation and forbidden direct mutation.
 3. Ask the user whether durable knowledge should be solidified.
-4. Create governed proposals only after user consent.
-5. Read proposal status and trusted recall evidence through Runes interfaces.
-6. Avoid direct manipulation of internal Markdown files, proposal state, importer artifacts, and database content.
-7. Bootstrap from `wiki/hermes_runes_index.md` and the canonical Runes Shield `_system` files without depending on incidental local wiki documents.
-8. Pass the multi-proposal trial run with approved / rejected / draft isolation verified.
+4. Keep governed proposal creation behind explicit user consent and future controlled interfaces.
+5. Run multi-proposal sandbox verification with approved / rejected / draft isolation.
+6. Generate human-only curated promotion dry-run plans.
+7. Avoid direct manipulation of internal Markdown files, proposal state, importer artifacts, and database content.
+8. Bootstrap from `wiki/hermes_runes_index.md` and the canonical Runes Shield `_system` files without depending on incidental local wiki documents.
+
+### Next stage after M21
+
+The next implementation stage should move from verified sandbox / dry-run behavior toward governed proposal creation while preserving:
+
+- explicit user consent,
+- human-only approval / rejection / promotion,
+- no autonomous trusted memory writer,
+- no direct Hermes-agent mutation of internal Markdown / DB state,
+- smoke/regression checks before any trusted memory change.
 
 ---
