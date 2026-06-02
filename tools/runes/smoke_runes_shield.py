@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Smoke test for M21.3 Runes Shield read-only CLI and offer policy."""
+"""Smoke test for M21.4 Runes Shield CLI, offer policy, and sandbox trial."""
 
 from __future__ import annotations
 
@@ -10,7 +10,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 RUNES = ROOT / "bin" / "runes"
+TRIAL_RUNNER = ROOT / "tools" / "runes" / "trial_run_m21_4.py"
 EXPECTED_SCHEMA = "m21.3.p0.v1"
+EXPECTED_TRIAL_SCHEMA = "m21.4.p0.v1"
 
 
 def run_json(command: str, *args: str) -> dict:
@@ -30,6 +32,25 @@ def run_json(command: str, *args: str) -> dict:
         return json.loads(proc.stdout)
     except json.JSONDecodeError as exc:
         raise AssertionError(f"runes {command} did not emit valid JSON: {exc}\n{proc.stdout}") from exc
+
+
+def run_trial_json() -> dict:
+    proc = subprocess.run(
+        [sys.executable, str(TRIAL_RUNNER), "--json"],
+        cwd=ROOT,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=False,
+    )
+    if proc.returncode != 0:
+        raise AssertionError(
+            f"M21.4 trial runner failed: rc={proc.returncode}\nSTDOUT:\n{proc.stdout}\nSTDERR:\n{proc.stderr}"
+        )
+    try:
+        return json.loads(proc.stdout)
+    except json.JSONDecodeError as exc:
+        raise AssertionError(f"M21.4 trial runner did not emit valid JSON: {exc}\n{proc.stdout}") from exc
 
 
 def assert_common(data: dict, command: str) -> None:
@@ -60,6 +81,27 @@ def assert_offer(text: str, expected: bool, reason: str) -> dict:
     assert decision.get("proposal_created") is False, decision
     assert decision.get("write") is False, decision
     return data
+
+
+def assert_trial(data: dict) -> None:
+    assert data.get("schema_version") == EXPECTED_TRIAL_SCHEMA, data
+    assert data.get("status") == "PASS", data
+    assert data.get("mode") == "sandbox_write_only", data
+    assert data.get("trusted_wiki_mutated") is False, data
+    assert data.get("database_mutated") is False, data
+    assert data.get("proposal_created_in_real_forge_inbox") is False, data
+
+    checks = data.get("checks", {})
+    assert checks.get("created_three_proposals") is True, data
+    assert checks.get("approved_imported_visible") is True, data
+    assert checks.get("rejected_not_trusted_visible") is True, data
+    assert checks.get("draft_not_trusted_visible") is True, data
+    assert checks.get("trusted_index_contains_only_approved") is True, data
+
+    recall = data.get("recall_result", {})
+    assert recall.get("approved_visible") is True, data
+    assert recall.get("rejected_visible") is False, data
+    assert recall.get("draft_visible") is False, data
 
 
 def main() -> int:
@@ -104,8 +146,11 @@ def main() -> int:
         "unverified speculation should not offer Runes proposal",
     )
 
+    trial = run_trial_json()
+    assert_trial(trial)
+
     result = {
-        "suite": "M21.3 Runes Shield CLI and offer-policy smoke",
+        "suite": "M21.4 Runes Shield CLI, offer-policy, and multi-proposal sandbox smoke",
         "status": "PASS",
         "checked": [
             "runes capabilities --json",
@@ -114,10 +159,16 @@ def main() -> int:
             "runes offer --text <casual chat> --json",
             "runes offer --text <secret-bearing content> --json",
             "runes offer --text <unverified speculation> --json",
+            "M21.4 sandbox create proposal A/B/C",
+            "M21.4 sandbox approve A",
+            "M21.4 sandbox reject B",
+            "M21.4 sandbox leave C draft",
+            "M21.4 sandbox approved-only trusted visibility",
             "canonical P0 file existence",
             "read-only boundary metadata",
             "consent guidance",
         ],
+        "trial_workspace": trial.get("workspace"),
     }
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0
@@ -130,7 +181,7 @@ if __name__ == "__main__":
         print(
             json.dumps(
                 {
-                    "suite": "M21.3 Runes Shield CLI and offer-policy smoke",
+                    "suite": "M21.4 Runes Shield CLI, offer-policy, and multi-proposal sandbox smoke",
                     "status": "FAIL",
                     "error": str(exc),
                 },
