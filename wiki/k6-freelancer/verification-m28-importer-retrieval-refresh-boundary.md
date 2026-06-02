@@ -1,6 +1,6 @@
 # M28 Importer / Retrieval Refresh Boundary
 
-Status: DESIGN STARTED / GOVERNED REFRESH BOUNDARY
+Status: PASS / GOVERNED RETRIEVAL REFRESH BASELINE / P0 TRIAL-RUN READY
 Milestone: M28 Importer / Retrieval Refresh Boundary
 Chinese: M28 匯入器 / 檢索刷新邊界
 
@@ -46,6 +46,8 @@ Controlled trusted wiki apply must never silently:
 - refresh vector embeddings
 - alter retrieval ordering
 
+Importer and retrieval refresh are explicit governed operations.
+
 ## Relationship to M27
 
 M27 established:
@@ -62,13 +64,13 @@ importer_mutated: false
 proposal_state_mutated: false
 ```
 
-M28 introduces a separately governed refresh path.
+M28 introduces a separately governed refresh path and proves retrieval visibility after explicit refresh.
 
 ## M28.1 Design Lock
 
-M28.1 locks the retrieval refresh design before implementation.
+M28.1 locked the retrieval refresh design before implementation.
 
-A future refresh operation must:
+A refresh operation must:
 
 1. be explicitly invoked
 2. identify a concrete target path or project
@@ -81,38 +83,124 @@ A future refresh operation must:
 9. avoid autonomous background refresh
 10. remain inspectable from CLI output
 
-## M28.2 Controlled Refresh Scope
+## M28.2 Controlled Importer Refresh Helper
 
-A future M28 controlled refresh helper may:
+M28.2 implemented:
 
-- run importer explicitly
-- refresh PostgreSQL FTS entries
-- refresh pgvector entries
-- refresh hybrid retrieval visibility
-- generate refresh operation evidence
-- run recall verification smoke
+```text
+tools/runes/import_refresh_m28_2.py
+```
 
-A future M28 controlled refresh helper must not:
+The helper explicitly runs:
 
-- mutate trusted Markdown wiki content
-- auto-approve proposals
-- auto-apply promotion patches
-- bypass Runes Shield governance
-- mutate proposal state silently
-- mutate attunement state silently
-- mutate promotion state silently
-- perform hidden background refresh
+```text
+tools/importer/importer.py
+```
 
-## M28.3 Retrieval Verification Scope
+M28.2 verified:
 
-M28 retrieval verification must confirm:
+- controlled refresh status: PASS
+- importer executed: PASS
+- database refresh attempted: PASS
+- importer summary parsed: PASS
+- operation record written: PASS
+- post-refresh recall verification required: PASS
+- trusted wiki mutated: false
+- proposal state mutated: false
+- attunement state mutated: false
+- promotion state mutated: false
 
-- newly applied trusted memory becomes retrievable
-- retrieval provenance remains visible
-- retrieval citations remain valid
-- trusted memory visibility matches importer state
-- rejected/unapproved content remains excluded
-- quarantine isolation remains preserved
+Observed smoke summary:
+
+```text
+schema=public
+imported_or_changed=17
+updated=1
+skipped=40
+chunks_written=215
+```
+
+## M28.3 Post-refresh Recall Verification
+
+M28.3 implemented:
+
+```text
+tools/runes/recall_verify_m28_3.py
+```
+
+M28.3 verifies that post-refresh retrieval can find canonical trusted memory evidence.
+
+Verified target:
+
+```text
+wiki/k6-freelancer/verification-m27-human-approved-apply-mvp.md
+```
+
+Verified marker:
+
+```text
+CONTROLLED TRUSTED WIKI MUTATION BASELINE
+```
+
+M28.3 verified:
+
+- status: PASS
+- json_parse_ok: true
+- recall_returncode_ok: true
+- expected_path_found: true
+- required_marker_found: true
+- post_refresh_recall_verified: true
+- retrieval_provenance_checked: true
+
+M28.3 preserves:
+
+- trusted_wiki_mutated: false
+- database_mutated: false
+- importer_mutated: false
+- proposal_state_mutated: false
+
+## M28.4 Retrieval Consistency Smoke
+
+M28.4 implemented:
+
+```text
+tools/runes/retrieval_consistency_m28_4.py
+```
+
+M28.4 verifies multiple canonical governance baselines in the retrieval layer.
+
+Verified cases:
+
+1. `m27_controlled_apply_baseline`
+2. `m27_smoke_lock`
+3. `m28_refresh_boundary`
+
+M28.4 local smoke result:
+
+```text
+status: PASS
+case_count: 3
+failed_count: 0
+```
+
+Each case verified:
+
+- expected_path_found: true
+- required_marker_found: true
+- json_parse_ok: true
+- recall_returncode_ok: true
+- post_refresh_recall_verified: true
+- retrieval_provenance_checked: true
+
+M28.4 preserves:
+
+- apply_not_executed_here: true
+- refresh_not_executed_here: true
+- retrieval_consistency_only: true
+- trusted_wiki_mutated: false
+- database_mutated: false
+- importer_mutated: false
+- proposal_state_mutated: false
 
 ## Locked Safety Invariants
 
@@ -125,15 +213,50 @@ M28 preserves:
 - retrieval evidence must remain inspectable
 - post-refresh recall verification must remain explicit
 - governance provenance must remain visible
+- retrieval consistency smoke must not mutate wiki or database
 
-## Future Direction
+## Governed Pipeline Now Established
 
-Planned follow-up milestones:
+M28.5 freezes the governed P0 pipeline:
 
-- M28.2 Controlled Importer Refresh CLI
-- M28.3 Post-refresh Recall Verification
-- M28.4 Retrieval Consistency Smoke
-- M28.5 Roadmap / Verification Freeze
+```text
+proposal
+→ attunement
+→ promotion preview
+→ preflight
+→ controlled apply
+→ explicit importer refresh
+→ post-refresh recall verification
+→ retrieval consistency smoke
+```
+
+This establishes:
+
+```text
+P0 Governed Trial Run Ready
+```
+
+## Remaining Scope After M28
+
+Trial-run work should now focus on real operational usage, not new core boundary construction.
+
+Recommended next stage:
+
+```text
+M29 P0 Trial Run Scenario Pack
+```
+
+M29 should validate:
+
+- real user-provided knowledge proposal
+- human attunement decision
+- controlled promotion preview
+- controlled apply
+- explicit refresh
+- post-refresh recall
+- provenance review
+- reject/no-promotion case
+- correction/update case
 
 ## Verification Status
 
@@ -146,7 +269,43 @@ M28.1 Importer / Retrieval Refresh Design Lock:
 - post-refresh recall verification requirement locked: PASS
 - no autonomous refresh invariant preserved: PASS
 
+M28.2 Controlled Importer Refresh Helper:
+
+- helper implemented: PASS
+- importer executed explicitly: PASS
+- importer summary parsed: PASS
+- operation record written: PASS
+- post-refresh recall verification required: PASS
+- no trusted wiki mutation: PASS
+- no proposal-state mutation: PASS
+
+M28.3 Post-refresh Recall Verification:
+
+- helper implemented: PASS
+- recall JSON parsed: PASS
+- expected path found: PASS
+- required marker found: PASS
+- retrieval provenance checked: PASS
+- no mutation boundary preserved: PASS
+
+M28.4 Retrieval Consistency Smoke:
+
+- helper implemented: PASS
+- canonical case count: 3
+- failed count: 0
+- M27 controlled apply baseline retrieved: PASS
+- M27 smoke lock baseline retrieved: PASS
+- M28 refresh boundary retrieved: PASS
+- consistency-only boundary preserved: PASS
+
+M28.5 Roadmap / Verification Freeze:
+
+- M28 baseline frozen: PASS
+- P0 governed pipeline declared: PASS
+- P0 trial-run readiness declared: PASS
+- M29 next-stage direction declared: PASS
+
 Overall:
 
-M28.1 Importer / Retrieval Refresh Design Lock:
-PASS / governed refresh boundary design locked
+M28 Importer / Retrieval Refresh Boundary:
+PASS / governed retrieval refresh baseline / P0 trial-run ready
