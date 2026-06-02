@@ -428,3 +428,51 @@ Next possible milestone:
 
 - M26 Human-approved Promotion Apply / Dry-run-to-Apply Boundary
 
+
+---
+
+## M26 Human-approved Promotion Apply / Dry-run-to-Apply Boundary
+
+Status: DESIGN LOCK / NO APPLY IMPLEMENTATION
+
+Verification record:
+
+- `wiki/k6-freelancer/verification-m26-human-approved-promotion-apply.md`
+
+Goal:
+
+Define the safety boundary for a future human-approved promotion apply flow without implementing trusted wiki writes yet.
+
+M26.1 completed scope:
+
+- dry-run-to-apply terminology
+- apply safety preconditions
+- single-target apply boundary
+- pre-apply hash requirement
+- operation record requirement
+- rollback requirement
+- post-apply verification requirement
+- no-autonomous-apply invariant
+
+Locked boundaries:
+
+- no actual patch apply
+- no trusted wiki write
+- no proposal state mutation
+- no attunement state mutation
+- no database mutation
+- no importer mutation
+- no autonomous promotion execution
+- no background apply worker
+
+Future direction:
+
+- M26.2 Apply preflight dry-run CLI
+- M26.3 Apply confirmation token preview
+- M26.4 Rollback plan preview
+- M26.5 Human-approved apply MVP, only after safety preflight is frozen
+
+Current milestone:
+
+- M26.1 Human-approved Promotion Apply Safety Design Lock: PASS / design locked
+
