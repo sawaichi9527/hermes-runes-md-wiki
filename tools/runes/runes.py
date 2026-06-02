@@ -14,6 +14,7 @@ try:
     from cleanup_plan_m22_4 import cleanup_plan
     from offer_policy import classify_offer_intent, decision_to_dict
     from proposal_attunement_m23_2 import attunement_dry_run, print_readable_preview
+    from attunement_trail_m24_2 import build_attunement_trail_dry_run, print_trail_preview
     from proposal_hygiene_m22_3 import hygiene_report
     from proposal_reader_m22_2 import list_proposals, show_proposal
     from proposal_writer_m22_1 import write_proposal
@@ -21,6 +22,7 @@ except ImportError:  # pragma: no cover
     from tools.runes.cleanup_plan_m22_4 import cleanup_plan
     from tools.runes.offer_policy import classify_offer_intent, decision_to_dict
     from tools.runes.proposal_attunement_m23_2 import attunement_dry_run, print_readable_preview
+    from tools.runes.attunement_trail_m24_2 import build_attunement_trail_dry_run, print_trail_preview
     from tools.runes.proposal_hygiene_m22_3 import hygiene_report
     from tools.runes.proposal_reader_m22_2 import list_proposals, show_proposal
     from tools.runes.proposal_writer_m22_1 import write_proposal
@@ -156,6 +158,7 @@ def capabilities_payload(root: Path) -> dict[str, Any]:
                 "proposal_hygiene",
                 "proposal_cleanup_plan",
                 "proposal_attunement_dry_run",
+                "attunement_trail_dry_run",
             ],
             "implemented_in_m21_3": ["capabilities", "guidance", "offer"],
             "implemented_in_m22_1": ["propose"],
@@ -163,6 +166,7 @@ def capabilities_payload(root: Path) -> dict[str, Any]:
             "implemented_in_m22_3": ["proposal_hygiene"],
             "implemented_in_m22_5": ["proposal_cleanup_plan"],
             "implemented_in_m23_3": ["proposal_attunement_readable_preview"],
+            "implemented_in_m24_2": ["attunement_trail_dry_run"],
             "capabilities": [
                 {"name": "capabilities", "command": "runes capabilities --json", "write": False},
                 {"name": "guidance", "command": "runes guidance --json", "write": False},
@@ -175,6 +179,7 @@ def capabilities_payload(root: Path) -> dict[str, Any]:
                 {"name": "proposal_attune", "command": "runes proposal attune --id '<proposal_id>' --dry-run --json", "write": False, "p0_status": "m23_3_readable_dry_run_implemented"},
                 {"name": "proposal_reject", "command": "runes proposal reject --id '<proposal_id>' --dry-run --json", "write": False, "p0_status": "m23_3_readable_dry_run_implemented"},
                 {"name": "proposal_supersede", "command": "runes proposal supersede --id '<old_id>' --superseded-by '<new_id>' --dry-run --json", "write": False, "p0_status": "m23_3_readable_dry_run_implemented"},
+                {"name": "attunement_trail", "command": "runes trail attunement --action attune --id '<proposal_id>' --dry-run --json", "write": False, "p0_status": "m24_2_dry_run_implemented"},
                 {"name": "recall", "command": "runes recall --json", "write": False, "p0_status": "planned_wrapper_not_implemented_in_m22_5"},
                 {"name": "smoke", "command": "runes smoke --json", "write": False, "p0_status": "planned_wrapper_not_implemented_in_m22_5"},
             ],
@@ -186,6 +191,7 @@ def capabilities_payload(root: Path) -> dict[str, Any]:
                 "M22.3 adds read-only proposal status hygiene reporting.",
                 "M22.5 adds cleanup-plan CLI dry-run.",
                 "M23.3 adds human-readable Runes Attunement dry-run previews.",
+                "M24.2 adds Runes Attunement trail dry-run previews.",
                 "Draft proposals are not trusted memory.",
             ],
         }
@@ -285,6 +291,20 @@ def build_parser() -> argparse.ArgumentParser:
     propose.add_argument("--output-root")
     propose.add_argument("--json", action="store_true")
 
+    trail = subparsers.add_parser("trail")
+    trail_sub = trail.add_subparsers(dest="trail_command", required=True)
+
+    attunement_trail = trail_sub.add_parser("attunement")
+    attunement_trail.add_argument("--action", required=True, choices=["attune", "reject", "supersede"])
+    attunement_trail.add_argument("--project", default="k6-freelancer")
+    attunement_trail.add_argument("--id", required=True)
+    attunement_trail.add_argument("--reason")
+    attunement_trail.add_argument("--actor", default="human")
+    attunement_trail.add_argument("--superseded-by")
+    attunement_trail.add_argument("--output-root")
+    attunement_trail.add_argument("--dry-run", action="store_true", required=True)
+    attunement_trail.add_argument("--json", action="store_true")
+
     proposal = subparsers.add_parser("proposal")
     proposal_sub = proposal.add_subparsers(dest="proposal_command", required=True)
 
@@ -347,6 +367,24 @@ def main() -> int:
                 print(f"reason={result.reason}")
             print("Use --json for details.")
         return 0 if result.status == "PASS" else 2
+    if args.command == "trail":
+        if args.trail_command == "attunement":
+            payload = build_attunement_trail_dry_run(
+                root=root,
+                project=args.project,
+                proposal_id=args.id,
+                action=args.action,
+                reason=args.reason,
+                actor=args.actor,
+                superseded_by=args.superseded_by,
+                output_root=args.output_root,
+            )
+            if args.json:
+                print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
+            else:
+                print_trail_preview(payload)
+            return 0 if payload.get("status") == "PASS" else 2
+
     if args.command == "proposal":
         if args.proposal_command == "list":
             return emit(list_proposals(root, args.project, args.state, args.output_root), args.json)
