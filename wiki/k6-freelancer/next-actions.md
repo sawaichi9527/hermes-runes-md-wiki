@@ -1,3 +1,42 @@
+## N-20260602-M27 Human-approved Apply MVP / Controlled Write Boundary
+
+Status: NEXT / PLANNED
+
+Current baseline:
+- M26.5 Roadmap / Verification Lock is PASS.
+- M26 is locked as a stable safety-boundary baseline.
+- M26 still has no trusted wiki apply implementation.
+- Preflight, confirmation-token, blocking smoke, and rollback-plan preview are available as dry-run safety evidence.
+
+Recommended next milestone:
+- M27 Human-approved Apply MVP / Controlled Write Boundary
+
+Purpose:
+- Introduce the smallest possible controlled write path only after preserving the M26.5 safety contract.
+- Convert dry-run apply evidence into an explicit human-approved apply operation.
+- Keep personal-use scale; do not build an enterprise approval system.
+
+Hard prerequisites:
+- explicit human approval
+- confirmation token or equivalent approval signal
+- single-target containment
+- pre-apply hash validation
+- visible diff or candidate evidence
+- operation record evidence
+- rollback or restore evidence
+- post-apply verification
+- no autonomous apply
+
+Out of scope:
+- autonomous trusted-memory mutation
+- multi-file merge engine
+- background apply worker
+- enterprise approval workflow
+- automatic importer/index rebuild as an implicit side effect
+- database mutation without an explicit human-governed path
+
+---
+
 ## N-20260531-M8.3c Observation Report Layer
 
 Status:
