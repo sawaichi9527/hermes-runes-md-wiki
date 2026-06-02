@@ -13,12 +13,14 @@ from typing import Any
 try:
     from cleanup_plan_m22_4 import cleanup_plan
     from offer_policy import classify_offer_intent, decision_to_dict
+    from proposal_attunement_m23_2 import attunement_dry_run
     from proposal_hygiene_m22_3 import hygiene_report
     from proposal_reader_m22_2 import list_proposals, show_proposal
     from proposal_writer_m22_1 import write_proposal
 except ImportError:  # pragma: no cover
     from tools.runes.cleanup_plan_m22_4 import cleanup_plan
     from tools.runes.offer_policy import classify_offer_intent, decision_to_dict
+    from tools.runes.proposal_attunement_m23_2 import attunement_dry_run
     from tools.runes.proposal_hygiene_m22_3 import hygiene_report
     from tools.runes.proposal_reader_m22_2 import list_proposals, show_proposal
     from tools.runes.proposal_writer_m22_1 import write_proposal
@@ -153,6 +155,7 @@ def capabilities_payload(root: Path) -> dict[str, Any]:
                 "proposal_show",
                 "proposal_hygiene",
                 "proposal_cleanup_plan",
+                "proposal_attunement_dry_run",
             ],
             "implemented_in_m21_3": ["capabilities", "guidance", "offer"],
             "implemented_in_m22_1": ["propose"],
@@ -168,6 +171,9 @@ def capabilities_payload(root: Path) -> dict[str, Any]:
                 {"name": "proposal_show", "command": "runes proposal show --id '<proposal_id>' --json", "write": False, "p0_status": "m22_2_read_only_implemented"},
                 {"name": "proposal_hygiene", "command": "runes proposal hygiene --json", "write": False, "p0_status": "m22_3_read_only_implemented"},
                 {"name": "proposal_cleanup_plan", "command": "runes proposal cleanup-plan --json", "write": False, "p0_status": "m22_5_dry_run_implemented"},
+                {"name": "proposal_attune", "command": "runes proposal attune --id '<proposal_id>' --dry-run --json", "write": False, "p0_status": "m23_2_dry_run_implemented"},
+                {"name": "proposal_reject", "command": "runes proposal reject --id '<proposal_id>' --dry-run --json", "write": False, "p0_status": "m23_2_dry_run_implemented"},
+                {"name": "proposal_supersede", "command": "runes proposal supersede --id '<old_id>' --superseded-by '<new_id>' --dry-run --json", "write": False, "p0_status": "m23_2_dry_run_implemented"},
                 {"name": "recall", "command": "runes recall --json", "write": False, "p0_status": "planned_wrapper_not_implemented_in_m22_5"},
                 {"name": "smoke", "command": "runes smoke --json", "write": False, "p0_status": "planned_wrapper_not_implemented_in_m22_5"},
             ],
@@ -300,6 +306,16 @@ def build_parser() -> argparse.ArgumentParser:
     cleanup.add_argument("--output-root")
     cleanup.add_argument("--json", action="store_true")
 
+    for action in ("attune", "reject", "supersede"):
+        attune_cmd = proposal_sub.add_parser(action)
+        attune_cmd.add_argument("--project", default="k6-freelancer")
+        attune_cmd.add_argument("--id", required=True)
+        attune_cmd.add_argument("--reason")
+        attune_cmd.add_argument("--superseded-by")
+        attune_cmd.add_argument("--output-root")
+        attune_cmd.add_argument("--dry-run", action="store_true", required=True)
+        attune_cmd.add_argument("--json", action="store_true")
+
     return parser
 
 
@@ -335,6 +351,19 @@ def main() -> int:
             return emit(hygiene_report(root, args.project, args.output_root), args.json)
         if args.proposal_command == "cleanup-plan":
             return emit(cleanup_plan(root, args.project, args.output_root), args.json)
+        if args.proposal_command in {"attune", "reject", "supersede"}:
+            return emit(
+                attunement_dry_run(
+                    root=root,
+                    project=args.project,
+                    proposal_id=args.id,
+                    action=args.proposal_command,
+                    reason=args.reason,
+                    superseded_by=args.superseded_by,
+                    output_root=args.output_root,
+                ),
+                args.json,
+            )
 
     parser.error(f"unsupported command: {args.command}")
     return 2
