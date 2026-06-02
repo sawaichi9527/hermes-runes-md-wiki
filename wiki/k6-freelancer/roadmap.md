@@ -135,3 +135,36 @@ It is intentionally not:
 - an enterprise review queue
 
 ---
+
+---
+
+## M23.5 Roadmap / Verification Lock
+
+Status: PASS / STABLE P0 GOVERNED ATTUNEMENT BASELINE
+
+Locked milestones:
+
+- M23.1 Runes Attunement Concept Lock: PASS
+- M23.2 Attunement dry-run CLI: PASS
+- M23.3 Human-readable Attunement Preview: PASS
+- M23.4 Attunement smoke test: PASS
+- M23.5 Roadmap / verification lock: PASS
+
+Locked boundaries:
+
+- approve execution: not implemented
+- reject execution: not implemented
+- supersede execution: not implemented
+- cleanup execution: not implemented
+- promotion execution: not implemented
+- trusted wiki mutation: forbidden
+- direct database mutation: forbidden
+- importer mutation: forbidden
+- autonomous attunement execution: forbidden
+- autonomous trusted-memory mutation: forbidden
+
+Current baseline:
+
+M23 Runes Attunement Workflow / Dry-run:
+PASS / stable P0 governed attunement baseline
+
