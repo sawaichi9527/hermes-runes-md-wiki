@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Smoke test for M21.2 Runes Shield read-only CLI."""
+"""Smoke test for M21.3 Runes Shield read-only CLI and offer policy."""
 
 from __future__ import annotations
 
@@ -10,12 +10,12 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 RUNES = ROOT / "bin" / "runes"
-EXPECTED_SCHEMA = "m21.2.p0.v1"
+EXPECTED_SCHEMA = "m21.3.p0.v1"
 
 
-def run_json(command: str) -> dict:
+def run_json(command: str, *args: str) -> dict:
     proc = subprocess.run(
-        [str(RUNES), command, "--json"],
+        [str(RUNES), command, *args, "--json"],
         cwd=ROOT,
         text=True,
         stdout=subprocess.PIPE,
@@ -48,6 +48,20 @@ def assert_common(data: dict, command: str) -> None:
     assert not missing, f"missing canonical files: {missing}"
 
 
+def assert_offer(text: str, expected: bool, reason: str) -> dict:
+    data = run_json("offer", "--text", text)
+    assert_common(data, "offer")
+    decision = data.get("decision", {})
+    assert decision.get("should_offer") is expected, {
+        "reason": reason,
+        "text": text,
+        "decision": decision,
+    }
+    assert decision.get("proposal_created") is False, decision
+    assert decision.get("write") is False, decision
+    return data
+
+
 def main() -> int:
     capabilities = run_json("capabilities")
     guidance = run_json("guidance")
@@ -58,18 +72,48 @@ def main() -> int:
     cap_names = {item.get("name") for item in capabilities.get("capabilities", [])}
     assert "capabilities" in cap_names, capabilities
     assert "guidance" in cap_names, capabilities
+    assert "offer" in cap_names, capabilities
     assert "propose" in cap_names, capabilities
 
     agent_interaction = guidance.get("agent_interaction", {})
     assert agent_interaction.get("consent_required_before_propose") is True, guidance
     assert agent_interaction.get("recommended_prompt_zh"), guidance
 
+    offer_positive = assert_offer(
+        "M21.2 Runes Shield capabilities/guidance CLI PASS. This is a frozen baseline and should be tracked as a project decision.",
+        True,
+        "project decision / baseline / PASS marker should offer Runes proposal",
+    )
+    assert offer_positive.get("decision", {}).get("recommended_prompt_zh"), offer_positive
+
+    assert_offer(
+        "哈哈，這名字很帥氣",
+        False,
+        "casual short acknowledgement should not offer Runes proposal",
+    )
+
+    assert_offer(
+        "DATABASE_URL=postgres://user:password@example/db and API_KEY=secret-token",
+        False,
+        "secret-bearing content should not offer Runes proposal",
+    )
+
+    assert_offer(
+        "Maybe this architecture might be useful, but it is still unverified speculation.",
+        False,
+        "unverified speculation should not offer Runes proposal",
+    )
+
     result = {
-        "suite": "M21.2 Runes Shield CLI smoke",
+        "suite": "M21.3 Runes Shield CLI and offer-policy smoke",
         "status": "PASS",
         "checked": [
             "runes capabilities --json",
             "runes guidance --json",
+            "runes offer --text <positive durable knowledge> --json",
+            "runes offer --text <casual chat> --json",
+            "runes offer --text <secret-bearing content> --json",
+            "runes offer --text <unverified speculation> --json",
             "canonical P0 file existence",
             "read-only boundary metadata",
             "consent guidance",
@@ -86,7 +130,7 @@ if __name__ == "__main__":
         print(
             json.dumps(
                 {
-                    "suite": "M21.2 Runes Shield CLI smoke",
+                    "suite": "M21.3 Runes Shield CLI and offer-policy smoke",
                     "status": "FAIL",
                     "error": str(exc),
                 },
