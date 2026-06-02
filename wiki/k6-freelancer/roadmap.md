@@ -557,3 +557,48 @@ Next:
 - M26.4 Rollback plan preview
 - M26.5 M26 roadmap / verification lock
 
+
+---
+
+## M26.4 Rollback Plan Preview
+
+Status: PASS / ROLLBACK PREVIEW BASELINE
+
+Verification target:
+
+- `tools/runes/promotion_rollback_plan_m26_4.py`
+
+CLI:
+
+```text
+runes promotion rollback-plan \
+  --proposal-id '<proposal_id>' \
+  --target-path '<wiki/path.md>' \
+  --heading '<heading>' \
+  --insert-text '<markdown>' \
+  --dry-run
+```
+
+Scope:
+
+- render rollback strategy preview
+- expose pre-apply hash evidence
+- expose candidate evidence hash
+- expose ordered rollback steps
+- expose operation record preview
+- preserve target Markdown hash
+- no trusted wiki mutation
+- no database mutation
+- no importer mutation
+- no operation record write
+- no rollback snapshot write
+- no rollback apply
+
+Boundary:
+
+M26.4 is still rollback plan preview only. It does not write snapshots or apply rollback.
+
+Next:
+
+- M26.5 M26 roadmap / verification lock
+
