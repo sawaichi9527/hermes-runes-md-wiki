@@ -147,7 +147,16 @@ def promotion_plan(root: Path, workspace: Path, domain: str, proposal: str | Non
         "requires_human_final_action": True,
     }
 
-    status = "PASS" if all(checks.values()) else "FAIL"
+    status_pass = (
+        checks["source_proposal_exists"] is True
+        and checks["source_status_is_approved"] is True
+        and checks["target_is_under_wiki_domain"] is True
+        and checks["curated_write_performed"] is False
+        and checks["database_mutated"] is False
+        and checks["proposal_state_mutated"] is False
+        and checks["requires_human_final_action"] is True
+    )
+    status = "PASS" if status_pass else "FAIL"
 
     return {
         "schema_version": SCHEMA_VERSION,
@@ -167,6 +176,13 @@ def promotion_plan(root: Path, workspace: Path, domain: str, proposal: str | Non
             "exists_now": target_abs.exists(),
         },
         "checks": checks,
+        "expected_guardrails": {
+            "curated_write_performed": False,
+            "database_mutated": False,
+            "proposal_state_mutated": False,
+            "agent_may_promote": False,
+            "human_only": True,
+        },
         "human_only": True,
         "agent_may_promote": False,
         "curated_write_performed": False,
