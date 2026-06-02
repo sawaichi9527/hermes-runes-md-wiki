@@ -378,3 +378,53 @@ Next:
 
 - M25.4 Roadmap / verification lock
 
+
+---
+
+## M25.4 Roadmap / Verification Lock
+
+Status: PASS / M25 STABLE DRY-RUN BASELINE
+
+Verification record:
+
+- `wiki/k6-freelancer/verification-m25-curated-promotion-preview.md`
+
+Locked milestone:
+
+```text
+M25 Curated Promotion Patch Preview / Dry-run:
+PASS / stable governed forge-preview baseline
+```
+
+Completed M25 scope:
+
+- M25.1 Curated Promotion Patch Design Lock: PASS
+- M25.2 Promotion Patch Dry-run CLI: PASS
+- M25.3 Promotion Patch Smoke Test: PASS
+- M25.4 Roadmap / Verification Lock: PASS
+
+Locked boundaries:
+
+- proposal is not trusted memory
+- patch preview is not wiki mutation
+- forge preview is not forge execution
+- promotion preview is not promotion execution
+- no trusted wiki mutation
+- no proposal state mutation
+- no database mutation
+- no importer mutation
+- no autonomous promotion execution
+
+Not implemented in M25:
+
+- actual patch apply
+- trusted wiki write
+- proposal promotion state mutation
+- database mutation
+- importer/index mutation
+- autonomous trusted-memory promotion
+
+Next possible milestone:
+
+- M26 Human-approved Promotion Apply / Dry-run-to-Apply Boundary
+
