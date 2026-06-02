@@ -7,6 +7,7 @@ Runes proposal. It never creates proposals and never mutates memory.
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 
 RECOMMENDED_PROMPT_ZH = "這段內容看起來像是後續會重複使用的專案知識。要不要我幫你建立一筆 Hermes Runes governed proposal，先放入待審核區，之後由你確認後再固化成 Markdown wiki？"
@@ -127,8 +128,10 @@ BLOCKING_SIGNALS = {
         "ok",
     ],
     "unverified_speculation": [
+        "unverified",
         "maybe",
         "probably",
+        "speculation",
         "猜測",
         "可能",
         "也許",
@@ -161,12 +164,28 @@ class OfferDecision:
     recommended_prompt_en: str | None
 
 
+def _is_ascii_wordlike(term: str) -> bool:
+    return bool(re.fullmatch(r"[a-z0-9_][a-z0-9_ -]*[a-z0-9_]", term.lower()))
+
+
+def _term_matches(text_lower: str, term: str) -> bool:
+    term_lower = term.lower()
+
+    # For English-like keywords, avoid substring false positives such as
+    # matching "verified" inside "unverified" or "ok" inside "token".
+    if _is_ascii_wordlike(term_lower):
+        pattern = r"(?<![a-z0-9_])" + re.escape(term_lower) + r"(?![a-z0-9_])"
+        return re.search(pattern, text_lower) is not None
+
+    return term_lower in text_lower
+
+
 def _matches(text_lower: str, signal_map: dict[str, list[str]]) -> dict[str, list[str]]:
     result: dict[str, list[str]] = {}
     for category, terms in signal_map.items():
         found = []
         for term in terms:
-            if term.lower() in text_lower:
+            if _term_matches(text_lower, term):
                 found.append(term)
         if found:
             result[category] = found
@@ -203,8 +222,8 @@ def classify_offer_intent(text: str) -> OfferDecision:
             blockers.append("raw log or secret-bearing material risk detected")
         elif category == "casual" and len(normalized) < 80 and not matched_durable:
             blockers.append("casual short acknowledgement detected")
-        elif category == "unverified_speculation" and not matched_durable:
-            blockers.append("unverified speculation without durable signal")
+        elif category == "unverified_speculation":
+            blockers.append("unverified speculation detected")
 
     if blockers:
         return OfferDecision(
