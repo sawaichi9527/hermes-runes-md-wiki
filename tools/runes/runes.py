@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Runes Shield read-only agent-facing CLI.
+"""Runes Shield agent-facing CLI.
 
 P0 scope:
 - capabilities: read-only capability discovery
 - guidance: read-only invocation guidance
+- offer: deterministic recommendation for whether Hermes-agent should ask the user about creating a governed proposal
 
 This CLI intentionally does not create proposals, approve/reject content,
 promote notes, import content, rebuild indexes, or mutate trusted memory.
@@ -14,10 +15,16 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import sys
 from pathlib import Path
 from typing import Any
 
-SCHEMA_VERSION = "m21.2.p0.v1"
+try:
+    from offer_policy import classify_offer_intent, decision_to_dict
+except ImportError:  # pragma: no cover - fallback for module execution contexts
+    from tools.runes.offer_policy import classify_offer_intent, decision_to_dict
+
+SCHEMA_VERSION = "m21.3.p0.v1"
 TOOL_NAME = "runes"
 SHIELD_NAME = "Runes Shield"
 SHIELD_SUBTITLE = "A governed invocation boundary for trusted Markdown memory."
@@ -45,41 +52,47 @@ ALLOWED_AGENT_CAPABILITIES = [
         "description": "Read agent-facing invocation guidance, consent rules, and durable-memory trigger guidance.",
     },
     {
+        "name": "offer",
+        "command": "runes offer --text '<message>' --json",
+        "write": False,
+        "description": "Deterministically decide whether Hermes-agent should ask the user about creating a governed proposal.",
+    },
+    {
         "name": "propose",
         "command": "runes propose --json",
         "write": True,
-        "p0_status": "planned_not_implemented_in_m21_2",
+        "p0_status": "planned_not_implemented_in_m21_3",
         "requires_user_consent": True,
         "creates_trusted_memory": False,
-        "description": "Create a governed draft proposal after user consent. Not implemented in M21.2.",
+        "description": "Create a governed draft proposal after user consent. Not implemented in M21.3.",
     },
     {
         "name": "proposal_list",
         "command": "runes proposal list --json",
         "write": False,
-        "p0_status": "planned_not_implemented_in_m21_2",
-        "description": "Inspect proposal states without mutating them. Not implemented in M21.2.",
+        "p0_status": "planned_not_implemented_in_m21_3",
+        "description": "Inspect proposal states without mutating them. Not implemented in M21.3.",
     },
     {
         "name": "proposal_show",
         "command": "runes proposal show --json",
         "write": False,
-        "p0_status": "planned_not_implemented_in_m21_2",
-        "description": "Inspect one proposal without mutating it. Not implemented in M21.2.",
+        "p0_status": "planned_not_implemented_in_m21_3",
+        "description": "Inspect one proposal without mutating it. Not implemented in M21.3.",
     },
     {
         "name": "recall",
         "command": "runes recall --json",
         "write": False,
-        "p0_status": "planned_wrapper_not_implemented_in_m21_2",
+        "p0_status": "planned_wrapper_not_implemented_in_m21_3",
         "description": "Retrieve trusted indexed memory evidence through a Runes Shield wrapper. Existing recall tools remain separate until wrapped.",
     },
     {
         "name": "smoke",
         "command": "runes smoke --json",
         "write": False,
-        "p0_status": "planned_wrapper_not_implemented_in_m21_2",
-        "description": "Verify Runes Shield and memory tool health. Not implemented in M21.2.",
+        "p0_status": "planned_wrapper_not_implemented_in_m21_3",
+        "description": "Verify Runes Shield and memory tool health. Not implemented in M21.3.",
     },
 ]
 
@@ -215,12 +228,13 @@ def capabilities_payload(root: Path) -> dict[str, Any]:
             "command": "capabilities",
             "status": "PASS",
             "mode": "read_only",
-            "implemented_in_m21_2": ["capabilities", "guidance"],
+            "implemented_in_m21_3": ["capabilities", "guidance", "offer"],
             "capabilities": ALLOWED_AGENT_CAPABILITIES,
             "forbidden_agent_operations": FORBIDDEN_AGENT_OPERATIONS,
             "human_only_operations": HUMAN_ONLY_OPERATIONS,
             "notes": [
-                "M21.2 exposes read-only capability and guidance discovery only.",
+                "M21.3 exposes read-only capability, guidance, and offer-policy discovery only.",
+                "Offer policy recommends whether Hermes-agent should ask the user; it does not create proposals.",
                 "Proposal creation and proposal inspection are documented P0 targets but not implemented in this milestone.",
                 "Hermes-agent must not infer operational behavior from incidental local wiki documents.",
             ],
@@ -283,6 +297,26 @@ def guidance_payload(root: Path) -> dict[str, Any]:
     return payload
 
 
+def offer_payload(root: Path, text: str) -> dict[str, Any]:
+    payload = base_payload(root)
+    decision = decision_to_dict(classify_offer_intent(text))
+    payload.update(
+        {
+            "command": "offer",
+            "status": "PASS",
+            "mode": "read_only",
+            "input_chars": len(text or ""),
+            "decision": decision,
+            "notes": [
+                "This command only recommends whether Hermes-agent should ask the user about a governed proposal.",
+                "This command never creates proposals and never mutates memory.",
+                "User consent is still required before any future runes propose command.",
+            ],
+        }
+    )
+    return payload
+
+
 def emit(payload: dict[str, Any], as_json: bool) -> int:
     if as_json:
         print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
@@ -292,8 +326,21 @@ def emit(payload: dict[str, Any], as_json: bool) -> int:
     print(payload["shield"]["slogan"])
     print(payload["shield"]["slogan_zh"])
     print(f"status={payload.get('status', 'UNKNOWN')} command={payload.get('command', 'unknown')}")
+    if payload.get("command") == "offer":
+        decision = payload.get("decision", {})
+        print(f"should_offer={decision.get('should_offer')} action={decision.get('action')} confidence={decision.get('confidence')}")
     print("Use --json for agent-facing structured output.")
     return 0
+
+
+def read_text_arg(args: argparse.Namespace) -> str:
+    if args.text is not None:
+        return args.text
+    if args.file:
+        return Path(args.file).read_text(encoding="utf-8")
+    if not sys.stdin.isatty():
+        return sys.stdin.read()
+    raise SystemExit("runes offer requires --text, --file, or stdin input")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -301,16 +348,28 @@ def build_parser() -> argparse.ArgumentParser:
         prog="runes",
         description="Runes Shield agent-facing CLI for governed Markdown memory.",
     )
-    parser.add_argument(
-        "command",
-        choices=["capabilities", "guidance"],
-        help="Read-only P0 command to run.",
+    subparsers = parser.add_subparsers(dest="command", required=True)
+
+    for command in ("capabilities", "guidance"):
+        sub = subparsers.add_parser(command, help=f"Run read-only {command} command.")
+        sub.add_argument(
+            "--json",
+            action="store_true",
+            help="Emit stable JSON output for agent/tool consumption.",
+        )
+
+    offer = subparsers.add_parser(
+        "offer",
+        help="Decide whether Hermes-agent should ask the user about creating a governed proposal.",
     )
-    parser.add_argument(
+    offer.add_argument("--text", help="Text to classify.")
+    offer.add_argument("--file", help="UTF-8 text file to classify.")
+    offer.add_argument(
         "--json",
         action="store_true",
         help="Emit stable JSON output for agent/tool consumption.",
     )
+
     return parser
 
 
@@ -323,6 +382,8 @@ def main() -> int:
         return emit(capabilities_payload(root), args.json)
     if args.command == "guidance":
         return emit(guidance_payload(root), args.json)
+    if args.command == "offer":
+        return emit(offer_payload(root, read_text_arg(args)), args.json)
 
     parser.error(f"unsupported command: {args.command}")
     return 2
