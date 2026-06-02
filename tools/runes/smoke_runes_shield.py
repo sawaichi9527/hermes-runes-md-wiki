@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Smoke test for M21.4 Runes Shield CLI, offer policy, and sandbox trial."""
+"""Smoke test for M21.5 Runes Shield CLI, offer policy, sandbox trial, and promotion dry-run."""
 
 from __future__ import annotations
 
@@ -11,8 +11,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 RUNES = ROOT / "bin" / "runes"
 TRIAL_RUNNER = ROOT / "tools" / "runes" / "trial_run_m21_4.py"
+PROMOTION_PLAN = ROOT / "tools" / "runes" / "promotion_plan_m21_5.py"
 EXPECTED_SCHEMA = "m21.3.p0.v1"
 EXPECTED_TRIAL_SCHEMA = "m21.4.p0.v1"
+EXPECTED_PROMOTION_SCHEMA = "m21.5.p0.v1"
 
 
 def run_json(command: str, *args: str) -> dict:
@@ -34,9 +36,9 @@ def run_json(command: str, *args: str) -> dict:
         raise AssertionError(f"runes {command} did not emit valid JSON: {exc}\n{proc.stdout}") from exc
 
 
-def run_trial_json() -> dict:
+def run_script_json(script: Path, *args: str) -> dict:
     proc = subprocess.run(
-        [sys.executable, str(TRIAL_RUNNER), "--json"],
+        [sys.executable, str(script), *args, "--json"],
         cwd=ROOT,
         text=True,
         stdout=subprocess.PIPE,
@@ -45,12 +47,12 @@ def run_trial_json() -> dict:
     )
     if proc.returncode != 0:
         raise AssertionError(
-            f"M21.4 trial runner failed: rc={proc.returncode}\nSTDOUT:\n{proc.stdout}\nSTDERR:\n{proc.stderr}"
+            f"{script.name} failed: rc={proc.returncode}\nSTDOUT:\n{proc.stdout}\nSTDERR:\n{proc.stderr}"
         )
     try:
         return json.loads(proc.stdout)
     except json.JSONDecodeError as exc:
-        raise AssertionError(f"M21.4 trial runner did not emit valid JSON: {exc}\n{proc.stdout}") from exc
+        raise AssertionError(f"{script.name} did not emit valid JSON: {exc}\n{proc.stdout}") from exc
 
 
 def assert_common(data: dict, command: str) -> None:
@@ -104,6 +106,28 @@ def assert_trial(data: dict) -> None:
     assert recall.get("draft_visible") is False, data
 
 
+def assert_promotion(data: dict) -> None:
+    assert data.get("schema_version") == EXPECTED_PROMOTION_SCHEMA, data
+    assert data.get("status") == "PASS", data
+    assert data.get("mode") == "dry_run_only", data
+    assert data.get("human_only") is True, data
+    assert data.get("agent_may_promote") is False, data
+    assert data.get("curated_write_performed") is False, data
+    assert data.get("database_mutated") is False, data
+    assert data.get("proposal_state_mutated") is False, data
+
+    checks = data.get("checks", {})
+    assert checks.get("source_proposal_exists") is True, data
+    assert checks.get("source_status_is_approved") is True, data
+    assert checks.get("target_is_under_wiki_domain") is True, data
+    assert checks.get("curated_write_performed") is False, data
+    assert checks.get("requires_human_final_action") is True, data
+
+    target = data.get("target", {})
+    assert target.get("planned_path", "").startswith("wiki/"), data
+    assert data.get("preview"), data
+
+
 def main() -> int:
     capabilities = run_json("capabilities")
     guidance = run_json("guidance")
@@ -146,11 +170,14 @@ def main() -> int:
         "unverified speculation should not offer Runes proposal",
     )
 
-    trial = run_trial_json()
+    trial = run_script_json(TRIAL_RUNNER)
     assert_trial(trial)
 
+    promotion = run_script_json(PROMOTION_PLAN, "--workspace", trial["workspace"])
+    assert_promotion(promotion)
+
     result = {
-        "suite": "M21.4 Runes Shield CLI, offer-policy, and multi-proposal sandbox smoke",
+        "suite": "M21.5 Runes Shield CLI, offer-policy, multi-proposal sandbox, and promotion dry-run smoke",
         "status": "PASS",
         "checked": [
             "runes capabilities --json",
@@ -164,11 +191,15 @@ def main() -> int:
             "M21.4 sandbox reject B",
             "M21.4 sandbox leave C draft",
             "M21.4 sandbox approved-only trusted visibility",
+            "M21.5 human-only promotion plan dry-run",
+            "M21.5 no curated write performed",
+            "M21.5 agent_may_promote false",
             "canonical P0 file existence",
             "read-only boundary metadata",
             "consent guidance",
         ],
         "trial_workspace": trial.get("workspace"),
+        "promotion_target": promotion.get("target", {}).get("planned_path"),
     }
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0
@@ -181,7 +212,7 @@ if __name__ == "__main__":
         print(
             json.dumps(
                 {
-                    "suite": "M21.4 Runes Shield CLI, offer-policy, and multi-proposal sandbox smoke",
+                    "suite": "M21.5 Runes Shield CLI, offer-policy, multi-proposal sandbox, and promotion dry-run smoke",
                     "status": "FAIL",
                     "error": str(exc),
                 },
