@@ -347,3 +347,34 @@ Next:
 
 - M25.3 Promotion patch smoke test
 
+
+---
+
+## M25.3 Promotion Patch Smoke Test
+
+Status: PASS / REGRESSION BASELINE
+
+Verification target:
+
+- `tools/runes/smoke_m25_3_promotion_patch.py`
+
+Scope:
+
+- validate promotion patch helper payload
+- validate JSON preview
+- validate Markdown preview
+- validate CLI route through `bin/runes promotion preview`
+- validate target Markdown hash remains unchanged
+- validate no trusted wiki mutation
+- validate no database mutation
+- validate no importer mutation
+- validate no promotion execution
+
+Boundary:
+
+M25.3 is still dry-run only. It does not apply any promotion patch.
+
+Next:
+
+- M25.4 Roadmap / verification lock
+
