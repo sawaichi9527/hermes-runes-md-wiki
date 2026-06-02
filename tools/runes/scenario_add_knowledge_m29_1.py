@@ -19,7 +19,7 @@ except ImportError:  # pragma: no cover
     from tools.runes.import_refresh_m28_2 import run_import_refresh
     from tools.runes.recall_verify_m28_3 import build_recall_verification
 
-SCHEMA_VERSION = "m29.1.p0.v1"
+SCHEMA_VERSION = "m29.1.p0.v2"
 DEFAULT_PROJECT = "k6-freelancer"
 DEFAULT_TARGET_PATH = "wiki/k6-freelancer/p0-trial-scenarios.md"
 DEFAULT_HEADING = "Scenario Evidence"
@@ -73,6 +73,7 @@ def run_add_knowledge_scenario(
     refresh: bool,
     verify_recall: bool,
     write_records: bool,
+    recall_heading: str | None,
 ) -> dict[str, Any]:
     target_abs = root / target_path
     pre_hash = sha256_file(target_abs)
@@ -135,7 +136,7 @@ def run_add_knowledge_scenario(
             query=required_marker,
             expected_path=target_path,
             required_marker=required_marker,
-            heading=heading,
+            heading=recall_heading,
             limit=5,
             write_record=write_records,
         )
@@ -146,6 +147,7 @@ def run_add_knowledge_scenario(
         "recall_pass": recall_result is not None and recall_result.get("status") == "PASS",
         "marker_verified": bool((recall_result or {}).get("checks", {}).get("required_marker_found")),
         "expected_path_verified": bool((recall_result or {}).get("checks", {}).get("expected_path_found")),
+        "result_count_positive": bool((recall_result or {}).get("checks", {}).get("result_count_positive")),
     }
 
     status = "PASS" if all(checks.values()) else "FAIL"
@@ -158,6 +160,7 @@ def run_add_knowledge_scenario(
         "proposal_id": proposal_id,
         "target_path": target_path,
         "heading": heading,
+        "recall_heading": recall_heading,
         "required_marker": required_marker,
         "checks": checks,
         "apply": apply_result,
@@ -187,6 +190,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--proposal-id", default=DEFAULT_PROPOSAL_ID)
     parser.add_argument("--target-path", default=DEFAULT_TARGET_PATH)
     parser.add_argument("--heading", default=DEFAULT_HEADING)
+    parser.add_argument("--recall-heading", default=None)
     parser.add_argument("--required-marker", default=DEFAULT_MARKER)
     parser.add_argument("--actor", default="human")
     parser.add_argument("--insert-text", default=DEFAULT_INSERT_TEXT)
@@ -213,6 +217,7 @@ def main() -> int:
         refresh=args.refresh,
         verify_recall=args.verify_recall,
         write_records=args.write_records,
+        recall_heading=args.recall_heading,
     )
     print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
     return 0 if payload.get("status") == "PASS" else 2
