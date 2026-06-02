@@ -522,3 +522,38 @@ Next:
 
 - M26.3 Apply confirmation token preview / smoke lock
 
+
+---
+
+## M26.3 Apply Confirmation Token / Blocking Smoke
+
+Status: PASS / REGRESSION BASELINE
+
+Verification target:
+
+- `tools/runes/smoke_m26_3_apply_preflight.py`
+
+Scope:
+
+- validate required confirmation token generation
+- validate matching confirmation token remains preview-only
+- validate hash mismatch blocks preflight
+- validate non-wiki path blocks preflight
+- validate outside-root path blocks preflight
+- validate CLI JSON PASS route
+- validate CLI JSON BLOCKED route
+- validate target Markdown hash remains unchanged
+- validate no trusted wiki mutation
+- validate no database mutation
+- validate no operation record write
+- validate no rollback snapshot write
+
+Boundary:
+
+M26.3 is still dry-run / smoke only. It does not apply any promotion patch.
+
+Next:
+
+- M26.4 Rollback plan preview
+- M26.5 M26 roadmap / verification lock
+

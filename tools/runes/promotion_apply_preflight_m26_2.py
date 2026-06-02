@@ -63,30 +63,7 @@ def build_apply_preflight(
 ) -> dict[str, Any]:
     abs_path, path_ok, path_error = ensure_wiki_path(root, target_path)
 
-    current_hash = sha256_file(abs_path)
-
-    patch_preview = build_promotion_patch_preview(
-        root=root,
-        project=project,
-        proposal_id=proposal_id,
-        target_path=target_path,
-        heading=heading,
-        insert_text=insert_text,
-        reason=reason,
-    )
-
-    candidate_evidence = json.dumps(
-        {
-            "target_path": target_path,
-            "heading": heading,
-            "insert_text": insert_text,
-            "patch_preview_schema": patch_preview.get("schema_version"),
-            "unified_diff": patch_preview.get("unified_diff"),
-        },
-        ensure_ascii=False,
-        sort_keys=True,
-    )
-    candidate_evidence_hash = sha256_text(candidate_evidence)
+    current_hash = sha256_file(abs_path) if path_ok else None
 
     confirmation_required = f"APPLY-PREFLIGHT:{proposal_id}:{target_path}:{current_hash or 'missing'}"
     confirmation_matches = human_confirmation == confirmation_required
@@ -106,6 +83,44 @@ def build_apply_preflight(
 
     status = "PASS" if not hard_errors else "BLOCKED"
 
+    if status == "PASS":
+        patch_preview = build_promotion_patch_preview(
+            root=root,
+            project=project,
+            proposal_id=proposal_id,
+            target_path=target_path,
+            heading=heading,
+            insert_text=insert_text,
+            reason=reason,
+        )
+
+        candidate_evidence = json.dumps(
+            {
+                "target_path": target_path,
+                "heading": heading,
+                "insert_text": insert_text,
+                "patch_preview_schema": patch_preview.get("schema_version"),
+                "unified_diff": patch_preview.get("unified_diff"),
+            },
+            ensure_ascii=False,
+            sort_keys=True,
+        )
+        candidate_evidence_hash = sha256_text(candidate_evidence)
+        patch_preview_payload = {
+            "status": patch_preview.get("status"),
+            "mode": patch_preview.get("mode"),
+            "unified_diff": patch_preview.get("unified_diff"),
+            "candidate_evidence_hash": candidate_evidence_hash,
+        }
+    else:
+        patch_preview_payload = {
+            "status": "SKIPPED",
+            "mode": "dry_run_only",
+            "unified_diff": "",
+            "candidate_evidence_hash": None,
+            "skipped_reason": "preflight blocked before patch preview generation",
+        }
+
     return {
         "schema_version": SCHEMA_VERSION,
         "suite": "M26.2 Human-approved promotion apply preflight dry-run",
@@ -115,7 +130,7 @@ def build_apply_preflight(
         "proposal_id": proposal_id,
         "target": {
             "path": target_path,
-            "exists": abs_path.exists(),
+            "exists": abs_path.exists() if path_ok else False,
             "path_ok": path_ok,
             "path_error": path_error,
             "current_sha256": current_hash,
@@ -130,14 +145,9 @@ def build_apply_preflight(
             "confirmation_is_required_for_future_apply": True,
             "confirmation_does_not_apply_now": True,
         },
-        "patch_preview": {
-            "status": patch_preview.get("status"),
-            "mode": patch_preview.get("mode"),
-            "unified_diff": patch_preview.get("unified_diff"),
-            "candidate_evidence_hash": candidate_evidence_hash,
-        },
+        "patch_preview": patch_preview_payload,
         "rollback_plan": {
-            "rollback_available_later": True,
+            "rollback_available_later": bool(path_ok),
             "rollback_strategy": "restore target file content using pre_apply_hash and operation record snapshot",
             "requires_future_snapshot": True,
             "pre_apply_hash": current_hash,
@@ -168,7 +178,6 @@ def build_apply_preflight(
             "files_written": False,
         },
     }
-
 
 def render_preflight_markdown(result: dict[str, Any]) -> str:
     target = result["target"]
