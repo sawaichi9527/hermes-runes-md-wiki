@@ -122,217 +122,211 @@ Hermes-agent should only call future proposal-writing commands after user consen
 
 Status: PASS
 
-Goal:
-
-- Define Runes Shield as the official P0 agent-facing boundary.
-- Replace earlier Facade / Gate / Field naming with Runes Shield.
-- Document allowed and forbidden Hermes-agent behaviors.
-- Document human-only approval boundaries.
-- Establish the canonical P0 Markdown entry path instead of relying on incidental local wiki files.
-
-Verified files:
-
-- `wiki/hermes_runes_index.md`
-- `wiki/_system/runes_shield_contract.md`
-- `wiki/_system/runes_invocation_policy.md`
-- `wiki/_system/runes_agent_guidance.md`
-
-Result:
-
-- M21.1a Runes Shield `_system` documents: PASS.
-- M21.1b Canonical Runes Markdown Architecture: PASS.
-
 #### M21.2 Runes Shield capabilities / guidance CLI
 
 Status: PASS / read-only / smoke verified
-
-Goal:
-
-- Provide simple read-only CLI/JSON endpoints for agent discovery.
-- Keep implementation local, deterministic, and easy to inspect.
-
-Verified commands:
-
-```bash
-bin/runes capabilities --json
-bin/runes guidance --json
-python3 tools/runes/smoke_runes_shield.py
-```
-
-Success criteria:
-
-- Output is stable enough for Hermes-agent to consume.
-- Output includes capability list, safety boundaries, write limitations, and human-only operations.
-- No proposal creation, trusted memory mutation, or DB mutation occurs.
 
 #### M21.3 Agent interaction prompt pattern
 
 Status: PASS / read-only / smoke verified
 
-Goal:
-
-- Define when Hermes-agent should offer Runes knowledge solidification to the user.
-- Avoid automatically turning every conversation into memory.
-
-Trigger candidates:
-
-- project decision
-- baseline result
-- verification result
-- technical procedure
-- durable service architecture
-- future action item
-- repeated troubleshooting knowledge
-- user explicitly asks to remember or solidify knowledge
-
-Non-trigger candidates:
-
-- one-off casual chat
-- unverified speculation
-- sensitive secrets
-- credentials / tokens / passwords
-- raw logs with private data
-- material that needs user review first
-
-Verified command:
-
-```bash
-bin/runes offer --text "..." --json
-python3 tools/runes/smoke_runes_shield.py
-```
-
-Success criteria:
-
-- Hermes-agent can proactively ask whether to create a governed proposal.
-- Hermes-agent does not silently persist knowledge.
-- User consent is required before future `runes propose`.
-- Casual chat, secret-bearing content, and unverified speculation do not trigger proposal offers.
-
 #### M21.4 Multi-proposal P0 trial run
 
 Status: PASS / sandbox-write-only / smoke verified
-
-Goal:
-
-- Validate the governed proposal flow with mixed proposal states without mutating real trusted wiki content or database state.
-
-Verified command:
-
-```bash
-python3 tools/runes/trial_run_m21_4.py --json
-python3 tools/runes/smoke_runes_shield.py
-```
-
-Verified scenario:
-
-1. Create proposal A in sandbox.
-2. Create proposal B in sandbox.
-3. Create proposal C in sandbox.
-4. Approve A in sandbox.
-5. Reject B in sandbox.
-6. C remains draft in sandbox.
-7. Import approved A into sandbox trusted index.
-8. Recall approved content from sandbox trusted index.
-9. Verify rejected and draft content are not visible as trusted memory.
-10. Run smoke/regression checks.
-
-Success criteria:
-
-- Approved proposal becomes retrievable sandbox trusted evidence.
-- Rejected proposal remains excluded.
-- Draft proposal remains excluded.
-- Trusted sandbox index contains only the approved proposal.
-- Real trusted wiki is not mutated.
-- Real database state is not mutated.
-- Real forge inbox is not mutated.
 
 #### M21.5 Human-only curated promotion path
 
 Status: PASS / dry-run-only / smoke verified
 
-Goal:
-
-- Define a dry-run path for promoting reviewed proposals into curated wiki notes.
-- Keep promotion human-controlled during P0.
-
-Verified command:
-
-```bash
-python3 tools/runes/promotion_plan_m21_5.py --workspace tmp/runes-trial/m21-4 --json
-python3 tools/runes/smoke_runes_shield.py
-```
-
-Verified behavior:
-
-- Runes may generate a promotion plan and preview.
-- Human performs or approves final promotion.
-- Hermes-agent may request status or evidence, but may not perform direct promotion.
-
-Success criteria:
-
-- Approved proposal can be converted into a curated Markdown promotion plan without giving Hermes-agent direct write authority over trusted wiki structure.
-- `human_only: true`.
-- `agent_may_promote: false`.
-- `curated_write_performed: false`.
-- `database_mutated: false`.
-- `proposal_state_mutated: false`.
-
 #### M21.6 P0 status recap / roadmap lock
 
 Status: PASS / roadmap lock
 
-Goal:
+---
 
-- Record M21.1 through M21.5 as the verified Runes Shield P0 / trial-run boundary baseline.
-- Link roadmap state to a dedicated verification record.
-- Make the next implementation stage explicit.
+## M22 Proposal Governance Loop
 
-Verified record:
+Status: PASS / P0 proposal governance loop established
+Priority: P0
+Verification record: `wiki/k6-freelancer/verification-m22-proposal-loop.md`
 
-```text
-wiki/k6-freelancer/verification-m21-runes-shield.md
+### Purpose
+
+M22 extends the Runes Shield boundary from discovery/guidance into a governed proposal workflow suitable for P0 Hermes-agent trial-run usage.
+
+The goal is to let Hermes-agent create, inspect, validate, and plan proposal cleanup operations without granting direct trusted-memory authority.
+
+### M22 verified scope
+
+The following proposal-governance loop is now implemented and verified:
+
+- governed draft proposal creation
+- proposal list inspection
+- proposal show inspection
+- proposal hygiene reporting
+- proposal cleanup-plan dry-run generation
+- CLI wrappers for hygiene and cleanup-plan
+
+### M22 milestone breakdown
+
+#### M22.1 Governed draft proposal writer
+
+Status: PASS / draft-write-only / smoke verified
+
+Verified command:
+
+```bash
+bin/runes propose --title "..." --text "..." --consent "go" --json
 ```
 
-Result:
+Verified properties:
 
-- M21 Runes Shield P0 / trial-run boundary is established.
-- Hermes-agent can invoke Runes discovery, guidance, offer-policy, sandbox proposal trial, and human-only promotion dry-run capabilities.
-- Hermes-agent still cannot directly write trusted wiki content, approve / reject / promote proposals, mutate proposal states, mutate DB/index state, or treat draft / rejected content as trusted memory.
+- explicit user consent required
+- creates draft proposal only
+- trusted memory not created
+- approval not executed
+- promotion not executed
+- importer/database not mutated
 
-### Out of scope for M21 P0
+---
 
-- Autonomous trusted memory writer
-- Agent direct wiki mutation
-- Agent direct database mutation
-- Full MCP server implementation
-- Enterprise policy engine
-- Multi-user permission model
-- Automatic heuristic tuning
-- P2/P3 observation-driven optimization
-- Web dashboard
-- Complex workflow engine
+#### M22.2 Proposal list/show inspection
 
-### P0 completion definition
+Status: PASS / read-only / smoke verified
 
-M21 P0 is complete because Hermes-agent can:
+Verified commands:
 
-1. Discover Runes capabilities through Runes Shield.
-2. Understand the boundary between allowed invocation and forbidden direct mutation.
-3. Ask the user whether durable knowledge should be solidified.
-4. Keep governed proposal creation behind explicit user consent and future controlled interfaces.
-5. Run multi-proposal sandbox verification with approved / rejected / draft isolation.
-6. Generate human-only curated promotion dry-run plans.
-7. Avoid direct manipulation of internal Markdown files, proposal state, importer artifacts, and database content.
-8. Bootstrap from `wiki/hermes_runes_index.md` and the canonical Runes Shield `_system` files without depending on incidental local wiki documents.
+```bash
+bin/runes proposal list --json
+bin/runes proposal show --id "..." --json
+```
 
-### Next stage after M21
+Verified properties:
 
-The next implementation stage should move from verified sandbox / dry-run behavior toward governed proposal creation while preserving:
+- proposal inspection without mutation
+- no trusted-memory mutation
+- no DB/importer mutation
 
-- explicit user consent,
-- human-only approval / rejection / promotion,
-- no autonomous trusted memory writer,
-- no direct Hermes-agent mutation of internal Markdown / DB state,
-- smoke/regression checks before any trusted memory change.
+---
+
+#### M22.3 Proposal hygiene report
+
+Status: PASS / read-only / smoke verified
+
+Verified command:
+
+```bash
+python3 tools/runes/proposal_hygiene_m22_3.py --json
+```
+
+Verified properties:
+
+- detects state mismatches
+- detects metadata hygiene issues
+- no mutation performed
+
+---
+
+#### M22.3b Hygiene CLI wiring
+
+Status: PASS / read-only / smoke verified
+
+Verified command:
+
+```bash
+bin/runes proposal hygiene --json
+```
+
+---
+
+#### M22.4 Human cleanup plan dry-run
+
+Status: PASS / dry-run-only / smoke verified
+
+Verified command:
+
+```bash
+python3 tools/runes/cleanup_plan_m22_4.py --json
+```
+
+Verified properties:
+
+- hygiene issues converted into planned cleanup actions
+- execution disabled
+- human review required
+- no mutation performed
+
+---
+
+#### M22.5 Cleanup-plan CLI wiring
+
+Status: PASS / dry-run-only / smoke verified
+
+Verified command:
+
+```bash
+bin/runes proposal cleanup-plan --json
+```
+
+Verified properties:
+
+- cleanup plan exposed through stable agent-facing CLI
+- execution disabled
+- agent may not execute cleanup
+- no mutation performed
+
+---
+
+### M22 governance boundary
+
+The following boundaries remain intentionally enforced:
+
+- Hermes-agent must use Runes Shield interfaces only.
+- Hermes-agent must not directly mutate wiki/.
+- Hermes-agent must not directly approve proposals.
+- Hermes-agent must not directly reject proposals.
+- Hermes-agent must not directly promote curated notes.
+- Hermes-agent must not autonomously execute cleanup.
+- Draft/rejected proposals are not trusted memory.
+- Human approval is required before trusted-memory creation.
+
+### Explicitly not implemented in M22
+
+The following operations intentionally remain outside the P0 boundary:
+
+- approve execution
+- reject execution
+- curated promotion execution
+- cleanup execution
+- importer/index rebuild execution
+- direct DB mutation
+- autonomous trusted-memory mutation
+
+### M22 result
+
+M22 establishes a stable P0 proposal-governance loop suitable for:
+
+- governed Hermes-agent proposal creation
+- proposal inspection
+- proposal hygiene validation
+- human cleanup planning
+
+without granting direct trusted-memory authority to Hermes-agent.
+
+### Next stage after M22
+
+The next stage should focus on:
+
+- human approval workflow design
+- human rejection workflow design
+- human-reviewed state transition dry-run
+- approval/rejection audit evidence
+
+while preserving:
+
+- explicit user consent
+- human-only approval/rejection/promotion
+- no autonomous trusted-memory mutation
+- no direct Hermes-agent wiki/DB control
 
 ---
