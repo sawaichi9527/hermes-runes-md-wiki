@@ -6,6 +6,7 @@ Supported current commands:
 - guidance: read-only invocation guidance
 - offer: deterministic recommendation for whether Hermes-agent should ask the user about creating a governed proposal
 - propose: M22.1 governed draft proposal writer, requiring explicit user consent
+- proposal list/show: M22.2 read-only proposal inspection
 
 Runes Shield must not approve, reject, promote, import, index, or mutate trusted memory directly through Hermes-agent.
 """
@@ -21,9 +22,11 @@ from typing import Any
 
 try:
     from offer_policy import classify_offer_intent, decision_to_dict
+    from proposal_reader_m22_2 import list_proposals, show_proposal
     from proposal_writer_m22_1 import write_proposal
 except ImportError:  # pragma: no cover - fallback for module execution contexts
     from tools.runes.offer_policy import classify_offer_intent, decision_to_dict
+    from tools.runes.proposal_reader_m22_2 import list_proposals, show_proposal
     from tools.runes.proposal_writer_m22_1 import write_proposal
 
 SCHEMA_VERSION = "m21.3.p0.v1"
@@ -167,9 +170,10 @@ def capabilities_payload(root: Path) -> dict[str, Any]:
             "command": "capabilities",
             "status": "PASS",
             "mode": "read_only",
-            "implemented": ["capabilities", "guidance", "offer", "propose"],
+            "implemented": ["capabilities", "guidance", "offer", "propose", "proposal_list", "proposal_show"],
             "implemented_in_m21_3": ["capabilities", "guidance", "offer"],
             "implemented_in_m22_1": ["propose"],
+            "implemented_in_m22_2": ["proposal_list", "proposal_show"],
             "capabilities": [
                 {
                     "name": "capabilities",
@@ -202,35 +206,36 @@ def capabilities_payload(root: Path) -> dict[str, Any]:
                     "name": "proposal_list",
                     "command": "runes proposal list --json",
                     "write": False,
-                    "p0_status": "planned_not_implemented_in_m22_1",
-                    "description": "Inspect proposal states without mutating them. Not implemented in M22.1.",
+                    "p0_status": "m22_2_read_only_implemented",
+                    "description": "Inspect proposal states without mutating them.",
                 },
                 {
                     "name": "proposal_show",
-                    "command": "runes proposal show --json",
+                    "command": "runes proposal show --id '<proposal_id>' --json",
                     "write": False,
-                    "p0_status": "planned_not_implemented_in_m22_1",
-                    "description": "Inspect one proposal without mutating it. Not implemented in M22.1.",
+                    "p0_status": "m22_2_read_only_implemented",
+                    "description": "Inspect one proposal without mutating it.",
                 },
                 {
                     "name": "recall",
                     "command": "runes recall --json",
                     "write": False,
-                    "p0_status": "planned_wrapper_not_implemented_in_m22_1",
+                    "p0_status": "planned_wrapper_not_implemented_in_m22_2",
                     "description": "Retrieve trusted indexed memory evidence through a Runes Shield wrapper. Existing recall tools remain separate until wrapped.",
                 },
                 {
                     "name": "smoke",
                     "command": "runes smoke --json",
                     "write": False,
-                    "p0_status": "planned_wrapper_not_implemented_in_m22_1",
-                    "description": "Verify Runes Shield and memory tool health. Not implemented as a runes subcommand in M22.1.",
+                    "p0_status": "planned_wrapper_not_implemented_in_m22_2",
+                    "description": "Verify Runes Shield and memory tool health. Not implemented as a runes subcommand in M22.2.",
                 },
             ],
             "forbidden_agent_operations": FORBIDDEN_AGENT_OPERATIONS,
             "human_only_operations": HUMAN_ONLY_OPERATIONS,
             "notes": [
                 "M22.1 adds controlled draft proposal creation after explicit consent.",
+                "M22.2 adds read-only proposal list/show inspection.",
                 "Draft proposals are not trusted memory.",
                 "Approval, rejection, promotion, import, indexing, and database writes remain outside Hermes-agent authority.",
                 "Hermes-agent must not infer operational behavior from incidental local wiki documents.",
@@ -319,13 +324,16 @@ def emit(payload: dict[str, Any], as_json: bool) -> int:
         print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
         return 0
 
-    print(f"{payload['shield']['name']}: {payload['shield']['subtitle']}")
-    print(payload["shield"]["slogan"])
-    print(payload["shield"]["slogan_zh"])
+    if "shield" in payload:
+        print(f"{payload['shield']['name']}: {payload['shield']['subtitle']}")
+        print(payload["shield"]["slogan"])
+        print(payload["shield"]["slogan_zh"])
     print(f"status={payload.get('status', 'UNKNOWN')} command={payload.get('command', 'unknown')}")
     if payload.get("command") == "offer":
         decision = payload.get("decision", {})
         print(f"should_offer={decision.get('should_offer')} action={decision.get('action')} confidence={decision.get('confidence')}")
+    if "count" in payload:
+        print(f"count={payload['count']}")
     print("Use --json for agent-facing structured output.")
     return 0
 
@@ -372,6 +380,22 @@ def build_parser() -> argparse.ArgumentParser:
     propose.add_argument("--output-root", help="Optional alternate root for sandbox/smoke proposal writes.")
     propose.add_argument("--json", action="store_true", help="Emit stable JSON output for agent/tool consumption.")
 
+    proposal = subparsers.add_parser("proposal", help="Read-only proposal inspection commands.")
+    proposal_sub = proposal.add_subparsers(dest="proposal_command", required=True)
+
+    proposal_list = proposal_sub.add_parser("list", help="List proposals without mutating them.")
+    proposal_list.add_argument("--project", default="k6-freelancer", help="Target project/domain.")
+    proposal_list.add_argument("--state", default="all", choices=["all", "draft", "approved", "rejected"])
+    proposal_list.add_argument("--output-root", help="Optional alternate root for sandbox/smoke proposal reads.")
+    proposal_list.add_argument("--json", action="store_true", help="Emit stable JSON output for agent/tool consumption.")
+
+    proposal_show = proposal_sub.add_parser("show", help="Show one proposal without mutating it.")
+    proposal_show.add_argument("--project", default="k6-freelancer", help="Target project/domain.")
+    proposal_show.add_argument("--id", required=True, help="Proposal id or filename.")
+    proposal_show.add_argument("--output-root", help="Optional alternate root for sandbox/smoke proposal reads.")
+    proposal_show.add_argument("--no-body", action="store_true", help="Omit body from JSON output.")
+    proposal_show.add_argument("--json", action="store_true", help="Emit stable JSON output for agent/tool consumption.")
+
     return parser
 
 
@@ -406,6 +430,13 @@ def main() -> int:
                 print(f"reason={result.reason}")
             print("Use --json for details.")
         return 0 if result.status == "PASS" else 2
+    if args.command == "proposal":
+        if args.proposal_command == "list":
+            payload = list_proposals(root, args.project, args.state, args.output_root)
+            return emit(payload, args.json)
+        if args.proposal_command == "show":
+            payload = show_proposal(root, args.project, args.id, args.output_root, include_body=not args.no_body)
+            return emit(payload, args.json)
 
     parser.error(f"unsupported command: {args.command}")
     return 2
