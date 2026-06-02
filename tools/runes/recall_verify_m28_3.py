@@ -11,7 +11,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-SCHEMA_VERSION = "m28.3.p0.v1"
+SCHEMA_VERSION = "m28.3.p0.v2"
 DEFAULT_PROJECT = "k6-freelancer"
 
 
@@ -51,12 +51,42 @@ def parse_json_stdout(stdout: str) -> tuple[Any | None, str | None]:
         return None, str(first_exc)
 
 
-def path_seen_in_json(data: Any, expected_path: str) -> bool:
-    return expected_path in "\n".join(extract_text_values(data))
+def result_items(data: Any) -> list[dict[str, Any]]:
+    if not isinstance(data, dict):
+        return []
+    results = data.get("results")
+    if not isinstance(results, list):
+        return []
+    return [item for item in results if isinstance(item, dict)]
 
 
-def marker_seen_in_json(data: Any, marker: str) -> bool:
-    return marker in "\n".join(extract_text_values(data))
+def result_path_matches(item: dict[str, Any], expected_path: str) -> bool:
+    if item.get("path") == expected_path:
+        return True
+    citation = item.get("citation")
+    if isinstance(citation, dict) and citation.get("path") == expected_path:
+        return True
+    return False
+
+
+def result_marker_matches(item: dict[str, Any], marker: str) -> bool:
+    searchable = "\n".join([
+        str(item.get("content") or ""),
+        str(item.get("section_heading") or ""),
+        json.dumps(item.get("citation") or {}, ensure_ascii=False, sort_keys=True),
+    ])
+    return marker in searchable
+
+
+def path_seen_in_results(data: Any, expected_path: str) -> bool:
+    return any(result_path_matches(item, expected_path) for item in result_items(data))
+
+
+def marker_seen_in_results(data: Any, expected_path: str, marker: str) -> bool:
+    return any(
+        result_path_matches(item, expected_path) and result_marker_matches(item, marker)
+        for item in result_items(data)
+    )
 
 
 def build_recall_verification(
@@ -120,9 +150,12 @@ def build_recall_verification(
     )
 
     parsed, parse_error = parse_json_stdout(proc.stdout)
+    results = result_items(parsed)
 
-    path_found = parsed is not None and path_seen_in_json(parsed, expected_path)
-    marker_found = True if required_marker is None else (parsed is not None and marker_seen_in_json(parsed, required_marker))
+    path_found = parsed is not None and path_seen_in_results(parsed, expected_path)
+    marker_found = True if required_marker is None else (
+        parsed is not None and marker_seen_in_results(parsed, expected_path, required_marker)
+    )
     recall_pass = proc.returncode == 0 and parsed is not None and path_found and marker_found
 
     payload: dict[str, Any] = {
@@ -139,8 +172,10 @@ def build_recall_verification(
         "command": cmd,
         "returncode": proc.returncode,
         "parse_error": parse_error,
+        "result_count": len(results),
         "checks": {
             "json_parse_ok": parsed is not None,
+            "result_count_positive": len(results) > 0,
             "expected_path_found": path_found,
             "required_marker_found": marker_found,
             "recall_returncode_ok": proc.returncode == 0,
@@ -149,6 +184,7 @@ def build_recall_verification(
             "operation_record": None,
             "post_refresh_recall_verified": recall_pass,
             "retrieval_provenance_checked": True,
+            "checked_only_retrieval_results": True,
         },
         "mutations": {
             "trusted_wiki_mutated": False,
@@ -183,10 +219,12 @@ def render_markdown(payload: dict[str, Any]) -> str:
         f"Query: {payload.get('query')}",
         f"Expected path: {payload.get('expected_path')}",
         f"Required marker: {payload.get('required_marker')}",
+        f"Result count: {payload.get('result_count')}",
         "",
         "### Checks",
         "",
         f"- JSON parse OK: {checks.get('json_parse_ok')}",
+        f"- Result count positive: {checks.get('result_count_positive')}",
         f"- Recall returncode OK: {checks.get('recall_returncode_ok')}",
         f"- Expected path found: {checks.get('expected_path_found')}",
         f"- Required marker found: {checks.get('required_marker_found')}",
@@ -195,6 +233,7 @@ def render_markdown(payload: dict[str, Any]) -> str:
         "",
         f"- Operation record: {evidence.get('operation_record')}",
         f"- Post-refresh recall verified: {evidence.get('post_refresh_recall_verified')}",
+        f"- Checked only retrieval results: {evidence.get('checked_only_retrieval_results')}",
         "",
     ])
 
