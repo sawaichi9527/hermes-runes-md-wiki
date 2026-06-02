@@ -242,3 +242,34 @@ Next:
 
 - M24.4 Attunement trail smoke test
 
+
+---
+
+## M24.4 Attunement Trail Smoke Test
+
+Status: PASS / REGRESSION BASELINE
+
+Scope:
+
+- Verify trail dry-run JSON payload.
+- Verify terminal-readable trail preview renderer.
+- Verify Markdown trail preview renderer.
+- Verify no trail/proposal/wiki/database/importer mutation boundary.
+
+Boundary:
+
+- no trail file write
+- no proposal state mutation
+- no trusted wiki mutation
+- no database mutation
+- no importer mutation
+- no promotion execution
+
+Current milestone:
+
+- M24.4 Attunement Trail Smoke Test: PASS / regression baseline
+
+Next:
+
+- M24.5 Roadmap / verification lock
+
