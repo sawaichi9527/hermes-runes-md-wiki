@@ -1,6 +1,6 @@
 # M23 Runes Attunement Workflow Verification
 
-Status: DESIGN LOCK / P0 DRY-RUN SCOPE
+Status: PASS / STABLE P0 GOVERNED ATTUNEMENT BASELINE
 Milestone: M23 Runes Attunement Workflow / Dry-run
 Chinese: M23 符文調律流程 / 乾跑
 
@@ -51,90 +51,64 @@ State meaning:
 
 M23 defines proposal intent categories for future Runes Shield proposal handling.
 
-### ingest-summary
+- ingest-summary: certified specs, RFCs, manuals, official documents.
+- research-note: websites, articles, public discussions, research topics.
+- memory-candidate: user-context knowledge proposed for long-term memory.
+- replace-memory: replacement or supersession of existing wiki knowledge.
+- wiki-operation: proposed Markdown wiki create/modify/remove/tag/mark operation.
 
-Used for certified or official documents such as specifications, RFCs, vendor manuals, and formal design documents.
+## M23 Completed Scope
 
-Expected characteristics:
+- M23.1 Runes Attunement Concept Lock: PASS
+- M23.2 Attunement dry-run CLI: PASS
+- M23.3 Human-readable Attunement Preview: PASS
+- M23.4 Attunement smoke test: PASS
+- M23.5 Roadmap / verification lock: PASS
 
-- higher source trust
-- source reference required
-- scope and interpretation must still be checked
-- low-risk fast attunement may be acceptable
+## M23.4 Smoke Baseline
 
-### research-note
+Smoke test:
 
-Used for websites, articles, public discussions, news, blog posts, titles, or externally researched topics.
+```text
+tools/runes/smoke_m23_4_attunement.py
+```
 
-Expected characteristics:
+Verified behaviors:
 
-- mixed source trust
-- may contain uncertainty
-- should not be written as certified fact unless verified
-- comparison and confidence note are preferred
+- attune dry-run payload: PASS
+- reject dry-run payload: PASS
+- supersede dry-run payload: PASS
+- readable preview availability: PASS
+- no proposal state mutation: PASS
+- no trusted memory creation: PASS
+- no curated wiki mutation: PASS
+- no database mutation: PASS
+- no importer mutation: PASS
+- no file writes: PASS
 
-### memory-candidate
+Latest verified local smoke result:
 
-Used when Hermes-agent identifies knowledge from user interaction that may deserve long-term memory solidification.
+```text
+suite: M23.4 Runes Attunement smoke test
+status: PASS
+failed: 0
+total: 27
+```
 
-Expected characteristics:
+## Locked Governance Boundaries
 
-- user-context source
-- requires user confirmation
-- should explain why the knowledge should be remembered
+M23 explicitly locks the following boundaries:
 
-### replace-memory
-
-Used when Hermes-agent proposes replacing, superseding, or rewriting existing wiki knowledge.
-
-Expected characteristics:
-
-- higher risk than add-only memory
-- old reference required
-- reason required
-- diff preview should be introduced in later milestones
-
-### wiki-operation
-
-Used when Hermes-agent proposes direct Markdown wiki operations such as create, modify, remove, tag, or mark.
-
-Expected characteristics:
-
-- always through Runes Shield
-- dry-run first
-- path preview required
-- trusted wiki mutation not implemented in M23
-
-## M23 Scope
-
-M23 includes:
-
-- Runes Attunement terminology lock
-- proposal intent model
-- state transition design
-- approve/reject/supersede dry-run design
-- human-readable attunement preview design
-- attunement trail preview design
-- separation between approval and promotion
-
-## M23 Non-goals
-
-M23 explicitly excludes:
-
-- automatic trusted wiki mutation
-- direct database mutation
-- autonomous approval
-- approve execution
-- reject execution
-- cleanup execution
-- curated promotion execution
-- multi-user RBAC
-- approval quorum
-- reviewer assignment
-- web dashboard
-- background worker
-- workflow engine
-- enterprise policy engine
+- approve execution: not implemented
+- reject execution: not implemented
+- supersede execution: not implemented
+- cleanup execution: not implemented
+- curated promotion execution: not implemented
+- trusted wiki mutation: forbidden
+- direct database mutation: forbidden
+- importer mutation: forbidden
+- autonomous attunement execution: forbidden
+- autonomous trusted-memory mutation: forbidden
 
 ## Runes Shield Boundary
 
@@ -146,12 +120,13 @@ Hermes-agent must not:
 - mutate proposal state directly
 - mutate database records directly
 - bypass Runes Shield for memory proposal operations
+- treat attuned proposals as already-promoted trusted memory
 
 ## Personal-use Boundary
 
 M23 is intentionally personal-use scoped.
 
-It should preserve extension flexibility without introducing enterprise complexity.
+It preserves extension flexibility without introducing enterprise complexity.
 
 Allowed extension points:
 
@@ -164,6 +139,7 @@ Allowed extension points:
 - superseded_by
 - decision_reason
 - promotion_status
+- attunement trail write
 
 Deferred extensions:
 
@@ -176,19 +152,27 @@ Deferred extensions:
 - trusted wiki promotion execution
 - rollback helper
 
-## Verification Status
+## Non-goals
 
-M23.1 Runes Attunement concept lock:
+M23 explicitly excludes:
 
-- terminology: PASS
-- state model: PASS
-- proposal intent model: PASS
-- P0 dry-run boundary: PASS
-- non-goals locked: PASS
-- direct trusted wiki mutation forbidden: PASS
-- autonomous trusted-memory mutation forbidden: PASS
+- automatic trusted wiki mutation
+- direct database mutation
+- autonomous approval
+- autonomous rejection
+- autonomous supersession
+- multi-user RBAC
+- approval quorum
+- reviewer assignment
+- web dashboard
+- background worker
+- workflow engine
+- enterprise policy engine
 
-Overall:
+## Overall Verification Status
 
 M23 Runes Attunement Workflow / Dry-run:
-DESIGN LOCK / READY FOR DRY-RUN CLI DESIGN
+
+```text
+PASS / stable P0 governed attunement baseline
+```
