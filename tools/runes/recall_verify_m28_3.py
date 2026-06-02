@@ -36,6 +36,21 @@ def extract_text_values(value: Any) -> list[str]:
     return texts
 
 
+def parse_json_stdout(stdout: str) -> tuple[Any | None, str | None]:
+    text = stdout or ""
+    try:
+        return json.loads(text), None
+    except Exception as first_exc:
+        start = text.find("{")
+        end = text.rfind("}")
+        if start >= 0 and end > start:
+            try:
+                return json.loads(text[start : end + 1]), None
+            except Exception as second_exc:
+                return None, str(second_exc)
+        return None, str(first_exc)
+
+
 def path_seen_in_json(data: Any, expected_path: str) -> bool:
     return expected_path in "\n".join(extract_text_values(data))
 
@@ -85,7 +100,6 @@ def build_recall_verification(
         "--path", expected_path,
         "--limit", str(limit),
         "--json",
-        "--no-warn-hf",
     ]
     if heading:
         cmd.extend(["--heading", heading])
@@ -105,12 +119,7 @@ def build_recall_verification(
         check=False,
     )
 
-    parsed: Any = None
-    parse_error = None
-    try:
-        parsed = json.loads(proc.stdout)
-    except Exception as exc:  # pragma: no cover - defensive for CLI failures
-        parse_error = str(exc)
+    parsed, parse_error = parse_json_stdout(proc.stdout)
 
     path_found = parsed is not None and path_seen_in_json(parsed, expected_path)
     marker_found = True if required_marker is None else (parsed is not None and marker_seen_in_json(parsed, required_marker))
