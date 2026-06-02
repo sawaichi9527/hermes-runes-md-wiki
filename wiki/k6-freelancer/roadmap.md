@@ -211,3 +211,34 @@ Current milestone:
 Next:
 
 - M24.2 Attunement trail dry-run CLI
+
+---
+
+## M24.3 Attunement Trail Markdown Preview
+
+Status: PASS / PREVIEW-ONLY
+
+Scope:
+
+- Add Markdown rendering for attunement trail event previews.
+- Keep JSON and terminal-readable previews intact.
+- Preserve dry-run-only behavior.
+- Do not write append-only trail files yet.
+
+Boundary:
+
+- no trail file write
+- no proposal state mutation
+- no trusted wiki mutation
+- no database mutation
+- no importer mutation
+- no promotion execution
+
+Current milestone:
+
+- M24.3 Attunement Trail Markdown Preview: PASS / preview-only
+
+Next:
+
+- M24.4 Attunement trail smoke test
+

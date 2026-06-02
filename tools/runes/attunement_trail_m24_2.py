@@ -116,6 +116,55 @@ def build_attunement_trail_dry_run(
     }
 
 
+def render_trail_markdown_preview(result: dict[str, Any]) -> str:
+    event = result.get("event_preview") or {}
+    mutations = result.get("mutations") or {}
+    preview = result.get("preview") or {}
+
+    lines = [
+        "## Runes Attunement Trail Event Preview",
+        "",
+        f"Status: {result.get('status')}",
+        f"Mode: {result.get('mode')}",
+        f"Project: {result.get('project')}",
+        f"Proposal ID: {result.get('proposal_id')}",
+        f"Action: {result.get('action')}",
+        "",
+        "### Event",
+        "",
+        f"- Event ID: {event.get('event_id')}",
+        f"- Event type: {event.get('event_type')}",
+        f"- Old state: {event.get('old_state')}",
+        f"- New state: {event.get('new_state')}",
+        f"- Actor: {event.get('actor')}",
+        f"- Decision reason: {event.get('decision_reason')}",
+        f"- Timestamp: {event.get('timestamp')}",
+        f"- Dry-run: {event.get('dry_run')}",
+        "",
+        "### Boundary",
+        "",
+        "- Trail is governance evidence, not trusted wiki memory.",
+        f"- Would write trail file now: {preview.get('would_write_trail_file', False)}",
+        f"- Would append event later: {preview.get('would_append_event_later', False)}",
+        f"- Proposal state mutation now: {mutations.get('proposal_state_mutated', False)}",
+        f"- Trusted wiki mutation now: {mutations.get('curated_wiki_mutated', False)}",
+        f"- Trusted memory created now: {mutations.get('trusted_memory_created', False)}",
+        f"- Database mutation now: {mutations.get('database_mutated', False)}",
+        f"- Importer mutation now: {mutations.get('importer_mutated', False)}",
+        f"- Files written now: {mutations.get('files_written', False)}",
+        "",
+        "### Current scope",
+        "",
+        "This is a Markdown preview only. M24.3 does not write an append-only trail file.",
+        "",
+    ]
+
+    superseded_by = event.get("superseded_by")
+    if superseded_by:
+        lines.insert(16, f"- Superseded by: {superseded_by}")
+
+    return "\n".join(lines)
+
 def print_trail_preview(result: dict[str, Any]) -> None:
     event = result.get("event_preview") or {}
     preview = result.get("preview") or {}
@@ -168,6 +217,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--output-root")
     parser.add_argument("--dry-run", action="store_true", required=True)
     parser.add_argument("--json", action="store_true")
+    parser.add_argument("--markdown", action="store_true")
     return parser
 
 
@@ -187,6 +237,8 @@ def main() -> int:
 
     if args.json:
         print(json.dumps(result, ensure_ascii=False, indent=2, sort_keys=True))
+    elif args.markdown:
+        print(render_trail_markdown_preview(result))
     else:
         print_trail_preview(result)
 
