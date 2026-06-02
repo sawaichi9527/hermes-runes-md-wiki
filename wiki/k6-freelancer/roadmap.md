@@ -173,109 +173,25 @@ The following proposal-governance loop is now implemented and verified:
 
 Status: PASS / draft-write-only / smoke verified
 
-Verified command:
-
-```bash
-bin/runes propose --title "..." --text "..." --consent "go" --json
-```
-
-Verified properties:
-
-- explicit user consent required
-- creates draft proposal only
-- trusted memory not created
-- approval not executed
-- promotion not executed
-- importer/database not mutated
-
----
-
 #### M22.2 Proposal list/show inspection
 
 Status: PASS / read-only / smoke verified
-
-Verified commands:
-
-```bash
-bin/runes proposal list --json
-bin/runes proposal show --id "..." --json
-```
-
-Verified properties:
-
-- proposal inspection without mutation
-- no trusted-memory mutation
-- no DB/importer mutation
-
----
 
 #### M22.3 Proposal hygiene report
 
 Status: PASS / read-only / smoke verified
 
-Verified command:
-
-```bash
-python3 tools/runes/proposal_hygiene_m22_3.py --json
-```
-
-Verified properties:
-
-- detects state mismatches
-- detects metadata hygiene issues
-- no mutation performed
-
----
-
 #### M22.3b Hygiene CLI wiring
 
 Status: PASS / read-only / smoke verified
-
-Verified command:
-
-```bash
-bin/runes proposal hygiene --json
-```
-
----
 
 #### M22.4 Human cleanup plan dry-run
 
 Status: PASS / dry-run-only / smoke verified
 
-Verified command:
-
-```bash
-python3 tools/runes/cleanup_plan_m22_4.py --json
-```
-
-Verified properties:
-
-- hygiene issues converted into planned cleanup actions
-- execution disabled
-- human review required
-- no mutation performed
-
----
-
 #### M22.5 Cleanup-plan CLI wiring
 
 Status: PASS / dry-run-only / smoke verified
-
-Verified command:
-
-```bash
-bin/runes proposal cleanup-plan --json
-```
-
-Verified properties:
-
-- cleanup plan exposed through stable agent-facing CLI
-- execution disabled
-- agent may not execute cleanup
-- no mutation performed
-
----
 
 ### M22 governance boundary
 
@@ -328,5 +244,106 @@ while preserving:
 - human-only approval/rejection/promotion
 - no autonomous trusted-memory mutation
 - no direct Hermes-agent wiki/DB control
+
+---
+
+## M23 Runes Attunement Workflow / Dry-run
+
+Status: DESIGN LOCK / P0 DRY-RUN SCOPE
+Priority: P0
+Verification record: `wiki/k6-freelancer/verification-m23-runes-attunement.md`
+
+### Chinese positioning
+
+M23 符文調律流程 / 乾跑
+
+### Goal
+
+Establish a lightweight personal human-governed approval workflow that allows Hermes-agent to propose memory solidification, replacement, and wiki operations through Runes Shield, while preventing autonomous trusted-memory mutation.
+
+### Concept
+
+Runes Attunement replaces enterprise-style audit/review terminology.
+
+It means:
+
+- proposal alignment before trusted memory promotion
+- user-guided confirmation of source, meaning, risk, and boundary
+- personal memory governance, not enterprise approval bureaucracy
+
+### Core rule
+
+Approved does not mean promoted.
+
+In M23:
+
+- approved means attuned as promotion candidate
+- promotion means later trusted wiki mutation
+- trusted wiki mutation is not implemented in M23
+
+### State model
+
+- pending: awaiting attunement
+- approved: attuned as promotion candidate
+- rejected: attunement rejected
+- superseded: replaced by newer attunement candidate
+
+### Proposal intent model
+
+M23 defines five proposal intent categories:
+
+- ingest-summary
+- research-note
+- memory-candidate
+- replace-memory
+- wiki-operation
+
+### Scope
+
+M23 includes:
+
+- Runes Attunement terminology lock
+- proposal intent model
+- state transition design
+- approve/reject/supersede dry-run design
+- human-readable attunement preview design
+- attunement trail preview design
+- strict separation between approval and promotion
+
+### Non-goals
+
+M23 excludes:
+
+- automatic trusted wiki mutation
+- direct database mutation
+- autonomous approval
+- approve execution
+- reject execution
+- cleanup execution
+- curated promotion execution
+- multi-user RBAC
+- approval quorum
+- reviewer assignment
+- web dashboard
+- background worker
+- workflow engine
+- enterprise policy engine
+
+### Boundary
+
+All Hermes-agent operations against Hermes Runes MD Wiki must go through Runes Shield.
+
+Hermes-agent must not directly mutate:
+
+- trusted wiki Markdown files
+- proposal state
+- database records
+
+### Verification
+
+Current milestone:
+
+- M23.1 Runes Attunement Concept Lock: PASS / design locked
+- M23.2 Attunement dry-run CLI design: next
 
 ---
