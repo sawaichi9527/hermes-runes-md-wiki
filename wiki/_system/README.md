@@ -99,3 +99,11 @@ Hermes Runes is not:
   - Defines how controlled Runes Shield operations should be invoked.
 - `runes_agent_guidance.md`
   - Defines agent-facing operating guidance for proposal, review, approval, and trusted-memory boundaries.
+
+## Runes Markdown Source Health
+
+- `runes_markdown_source_health.md`
+  - Defines Markdown source-of-truth health semantics.
+  - Defines Runes Shield Forge Readiness Check / Runes 符文鑄造前適性檢查.
+  - Defines refinement levels `+0` to `+9`.
+  - Clarifies that PostgreSQL is a replaceable recall/index backend, not the authoritative memory layer.
