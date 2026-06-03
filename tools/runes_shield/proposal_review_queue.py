@@ -2,10 +2,13 @@
 
 import argparse
 import json
+from pathlib import Path
 
 from build_proposal_manifest import build_manifest
 
 
+ROOT = Path(__file__).resolve().parents[2]
+FIXTURE_DIR = ROOT / "tools" / "runes_shield" / "fixtures"
 OUTPUT_CHOICES = ("table", "json")
 REVIEWABLE_STATUSES = {"pending_human_review"}
 
@@ -55,6 +58,11 @@ def find_queue_entry(entries, proposal_id):
     return None
 
 
+def load_payload(entry):
+    fixture_path = FIXTURE_DIR / entry["proposal_fixture"]
+    return json.loads(fixture_path.read_text(encoding="utf-8"))
+
+
 def render_table(entries):
     headers = [
         "queue_status",
@@ -92,17 +100,25 @@ def render_table(entries):
     return "\n".join(lines)
 
 
-def render_detail(entry):
-    return "\n".join(
-        [
-            f"proposal_id: {entry['proposal_id']}",
-            f"fixture: {entry['proposal_fixture']}",
-            f"queue_status: {entry['queue_status']}",
-            f"validation_status: {entry['validation_status']}",
-            f"sample_status: {entry['sample_status']}",
-            f"write: {entry['write']}",
-        ]
-    )
+def render_detail(entry, payload=None):
+    lines = [
+        f"proposal_id: {entry['proposal_id']}",
+        f"fixture: {entry['proposal_fixture']}",
+        f"queue_status: {entry['queue_status']}",
+        f"validation_status: {entry['validation_status']}",
+        f"sample_status: {entry['sample_status']}",
+        f"write: {entry['write']}",
+    ]
+
+    if payload is not None:
+        lines.extend(
+            [
+                "payload:",
+                json.dumps(payload, indent=2, ensure_ascii=False),
+            ]
+        )
+
+    return "\n".join(lines)
 
 
 def emit_json(payload):
@@ -137,6 +153,11 @@ def main():
         default="table",
         help="Output format.",
     )
+    show_parser.add_argument(
+        "--include-payload",
+        action="store_true",
+        help="Include the source proposal JSON payload in read-only output.",
+    )
 
     args = parser.parse_args()
     queue = build_queue()
@@ -155,17 +176,20 @@ def main():
                 f"proposal not pending human review: {args.proposal_id}"
             )
 
+        payload = load_payload(entry) if args.include_payload else None
+
         if args.format == "json":
-            emit_json(
-                {
-                    "queue_version": queue["queue_version"],
-                    "write": False,
-                    "entry": entry,
-                }
-            )
+            result = {
+                "queue_version": queue["queue_version"],
+                "write": False,
+                "entry": entry,
+            }
+            if payload is not None:
+                result["payload"] = payload
+            emit_json(result)
             return
 
-        print(render_detail(entry))
+        print(render_detail(entry, payload=payload))
         return
 
 
