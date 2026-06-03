@@ -96,3 +96,7 @@ archive/legacy-baks/
 # Local runtime operation artifacts
 var/locks/
 var/operations/
+
+# Local operational evidence store
+# Generated runes operation logs are local-only and should not be committed.
+operations/
