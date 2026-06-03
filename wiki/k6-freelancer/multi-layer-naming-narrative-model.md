@@ -1,3 +1,12 @@
+> Status: Historical design source.
+>
+> This document records earlier multi-layer naming and narrative exploration.
+> Active Hermes-agent style guidance has been centralized in:
+> `wiki/_system/agent-style-overlay.md`.
+>
+> Do not treat this file as the current agent-facing style authority.
+> Engineering policy remains under `wiki/_system/` governance documents.
+
 # M30.3b Multi-layer Naming & Narrative Model
 
 Status: M30.3b POLICY / NARRATIVE MODEL / NO CODE CHANGE
