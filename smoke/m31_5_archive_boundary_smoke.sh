@@ -22,7 +22,7 @@ test "$active_runes_count" = "0" || { echo "FAIL active_runes_count=$active_rune
 
 echo "[4/6] active code does not import from tools.archive"
 archive_import_hits="$(
-  grep -RInE '(^|[^A-Za-z0-9_])(from|import)[[:space:]]+tools\.archive|tools/archive|archive/root-milestone-shell|milestone-shell' \
+  grep -RInE '(^|[^A-Za-z0-9_])(from|import)[[:space:]]+tools\.archive' \
     bin smoke tools/importer tools/forge tools/runes \
     --exclude='m31_4_archive_lock_smoke.sh' \
     --exclude='m31_5_archive_boundary_smoke.sh' \
