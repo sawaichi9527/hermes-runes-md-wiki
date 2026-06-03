@@ -45,8 +45,6 @@ def run_json(command, timeout=60):
 
 
 def main():
-    print("== M58.5 Integration Smoke ==")
-
     issues = []
     results = {}
 
