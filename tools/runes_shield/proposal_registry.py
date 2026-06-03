@@ -2,10 +2,13 @@
 
 import argparse
 import json
+from pathlib import Path
 
 from build_proposal_manifest import build_manifest
 
 
+ROOT = Path(__file__).resolve().parents[2]
+FIXTURE_DIR = ROOT / "tools" / "runes_shield" / "fixtures"
 VALIDATION_CHOICES = ("all", "valid", "invalid")
 OUTPUT_CHOICES = ("table", "json")
 
@@ -33,6 +36,11 @@ def find_entry(entries, proposal_id):
         if entry["proposal_id"] == proposal_id:
             return entry
     return None
+
+
+def load_payload(entry):
+    fixture_path = FIXTURE_DIR / entry["proposal_fixture"]
+    return json.loads(fixture_path.read_text(encoding="utf-8"))
 
 
 def render_table(entries):
@@ -69,7 +77,7 @@ def render_table(entries):
     return "\n".join(lines)
 
 
-def render_detail(entry):
+def render_detail(entry, payload=None):
     lines = [
         f"proposal_id: {entry['proposal_id']}",
         f"fixture: {entry['proposal_fixture']}",
@@ -83,6 +91,15 @@ def render_detail(entry):
         f"assessment_missing_fields: {entry['assessment_missing_fields']}",
         f"write: {entry['write']}",
     ]
+
+    if payload is not None:
+        lines.extend(
+            [
+                "payload:",
+                json.dumps(payload, indent=2, ensure_ascii=False),
+            ]
+        )
+
     return "\n".join(lines)
 
 
@@ -134,6 +151,11 @@ def main():
         default="table",
         help="Output format.",
     )
+    show_parser.add_argument(
+        "--include-payload",
+        action="store_true",
+        help="Include the source proposal JSON payload in read-only output.",
+    )
 
     args = parser.parse_args()
 
@@ -168,17 +190,20 @@ def main():
         if entry is None:
             raise SystemExit(f"proposal not found: {args.proposal_id}")
 
+        payload = load_payload(entry) if args.include_payload else None
+
         if args.format == "json":
-            emit_json(
-                {
-                    "manifest_version": manifest["manifest_version"],
-                    "write": False,
-                    "entry": entry,
-                }
-            )
+            result = {
+                "manifest_version": manifest["manifest_version"],
+                "write": False,
+                "entry": entry,
+            }
+            if payload is not None:
+                result["payload"] = payload
+            emit_json(result)
             return
 
-        print(render_detail(entry))
+        print(render_detail(entry, payload=payload))
         return
 
 
