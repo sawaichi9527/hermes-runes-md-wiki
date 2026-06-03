@@ -1,0 +1,111 @@
+{
+  "schema_version": "m35-p0-runtime-registry-v1",
+  "tool_boundary": "runes_shield",
+  "write_default": false,
+  "entries": [
+    {
+      "id": "m35.match.observe",
+      "state": "MATCH",
+      "tool": "observe",
+      "routing_enabled": true,
+      "write": false,
+      "requires_confirmation": false,
+      "authority": "observe",
+      "risk": "low",
+      "allowed_outputs": [
+        "diagnostic_summary",
+        "evidence_references",
+        "source_health_report",
+        "readiness_report",
+        "recommended_next_actions"
+      ],
+      "blocked_behaviors": [
+        "trusted_memory_mutation",
+        "proposal_approval",
+        "database_mutation",
+        "hidden_escalation"
+      ],
+      "notes": "Explicit match routes to observation-only diagnostics."
+    },
+    {
+      "id": "m35.confirm.challenge",
+      "state": "CONFIRM",
+      "tool": "confirm",
+      "routing_enabled": true,
+      "write": false,
+      "requires_confirmation": false,
+      "authority": "confirm",
+      "risk": "low",
+      "allowed_outputs": [
+        "confirmation_challenge",
+        "pending_operation_summary"
+      ],
+      "blocked_behaviors": [
+        "implicit_continuation",
+        "hidden_invoke",
+        "write_authority"
+      ],
+      "notes": "Unclear context returns confirmation challenge only."
+    },
+    {
+      "id": "m35.confirm_match.observe",
+      "state": "CONFIRM_MATCH",
+      "tool": "observe",
+      "routing_enabled": true,
+      "write": false,
+      "requires_confirmation": false,
+      "authority": "observe",
+      "risk": "low",
+      "allowed_outputs": [
+        "diagnostic_summary",
+        "evidence_references",
+        "source_health_report",
+        "readiness_report",
+        "recommended_next_actions"
+      ],
+      "blocked_behaviors": [
+        "autonomous_apply",
+        "proposal_approval",
+        "trusted_memory_promotion",
+        "database_mutation"
+      ],
+      "notes": "Explicit continuation after confirmation routes to observation-only diagnostics."
+    },
+    {
+      "id": "m35.no_match.none",
+      "state": "NO_MATCH",
+      "tool": "none",
+      "routing_enabled": false,
+      "write": false,
+      "requires_confirmation": false,
+      "authority": "none",
+      "risk": "low",
+      "allowed_outputs": [
+        "normal_assistant_handling"
+      ],
+      "blocked_behaviors": [
+        "observation_invocation",
+        "authority_escalation",
+        "hidden_registry_routing"
+      ],
+      "notes": "Non-matching content does not route through Runes Shield tools."
+    }
+  ],
+  "reserved": [
+    {
+      "name": "apply",
+      "enabled": false,
+      "reason": "Reserved for separate human-governed controlled-write path."
+    },
+    {
+      "name": "admin",
+      "enabled": false,
+      "reason": "Out of P0 runtime registry scope."
+    },
+    {
+      "name": "system_mutation",
+      "enabled": false,
+      "reason": "Internal mutation paths are not agent-facing."
+    }
+  ]
+}
