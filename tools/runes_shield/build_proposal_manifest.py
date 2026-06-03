@@ -6,22 +6,35 @@ from pathlib import Path
 from validate_proposal_fixture import validate_fixture
 
 ROOT = Path(__file__).resolve().parents[2]
-FIXTURE_DIR = ROOT / "tools" / "runes_shield" / "fixtures"
+RUNE_SHIELD_DIR = ROOT / "tools" / "runes_shield"
+FIXTURE_DIR = RUNE_SHIELD_DIR / "fixtures"
+DRAFT_DIR = RUNE_SHIELD_DIR / "drafts"
+
+SOURCES = [
+    ("fixture", FIXTURE_DIR, "proposal_draft_*.json"),
+    ("draft", DRAFT_DIR, "*.json"),
+]
 
 
-def iter_proposal_fixtures():
-    return sorted(FIXTURE_DIR.glob("proposal_draft_*.json"))
+def iter_proposal_sources():
+    for source_type, source_dir, pattern in SOURCES:
+        if not source_dir.exists():
+            continue
+        for path in sorted(source_dir.glob(pattern)):
+            yield source_type, path
 
 
 def build_manifest():
     entries = []
 
-    for fixture_path in iter_proposal_fixtures():
-        validation = validate_fixture(fixture_path)
+    for source_type, proposal_path in iter_proposal_sources():
+        validation = validate_fixture(proposal_path)
         entries.append(
             {
-                "proposal_fixture": fixture_path.name,
-                "proposal_id": _read_proposal_id(fixture_path),
+                "proposal_fixture": proposal_path.name,
+                "proposal_source": source_type,
+                "proposal_path": str(proposal_path.relative_to(ROOT)),
+                "proposal_id": _read_proposal_id(proposal_path),
                 "sample_status": validation["sample_status"],
                 "validation_status": validation["status"],
                 "blocked_status_detected": validation["blocked_status_detected"],
@@ -38,7 +51,7 @@ def build_manifest():
 
     return {
         "manifest_version": "m38-proposal-registry-v1",
-        "source": "tools/runes_shield/fixtures",
+        "source": "tools/runes_shield/fixtures + tools/runes_shield/drafts",
         "entry_count": len(entries),
         "write": False,
         "capabilities": {
