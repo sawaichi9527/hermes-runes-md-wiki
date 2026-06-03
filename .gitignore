@@ -100,3 +100,6 @@ var/operations/
 # Local operational evidence store
 # Generated runes operation logs are local-only and should not be committed.
 operations/
+
+# Local Ragnarok observation bundles
+bundles/ragnarok-observation/
