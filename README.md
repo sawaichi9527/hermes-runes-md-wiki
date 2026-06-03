@@ -26,6 +26,38 @@ Hermes Runes provides governed memory evidence, source metadata, and operational
 
 ---
 
+## Agent Onboarding / Runes Summoning Trial
+
+External AI agents should begin onboarding from:
+
+```text
+README.md
+    ↓
+AGENTS.md
+    ↓
+wiki/_system/README.md
+```
+
+For first-connect / post-install readiness checks, see:
+
+```text
+wiki/_system/m58-runes-summoning-trial.md
+```
+
+M58 Runes Summoning Trial is an agent-agnostic governed onboarding diagnostic for external agents entering Hermes Runes MD Wiki through Runes Shield.
+
+M58 is intentionally lightweight:
+
+- read-only
+- bounded
+- non-recursive
+- personal-local
+- diagnostic-oriented
+
+The optional onboarding subtitles and world-setting references are UX-only flavor text and are not runtime requirements.
+
+---
+
 ## Core Design
 
 ```text
@@ -447,23 +479,3 @@ This includes:
 - PostgreSQL passwords
 - Telegram tokens
 - local credentials
-- private user secrets
-- future service credentials
-
-Secrets belong in:
-
-```text
-tools/importer/.env
-local secret stores
-runtime configuration
-```
-
-not in source-of-truth memory.
-
-Observation logs must not store raw/full prompts, full answers, full memory context, or secrets by default.
-
----
-
-## License
-
-License selection is currently pending.
