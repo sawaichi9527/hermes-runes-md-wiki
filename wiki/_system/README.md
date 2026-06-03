@@ -83,3 +83,10 @@ Hermes Runes is not:
 ## Change Log
 
 - 2026-06-01: Initial P0 system policy index.
+
+## Agent Style Overlay
+
+- `agent-style-overlay.md`
+  - Optional presentation guidance for Hermes-agent when interacting with Hermes Runes MD Wiki through Runes Shield.
+  - Defines Runes-themed terms such as forge, attunement, relic, seal, resonance, and inscription.
+  - Style only; does not override `soul.md`, governance policy, security policy, or human approval requirements.
