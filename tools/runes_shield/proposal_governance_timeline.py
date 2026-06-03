@@ -6,8 +6,8 @@ from pathlib import Path
 
 from proposal_apply_execute import request_apply
 from proposal_apply_preview import build_previews
-from proposal_attunement_decision import load_decisions
-from proposal_review_queue import build_review_queue
+from proposal_attunement_decision import find_decisions
+from proposal_review_queue import build_queue
 from proposal_state_projection import build_projection
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -17,7 +17,7 @@ OUTPUT_CHOICES = ("table", "json")
 def build_timeline(proposal_id):
     timeline = []
 
-    queue = build_review_queue()
+    queue = build_queue()    
     queue_entry = next(
         (
             entry
@@ -37,7 +37,7 @@ def build_timeline(proposal_id):
             }
         )
 
-    decisions = load_decisions(include_payload=True)
+    decisions = find_decisions(proposal_id)
 
     for decision in decisions:
         if decision["proposal_id"] != proposal_id:
