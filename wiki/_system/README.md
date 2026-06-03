@@ -90,3 +90,12 @@ Hermes Runes is not:
   - Optional presentation guidance for Hermes-agent when interacting with Hermes Runes MD Wiki through Runes Shield.
   - Defines Runes-themed terms such as forge, attunement, relic, seal, resonance, and inscription.
   - Style only; does not override `soul.md`, governance policy, security policy, or human approval requirements.
+
+## Runes Shield Discovery
+
+- `runes_shield_contract.md`
+  - Defines the governed invocation boundary between Hermes-agent and Hermes Runes MD Wiki.
+- `runes_invocation_policy.md`
+  - Defines how controlled Runes Shield operations should be invoked.
+- `runes_agent_guidance.md`
+  - Defines agent-facing operating guidance for proposal, review, approval, and trusted-memory boundaries.
