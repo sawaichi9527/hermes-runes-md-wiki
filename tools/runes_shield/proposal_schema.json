@@ -1,0 +1,43 @@
+{
+  "schema_version": "m37.1-proposal-draft-v1",
+  "required_fields": [
+    "proposal_id",
+    "status",
+    "author_role",
+    "reviewer_role",
+    "source_summary",
+    "candidate_claims",
+    "assessment",
+    "human_review"
+  ],
+  "allowed_status": [
+    "draft",
+    "quarantine",
+    "pending_human_review"
+  ],
+  "blocked_status": [
+    "approved",
+    "applied",
+    "promoted",
+    "trusted"
+  ],
+  "required_roles": {
+    "author_role": "Hermes-agent",
+    "assessment_role": "Runes Shield",
+    "reviewer_role": "Human"
+  },
+  "required_assessment_fields": [
+    "credibility_level",
+    "risk_level",
+    "source_evidence",
+    "policy_notes",
+    "quarantine_recommendation"
+  ],
+  "blocked_capabilities": {
+    "trusted_wiki_write": false,
+    "automatic_approval": false,
+    "automatic_promotion": false,
+    "apply_execution": false,
+    "database_mutation": false
+  }
+}
