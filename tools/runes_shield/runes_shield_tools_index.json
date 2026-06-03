@@ -1,0 +1,77 @@
+{
+  "index_version": "m40-runes-shield-tool-index-v1",
+  "boundary": "P0 agent-facing read-only tool discovery",
+  "write": false,
+  "blocked_capabilities": {
+    "trusted_wiki_write": false,
+    "automatic_approval": false,
+    "automatic_promotion": false,
+    "apply_execution": false,
+    "database_mutation": false
+  },
+  "tools": [
+    {
+      "name": "proposal_registry.list",
+      "command": "python3 tools/runes_shield/proposal_registry.py list --format json",
+      "risk": "low",
+      "write": false,
+      "description": "List proposal registry entries from the read-only manifest."
+    },
+    {
+      "name": "proposal_registry.show",
+      "command": "python3 tools/runes_shield/proposal_registry.py show <proposal_id> --format json",
+      "risk": "low",
+      "write": false,
+      "description": "Show one proposal registry entry by proposal_id."
+    },
+    {
+      "name": "proposal_registry.show_payload",
+      "command": "python3 tools/runes_shield/proposal_registry.py show <proposal_id> --include-payload --format json",
+      "risk": "low",
+      "write": false,
+      "description": "Show one proposal registry entry with source proposal payload."
+    },
+    {
+      "name": "proposal_review_queue.list",
+      "command": "python3 tools/runes_shield/proposal_review_queue.py list --format json",
+      "risk": "low",
+      "write": false,
+      "description": "List proposals pending human review in the Runes Attunement Queue."
+    },
+    {
+      "name": "proposal_review_queue.show",
+      "command": "python3 tools/runes_shield/proposal_review_queue.py show <proposal_id> --format json",
+      "risk": "low",
+      "write": false,
+      "description": "Show one pending-review proposal queue entry."
+    },
+    {
+      "name": "proposal_review_queue.show_payload",
+      "command": "python3 tools/runes_shield/proposal_review_queue.py show <proposal_id> --include-payload --format json",
+      "risk": "low",
+      "write": false,
+      "description": "Show one pending-review proposal with source proposal payload."
+    },
+    {
+      "name": "smoke.proposal_registry_all",
+      "command": "python3 tools/runes_shield/smoke_proposal_registry_all.py",
+      "risk": "low",
+      "write": false,
+      "description": "Run all proposal registry regression smoke checks."
+    },
+    {
+      "name": "smoke.proposal_review_queue_all",
+      "command": "python3 tools/runes_shield/smoke_proposal_review_queue_all.py",
+      "risk": "low",
+      "write": false,
+      "description": "Run all proposal review queue regression smoke checks."
+    }
+  ],
+  "blocked_tool_names": [
+    "proposal.apply",
+    "proposal.approve",
+    "proposal.promote",
+    "wiki.write",
+    "database.mutate"
+  ]
+}
