@@ -116,3 +116,10 @@ Hermes Runes is not:
   - Defines the canonical ritual confirmation phrase:
     `少年啊，你確定要讓世界樹震動，開啟諸神的黃昏嗎？`
   - Defines developer diagnostic bundle scope, secret exclusions, and local-only output expectations.
+
+## Ragnarok Observation Evidence Inventory
+
+- `ragnarok_observation_evidence_inventory.md`
+  - Defines the evidence categories that a future Ragnarok Observation Bundle may collect.
+  - Clarifies that Runes Markdown Source Health is one evidence branch, not the full bundle scope.
+  - Defines non-secret, summarized, local-only evidence collection boundaries.
