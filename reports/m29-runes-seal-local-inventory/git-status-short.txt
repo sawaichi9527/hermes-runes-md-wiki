@@ -1,0 +1,41 @@
+ M bin/hermes-memory-smoke
+ M bin/hermes-recall
+ M bin/runes
+ M tools/importer/hybrid_search.py
+ M tools/importer/observation_logger.py
+ M tools/runes/cleanup_plan_m22_4.py
+ M tools/runes/promotion_plan_m21_5.py
+ M tools/runes/proposal_hygiene_m22_3.py
+ M tools/runes/proposal_reader_m22_2.py
+ M tools/runes/proposal_writer_m22_1.py
+ M tools/runes/smoke_m22_1_propose.py
+ M tools/runes/smoke_m22_2_proposal_reader.py
+ M tools/runes/smoke_m22_3_proposal_hygiene.py
+ M tools/runes/smoke_m22_3b_hygiene_cli.py
+ M tools/runes/smoke_m22_4_cleanup_plan.py
+ M tools/runes/smoke_m22_5_cleanup_plan_cli.py
+ M tools/runes/smoke_runes_shield.py
+ M tools/runes/trial_run_m21_4.py
+ M wiki/k6-freelancer/next-actions.md
+ M wiki/k6-freelancer/p0-trial-scenarios.md
+ M wiki/k6-freelancer/verification.md
+?? m24_2_apply_attunement_trail_cli.sh
+?? m24_3_apply_trail_markdown_preview.sh
+?? m24_3_fix_newline_literal.sh
+?? m24_4_apply_attunement_trail_smoke.sh
+?? m24_5_lock_attunement_trail_baseline.sh
+?? m25_1_2_apply_curated_promotion_patch_preview.sh
+?? m25_3_apply_promotion_patch_smoke.sh
+?? m25_4_lock_curated_promotion_patch_baseline.sh
+?? m26_1_apply_promotion_apply_safety_design.sh
+?? m26_2_apply_preflight_dry_run_cli.sh
+?? m26_3_apply_preflight_confirmation_smoke.sh
+?? m26_3_fix_preflight_blocking.sh
+?? m26_4_apply_rollback_plan_preview.sh
+?? operations/
+?? reports/
+?? tools/forge/
+?? tools/importer/promotion_governance_smoke.py
+?? wiki/k6-freelancer/forge-inbox/m20-2-agent-proposal-write-trial-forge-20260601-224400-aa10dfd9.md
+?? wiki/k6-freelancer/forge-inbox/m22-1-m22-1-manual-draft-proposal-test-20260602-063134-a831adf4fc.md
+?? wiki/k6-freelancer/roadmap-m24-attunement-trail-append.md

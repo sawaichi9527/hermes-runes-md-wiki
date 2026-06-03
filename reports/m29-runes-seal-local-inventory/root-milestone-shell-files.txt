@@ -1,0 +1,13 @@
+./m24_2_apply_attunement_trail_cli.sh
+./m24_3_apply_trail_markdown_preview.sh
+./m24_3_fix_newline_literal.sh
+./m24_4_apply_attunement_trail_smoke.sh
+./m24_5_lock_attunement_trail_baseline.sh
+./m25_1_2_apply_curated_promotion_patch_preview.sh
+./m25_3_apply_promotion_patch_smoke.sh
+./m25_4_lock_curated_promotion_patch_baseline.sh
+./m26_1_apply_promotion_apply_safety_design.sh
+./m26_2_apply_preflight_dry_run_cli.sh
+./m26_3_apply_preflight_confirmation_smoke.sh
+./m26_3_fix_preflight_blocking.sh
+./m26_4_apply_rollback_plan_preview.sh
