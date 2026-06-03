@@ -1,0 +1,73 @@
+{
+  "fixture_version": "m60.2-real-onboarding-transcript-fixture-v1",
+  "fixture_id": "m60-real-onboarding-public-safe-fixture-001",
+  "status": "active",
+  "purpose": "Public-safe regression fixture for real external agent onboarding flow.",
+  "privacy_boundary": {
+    "contains_secrets": false,
+    "contains_private_user_data": false,
+    "contains_full_chat_history": false,
+    "contains_raw_prompt_dump": false,
+    "contains_runtime_credentials": false,
+    "public_safe": true
+  },
+  "agent_profile": {
+    "profile_id": "generic-cli-agent",
+    "agent_scope": "agent-agnostic",
+    "profile_is_metadata_only": true
+  },
+  "transcript_kind": "summarized-fixture",
+  "onboarding_path": [
+    {
+      "step": 1,
+      "name": "read_root_readme",
+      "source": "README.md",
+      "expected_result": "Agent identifies Hermes Runes MD Wiki as an agent-agnostic governed local RAG memory substrate."
+    },
+    {
+      "step": 2,
+      "name": "read_agents_file",
+      "source": "AGENTS.md",
+      "expected_result": "Agent discovers first-time onboarding path and M58 Runes Summoning Trial guidance."
+    },
+    {
+      "step": 3,
+      "name": "read_system_onboarding_guide",
+      "source": "wiki/_system/m58-runes-summoning-trial.md",
+      "expected_result": "Agent understands M58 as first-connect / post-install diagnostic, not a runtime dependency."
+    },
+    {
+      "step": 4,
+      "name": "run_m59_onboarding_lock",
+      "command": "python3 tools/runes_shield/runes_agent_onboarding_lock.py --format json",
+      "expected_result": "M59 reports PASS and ready_for_governed_access true."
+    }
+  ],
+  "expected_lock_summary": {
+    "lock_version": "m59-agent-onboarding-lock-v1",
+    "status": "PASS",
+    "agent_scope": "agent-agnostic",
+    "write": false,
+    "ready_for_governed_access": true,
+    "issue_count": 0
+  },
+  "expected_locked_surfaces": {
+    "verity_checks": 10,
+    "invocation_tools": 8,
+    "adapter_safe_intents": 9,
+    "adapter_blocked_intents": 7
+  },
+  "forbidden_claims": [
+    "profile grants write permission",
+    "agent may bypass Runes Shield",
+    "agent may directly mutate wiki files",
+    "agent may directly mutate database state",
+    "agent may automatically apply proposals",
+    "agent may automatically promote memory"
+  ],
+  "notes": [
+    "This is a summarized fixture, not a full conversation transcript.",
+    "This fixture is safe to commit because it contains no secrets, no private user data, and no raw long-form chat history.",
+    "Use this fixture for regression and onboarding sanity checks only."
+  ]
+}
