@@ -70,9 +70,9 @@ def iter_decisions():
     return sorted(DECISION_DIR.glob("*.json"))
 
 
-def load_decision(path):
+def load_decision(path, include_payload=False):
     data = json.loads(path.read_text(encoding="utf-8"))
-    return {
+    entry = {
         "decision_file": path.name,
         "decision_path": str(path.relative_to(ROOT)),
         "proposal_id": data.get("proposal_id"),
@@ -80,10 +80,21 @@ def load_decision(path):
         "reviewer": data.get("reviewer"),
         "write": False,
     }
+    if include_payload:
+        entry["payload"] = data
+    return entry
 
 
 def list_decisions():
     return [load_decision(path) for path in iter_decisions()]
+
+
+def find_decisions(proposal_id):
+    return [
+        load_decision(path, include_payload=True)
+        for path in iter_decisions()
+        if load_decision(path)["proposal_id"] == proposal_id
+    ]
 
 
 def render_table(entries):
@@ -148,6 +159,13 @@ def main():
     )
     list_parser.add_argument("--format", choices=OUTPUT_CHOICES, default="table")
 
+    show_parser = subparsers.add_parser(
+        "show",
+        help="Show recorded attunement decisions for one proposal_id.",
+    )
+    show_parser.add_argument("proposal_id")
+    show_parser.add_argument("--format", choices=OUTPUT_CHOICES, default="table")
+
     args = parser.parse_args()
 
     if args.command == "record":
@@ -178,6 +196,25 @@ def main():
             emit_json(
                 {
                     "decision_store_version": "m42-human-attunement-decision-store-v1",
+                    "entry_count": len(entries),
+                    "write": False,
+                    "entries": entries,
+                }
+            )
+            return
+        print(render_table(entries))
+        return
+
+    if args.command == "show":
+        entries = find_decisions(args.proposal_id)
+        if not entries:
+            raise SystemExit(f"decision not found: {args.proposal_id}")
+
+        if args.format == "json":
+            emit_json(
+                {
+                    "decision_store_version": "m42-human-attunement-decision-store-v1",
+                    "proposal_id": args.proposal_id,
                     "entry_count": len(entries),
                     "write": False,
                     "entries": entries,
