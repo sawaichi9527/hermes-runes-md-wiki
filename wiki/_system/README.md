@@ -107,3 +107,12 @@ Hermes Runes is not:
   - Defines Runes Shield Forge Readiness Check / Runes 符文鑄造前適性檢查.
   - Defines refinement levels `+0` to `+9`.
   - Clarifies that PostgreSQL is a replaceable recall/index backend, not the authoritative memory layer.
+
+## Ragnarok Observation Bundle Policy
+
+- `ragnarok_observation_bundle_policy.md`
+  - Defines Ragnarok Observation Bundle / 諸神的黃昏觀測封包.
+  - Defines Ragnarok Incantation Boundary / 諸神的黃昏詠唱邊界.
+  - Defines the canonical ritual confirmation phrase:
+    `少年啊，你確定要讓世界樹震動，開啟諸神的黃昏嗎？`
+  - Defines developer diagnostic bundle scope, secret exclusions, and local-only output expectations.
