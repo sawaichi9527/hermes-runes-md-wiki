@@ -3,17 +3,21 @@
 import argparse
 import json
 
+from observe_health import observe_health
 from resolve_route import resolve_route
 
 
 def handle_observe(route):
+    observation = observe_health()
+
     return {
-        "status": "PASS",
+        "status": observation["status"],
         "handler": "observe",
         "state": route["state"],
         "route_id": route["route_id"],
         "write": False,
-        "summary": "Observation handler selected. No write authority granted.",
+        "summary": observation["summary"],
+        "observation": observation,
         "allowed_outputs": route["allowed_outputs"],
         "blocked_behaviors": route["blocked_behaviors"],
     }
