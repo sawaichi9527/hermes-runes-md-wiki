@@ -27,7 +27,7 @@ SAMPLE_PROPOSAL = {
         "policy_notes": [
             "Requires human review before trusted memory promotion."
         ],
-        "quarantine_recommendation": false
+        "quarantine_recommendation": False
     },
     "human_review": {
         "status": "pending",
