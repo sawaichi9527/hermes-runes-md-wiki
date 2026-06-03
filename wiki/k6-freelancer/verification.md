@@ -443,3 +443,121 @@ Result:
 - M12 repository runtime safety and DB config portability baseline is considered stable.
 
 ---
+
+---
+
+# M20 Governed Memory Promotion Pipeline
+
+Status: PASS / frozen baseline candidate
+
+## M20.2 Agent Proposal Write Trial
+
+PASS
+
+Verified:
+- agent-generated proposal write
+- forge-inbox quarantine
+- retrieval isolation
+- governance regression preservation
+
+Key metadata:
+- proposal_type: agent_memory
+- trust_class: unverified
+- status: draft
+
+Confirmed:
+- draft proposal retrieval excluded
+- trusted retrieval ordering preserved
+
+---
+
+## M20.3 Promotion Gate MVP
+
+PASS
+
+Verified:
+- human review approve flow
+- status transition:
+  - draft -> approved
+- trust transition:
+  - unverified -> reviewed
+
+Confirmed:
+- approved proposal becomes retrieval-visible
+- reviewed proposal remains provenance-tagged
+- reviewed != trusted
+
+---
+
+## M20.4 Promotion Governance Smoke
+
+PASS
+
+Regression coverage:
+- approved reviewed proposal retrieval visibility
+- trusted wiki outranks reviewed proposal
+- rejected proposal deindex policy
+
+Integrated into:
+- hermes-memory-smoke
+
+---
+
+## M20.5 Personal Governance Trust Policy
+
+PASS
+
+Policy:
+- draft/rejected:
+  hard exclusion or deindex
+- approved + reviewed:
+  retrieval visible
+  no ranking privilege
+- normal wiki:
+  baseline trusted-by-location
+
+Current policy id:
+- m20.5-personal-governance-v1
+
+Confirmed:
+- reviewed proposal trust_bias = 0
+- trusted wiki retrieval ordering preserved
+
+---
+
+## M20.6 Governance Observation
+
+PASS
+
+Observation policy:
+- lightweight local JSONL only
+- no DB
+- not ingested into RAG
+- observation-first governance refinement
+
+Governance observation event:
+- promotion_governance_smoke
+
+Confirmed:
+- observation parser compatibility preserved
+- M10/M11 observation smoke PASS
+- parse_errors = 0
+
+---
+
+## M20 Baseline Assessment
+
+Current system state:
+
+- governed write path established
+- quarantine boundary established
+- human promotion gate established
+- provenance-aware retrieval established
+- governance regression protection established
+- observation-backed governance established
+
+Complexity target preserved:
+- personal-use scale
+- non-enterprise governance scope
+- future P0/P1 refinement flexibility retained
+

@@ -331,3 +331,34 @@ Initial signals:
 - answer_preview
 
 ---
+
+# Next Stage Candidate
+
+## M21 P0 Trial Run
+
+Goal:
+- validate governed memory behavior under real usage
+
+Scope:
+- multiple real agent proposals
+- mixed approve/reject decisions
+- retrieval stability observation
+- provenance behavior observation
+- governance observation review
+- trust bias observation
+- smoke/regression preservation
+
+Constraints:
+- personal-use scale only
+- avoid enterprise governance complexity
+- observation-first refinement
+- no automatic policy mutation
+
+Future evaluation candidates:
+- reviewed vs trusted separation refinement
+- proposal aging policy
+- trust escalation policy
+- optional retrieval explainability expansion
+- optional compatibility behavior for:
+  - --mode hybrid
+  - --mode fts
