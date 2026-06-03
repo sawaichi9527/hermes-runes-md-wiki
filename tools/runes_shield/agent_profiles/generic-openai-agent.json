@@ -1,0 +1,31 @@
+{
+  "profile_version": "m60.1-agent-runtime-profile-v1",
+  "profile_id": "generic-openai-agent",
+  "agent_name": "Generic OpenAI-Compatible Agent",
+  "agent_kind": "generic",
+  "interface_type": "openai-compatible-api",
+  "description": "A generic external agent using an OpenAI-compatible interface.",
+  "interface_features": {
+    "tool_call_style": "native-or-wrapper",
+    "streaming": true,
+    "system_prompt": true,
+    "json_output": true
+  },
+  "governance_notes": {
+    "agent_scope": "agent-agnostic",
+    "profile_is_metadata_only": true,
+    "profile_grants_permissions": false,
+    "runes_shield_required": true,
+    "write_access": false,
+    "automatic_apply": false,
+    "automatic_promotion": false,
+    "background_worker": false
+  },
+  "recommended_checks": [
+    "m57_baseline",
+    "m58_workflow",
+    "m58_docs",
+    "m58_integration",
+    "m59_onboarding_lock"
+  ]
+}
