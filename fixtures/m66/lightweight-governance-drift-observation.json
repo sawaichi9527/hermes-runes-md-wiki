@@ -1,0 +1,67 @@
+{
+  "observation_version": "m66.1-lightweight-governance-drift-observation-v1",
+  "observation_id": "m66-lightweight-governance-drift-observation-001",
+  "status": "active",
+  "purpose": "Observe long-term governance semantic erosion risk without introducing enforcement daemons, telemetry platforms, automatic correction systems, or enterprise governance infrastructure.",
+  "scale": "personal-local",
+  "observation_principle": "observe-first-dont-over-automate",
+  "depends_on": [
+    "m65-lightweight-evidence-regression-preservation-frozen"
+  ],
+  "protected_observation_semantics": {
+    "observation_is_non_authoritative": true,
+    "observation_is_non_blocking": true,
+    "observation_is_human_review_support": true,
+    "observation_is_runtime_lightweight": true,
+    "automatic_governance_correction": false,
+    "automatic_policy_mutation": false,
+    "automatic_authority_escalation": false,
+    "runtime_dependency_required": false,
+    "write": false,
+    "authoritative": false
+  },
+  "drift_observation_targets": [
+    {
+      "id": "wrapper_semantic_erosion",
+      "expected_state": "review-only-non-authoritative",
+      "drift_detection_only": true,
+      "automatic_correction": false
+    },
+    {
+      "id": "replay_boundary_erosion",
+      "expected_state": "review-only-replay",
+      "drift_detection_only": true,
+      "automatic_correction": false
+    },
+    {
+      "id": "provenance_authority_erosion",
+      "expected_state": "traceability-not-authority",
+      "drift_detection_only": true,
+      "automatic_correction": false
+    },
+    {
+      "id": "retention_boundary_erosion",
+      "expected_state": "minimal-summary-only",
+      "drift_detection_only": true,
+      "automatic_correction": false
+    }
+  ],
+  "forbidden_observation_infrastructure": [
+    "governance-enforcement-daemon",
+    "policy-engine",
+    "semantic-scoring-engine",
+    "telemetry-analytics-platform",
+    "drift-ai-analyzer",
+    "automatic-remediation-service",
+    "runtime-governance-mesh",
+    "distributed-observation-platform"
+  ],
+  "expected_result": {
+    "status": "PASS",
+    "observation_target_count": 4,
+    "runtime_dependency_required": false,
+    "authoritative": false,
+    "write": false,
+    "issue_count": 0
+  }
+}
