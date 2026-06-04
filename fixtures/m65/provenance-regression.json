@@ -1,0 +1,106 @@
+{
+  "regression_version": "m65.4-provenance-regression-v1",
+  "regression_id": "m65-provenance-regression-001",
+  "status": "active",
+  "purpose": "Preserve M64.4 provenance semantics and prevent source, timestamp, wrapper profile, validation PASS, or commit presence from drifting into authority, trust grant, or apply permission.",
+  "scale": "personal-local",
+  "regression_principle": "provenance-regression-is-traceability-not-authority",
+  "depends_on": [
+    "m64.4-evidence-provenance-verification-v1",
+    "m65.1-governance-regression-baseline-v1",
+    "m65.3-wrapper-interpretation-regression-v1"
+  ],
+  "protected_provenance_semantics": {
+    "source_trace_required": true,
+    "source_is_authority": false,
+    "timestamp_is_freshness_guarantee": false,
+    "wrapper_profile_is_trust_grant": false,
+    "validation_result_is_apply_permission": false,
+    "validation_result_is_promotion_permission": false,
+    "commit_presence_is_authority": false,
+    "human_review_remains_required": true,
+    "authoritative": false,
+    "write": false,
+    "runtime_dependency_required": false
+  },
+  "regression_cases": [
+    {
+      "id": "source_trace_regression",
+      "input_semantic": "source_type_present",
+      "expected_semantic": "traceability-only",
+      "authority": false,
+      "trust_grant": false,
+      "apply_allowed": false,
+      "promotion_allowed": false,
+      "write": false
+    },
+    {
+      "id": "timestamp_regression",
+      "input_semantic": "timestamp_or_last_reviewed_present",
+      "expected_semantic": "review-time-metadata-only",
+      "freshness_guarantee": false,
+      "authority": false,
+      "apply_allowed": false,
+      "promotion_allowed": false,
+      "write": false
+    },
+    {
+      "id": "wrapper_profile_regression",
+      "input_semantic": "wrapper_profile_present",
+      "expected_semantic": "profile-metadata-only",
+      "trust_grant": false,
+      "authority": false,
+      "apply_allowed": false,
+      "promotion_allowed": false,
+      "write": false
+    },
+    {
+      "id": "validation_pass_regression",
+      "input_semantic": "validation_status_pass",
+      "expected_semantic": "review-evidence-only",
+      "apply_allowed": false,
+      "promotion_allowed": false,
+      "authority": false,
+      "write": false
+    },
+    {
+      "id": "commit_presence_regression",
+      "input_semantic": "repo_commit_presence",
+      "expected_semantic": "versioned-record-only",
+      "runtime_authorization": false,
+      "authority": false,
+      "apply_allowed": false,
+      "promotion_allowed": false,
+      "write": false
+    }
+  ],
+  "forbidden_provenance_regression": [
+    "source-becomes-authority",
+    "timestamp-becomes-freshness-guarantee",
+    "wrapper-profile-becomes-trust-grant",
+    "validation-pass-becomes-apply-permission",
+    "validation-pass-becomes-promotion-permission",
+    "commit-presence-becomes-runtime-authorization",
+    "provenance-record-grants-write",
+    "provenance-record-grants-database-mutation",
+    "provenance-record-grants-runtime-policy-override"
+  ],
+  "forbidden_infrastructure": [
+    "pki-chain",
+    "timestamp-authority",
+    "signed-audit-mesh",
+    "distributed-ledger",
+    "enterprise-provenance-graph",
+    "authority-token-system",
+    "runtime-attestation-service"
+  ],
+  "expected_result": {
+    "status": "PASS",
+    "regression_case_count": 5,
+    "authoritative": false,
+    "write": false,
+    "runtime_dependency_required": false,
+    "issue_count": 0,
+    "ready_for_m65_5_retention_public_safe_regression": true
+  }
+}
