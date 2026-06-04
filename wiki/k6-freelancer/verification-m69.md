@@ -5,8 +5,8 @@
 - Category: verification
 - Topic: m69-documentation-runtime-interface-boundary
 - Note type: verification-lock
-- Status: pending-user-verification
-- Memory quality: pending
+- Status: frozen
+- Memory quality: verified
 - Related objective: k6-freelancer
 - Last reviewed: 2026-06-04
 
@@ -24,23 +24,6 @@ documentation != runtime API
 Runes Shield exposes callable behavior
 ```
 
-## Scope
-
-- roadmap documents
-- verification locks
-- next-actions notes
-- examples
-- system docs
-
-## Non-scope
-
-- documentation runtime dispatcher
-- doc-driven tool executor
-- automatic doc command runner
-- runtime doc parser daemon
-- wiki API reflection engine
-- agent command autoloader
-
 ## Fixture
 
 ```text
@@ -53,15 +36,23 @@ fixtures/m69/documentation-runtime-interface-boundary.json
 python3 tools/runes_shield/smoke_m69_documentation_runtime_interface_boundary.py
 ```
 
-## Expected Result
+## Verified Result
 
 ```text
+smoke_version: m69-documentation-runtime-interface-boundary-v1
 status: PASS
+mode: documentation-runtime-interface-boundary
+scale: personal-local
 write: false
 authoritative: false
 runtime_dependency_required: false
+boundary_target_count: 5
+issue_count: 0
 ```
 
-## Verification Status
+## Final Lock
 
-Pending user execution.
+```text
+M69 Documentation / Runtime Interface Boundary
+PASS / frozen / smoke verified
+```
