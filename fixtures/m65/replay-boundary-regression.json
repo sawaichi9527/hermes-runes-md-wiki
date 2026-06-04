@@ -1,0 +1,91 @@
+{
+  "regression_version": "m65.2-replay-boundary-regression-v1",
+  "regression_id": "m65-replay-boundary-regression-001",
+  "status": "active",
+  "purpose": "Preserve M64.6 replay boundary semantics and prevent replay from drifting into execution, apply, promotion, authority, or workflow replay infrastructure.",
+  "scale": "personal-local",
+  "regression_principle": "replay-regression-is-semantic-boundary-check-only",
+  "depends_on": [
+    "m64.6-evidence-replay-boundary-v1",
+    "m65.1-governance-regression-baseline-v1"
+  ],
+  "protected_replay_semantics": {
+    "review_only_replay_allowed": true,
+    "replay_is_review": true,
+    "replay_is_execution": false,
+    "replay_is_apply": false,
+    "replay_is_promotion": false,
+    "replay_is_authority": false,
+    "replay_grants_write": false,
+    "replay_grants_database_mutation": false,
+    "replay_grants_runtime_policy_override": false,
+    "replay_grants_authority_escalation": false,
+    "human_review_remains_required": true,
+    "authoritative": false,
+    "write": false,
+    "runtime_dependency_required": false
+  },
+  "regression_cases": [
+    {
+      "id": "review_summary_replay_regression",
+      "input_semantic": "review-summary-replay",
+      "expected_semantic": "review-only",
+      "execution": false,
+      "apply_allowed": false,
+      "promotion_allowed": false,
+      "authoritative": false,
+      "write": false
+    },
+    {
+      "id": "validation_summary_replay_regression",
+      "input_semantic": "validation-summary-replay",
+      "expected_semantic": "review-only",
+      "execution": false,
+      "apply_allowed": false,
+      "promotion_allowed": false,
+      "authoritative": false,
+      "write": false
+    },
+    {
+      "id": "governance_boundary_replay_regression",
+      "input_semantic": "governance-boundary-replay",
+      "expected_semantic": "review-only",
+      "execution": false,
+      "apply_allowed": false,
+      "promotion_allowed": false,
+      "authoritative": false,
+      "write": false
+    }
+  ],
+  "forbidden_replay_regression": [
+    "replay-becomes-execution",
+    "replay-becomes-apply",
+    "replay-becomes-promotion",
+    "replay-becomes-authority",
+    "replay-grants-write",
+    "replay-grants-database-mutation",
+    "replay-grants-runtime-policy-override",
+    "replay-grants-authority-escalation",
+    "workflow-replay-engine-required",
+    "background-worker-required",
+    "orchestration-daemon-required"
+  ],
+  "forbidden_infrastructure": [
+    "workflow-replay-engine",
+    "orchestration-daemon",
+    "background-worker",
+    "event-bus",
+    "execution-recovery-system",
+    "distributed-replay-runner",
+    "runtime-state-store"
+  ],
+  "expected_result": {
+    "status": "PASS",
+    "regression_case_count": 3,
+    "authoritative": false,
+    "write": false,
+    "runtime_dependency_required": false,
+    "issue_count": 0,
+    "ready_for_m65_3_wrapper_interpretation_regression": true
+  }
+}
