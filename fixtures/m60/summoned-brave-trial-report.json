@@ -1,0 +1,41 @@
+{
+  "fixture_version": "m60.4-summoned-brave-trial-report-v1",
+  "fixture_id": "m60-summoned-brave-trial-report-public-safe-fixture-001",
+  "status": "active",
+  "purpose": "Optional UX-only onboarding report templates for generic agents completing the Runes Summoning Trial.",
+  "runtime_dependency": false,
+  "memory_dependency": false,
+  "ephemeral_only": true,
+  "agent_scope": "agent-agnostic",
+  "privacy_boundary": {
+    "contains_secrets": false,
+    "contains_private_user_data": false,
+    "contains_full_chat_history": false,
+    "public_safe": true
+  },
+  "template_variables": [
+    "agent_display_name",
+    "optional_title"
+  ],
+  "supported_languages": [
+    "zh-TW",
+    "en-US"
+  ],
+  "report_modes": [
+    "PASS",
+    "FAIL"
+  ],
+  "constraints": {
+    "optional_ux_only": true,
+    "not_runtime_requirement": true,
+    "not_authorization": true,
+    "not_memory_source": true,
+    "bounded": true,
+    "personal_local": true
+  },
+  "notes": [
+    "This fixture provides optional onboarding subtitles and onboarding completion reports only.",
+    "These templates must not be treated as authorization, governance approval, or runtime state.",
+    "Agents may omit these UX messages entirely without affecting onboarding validity."
+  ]
+}
