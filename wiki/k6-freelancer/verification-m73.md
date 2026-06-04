@@ -5,8 +5,8 @@
 - Category: verification
 - Topic: m73-controlled-trusted-transition-boundary
 - Note type: verification-lock
-- Status: pending-user-verification
-- Memory quality: pending
+- Status: frozen
+- Memory quality: verified
 - Related objective: k6-freelancer
 - Last reviewed: 2026-06-05
 
@@ -54,20 +54,27 @@ fixtures/m73/controlled-trusted-transition-boundary.json
 python3 tools/runes_shield/smoke_m73_controlled_trusted_transition_boundary.py
 ```
 
-## Expected Result
+## Verified Result
 
-```text
-status: PASS
-mode: controlled-trusted-transition-boundary
-scale: personal-local
-write: false
-authoritative: false
-runtime_dependency_required: false
-transition_mode: human-approved-transition-rehearsal
-transition_case_count: 3
-issue_count: 0
+```json
+{
+  "smoke_version": "m73-controlled-trusted-transition-boundary-v1",
+  "status": "PASS",
+  "mode": "controlled-trusted-transition-boundary",
+  "scale": "personal-local",
+  "write": false,
+  "authoritative": false,
+  "runtime_dependency_required": false,
+  "transition_mode": "human-approved-transition-rehearsal",
+  "transition_case_count": 3,
+  "issue_count": 0,
+  "issues": []
+}
 ```
 
-## Verification Status
+## Final Lock
 
-Pending user execution.
+```text
+M73 Controlled Trusted Transition Boundary
+PASS / frozen / smoke verified
+```
