@@ -1,6 +1,6 @@
 ## N-20260604-M67-M70 Boundary Validation
 
-Status: NEXT / PENDING USER VERIFICATION
+Status: PASS / FROZEN / SMOKE VERIFIED
 
 Current baseline:
 - M63 Real External Agent Trial-run: PASS / frozen.
@@ -8,8 +8,12 @@ Current baseline:
 - M65 Lightweight Evidence Regression Preservation: PASS / frozen.
 - M66 Lightweight Governance Drift Observation: PASS / frozen.
 - Python Command Compatibility Verification Lock: PASS / frozen / user verified.
+- M67 Observation Stability Boundary: PASS / frozen.
+- M68 Runtime / Verification Separation Boundary: PASS / frozen.
+- M69 Documentation / Runtime Interface Boundary: PASS / frozen.
+- M70 Human Review / Machine Suggestion Boundary: PASS / frozen.
 
-Implemented boundary milestones:
+Frozen boundary milestones:
 - M67 Observation Stability Boundary
 - M68 Runtime / Verification Separation Boundary
 - M69 Documentation / Runtime Interface Boundary
@@ -17,14 +21,14 @@ Implemented boundary milestones:
 
 Purpose:
 - Preserve observation-layer stability.
-- Separate verification evidence from runtime permission.
+- Separate verification evidence from runtime control.
 - Separate documentation from runtime callable interface.
 - Separate machine suggestions from human approval.
 - Preserve personal-local simplicity.
 - Avoid enterprise governance infrastructure.
 - Avoid adding runtime burden to Hermes-agent.
 
-Verification commands:
+Verified commands:
 
 ```bash
 python3 tools/runes_shield/smoke_m67_observation_stability_boundary.py
@@ -33,7 +37,13 @@ python3 tools/runes_shield/smoke_m69_documentation_runtime_interface_boundary.py
 python3 tools/runes_shield/smoke_m70_human_review_machine_suggestion_boundary.py
 ```
 
-Hard constraints:
+Result:
+- M67: PASS / issue_count: 0
+- M68: PASS / issue_count: 0
+- M69: PASS / issue_count: 0
+- M70: PASS / issue_count: 0
+
+Hard constraints preserved:
 - no governance enforcement daemon
 - no policy engine
 - no orchestration daemon
@@ -47,13 +57,12 @@ Hard constraints:
 - no direct wiki mutation
 - no runtime authority escalation
 
-Success criteria:
-- all M67-M70 smoke tests PASS
-- all boundaries remain read-only
-- all boundaries remain non-authoritative
-- no runtime dependency is introduced
-- no enterprise infrastructure is introduced
-- human review remains required for trust transition
+Final lock:
+
+```text
+M67-M70 Boundary Validation Pack
+PASS / frozen / smoke verified
+```
 
 References:
 - `wiki/k6-freelancer/verification-m67.md`
@@ -63,9 +72,55 @@ References:
 
 ---
 
-## N-20260603-M50 Controlled Trial-run Governance
+## N-20260604-Controlled-Trial-Run-Preparation
 
 Status: NEXT / PLANNED
+
+Current baseline:
+- M63-M70 external-agent and governance-boundary validation is frozen.
+- Active wrapper Python command compatibility is frozen.
+- Observation, verification, documentation, and human-review boundaries are locked.
+
+Recommended next step:
+- Controlled trial-run preparation for P0 governed proposal usage.
+
+Purpose:
+- Move from boundary validation into controlled real-world usage.
+- Keep proposal generation governed and human-reviewed.
+- Preserve the P0 safety boundary while exercising realistic agent workflows.
+- Avoid autonomous trusted wiki mutation.
+
+Suggested scope:
+- controlled proposal fixtures
+- realistic proposal draft generation
+- human review checklist
+- proposal accept/reject/quarantine examples
+- retrieval/source citation check
+- boundary regression smoke before and after trial-run
+
+Hard constraints:
+- no autonomous trusted wiki mutation
+- no automatic apply execution
+- no background promotion worker
+- no database mutation side effects outside approved importer paths
+- no enterprise workflow expansion
+- no runtime authority escalation
+
+Success criteria:
+- proposal workflow remains governed
+- human review remains required
+- trusted memory transition remains explicit
+- Runes Shield boundary remains intact
+- smoke/regression suites remain PASS
+
+Reference:
+- `wiki/k6-freelancer/verification-m70.md`
+
+---
+
+## N-20260603-M50 Controlled Trial-run Governance
+
+Status: HISTORICAL / SUPERSEDED BY N-20260604-Controlled-Trial-Run-Preparation
 
 Current baseline:
 - M47 Governance Timeline: PASS / frozen.
