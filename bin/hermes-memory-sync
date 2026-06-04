@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+PYTHON="${PYTHON:-python3}"
 ROOT="${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-memory}"
 IMPORTER_DIR="$ROOT/tools/importer"
 RUN_SMOKE=0
@@ -68,11 +69,11 @@ fi
 
 if [ "$RUN_SECURE" -eq 1 ]; then
   echo "[hermes-memory-sync] running security scan..."
-  python security_scan_m6_3.py --fail-on-findings
+  "$PYTHON" security_scan_m6_3.py --fail-on-findings
 fi
 
 echo "[hermes-memory-sync] running importer..."
-python importer.py
+"$PYTHON" importer.py
 
 if [ "$RUN_SMOKE" -eq 1 ]; then
   echo "[hermes-memory-sync] running smoke test..."
