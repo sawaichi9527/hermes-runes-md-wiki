@@ -1,0 +1,94 @@
+{
+  "regression_version": "m65.1-governance-regression-baseline-v1",
+  "regression_id": "m65-governance-regression-baseline-001",
+  "status": "active",
+  "purpose": "Preserve lightweight governed evidence semantics after M64 without introducing enterprise regression infrastructure, telemetry aggregation, CI orchestration, or runtime burden.",
+  "scale": "personal-local",
+  "regression_principle": "simple-semantic-contract-regression",
+  "depends_on": [
+    "m63-real-external-agent-trial-run-frozen",
+    "m64-external-agent-evidence-lock-frozen"
+  ],
+  "protected_semantics": {
+    "evidence_is_review_material_not_authority": true,
+    "provenance_is_traceability_not_authority": true,
+    "replay_is_review_not_execution": true,
+    "wrapper_is_interface_not_governance_authority": true,
+    "retention_is_not_runtime_dependency": true,
+    "same_evidence_same_boundary_same_interpretation": true,
+    "human_review_remains_required": true,
+    "authoritative": false,
+    "write": false
+  },
+  "regression_targets": [
+    {
+      "id": "authority_boundary_regression",
+      "expected": "non-authoritative",
+      "authoritative": false,
+      "write": false,
+      "apply_allowed": false,
+      "promotion_allowed": false
+    },
+    {
+      "id": "replay_boundary_regression",
+      "expected": "review-only-replay",
+      "execution": false,
+      "apply_allowed": false,
+      "promotion_allowed": false,
+      "write": false
+    },
+    {
+      "id": "provenance_boundary_regression",
+      "expected": "traceability-only",
+      "source_is_authority": false,
+      "timestamp_is_freshness_guarantee": false,
+      "wrapper_profile_is_trust_grant": false,
+      "validation_result_is_apply_permission": false
+    },
+    {
+      "id": "wrapper_interpretation_regression",
+      "expected": "review-only-non-authoritative",
+      "wrapper_specific_trust_grant": false,
+      "wrapper_specific_apply_permission": false,
+      "wrapper_specific_promotion_permission": false
+    },
+    {
+      "id": "retention_boundary_regression",
+      "expected": "minimal-summary-retention",
+      "full_transcript_allowed": false,
+      "rag_ingestion_allowed": false,
+      "runtime_state_allowed": false,
+      "retention_failure_blocks_runtime": false
+    },
+    {
+      "id": "public_safe_regression",
+      "expected": "public-safe-summary-only",
+      "contains_secrets": false,
+      "contains_private_user_data": false,
+      "contains_raw_prompt": false,
+      "contains_raw_answer": false,
+      "contains_full_transcript": false
+    }
+  ],
+  "forbidden_regression_infrastructure": [
+    "ci-orchestration-mesh",
+    "distributed-runner",
+    "telemetry-aggregation-service",
+    "regression-database",
+    "policy-engine",
+    "trust-scoring-system",
+    "runtime-monitoring-daemon",
+    "siem-platform",
+    "distributed-tracing",
+    "workflow-replay-engine"
+  ],
+  "expected_result": {
+    "status": "PASS",
+    "regression_target_count": 6,
+    "authoritative": false,
+    "write": false,
+    "runtime_dependency_required": false,
+    "issue_count": 0,
+    "ready_for_m65_2_replay_boundary_regression": true
+  }
+}
