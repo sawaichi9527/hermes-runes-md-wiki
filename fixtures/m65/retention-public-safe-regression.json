@@ -1,0 +1,108 @@
+{
+  "regression_version": "m65.5-retention-public-safe-regression-v1",
+  "regression_id": "m65-retention-public-safe-regression-001",
+  "status": "active",
+  "purpose": "Preserve M64.2 and M64.3 retention/public-safe semantics and prevent evidence storage from drifting into full transcript archival, raw prompt/answer retention, RAG ingestion, runtime state, secret leakage, or enterprise scanning dependency.",
+  "scale": "personal-local",
+  "regression_principle": "retention-public-safe-regression-is-minimal-summary-only",
+  "depends_on": [
+    "m64.2-evidence-retention-boundary-v1",
+    "m64.3-public-safe-evidence-verification-v1",
+    "m65.1-governance-regression-baseline-v1"
+  ],
+  "protected_retention_semantics": {
+    "summarized_only": true,
+    "public_safe": true,
+    "authoritative": false,
+    "write": false,
+    "contains_secrets": false,
+    "contains_private_user_data": false,
+    "contains_raw_prompt": false,
+    "contains_raw_answer": false,
+    "contains_full_transcript": false,
+    "contains_credentials": false,
+    "full_transcript_allowed": false,
+    "raw_prompt_allowed": false,
+    "raw_answer_allowed": false,
+    "credential_allowed": false,
+    "rag_ingestion_allowed": false,
+    "runtime_state_allowed": false,
+    "authority_escalation_allowed": false,
+    "retention_failure_blocks_runtime": false,
+    "runtime_dependency_required": false,
+    "content_scanning_platform_required": false,
+    "automatic_redaction_pipeline_required": false
+  },
+  "regression_cases": [
+    {
+      "id": "minimal_summary_retention_regression",
+      "expected_semantic": "minimal-summary-retention",
+      "full_transcript_allowed": false,
+      "raw_prompt_allowed": false,
+      "raw_answer_allowed": false,
+      "rag_ingestion_allowed": false,
+      "runtime_state_allowed": false,
+      "write": false
+    },
+    {
+      "id": "public_safe_fixture_regression",
+      "expected_semantic": "public-safe-summary-only",
+      "contains_secrets": false,
+      "contains_private_user_data": false,
+      "contains_raw_prompt": false,
+      "contains_raw_answer": false,
+      "contains_full_transcript": false,
+      "write": false
+    },
+    {
+      "id": "retention_runtime_dependency_regression",
+      "expected_semantic": "non-runtime-blocking-retention",
+      "retention_failure_blocks_runtime": false,
+      "runtime_dependency_required": false,
+      "runtime_state_allowed": false,
+      "write": false
+    },
+    {
+      "id": "enterprise_scanning_dependency_regression",
+      "expected_semantic": "no-enterprise-scanning-required",
+      "content_scanning_platform_required": false,
+      "automatic_redaction_pipeline_required": false,
+      "telemetry_pipeline_required": false,
+      "siem_required": false,
+      "write": false
+    }
+  ],
+  "forbidden_retention_regression": [
+    "full-transcript-archive-enabled",
+    "raw-prompt-retention-enabled",
+    "raw-answer-retention-enabled",
+    "secret-retention-enabled",
+    "credential-retention-enabled",
+    "private-user-data-retention-enabled",
+    "rag-ingestion-source-enabled",
+    "runtime-state-store-enabled",
+    "retention-failure-blocks-runtime",
+    "evidence-retention-grants-authority"
+  ],
+  "forbidden_infrastructure": [
+    "enterprise-content-scanning-platform",
+    "automatic-redaction-pipeline",
+    "dlp-platform",
+    "siem-platform",
+    "telemetry-pipeline",
+    "evidence-database",
+    "runtime-state-store",
+    "archive-service"
+  ],
+  "expected_result": {
+    "status": "PASS",
+    "regression_case_count": 4,
+    "authoritative": false,
+    "write": false,
+    "runtime_dependency_required": false,
+    "public_safe": true,
+    "summarized_only": true,
+    "issue_count": 0,
+    "ready_for_m65_6_freeze_lock": true
+  }
+}
