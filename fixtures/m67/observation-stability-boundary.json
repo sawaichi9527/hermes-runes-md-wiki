@@ -1,0 +1,51 @@
+{
+  "schema_version": "m67-observation-stability-boundary-v1",
+  "milestone": "M67 Observation Stability Boundary",
+  "mode": "observation-stability-boundary",
+  "scale": "personal-local",
+  "write": false,
+  "authoritative": false,
+  "runtime_dependency_required": false,
+  "observation_only": true,
+  "principle": "observation-stability-is-semantic-preservation-not-governance-expansion",
+  "required_semantics": {
+    "observation_is_drift_detection_support": true,
+    "observation_is_not_authority": true,
+    "observation_is_not_enforcement": true,
+    "observation_is_not_policy_engine": true,
+    "observation_is_not_trust_scoring": true,
+    "observation_is_non_blocking": true,
+    "observation_is_human_review_support": true,
+    "observation_is_runtime_lightweight": true,
+    "automatic_correction": false,
+    "automatic_policy_mutation": false,
+    "automatic_remediation": false
+  },
+  "stability_targets": [
+    "baseline_observation_semantics",
+    "non_authoritative_observation",
+    "non_blocking_observation",
+    "human_review_support_observation",
+    "runtime_lightweight_observation"
+  ],
+  "forbidden_drift": [
+    "observation-becomes-authority",
+    "observation-becomes-enforcement",
+    "observation-becomes-policy-engine",
+    "observation-becomes-trust-scoring",
+    "observation-becomes-runtime-dependency",
+    "observation-becomes-automatic-remediation",
+    "observation-becomes-governance-brain",
+    "observation-blocks-runtime"
+  ],
+  "forbidden_infrastructure": [
+    "governance-enforcement-daemon",
+    "policy-engine",
+    "trust-scoring-system",
+    "telemetry-analytics-platform",
+    "runtime-governance-mesh",
+    "automatic-remediation-service",
+    "semantic-scoring-engine",
+    "distributed-observation-platform"
+  ]
+}
