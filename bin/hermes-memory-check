@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+PYTHON="${PYTHON:-python3}"
 ROOT="${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-memory}"
 IMPORTER_DIR="$ROOT/tools/importer"
 WIKI_DIR="$ROOT/wiki/k6-freelancer"
@@ -54,7 +55,7 @@ if [ -d ".venv" ]; then
   source ".venv/bin/activate"
 fi
 
-python delete_source.py \
+"$PYTHON" delete_source.py \
   --project k6-freelancer \
   --path __hermes_memory_check_probe_not_exist__.md \
   --json >/tmp/hermes-memory-check-delete-probe.json
