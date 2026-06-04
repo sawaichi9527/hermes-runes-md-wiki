@@ -5,8 +5,8 @@
 - Category: verification
 - Topic: m76-first-manual-apply-readiness-gate
 - Note type: verification-lock
-- Status: pending-user-verification
-- Memory quality: pending
+- Status: frozen
+- Memory quality: verified
 - Related objective: k6-freelancer
 - Last reviewed: 2026-06-05
 
@@ -60,19 +60,29 @@ fixtures/m76/first-manual-apply-readiness-gate.json
 python3 tools/runes_shield/smoke_m76_first_manual_apply_readiness_gate.py
 ```
 
-## Expected Result
+## Verified Result
 
-```text
-status: PASS
-mode: first-manual-apply-readiness-gate
-scale: personal-local
-write: false
-authoritative: false
-runtime_dependency_required: false
-gate_mode: readiness-check-only
-issue_count: 0
+```json
+{
+  "smoke_version": "m76-first-manual-apply-readiness-gate-v1",
+  "status": "PASS",
+  "mode": "first-manual-apply-readiness-gate",
+  "scale": "personal-local",
+  "write": false,
+  "authoritative": false,
+  "runtime_dependency_required": false,
+  "gate_mode": "readiness-check-only",
+  "required_gate_field_count": 9,
+  "pre_apply_smoke_count": 3,
+  "post_apply_smoke_count": 4,
+  "issue_count": 0,
+  "issues": []
+}
 ```
 
-## Verification Status
+## Final Lock
 
-Pending user execution.
+```text
+M76 First Manual Apply Readiness Gate
+PASS / frozen / smoke verified
+```
