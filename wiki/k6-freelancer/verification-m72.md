@@ -5,8 +5,8 @@
 - Category: verification
 - Topic: m72-controlled-proposal-trial-run
 - Note type: verification-lock
-- Status: pending-user-verification
-- Memory quality: pending
+- Status: frozen
+- Memory quality: verified
 - Related objective: k6-freelancer
 - Last reviewed: 2026-06-04
 
@@ -56,20 +56,29 @@ fixtures/m72/controlled-proposal-trial-run.json
 python3 tools/runes_shield/smoke_m72_controlled_proposal_trial_run.py
 ```
 
-## Expected Result
+## Verified Result
 
-```text
-status: PASS
-mode: controlled-proposal-trial-run
-scale: personal-local
-write: false
-authoritative: false
-runtime_dependency_required: false
-trial_run_mode: governed-proposal-lifecycle-rehearsal
-proposal_case_count: 3
-issue_count: 0
+```json
+{
+  "smoke_version": "m72-controlled-proposal-trial-run-v1",
+  "status": "PASS",
+  "mode": "controlled-proposal-trial-run",
+  "scale": "personal-local",
+  "write": false,
+  "authoritative": false,
+  "runtime_dependency_required": false,
+  "trial_run_mode": "governed-proposal-lifecycle-rehearsal",
+  "proposal_case_count": 3,
+  "pre_trial_smoke_count": 5,
+  "post_trial_check_count": 6,
+  "issue_count": 0,
+  "issues": []
+}
 ```
 
-## Verification Status
+## Final Lock
 
-Pending user execution.
+```text
+M72 Controlled Proposal Trial-run
+PASS / frozen / smoke verified
+```
