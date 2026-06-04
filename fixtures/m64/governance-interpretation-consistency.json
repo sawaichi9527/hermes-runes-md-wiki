@@ -1,0 +1,90 @@
+{
+  "consistency_version": "m64.5-governance-interpretation-consistency-v1",
+  "consistency_id": "m64-governance-interpretation-consistency-001",
+  "status": "active",
+  "purpose": "Ensure the same evidence and boundary produce the same governance interpretation across supported external-agent wrapper profiles without allowing wrapper-specific trust escalation.",
+  "scale": "personal-local",
+  "governance_principle": "same-evidence-same-boundary-same-interpretation",
+  "depends_on": [
+    "m64.1-evidence-classification-v1",
+    "m64.2-evidence-retention-boundary-v1",
+    "m64.3-public-safe-evidence-verification-v1",
+    "m64.4-evidence-provenance-verification-v1"
+  ],
+  "supported_wrapper_profiles": [
+    "generic-cli-wrapper",
+    "openclaw-style-agent",
+    "openai-compatible-wrapper"
+  ],
+  "canonical_interpretation": {
+    "evidence_status": "PASS",
+    "boundary_status": "preserved",
+    "interpretation": "review-only-non-authoritative",
+    "authoritative": false,
+    "write": false,
+    "apply_allowed": false,
+    "promotion_allowed": false,
+    "direct_wiki_mutation_allowed": false,
+    "direct_database_mutation_allowed": false,
+    "runtime_authority_escalation_allowed": false,
+    "human_review_required": true
+  },
+  "wrapper_interpretations": [
+    {
+      "wrapper_profile": "generic-cli-wrapper",
+      "interpretation": "review-only-non-authoritative",
+      "authoritative": false,
+      "write": false,
+      "apply_allowed": false,
+      "promotion_allowed": false,
+      "human_review_required": true
+    },
+    {
+      "wrapper_profile": "openclaw-style-agent",
+      "interpretation": "review-only-non-authoritative",
+      "authoritative": false,
+      "write": false,
+      "apply_allowed": false,
+      "promotion_allowed": false,
+      "human_review_required": true
+    },
+    {
+      "wrapper_profile": "openai-compatible-wrapper",
+      "interpretation": "review-only-non-authoritative",
+      "authoritative": false,
+      "write": false,
+      "apply_allowed": false,
+      "promotion_allowed": false,
+      "human_review_required": true
+    }
+  ],
+  "forbidden_interpretation_drift": [
+    "wrapper-specific trust grant",
+    "wrapper-specific apply permission",
+    "wrapper-specific promotion permission",
+    "profile metadata becoming authority",
+    "PASS evidence becoming trusted memory",
+    "provenance becoming authorization",
+    "timestamp becoming freshness guarantee",
+    "validation result becoming automatic apply permission",
+    "runtime capability becoming governance authority"
+  ],
+  "consistency_rules": {
+    "same_evidence_same_boundary_same_interpretation": true,
+    "wrapper_profile_must_not_change_authority": true,
+    "wrapper_profile_must_not_change_write": true,
+    "wrapper_profile_must_not_change_apply": true,
+    "wrapper_profile_must_not_change_promotion": true,
+    "human_review_remains_required": true,
+    "authoritative": false,
+    "write": false
+  },
+  "expected_result": {
+    "status": "PASS",
+    "wrapper_profile_count": 3,
+    "authoritative": false,
+    "write": false,
+    "issue_count": 0,
+    "ready_for_m64_6_evidence_replay_boundary": true
+  }
+}
