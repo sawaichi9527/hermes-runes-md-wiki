@@ -1,0 +1,55 @@
+{
+  "schema_version": "m71-controlled-trial-run-preparation-v1",
+  "milestone": "M71 Controlled Trial-run Preparation Pack",
+  "mode": "controlled-trial-run-preparation",
+  "scale": "personal-local",
+  "write": false,
+  "authoritative": false,
+  "runtime_dependency_required": false,
+  "principle": "prepare-controlled-trial-run-without-trusted-write-or-automatic-promotion",
+  "trial_run_mode": "governed-proposal-only",
+  "allowed_scope": [
+    "proposal_draft_generation",
+    "human_review_checklist",
+    "pre_trial_smoke_list",
+    "post_trial_smoke_list",
+    "boundary_regression_check",
+    "retrieval_source_check"
+  ],
+  "required_semantics": {
+    "trial_run_is_preparation_not_production": true,
+    "proposal_draft_is_not_trusted_memory": true,
+    "human_review_required": true,
+    "trusted_write_allowed": false,
+    "automatic_promotion_allowed": false,
+    "automatic_apply_allowed": false,
+    "direct_wiki_mutation_allowed": false,
+    "runtime_authority_escalation_allowed": false,
+    "hermes_agent_runtime_burden_added": false,
+    "enterprise_workflow_required": false
+  },
+  "pre_trial_smokes": [
+    "smoke_m67_observation_stability_boundary.py",
+    "smoke_m68_runtime_verification_separation_boundary.py",
+    "smoke_m69_documentation_runtime_interface_boundary.py",
+    "smoke_m70_human_review_machine_suggestion_boundary.py"
+  ],
+  "review_checklist": [
+    "source_is_identified",
+    "proposal_intent_is_clear",
+    "human_decision_is_explicit",
+    "trusted_memory_transition_is_explicit",
+    "no_secret_or_private_raw_content",
+    "no_direct_runtime_command_from_documentation"
+  ],
+  "forbidden_infrastructure": [
+    "automatic-apply-worker",
+    "automatic-promotion-worker",
+    "trusted-write-daemon",
+    "proposal-orchestration-daemon",
+    "enterprise-workflow-engine",
+    "runtime-policy-engine",
+    "telemetry-analytics-platform",
+    "websocket-bridge"
+  ]
+}
