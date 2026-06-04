@@ -1,0 +1,55 @@
+{
+  "schema_version": "m77-first-manual-apply-dry-run-execution-v1",
+  "milestone": "M77 First Manual Apply Dry-run Execution",
+  "mode": "first-manual-apply-dry-run-execution",
+  "scale": "personal-local",
+  "write": false,
+  "authoritative": false,
+  "runtime_dependency_required": false,
+  "principle": "dry-run-execution-rehearses-apply-sequence-without-real-write",
+  "execution_mode": "dry-run-execution-only",
+  "required_semantics": {
+    "dry_run_execution_only": true,
+    "human_approval_required": true,
+    "one_candidate_required": true,
+    "one_operation_required": true,
+    "one_target_path_required": true,
+    "diff_preview_required": true,
+    "rollback_note_required": true,
+    "pre_apply_smokes_must_pass": true,
+    "post_apply_smokes_must_pass": true,
+    "real_write_allowed": false,
+    "automatic_apply_allowed": false,
+    "batch_apply_allowed": false,
+    "runtime_authority_escalation_allowed": false,
+    "enterprise_workflow_required": false
+  },
+  "dry_run_execution_steps": [
+    "load_single_candidate",
+    "verify_source_reference",
+    "verify_target_path_preview",
+    "render_diff_preview",
+    "render_rollback_note",
+    "run_pre_apply_smokes",
+    "simulate_apply_execution",
+    "run_post_apply_smokes",
+    "record_dry_run_result"
+  ],
+  "execution_result_expectation": {
+    "real_write_performed": false,
+    "target_path_mutated": false,
+    "index_mutated": false,
+    "runtime_state_changed": false,
+    "database_side_effect": false
+  },
+  "forbidden_infrastructure": [
+    "automatic-apply-worker",
+    "batch-apply-engine",
+    "background-write-worker",
+    "trusted-write-daemon",
+    "runtime-policy-engine",
+    "enterprise-workflow-engine",
+    "multi-agent-apply-orchestrator",
+    "write-scheduler"
+  ]
+}
