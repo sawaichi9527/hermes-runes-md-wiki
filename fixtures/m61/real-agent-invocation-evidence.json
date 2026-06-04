@@ -1,0 +1,59 @@
+{
+  "evidence_version": "m61-real-agent-invocation-evidence-v1",
+  "evidence_id": "m61-real-agent-evidence-public-safe-001",
+  "status": "active",
+  "purpose": "Public-safe evidence schema fixture for recording that an external generic agent completed onboarding validation without storing private transcript content.",
+  "evidence_kind": "summarized-external-agent-invocation-evidence",
+  "agent_scope": "agent-agnostic",
+  "agent_profile_id": "generic-cli-agent",
+  "privacy_boundary": {
+    "contains_secrets": false,
+    "contains_private_user_data": false,
+    "contains_full_chat_history": false,
+    "contains_raw_prompt_dump": false,
+    "contains_runtime_credentials": false,
+    "public_safe": true
+  },
+  "validated_commands": [
+    {
+      "name": "m59_onboarding_lock",
+      "command": "python3 tools/runes_shield/runes_agent_onboarding_lock.py --format json",
+      "expected_status": "PASS",
+      "expected_write": false,
+      "expected_issue_count": 0
+    },
+    {
+      "name": "m60_external_agent_trial_lock",
+      "command": "python3 tools/runes_shield/smoke_m60_external_agent_trial.py",
+      "expected_status": "PASS",
+      "expected_write": false,
+      "expected_issue_count": 0
+    }
+  ],
+  "required_evidence_fields": [
+    "agent_profile_id",
+    "agent_scope",
+    "validated_commands",
+    "privacy_boundary",
+    "observed_status",
+    "observed_write",
+    "observed_issue_count"
+  ],
+  "observed_status": "PASS",
+  "observed_write": false,
+  "observed_issue_count": 0,
+  "governance_boundary": {
+    "evidence_grants_permissions": false,
+    "evidence_is_runtime_state": false,
+    "evidence_is_memory_source": false,
+    "direct_wiki_mutation": false,
+    "direct_database_mutation": false,
+    "automatic_apply": false,
+    "automatic_promotion": false
+  },
+  "notes": [
+    "This is an evidence schema fixture, not a full agent transcript.",
+    "Real future evidence records should remain summarized and public-safe unless explicitly stored outside the public repository.",
+    "Evidence proves a validation command completed; it does not grant authority or bypass Runes Shield."
+  ]
+}
