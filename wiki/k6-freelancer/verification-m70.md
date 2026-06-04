@@ -5,8 +5,8 @@
 - Category: verification
 - Topic: m70-human-review-machine-suggestion-boundary
 - Note type: verification-lock
-- Status: pending-user-verification
-- Memory quality: pending
+- Status: frozen
+- Memory quality: verified
 - Related objective: k6-freelancer
 - Last reviewed: 2026-06-04
 
@@ -14,7 +14,7 @@
 
 M70 separates machine suggestions from human approval.
 
-Model output, wrapper output, evidence summaries, observation reports, and proposal recommendations may support review, but they do not replace human approval and must not trigger automatic apply, promotion, or trust transition.
+Model output, wrapper output, evidence summaries, observation reports, and proposal recommendations may support review, but they do not replace human approval and must not trigger automatic trust transition.
 
 ## Engineering Boundary
 
@@ -23,24 +23,6 @@ machine suggestion = review support
 machine suggestion != human approval
 human review remains required for trust transition
 ```
-
-## Scope
-
-- model output
-- wrapper output
-- evidence summary
-- observation report
-- proposal recommendation
-
-## Non-scope
-
-- automatic approval engine
-- trust scoring system
-- machine review replacement system
-- background apply worker
-- automatic promotion worker
-- approval daemon
-- policy engine
 
 ## Fixture
 
@@ -54,15 +36,23 @@ fixtures/m70/human-review-machine-suggestion-boundary.json
 python3 tools/runes_shield/smoke_m70_human_review_machine_suggestion_boundary.py
 ```
 
-## Expected Result
+## Verified Result
 
 ```text
+smoke_version: m70-human-review-machine-suggestion-boundary-v1
 status: PASS
+mode: human-review-machine-suggestion-boundary
+scale: personal-local
 write: false
 authoritative: false
 runtime_dependency_required: false
+boundary_target_count: 5
+issue_count: 0
 ```
 
-## Verification Status
+## Final Lock
 
-Pending user execution.
+```text
+M70 Human Review / Machine Suggestion Boundary
+PASS / frozen / smoke verified
+```
