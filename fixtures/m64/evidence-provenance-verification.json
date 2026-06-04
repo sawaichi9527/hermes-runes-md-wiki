@@ -1,0 +1,118 @@
+{
+  "provenance_version": "m64.4-evidence-provenance-verification-v1",
+  "provenance_id": "m64-evidence-provenance-verification-001",
+  "status": "active",
+  "purpose": "Define lightweight personal-local evidence provenance verification rules without making source, timestamp, wrapper identity, or validation result an authority grant.",
+  "scale": "personal-local",
+  "governance_principle": "provenance-is-traceability-not-authority",
+  "depends_on": [
+    "m64.1-evidence-classification-v1",
+    "m64.2-evidence-retention-boundary-v1",
+    "m64.3-public-safe-evidence-verification-v1"
+  ],
+  "provenance_rules": {
+    "source_trace_required": true,
+    "source_is_authority": false,
+    "timestamp_is_freshness_guarantee": false,
+    "wrapper_profile_is_trust_grant": false,
+    "validation_result_is_apply_permission": false,
+    "validation_result_is_promotion_permission": false,
+    "commit_presence_is_authority": false,
+    "human_review_remains_required": true,
+    "authoritative": false,
+    "write": false,
+    "public_safe": true,
+    "summarized_only": true
+  },
+  "allowed_provenance_fields": [
+    "source_type",
+    "source_scope",
+    "agent_scope",
+    "profile_id",
+    "wrapper_profile_id",
+    "compatibility_profile_id",
+    "validation_version",
+    "smoke_version",
+    "verification_command",
+    "review_status",
+    "last_reviewed",
+    "related_milestone"
+  ],
+  "forbidden_provenance_fields": [
+    "authority_token",
+    "permission_grant",
+    "runtime_policy_override",
+    "apply_permission",
+    "promotion_permission",
+    "secret",
+    "token",
+    "password",
+    "database_password",
+    "api_key",
+    "private_user_data",
+    "full_transcript",
+    "raw_prompt",
+    "raw_answer",
+    "runtime_state"
+  ],
+  "provenance_classes": [
+    {
+      "id": "user_verified_summary",
+      "source_type": "user-verified",
+      "traceable": true,
+      "authoritative": false,
+      "write": false,
+      "trust_grant": false
+    },
+    {
+      "id": "smoke_result_summary",
+      "source_type": "smoke-output-summary",
+      "traceable": true,
+      "authoritative": false,
+      "write": false,
+      "trust_grant": false
+    },
+    {
+      "id": "fixture_contract_summary",
+      "source_type": "repo-fixture-summary",
+      "traceable": true,
+      "authoritative": false,
+      "write": false,
+      "trust_grant": false
+    },
+    {
+      "id": "wrapper_profile_summary",
+      "source_type": "wrapper-profile-summary",
+      "traceable": true,
+      "authoritative": false,
+      "write": false,
+      "trust_grant": false
+    },
+    {
+      "id": "verification_document_summary",
+      "source_type": "verification-doc-summary",
+      "traceable": true,
+      "authoritative": false,
+      "write": false,
+      "trust_grant": false
+    }
+  ],
+  "forbidden_interpretations": [
+    "source implies authority",
+    "timestamp implies freshness guarantee",
+    "wrapper profile implies trust grant",
+    "validation PASS implies apply permission",
+    "validation PASS implies automatic promotion",
+    "commit presence implies runtime authorization",
+    "provenance record implies direct wiki write permission",
+    "provenance record implies database mutation permission"
+  ],
+  "expected_result": {
+    "status": "PASS",
+    "provenance_class_count": 5,
+    "authoritative": false,
+    "write": false,
+    "issue_count": 0,
+    "ready_for_m64_5_governance_interpretation_consistency": true
+  }
+}
