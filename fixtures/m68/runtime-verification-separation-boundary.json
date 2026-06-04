@@ -1,0 +1,47 @@
+{
+  "schema_version": "m68-runtime-verification-separation-boundary-v1",
+  "milestone": "M68 Runtime / Verification Separation Boundary",
+  "mode": "runtime-verification-separation-boundary",
+  "scale": "personal-local",
+  "write": false,
+  "authoritative": false,
+  "runtime_dependency_required": false,
+  "principle": "verification-results-are-review-evidence-not-runtime-permission",
+  "required_semantics": {
+    "smoke_pass_is_not_apply_permission": true,
+    "smoke_pass_is_not_promotion_permission": true,
+    "verification_doc_is_not_runtime_policy": true,
+    "fixture_is_not_runtime_state": true,
+    "validation_result_is_not_trust_grant": true,
+    "test_success_is_not_authority": true,
+    "runtime_does_not_depend_on_verification_docs": true,
+    "human_review_required_for_trust_transition": true,
+    "automatic_apply_from_verification": false,
+    "automatic_promotion_from_verification": false,
+    "automatic_runtime_policy_mutation": false
+  },
+  "separation_targets": [
+    "smoke_results",
+    "verification_documents",
+    "fixtures",
+    "regression_outputs",
+    "freeze_locks"
+  ],
+  "forbidden_drift": [
+    "smoke-pass-becomes-apply-permission",
+    "smoke-pass-becomes-promotion-permission",
+    "verification-doc-becomes-runtime-policy",
+    "fixture-becomes-runtime-state",
+    "regression-output-becomes-authority",
+    "freeze-lock-becomes-runtime-permission",
+    "validation-result-bypasses-human-review"
+  ],
+  "forbidden_infrastructure": [
+    "runtime-policy-engine",
+    "verification-driven-apply-worker",
+    "automatic-promotion-worker",
+    "verification-daemon",
+    "background-governance-controller",
+    "runtime-state-store"
+  ]
+}
