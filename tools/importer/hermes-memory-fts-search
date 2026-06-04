@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+PYTHON="${PYTHON:-python3}"
+
 cd "$(dirname "$0")/../.."
 
-python tools/importer/fts_search.py "$@"
+"$PYTHON" tools/importer/fts_search.py "$@"
