@@ -1,0 +1,106 @@
+{
+  "contract_version": "m63.3-openai-compatible-wrapper-validation-v1",
+  "contract_id": "m63-openai-compatible-wrapper-validation-001",
+  "status": "active",
+  "purpose": "Validate OpenAI-compatible wrapper behavior for Hermes Runes MD Wiki through the governed Runes Shield boundary without treating chat roles, tool calls, JSON schema, or model responses as memory authority.",
+  "agent_scope": "agent-agnostic",
+  "validation_kind": "openai-compatible-wrapper-validation",
+  "scale": "personal-local",
+  "compatibility_profile": {
+    "profile_id": "openai-compatible-wrapper",
+    "runtime_dependency_required": false,
+    "compatibility_mode": "schema-contract-only",
+    "transport": "local-process-or-http-compatible-wrapper",
+    "expected_agent_traits": [
+      "chat-completions-compatible",
+      "role-message-mapping",
+      "tool-call-capable",
+      "json-schema-capable",
+      "function-argument-serialization",
+      "model-output-untrusted"
+    ]
+  },
+  "required_boundaries": {
+    "read_only_validation": true,
+    "runes_shield_required": true,
+    "profile_metadata_only": true,
+    "runtime_dependency_not_required": true,
+    "tool_call_is_not_authority_grant": true,
+    "assistant_role_is_not_authority_grant": true,
+    "system_role_is_not_runtime_policy_grant": true,
+    "json_schema_is_not_authority_grant": true,
+    "function_arguments_are_untrusted": true,
+    "model_output_is_untrusted": true,
+    "no_direct_wiki_mutation": true,
+    "no_direct_database_mutation": true,
+    "no_automatic_apply": true,
+    "no_automatic_promotion": true,
+    "no_background_worker": true,
+    "no_orchestration_daemon": true,
+    "no_websocket_bridge": true,
+    "no_enterprise_telemetry_system": true,
+    "no_runtime_authority_escalation": true
+  },
+  "schema_surface": {
+    "allowed_request_fields": [
+      "messages",
+      "tools",
+      "tool_choice",
+      "response_format",
+      "metadata"
+    ],
+    "required_response_fields": [
+      "status",
+      "mode",
+      "scale",
+      "write",
+      "agent_scope",
+      "compatibility_profile_id",
+      "issue_count"
+    ],
+    "forbidden_request_fields": [
+      "direct_wiki_path_write",
+      "direct_database_write",
+      "apply_proposal",
+      "promote_memory",
+      "runtime_policy_override",
+      "authority_escalation"
+    ],
+    "forbidden_response_fields": [
+      "raw_prompt",
+      "full_transcript",
+      "secret",
+      "token",
+      "password",
+      "database_password",
+      "api_key"
+    ]
+  },
+  "risk_alignment": {
+    "tool_call_confusion_risk_acknowledged": true,
+    "role_confusion_risk_acknowledged": true,
+    "json_schema_overtrust_risk_acknowledged": true,
+    "function_argument_injection_risk_acknowledged": true,
+    "model_output_injection_risk_acknowledged": true,
+    "human_governance_boundary_required": true
+  },
+  "evidence_policy": {
+    "summarized_only": true,
+    "public_safe_fixture_allowed": true,
+    "full_transcript_required": false,
+    "contains_secrets": false,
+    "contains_private_user_data": false,
+    "commit_local_evidence_to_repo": false,
+    "ingest_evidence_to_rag": false,
+    "write_to_observation_log": false
+  },
+  "expected_result": {
+    "status": "PASS",
+    "agent_scope": "agent-agnostic",
+    "compatibility_profile_id": "openai-compatible-wrapper",
+    "runtime_dependency_required": false,
+    "write": false,
+    "issue_count": 0,
+    "ready_for_m63_freeze": true
+  }
+}
