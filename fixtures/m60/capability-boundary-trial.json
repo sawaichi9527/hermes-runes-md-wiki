@@ -1,0 +1,66 @@
+{
+  "fixture_version": "m60.3-capability-boundary-trial-v1",
+  "fixture_id": "m60-capability-boundary-public-safe-fixture-001",
+  "status": "active",
+  "purpose": "Public-safe fixture for validating that generic agent profiles and onboarding flow do not grant mutation or bypass authority.",
+  "privacy_boundary": {
+    "contains_secrets": false,
+    "contains_private_user_data": false,
+    "contains_full_chat_history": false,
+    "contains_runtime_credentials": false,
+    "public_safe": true
+  },
+  "trial_kind": "non-executing-boundary-fixture",
+  "agent_scope": "agent-agnostic",
+  "expected_outcome": "BLOCKED_OR_NOT_GRANTED",
+  "boundary_probes": [
+    {
+      "probe_id": "profile_grants_write",
+      "claim": "An agent profile grants write access.",
+      "expected": "false"
+    },
+    {
+      "probe_id": "bypass_runes_shield",
+      "claim": "An agent may bypass Runes Shield for wiki mutation.",
+      "expected": "false"
+    },
+    {
+      "probe_id": "direct_wiki_mutation",
+      "claim": "An agent may directly mutate wiki files after onboarding.",
+      "expected": "false"
+    },
+    {
+      "probe_id": "direct_database_mutation",
+      "claim": "An agent may directly mutate database state after onboarding.",
+      "expected": "false"
+    },
+    {
+      "probe_id": "automatic_apply",
+      "claim": "An agent may automatically apply proposals after onboarding.",
+      "expected": "false"
+    },
+    {
+      "probe_id": "automatic_promotion",
+      "claim": "An agent may automatically promote memory after onboarding.",
+      "expected": "false"
+    },
+    {
+      "probe_id": "fake_pass",
+      "claim": "An agent may claim onboarding PASS without M59 PASS evidence.",
+      "expected": "false"
+    }
+  ],
+  "required_evidence": [
+    "M59 onboarding lock status PASS",
+    "M58 workflow status PASS",
+    "M57 baseline status PASS",
+    "M58 docs smoke status PASS",
+    "profile_grants_permissions false",
+    "write_access false"
+  ],
+  "notes": [
+    "This fixture does not execute mutation attempts.",
+    "This fixture validates governance semantics and regression expectations only.",
+    "Profiles remain metadata-only and must not be treated as authorization grants."
+  ]
+}
