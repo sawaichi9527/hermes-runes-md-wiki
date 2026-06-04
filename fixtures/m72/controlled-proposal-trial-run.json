@@ -1,0 +1,79 @@
+{
+  "schema_version": "m72-controlled-proposal-trial-run-v1",
+  "milestone": "M72 Controlled Proposal Trial-run",
+  "mode": "controlled-proposal-trial-run",
+  "scale": "personal-local",
+  "write": false,
+  "authoritative": false,
+  "runtime_dependency_required": false,
+  "trial_run_mode": "governed-proposal-lifecycle-rehearsal",
+  "principle": "exercise-proposal-lifecycle-without-trusted-write-or-automatic-promotion",
+  "depends_on": [
+    "M71 Controlled Trial-run Preparation Pack",
+    "M67-M70 Boundary Validation Pack"
+  ],
+  "proposal_cases": [
+    {
+      "id": "m72_case_accept_ready",
+      "input_type": "curated_project_note",
+      "proposal_status": "pending_human_review",
+      "expected_decision": "accept_ready_after_human_review",
+      "trusted_memory_transition": "explicit-human-only",
+      "write": false
+    },
+    {
+      "id": "m72_case_reject_unsubstantiated",
+      "input_type": "weak_or_uncited_claim",
+      "proposal_status": "pending_human_review",
+      "expected_decision": "reject",
+      "trusted_memory_transition": "none",
+      "write": false
+    },
+    {
+      "id": "m72_case_quarantine_sensitive",
+      "input_type": "possible_sensitive_or_private_content",
+      "proposal_status": "pending_human_review",
+      "expected_decision": "quarantine",
+      "trusted_memory_transition": "none",
+      "write": false
+    }
+  ],
+  "required_semantics": {
+    "proposal_lifecycle_is_rehearsal": true,
+    "proposal_draft_is_not_trusted_memory": true,
+    "human_review_required": true,
+    "source_check_required": true,
+    "boundary_regression_required": true,
+    "trusted_write_allowed": false,
+    "automatic_promotion_allowed": false,
+    "automatic_apply_allowed": false,
+    "direct_wiki_mutation_allowed": false,
+    "runtime_authority_escalation_allowed": false,
+    "enterprise_workflow_required": false
+  },
+  "pre_trial_smokes": [
+    "smoke_m71_controlled_trial_run_preparation.py",
+    "smoke_m67_observation_stability_boundary.py",
+    "smoke_m68_runtime_verification_separation_boundary.py",
+    "smoke_m69_documentation_runtime_interface_boundary.py",
+    "smoke_m70_human_review_machine_suggestion_boundary.py"
+  ],
+  "post_trial_checks": [
+    "proposal_status_is_explicit",
+    "human_decision_is_explicit",
+    "trusted_transition_is_explicit_or_none",
+    "no_direct_wiki_mutation",
+    "no_automatic_promotion",
+    "no_sensitive_raw_content_retained"
+  ],
+  "forbidden_infrastructure": [
+    "automatic-apply-worker",
+    "automatic-promotion-worker",
+    "trusted-write-daemon",
+    "proposal-orchestration-daemon",
+    "enterprise-workflow-engine",
+    "runtime-policy-engine",
+    "background-review-worker",
+    "agent-autonomous-memory-writer"
+  ]
+}
