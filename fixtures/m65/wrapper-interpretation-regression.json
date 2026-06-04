@@ -1,0 +1,92 @@
+{
+  "regression_version": "m65.3-wrapper-interpretation-regression-v1",
+  "regression_id": "m65-wrapper-interpretation-regression-001",
+  "status": "active",
+  "purpose": "Preserve M64.5 governance interpretation consistency across wrapper profiles without introducing wrapper runtimes, adapters, or agent-specific integration code.",
+  "scale": "personal-local",
+  "regression_principle": "wrapper-regression-is-semantics-not-runtime",
+  "depends_on": [
+    "m64.5-governance-interpretation-consistency-v1",
+    "m65.1-governance-regression-baseline-v1",
+    "m65.2-replay-boundary-regression-v1"
+  ],
+  "supported_wrapper_profiles": [
+    "generic-cli-wrapper",
+    "openclaw-style-agent",
+    "openai-compatible-wrapper"
+  ],
+  "canonical_expected_interpretation": {
+    "interpretation": "review-only-non-authoritative",
+    "authoritative": false,
+    "write": false,
+    "apply_allowed": false,
+    "promotion_allowed": false,
+    "runtime_authority_escalation_allowed": false,
+    "human_review_required": true,
+    "runtime_dependency_required": false
+  },
+  "regression_cases": [
+    {
+      "wrapper_profile": "generic-cli-wrapper",
+      "expected_interpretation": "review-only-non-authoritative",
+      "authoritative": false,
+      "write": false,
+      "apply_allowed": false,
+      "promotion_allowed": false,
+      "runtime_authority_escalation_allowed": false,
+      "human_review_required": true,
+      "runtime_dependency_required": false
+    },
+    {
+      "wrapper_profile": "openclaw-style-agent",
+      "expected_interpretation": "review-only-non-authoritative",
+      "authoritative": false,
+      "write": false,
+      "apply_allowed": false,
+      "promotion_allowed": false,
+      "runtime_authority_escalation_allowed": false,
+      "human_review_required": true,
+      "runtime_dependency_required": false
+    },
+    {
+      "wrapper_profile": "openai-compatible-wrapper",
+      "expected_interpretation": "review-only-non-authoritative",
+      "authoritative": false,
+      "write": false,
+      "apply_allowed": false,
+      "promotion_allowed": false,
+      "runtime_authority_escalation_allowed": false,
+      "human_review_required": true,
+      "runtime_dependency_required": false
+    }
+  ],
+  "forbidden_wrapper_regression": [
+    "wrapper-specific-trust-grant",
+    "wrapper-specific-apply-permission",
+    "wrapper-specific-promotion-permission",
+    "wrapper-specific-runtime-escalation",
+    "wrapper-profile-becomes-authority",
+    "wrapper-runtime-becomes-dependency",
+    "advanced-wrapper-bypasses-human-review",
+    "agent-specific-adapter-changes-governance"
+  ],
+  "forbidden_infrastructure": [
+    "wrapper-runtime-service",
+    "adapter-daemon",
+    "agent-specific-bridge",
+    "websocket-bridge",
+    "orchestration-daemon",
+    "runtime-policy-engine",
+    "wrapper-trust-score-system"
+  ],
+  "expected_result": {
+    "status": "PASS",
+    "wrapper_profile_count": 3,
+    "regression_case_count": 3,
+    "authoritative": false,
+    "write": false,
+    "runtime_dependency_required": false,
+    "issue_count": 0,
+    "ready_for_m65_4_provenance_regression": true
+  }
+}
