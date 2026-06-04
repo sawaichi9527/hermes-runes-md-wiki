@@ -1,4 +1,4 @@
-## N-20260604-M66 Lightweight Governance Drift Observation
+## N-20260604-M67 Lightweight Governance Observation Stability
 
 Status: NEXT / PLANNED
 
@@ -6,58 +6,53 @@ Current baseline:
 - M63 Real External Agent Trial-run: PASS / frozen.
 - M64 External Agent Evidence Lock: PASS / frozen.
 - M65 Lightweight Evidence Regression Preservation: PASS / frozen.
-- Lightweight semantic regression preservation established.
-- Replay review-only boundary preserved.
-- Provenance traceability-only semantics preserved.
-- Wrapper interpretation consistency preserved.
-- Public-safe summarized evidence boundary preserved.
+- M66 Lightweight Governance Drift Observation: PASS / frozen.
+- Lightweight governance drift-observation layer established.
+- Wrapper drift observation preserved.
+- Replay-boundary drift observation preserved.
+- Provenance-boundary drift observation preserved.
+- Retention/public-safe drift observation preserved.
 
 Recommended next milestone:
-- M66 Lightweight Governance Drift Observation
+- M67 Lightweight Governance Observation Stability
 
 Purpose:
-- Observe long-term semantic drift risk.
-- Preserve lightweight governance boundaries over time.
-- Detect governance-boundary erosion early.
-- Preserve deterministic interpretation semantics.
-- Preserve non-enterprise operational simplicity.
+- Preserve long-term observation stability.
+- Prevent observation-layer semantic inflation.
+- Preserve lightweight governance observation semantics.
+- Detect observation-to-enforcement drift early.
+- Preserve deterministic observation interpretation.
 
 Suggested scope:
-- lightweight drift-observation fixtures
-- semantic-boundary observation validation
-- wrapper drift observation
-- replay-boundary drift observation
-- provenance-boundary drift observation
-- retention/public-safe drift observation
-- governance-baseline preservation
-- freeze-lock observation aggregation
+- observation stability fixtures
+- observation semantic consistency validation
+- observation inflation boundary validation
+- observation-to-authority drift observation
+- observation-to-enforcement drift observation
+- freeze-lock stability aggregation
 
 Hard constraints:
+- no governance enforcement daemon
+- no policy engine
 - no orchestration daemon
 - no websocket bridge
-- no enterprise telemetry system
-- no SIEM platform
-- no distributed tracing
-- no workflow replay engine
-- no runtime governance daemon
-- no automatic proposal apply
-- no automatic promotion
+- no telemetry analytics platform
+- no trust scoring system
+- no automatic remediation
+- no runtime governance mesh
 - no direct wiki mutation
-- no direct database mutation
 - no runtime authority escalation
-- no evidence-to-authority escalation
 
 Success criteria:
-- M65 frozen baseline remains PASS
-- governance semantics remain deterministic
-- replay remains review-only
-- provenance remains traceability-only
-- wrapper interpretation remains stable
-- evidence remains summarized/public-safe
-- observation suites remain PASS
+- M66 frozen baseline remains PASS
+- observation semantics remain lightweight
+- observation remains non-authoritative
+- observation remains non-blocking
+- governance boundaries remain deterministic
+- smoke/observation suites remain PASS
 
 Reference:
-- `wiki/k6-freelancer/verification-m65.md`
+- `wiki/k6-freelancer/verification-m66.md`
 
 ---
 
