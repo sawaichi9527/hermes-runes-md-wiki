@@ -51,14 +51,17 @@ Reference:
 
 ## N-20260605-M73-M75 Human-approved Apply Path Validation
 
-Status: NEXT / PENDING USER VERIFICATION
+Status: PASS / FROZEN / SMOKE VERIFIED
 
 Current baseline:
 - M72 Controlled Proposal Trial-run: PASS / frozen / smoke verified.
 - M71 Controlled Trial-run Preparation Pack: PASS / smoke verified.
 - M67-M70 Boundary Validation Pack: PASS / frozen / smoke verified.
+- M73 Controlled Trusted Transition Boundary: PASS / frozen.
+- M74 Trusted Memory Apply Rehearsal: PASS / frozen.
+- M75 Minimal Human-approved Apply Path: PASS / frozen.
 
-Implemented milestones:
+Frozen milestones:
 - M73 Controlled Trusted Transition Boundary
 - M74 Trusted Memory Apply Rehearsal
 - M75 Minimal Human-approved Apply Path
@@ -71,7 +74,7 @@ Purpose:
 - Keep the system personal-local and deterministic.
 - Avoid adding runtime burden to Hermes-agent.
 
-Verification commands:
+Verified commands:
 
 ```bash
 python3 tools/runes_shield/smoke_m73_controlled_trusted_transition_boundary.py
@@ -79,7 +82,12 @@ python3 tools/runes_shield/smoke_m74_trusted_memory_apply_rehearsal.py
 python3 tools/runes_shield/smoke_m75_minimal_human_approved_apply_path.py
 ```
 
-Hard constraints:
+Result:
+- M73: PASS / issue_count: 0
+- M74: PASS / issue_count: 0
+- M75: PASS / issue_count: 0
+
+Hard constraints preserved:
 - no automatic trust scoring system
 - no automatic promotion worker
 - no automatic apply worker
@@ -91,13 +99,12 @@ Hard constraints:
 - no multi-agent apply orchestrator
 - no runtime authority escalation
 
-Success criteria:
-- all M73-M75 smoke tests PASS
-- reviewed proposal remains not trusted memory
-- trusted transition remains explicit and human-approved
-- apply rehearsal remains dry-run plan only
-- minimal apply path remains one candidate / one operation / one target path
-- no real write is enabled in this pack
+Final lock:
+
+```text
+M73-M75 Human-approved Apply Path Validation
+PASS / frozen / smoke verified
+```
 
 References:
 - `wiki/k6-freelancer/verification-m73.md`
@@ -106,9 +113,56 @@ References:
 
 ---
 
+## N-20260605-M76 First Manual Apply Readiness Gate
+
+Status: NEXT / PLANNED
+
+Current baseline:
+- M73-M75 human-approved apply path validation is frozen.
+- Apply remains dry-run only.
+- No real trusted write is enabled yet.
+
+Recommended next milestone:
+- M76 First Manual Apply Readiness Gate
+
+Purpose:
+- Decide whether the project is ready for one explicit manual apply operation.
+- Preserve one candidate / one operation / one target path.
+- Require pre/post smoke checks.
+- Keep apply human-approved and local.
+- Avoid introducing background workers or agent autonomy.
+
+Suggested scope:
+- manual apply readiness checklist
+- one candidate fixture
+- target path verification
+- source reference verification
+- pre/post smoke checklist
+- rollback note verification
+
+Hard constraints:
+- no automatic apply execution
+- no background write worker
+- no trusted write daemon
+- no batch apply engine
+- no runtime policy engine
+- no enterprise workflow expansion
+
+Success criteria:
+- readiness gate remains explicit
+- apply target is single-path only
+- human approval is recorded
+- pre/post smoke commands are listed
+- no real write is performed by the readiness gate itself
+
+Reference:
+- `wiki/k6-freelancer/verification-m75.md`
+
+---
+
 ## N-20260603-M50 Controlled Trial-run Governance
 
-Status: HISTORICAL / SUPERSEDED BY N-20260605-M73-M75 Human-approved Apply Path Validation
+Status: HISTORICAL / SUPERSEDED BY N-20260605-M76 First Manual Apply Readiness Gate
 
 Current baseline:
 - M47 Governance Timeline: PASS / frozen.
