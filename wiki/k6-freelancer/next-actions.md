@@ -1,60 +1,60 @@
-## N-20260604-M64 External Agent Evidence Lock
+## N-20260604-M65 Lightweight Evidence Regression Preservation
 
 Status: NEXT / PLANNED
 
 Current baseline:
-- M58 Summoning Trial: PASS / frozen.
-- M59 Generic Agent Onboarding Lock: PASS / frozen.
-- M60 External Agent Trial Baseline: PASS / frozen.
-- M61 Real Agent Invocation Evidence: PASS / frozen.
-- M62 Real External Agent Validation: PASS / frozen.
 - M63 Real External Agent Trial-run: PASS / frozen.
-- Cross-wrapper external-agent compatibility baseline established.
-- Generic CLI / OpenClaw-style / OpenAI-compatible wrapper validation confirmed.
-- P0 governance boundary remains preserved.
+- M64 External Agent Evidence Lock: PASS / frozen.
+- Lightweight evidence governance boundary established.
+- Public-safe summarized evidence boundary established.
+- Replay boundary preserved.
+- Governance interpretation consistency preserved.
+- Evidence provenance remains non-authoritative.
 
 Recommended next milestone:
-- M64 External Agent Evidence Lock
+- M65 Lightweight Evidence Regression Preservation
 
 Purpose:
-- Lock the external-agent evidence boundary.
-- Prevent evidence drift into runtime authority.
-- Preserve summarized/public-safe validation evidence.
-- Preserve deterministic governance interpretation.
-- Prevent orchestration-oriented evidence expansion.
+- Preserve the lightweight evidence governance baseline.
+- Prevent future enterprise-complexity drift.
+- Prevent evidence-authority escalation regressions.
+- Preserve deterministic wrapper interpretation behavior.
+- Preserve replay review-only semantics.
 
 Suggested scope:
-- external-agent evidence classification
-- evidence retention boundary validation
-- summarized/public-safe evidence verification
-- evidence provenance verification
-- governance interpretation consistency
-- evidence replay boundary validation
-- wrapper evidence normalization
-- freeze-lock regression preservation
+- evidence governance regression fixtures
+- replay-boundary regression validation
+- wrapper interpretation regression validation
+- provenance regression validation
+- retention-boundary regression validation
+- public-safe evidence regression validation
+- lightweight baseline preservation
+- freeze-lock regression aggregation
 
 Hard constraints:
 - no orchestration daemon
 - no websocket bridge
 - no enterprise telemetry system
+- no SIEM platform
+- no distributed tracing
+- no workflow replay engine
 - no automatic proposal apply
 - no automatic promotion
 - no direct wiki mutation
 - no direct database mutation
 - no runtime authority escalation
-- no full transcript archival pipeline
 - no evidence-to-authority escalation
 
 Success criteria:
-- M63 frozen baseline remains PASS
+- M64 frozen baseline remains PASS
 - evidence remains summarized/public-safe
-- evidence remains non-authoritative
-- replay boundary remains preserved
-- governance interpretation remains deterministic
-- smoke/regression suites remain PASS
+- provenance remains non-authoritative
+- replay remains review-only
+- wrapper interpretation remains deterministic
+- regression suites remain PASS
 
 Reference:
-- `wiki/k6-freelancer/verification-m63.md`
+- `wiki/k6-freelancer/verification-m64.md`
 
 ---
 
@@ -103,115 +103,3 @@ Success criteria:
 
 Reference:
 - `wiki/k6-freelancer/verification-m49.md`
-
----
-
-## N-20260531-M8.3c Observation Report Layer
-
-Status:
-- planned
-
-Goal:
-- Add lightweight observation reporting over local JSONL observation logs.
-
-Scope:
-- `hermes-observe report`
-- daily / weekly sanitizer summary
-- contamination trend analysis
-- structured output validity tracking
-- model-profile comparison
-
-Planned Features:
-- sanitizer activation statistics
-- review-status frequency
-- contamination marker frequency
-- structured-output success rate
-- model-profile comparison
-- daily/weekly markdown report export
-
-Governance Rules:
-- Observation analysis is automated.
-- Heuristic modification is NOT automated.
-- Human review remains required before sanitizer rule changes.
-
-Current Observation Baseline:
-- M8.3a default-on lightweight JSONL logger
-- daily rotation
-- retention cleanup
-- no DB backend
-- no RAG ingestion
-- no raw/full prompt persistence
-
-Risk Notes:
-- Over-aggressive sanitizer heuristics remain possible.
-- Structured-output compliance varies by model family.
-- Forced-thinking models (e.g. Qwen) require stronger fallback handling.
-- Observation logs must remain lightweight to avoid operational complexity.
-
-Suggested Future Direction:
-- Long-term observation-driven heuristic tuning
-- Cross-model contamination comparison
-- Safer language continuity heuristics
-- Expanded reversible sanitizer coverage
-
----
-
-## M10 Observation-driven Hardening
-Status: Planned
-
-Goal:
-- Stop expanding sanitizer rules blindly.
-- Collect lightweight local evidence from real runs.
-- Use observations to improve sanitizer, extraction cleanup, retry policy, and eval cases later.
-
-Planned:
-- Add JSONL observation logs.
-- Log only metadata and short safe previews.
-- Do not log raw/full prompts, full answers, full memory context, or secrets.
-- Do not ingest observation logs into RAG memory.
-- Keep failures non-blocking.
-
-Initial signals:
-- extraction_path
-- finish_reason
-- quality_issues
-- risk_signals
-- completeness_issues
-- citation_issues
-- retry_should_run
-- retry_reason
-- answer_chars
-- answer_preview
-
----
-
-# Next Stage Candidate
-
-## M21 P0 Trial Run
-
-Goal:
-- validate governed memory behavior under real usage
-
-Scope:
-- multiple real agent proposals
-- mixed approve/reject decisions
-- retrieval stability observation
-- provenance behavior observation
-- governance observation review
-- trust bias observation
-- smoke/regression preservation
-
-Constraints:
-- personal-use scale only
-- avoid enterprise governance complexity
-- observation-first refinement
-- no automatic policy mutation
-
-Future evaluation candidates:
-- reviewed vs trusted separation refinement
-- proposal aging policy
-- trust escalation policy
-- optional retrieval explainability expansion
-- optional compatibility behavior for:
-  - --mode hybrid
-  - --mode fts
