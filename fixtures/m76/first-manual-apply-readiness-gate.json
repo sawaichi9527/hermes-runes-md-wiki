@@ -1,0 +1,69 @@
+{
+  "schema_version": "m76-first-manual-apply-readiness-gate-v1",
+  "milestone": "M76 First Manual Apply Readiness Gate",
+  "mode": "first-manual-apply-readiness-gate",
+  "scale": "personal-local",
+  "write": false,
+  "authoritative": false,
+  "runtime_dependency_required": false,
+  "principle": "readiness-gate-validates-manual-apply-preconditions-without-performing-write",
+  "gate_mode": "readiness-check-only",
+  "required_semantics": {
+    "gate_is_not_apply_executor": true,
+    "one_candidate_required": true,
+    "one_operation_required": true,
+    "one_target_path_required": true,
+    "source_reference_required": true,
+    "diff_preview_required": true,
+    "rollback_note_required": true,
+    "human_approval_checkpoint_required": true,
+    "pre_apply_smoke_list_required": true,
+    "post_apply_smoke_list_required": true,
+    "real_write_performed_by_gate": false,
+    "automatic_apply_allowed": false,
+    "automatic_promotion_allowed": false,
+    "batch_apply_allowed": false,
+    "runtime_authority_escalation_allowed": false,
+    "enterprise_workflow_required": false
+  },
+  "readiness_candidate": {
+    "id": "m76_first_manual_apply_candidate_placeholder",
+    "candidate_count": 1,
+    "operation_count": 1,
+    "target_path_count": 1,
+    "human_approval_status": "required_before_m77",
+    "real_write_status": "not_performed_by_m76"
+  },
+  "required_gate_fields": [
+    "candidate_id",
+    "operation_id",
+    "target_path_preview",
+    "source_reference",
+    "diff_preview",
+    "rollback_note",
+    "human_approval_checkpoint",
+    "pre_apply_smokes",
+    "post_apply_smokes"
+  ],
+  "pre_apply_smokes": [
+    "smoke_m73_controlled_trusted_transition_boundary.py",
+    "smoke_m74_trusted_memory_apply_rehearsal.py",
+    "smoke_m75_minimal_human_approved_apply_path.py"
+  ],
+  "post_apply_smokes": [
+    "smoke_m67_observation_stability_boundary.py",
+    "smoke_m68_runtime_verification_separation_boundary.py",
+    "smoke_m69_documentation_runtime_interface_boundary.py",
+    "smoke_m70_human_review_machine_suggestion_boundary.py"
+  ],
+  "forbidden_infrastructure": [
+    "automatic-apply-worker",
+    "batch-apply-engine",
+    "background-write-worker",
+    "trusted-write-daemon",
+    "runtime-policy-engine",
+    "enterprise-workflow-engine",
+    "multi-agent-apply-orchestrator",
+    "write-scheduler"
+  ]
+}
