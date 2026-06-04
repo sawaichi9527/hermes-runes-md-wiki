@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+PYTHON="${PYTHON:-python3}"
+
 cd "$(dirname "$0")/../.."
 
-python tools/importer/embed_chunks.py "$@"
+"$PYTHON" tools/importer/embed_chunks.py "$@"
