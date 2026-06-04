@@ -1,0 +1,53 @@
+{
+  "schema_version": "m75-minimal-human-approved-apply-path-v1",
+  "milestone": "M75 Minimal Human-approved Apply Path",
+  "mode": "minimal-human-approved-apply-path",
+  "scale": "personal-local",
+  "write": false,
+  "authoritative": false,
+  "runtime_dependency_required": false,
+  "principle": "minimal-apply-path-requires-explicit-human-approval-and-remains-dry-run-in-this-pack",
+  "apply_path_mode": "bounded-human-approved-dry-run",
+  "required_semantics": {
+    "human_approval_required": true,
+    "single_operation_scope_required": true,
+    "explicit_target_path_required": true,
+    "explicit_source_reference_required": true,
+    "pre_apply_smoke_required": true,
+    "post_apply_smoke_required": true,
+    "manual_review_checkpoint_required": true,
+    "real_write_enabled_in_this_pack": false,
+    "automatic_apply_allowed": false,
+    "automatic_promotion_allowed": false,
+    "multi_file_batch_apply_allowed": false,
+    "runtime_authority_escalation_allowed": false,
+    "enterprise_workflow_required": false
+  },
+  "minimal_apply_steps": [
+    "select_one_human_approved_candidate",
+    "confirm_source_reference",
+    "confirm_target_path_preview",
+    "confirm_diff_preview",
+    "run_pre_apply_smokes",
+    "record_manual_review_checkpoint",
+    "prepare_single_operation_apply_plan",
+    "run_post_apply_smokes"
+  ],
+  "apply_guardrails": [
+    "one_candidate_per_operation",
+    "one_target_path_per_operation",
+    "explicit_human_decision_required",
+    "no_secret_or_private_raw_content",
+    "no_background_worker",
+    "no_runtime_policy_change"
+  ],
+  "forbidden_infrastructure": [
+    "automatic-apply-worker",
+    "batch-apply-engine",
+    "background-write-worker",
+    "trusted-write-daemon",
+    "runtime-policy-engine",
+    "enterprise-workflow-engine",
+    "multi-agent-apply-orchestrator"
+  ]
+}
