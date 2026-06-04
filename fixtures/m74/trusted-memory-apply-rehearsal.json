@@ -1,0 +1,65 @@
+{
+  "schema_version": "m74-trusted-memory-apply-rehearsal-v1",
+  "milestone": "M74 Trusted Memory Apply Rehearsal",
+  "mode": "trusted-memory-apply-rehearsal",
+  "scale": "personal-local",
+  "write": false,
+  "authoritative": false,
+  "runtime_dependency_required": false,
+  "principle": "apply-rehearsal-produces-reviewable-plan-not-real-write",
+  "apply_mode": "dry-run-plan-only",
+  "required_semantics": {
+    "apply_rehearsal_is_plan_only": true,
+    "apply_plan_is_reviewable": true,
+    "human_approval_required": true,
+    "path_preview_required": true,
+    "diff_preview_required": true,
+    "rollback_note_required": true,
+    "real_write_allowed": false,
+    "direct_wiki_mutation_allowed": false,
+    "automatic_apply_allowed": false,
+    "automatic_promotion_allowed": false,
+    "runtime_authority_escalation_allowed": false,
+    "enterprise_workflow_required": false
+  },
+  "apply_plan_cases": [
+    {
+      "id": "m74_create_flat_note_plan",
+      "operation": "create_flat_note",
+      "plan_only": true,
+      "write": false,
+      "requires_human_approval": true
+    },
+    {
+      "id": "m74_update_index_plan",
+      "operation": "update_index_reference",
+      "plan_only": true,
+      "write": false,
+      "requires_human_approval": true
+    },
+    {
+      "id": "m74_noop_reject_plan",
+      "operation": "no_write_reject_or_quarantine",
+      "plan_only": true,
+      "write": false,
+      "requires_human_approval": false
+    }
+  ],
+  "required_apply_plan_fields": [
+    "operation_id",
+    "target_path_preview",
+    "diff_preview",
+    "source_reference",
+    "human_decision_required",
+    "rollback_note"
+  ],
+  "forbidden_infrastructure": [
+    "automatic-apply-worker",
+    "background-write-worker",
+    "trusted-write-daemon",
+    "runtime-policy-engine",
+    "enterprise-workflow-engine",
+    "websocket-apply-bridge",
+    "agent-autonomous-memory-writer"
+  ]
+}
