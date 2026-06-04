@@ -1,0 +1,74 @@
+{
+  "observation_version": "m66.3-replay-boundary-drift-observation-v1",
+  "observation_id": "m66-replay-boundary-drift-observation-001",
+  "status": "active",
+  "purpose": "Observe replay boundary erosion risk without introducing replay engines, workflow recovery systems, background workers, or execution entrypoints.",
+  "scale": "personal-local",
+  "observation_principle": "replay-observation-is-drift-detection-not-execution",
+  "depends_on": [
+    "m66.1-lightweight-governance-drift-observation-v1",
+    "m65.2-replay-boundary-regression-v1"
+  ],
+  "protected_replay_observation_semantics": {
+    "replay_is_review_not_execution": true,
+    "replay_is_not_apply": true,
+    "replay_is_not_promotion": true,
+    "replay_is_not_authority": true,
+    "replay_observation_is_non_authoritative": true,
+    "replay_observation_is_non_blocking": true,
+    "replay_observation_is_human_review_support": true,
+    "automatic_correction": false,
+    "automatic_policy_mutation": false,
+    "runtime_dependency_required": false,
+    "write": false,
+    "authoritative": false
+  },
+  "replay_drift_targets": [
+    {
+      "id": "review_summary_replay_drift",
+      "expected_state": "review-only-replay",
+      "drift_detection_only": true,
+      "automatic_correction": false
+    },
+    {
+      "id": "validation_summary_replay_drift",
+      "expected_state": "review-only-replay",
+      "drift_detection_only": true,
+      "automatic_correction": false
+    },
+    {
+      "id": "governance_boundary_replay_drift",
+      "expected_state": "review-only-replay",
+      "drift_detection_only": true,
+      "automatic_correction": false
+    }
+  ],
+  "forbidden_replay_drift": [
+    "review-replay-becomes-execution",
+    "validation-replay-becomes-apply",
+    "governance-replay-becomes-promotion",
+    "replay-observation-becomes-authority",
+    "replay-observation-grants-write",
+    "replay-observation-triggers-background-worker",
+    "replay-observation-becomes-automatic-correction",
+    "summary-replay-becomes-workflow-replay"
+  ],
+  "forbidden_infrastructure": [
+    "workflow-replay-engine",
+    "execution-recovery-system",
+    "background-worker",
+    "event-bus",
+    "orchestration-daemon",
+    "distributed-replay-runner",
+    "runtime-state-store"
+  ],
+  "expected_result": {
+    "status": "PASS",
+    "replay_drift_target_count": 3,
+    "runtime_dependency_required": false,
+    "authoritative": false,
+    "write": false,
+    "issue_count": 0,
+    "ready_for_m66_4_provenance_boundary_drift_observation": true
+  }
+}
