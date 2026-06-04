@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+PYTHON="${PYTHON:-python3}"
 ROOT="${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-runes-md-wiki}"
 
 cd "$ROOT"
 
-exec python tools/importer/forge.py "$@"
+exec "$PYTHON" tools/importer/forge.py "$@"
