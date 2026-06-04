@@ -5,8 +5,8 @@
 - Category: verification
 - Topic: m74-trusted-memory-apply-rehearsal
 - Note type: verification-lock
-- Status: pending-user-verification
-- Memory quality: pending
+- Status: frozen
+- Memory quality: verified
 - Related objective: k6-freelancer
 - Last reviewed: 2026-06-05
 
@@ -55,20 +55,28 @@ fixtures/m74/trusted-memory-apply-rehearsal.json
 python3 tools/runes_shield/smoke_m74_trusted_memory_apply_rehearsal.py
 ```
 
-## Expected Result
+## Verified Result
 
-```text
-status: PASS
-mode: trusted-memory-apply-rehearsal
-scale: personal-local
-write: false
-authoritative: false
-runtime_dependency_required: false
-apply_mode: dry-run-plan-only
-apply_plan_case_count: 3
-issue_count: 0
+```json
+{
+  "smoke_version": "m74-trusted-memory-apply-rehearsal-v1",
+  "status": "PASS",
+  "mode": "trusted-memory-apply-rehearsal",
+  "scale": "personal-local",
+  "write": false,
+  "authoritative": false,
+  "runtime_dependency_required": false,
+  "apply_mode": "dry-run-plan-only",
+  "apply_plan_case_count": 3,
+  "required_apply_plan_field_count": 6,
+  "issue_count": 0,
+  "issues": []
+}
 ```
 
-## Verification Status
+## Final Lock
 
-Pending user execution.
+```text
+M74 Trusted Memory Apply Rehearsal
+PASS / frozen / smoke verified
+```
