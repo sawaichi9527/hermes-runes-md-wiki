@@ -1,0 +1,93 @@
+{
+  "verification_version": "m64.3-public-safe-evidence-verification-v1",
+  "verification_id": "m64-public-safe-evidence-verification-001",
+  "status": "active",
+  "purpose": "Define lightweight public-safe evidence verification rules for repository-committed external-agent evidence summaries without creating a content scanning platform or telemetry pipeline.",
+  "scale": "personal-local",
+  "governance_principle": "public-safe-summary-only",
+  "depends_on": [
+    "m64.1-evidence-classification-v1",
+    "m64.2-evidence-retention-boundary-v1"
+  ],
+  "public_safe_rules": {
+    "summarized_only": true,
+    "public_safe": true,
+    "authoritative": false,
+    "write": false,
+    "contains_secrets": false,
+    "contains_private_user_data": false,
+    "contains_raw_prompt": false,
+    "contains_raw_answer": false,
+    "contains_full_transcript": false,
+    "contains_credentials": false,
+    "contains_runtime_state": false,
+    "rag_ingestion_allowed": false,
+    "runtime_state_allowed": false,
+    "authority_escalation_allowed": false,
+    "automatic_redaction_pipeline_required": false,
+    "content_scanning_platform_required": false
+  },
+  "allowed_public_fields": [
+    "status",
+    "mode",
+    "scale",
+    "write",
+    "authoritative",
+    "agent_scope",
+    "profile_id",
+    "compatibility_profile_id",
+    "wrapper_profile_id",
+    "runtime_dependency_required",
+    "evidence_class",
+    "retention",
+    "issue_count",
+    "issues"
+  ],
+  "forbidden_public_fields": [
+    "raw_prompt",
+    "raw_answer",
+    "full_prompt",
+    "full_answer",
+    "full_transcript",
+    "secret",
+    "token",
+    "password",
+    "database_password",
+    "api_key",
+    "private_user_data",
+    "credential",
+    "authorization_header",
+    "runtime_state",
+    "session_cookie"
+  ],
+  "sample_public_safe_evidence": {
+    "status": "PASS",
+    "mode": "public-safe-evidence-summary",
+    "scale": "personal-local",
+    "write": false,
+    "authoritative": false,
+    "evidence_class": "validation_evidence",
+    "retention": "verification-doc-summary",
+    "issue_count": 0,
+    "issues": []
+  },
+  "forbidden_behaviors": [
+    "committing raw prompts",
+    "committing raw answers",
+    "committing full transcripts",
+    "committing secrets or credentials",
+    "committing private user data",
+    "committing runtime state",
+    "using public evidence as authority",
+    "ingesting public evidence into RAG memory",
+    "requiring an enterprise content scanning platform",
+    "requiring a telemetry pipeline"
+  ],
+  "expected_result": {
+    "status": "PASS",
+    "authoritative": false,
+    "write": false,
+    "issue_count": 0,
+    "ready_for_m64_4_evidence_provenance_verification": true
+  }
+}
