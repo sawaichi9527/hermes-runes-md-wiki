@@ -1,0 +1,50 @@
+{
+  "schema_version": "m70-human-review-machine-suggestion-boundary-v1",
+  "milestone": "M70 Human Review / Machine Suggestion Boundary",
+  "mode": "human-review-machine-suggestion-boundary",
+  "scale": "personal-local",
+  "write": false,
+  "authoritative": false,
+  "runtime_dependency_required": false,
+  "principle": "machine-suggestions-support-human-review-but-do-not-replace-human-approval",
+  "required_semantics": {
+    "machine_suggestion_is_not_human_approval": true,
+    "model_output_is_not_trust_transition": true,
+    "wrapper_output_is_not_approval": true,
+    "evidence_summary_is_not_approval": true,
+    "observation_report_is_not_approval": true,
+    "human_review_required_for_apply": true,
+    "human_review_required_for_promotion": true,
+    "human_review_required_for_trust_transition": true,
+    "automatic_apply_from_machine_suggestion": false,
+    "automatic_promotion_from_machine_suggestion": false,
+    "automatic_trust_transition_from_machine_suggestion": false,
+    "machine_suggestion_blocks_runtime": false
+  },
+  "boundary_targets": [
+    "model_output",
+    "wrapper_output",
+    "evidence_summary",
+    "observation_report",
+    "proposal_recommendation"
+  ],
+  "forbidden_drift": [
+    "machine-suggestion-becomes-human-approval",
+    "model-output-becomes-trust-transition",
+    "wrapper-output-becomes-approval",
+    "evidence-summary-becomes-approval",
+    "observation-report-becomes-approval",
+    "proposal-recommendation-auto-applies",
+    "proposal-recommendation-auto-promotes",
+    "machine-suggestion-bypasses-human-review"
+  ],
+  "forbidden_infrastructure": [
+    "automatic-approval-engine",
+    "trust-scoring-system",
+    "machine-review-replacement-system",
+    "background-apply-worker",
+    "automatic-promotion-worker",
+    "approval-daemon",
+    "policy-engine"
+  ]
+}
