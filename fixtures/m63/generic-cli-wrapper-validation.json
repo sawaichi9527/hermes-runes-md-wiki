@@ -1,0 +1,88 @@
+{
+  "contract_version": "m63.1-generic-cli-wrapper-validation-v1",
+  "contract_id": "m63-generic-cli-wrapper-validation-001",
+  "status": "active",
+  "purpose": "Validate that a generic CLI wrapper can invoke Hermes Runes MD Wiki through the governed Runes Shield boundary without introducing orchestration or write authority.",
+  "agent_scope": "agent-agnostic",
+  "validation_kind": "generic-cli-wrapper-validation",
+  "scale": "personal-local",
+  "wrapper_profile": {
+    "profile_id": "generic-cli-wrapper",
+    "invocation_style": "stdin-stdout-json",
+    "transport": "local-process",
+    "runtime_state": "none",
+    "persistent_session_required": false,
+    "background_worker_required": false
+  },
+  "required_boundaries": {
+    "read_only_validation": true,
+    "runes_shield_required": true,
+    "profile_metadata_only": true,
+    "deterministic_exit_codes_required": true,
+    "stdout_json_required": true,
+    "stderr_diagnostic_only": true,
+    "no_direct_wiki_mutation": true,
+    "no_direct_database_mutation": true,
+    "no_automatic_apply": true,
+    "no_automatic_promotion": true,
+    "no_background_worker": true,
+    "no_orchestration_daemon": true,
+    "no_websocket_bridge": true,
+    "no_runtime_authority_escalation": true,
+    "no_enterprise_telemetry_system": true
+  },
+  "expected_cli_contract": {
+    "success_exit_code": 0,
+    "failure_exit_code_nonzero": true,
+    "stdout_shape": "json-object",
+    "required_stdout_fields": [
+      "status",
+      "mode",
+      "scale",
+      "write",
+      "agent_scope",
+      "wrapper_profile_id",
+      "issue_count"
+    ],
+    "forbidden_stdout_fields": [
+      "raw_prompt",
+      "full_transcript",
+      "secret",
+      "token",
+      "password",
+      "database_password",
+      "api_key"
+    ]
+  },
+  "forbidden_behaviors": [
+    "starting an orchestration daemon",
+    "starting a websocket bridge",
+    "starting an enterprise telemetry pipeline",
+    "claiming write authority from wrapper metadata",
+    "bypassing Runes Shield",
+    "directly mutating wiki files",
+    "directly mutating database state",
+    "automatically applying proposals",
+    "automatically promoting memory",
+    "persisting full transcripts in public fixtures",
+    "ingesting validation evidence into RAG memory"
+  ],
+  "evidence_policy": {
+    "summarized_only": true,
+    "public_safe_fixture_allowed": true,
+    "full_transcript_required": false,
+    "contains_secrets": false,
+    "contains_private_user_data": false,
+    "commit_local_evidence_to_repo": false,
+    "ingest_evidence_to_rag": false,
+    "write_to_observation_log": false
+  },
+  "expected_result": {
+    "status": "PASS",
+    "agent_scope": "agent-agnostic",
+    "wrapper_profile_id": "generic-cli-wrapper",
+    "write": false,
+    "issue_count": 0,
+    "ready_for_m63_2_openclaw_compatibility": true
+  }
+}
