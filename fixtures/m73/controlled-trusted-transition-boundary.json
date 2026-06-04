@@ -1,0 +1,57 @@
+{
+  "schema_version": "m73-controlled-trusted-transition-boundary-v1",
+  "milestone": "M73 Controlled Trusted Transition Boundary",
+  "mode": "controlled-trusted-transition-boundary",
+  "scale": "personal-local",
+  "write": false,
+  "authoritative": false,
+  "runtime_dependency_required": false,
+  "principle": "reviewed-proposal-is-not-trusted-memory-until-explicit-human-transition",
+  "transition_mode": "human-approved-transition-rehearsal",
+  "required_semantics": {
+    "reviewed_is_not_trusted": true,
+    "trusted_transition_must_be_explicit": true,
+    "human_approval_required": true,
+    "source_check_required": true,
+    "boundary_regression_required": true,
+    "automatic_trust_escalation_allowed": false,
+    "automatic_promotion_allowed": false,
+    "automatic_apply_allowed": false,
+    "direct_wiki_mutation_allowed": false,
+    "runtime_authority_escalation_allowed": false,
+    "trust_scoring_required": false,
+    "enterprise_workflow_required": false
+  },
+  "transition_cases": [
+    {
+      "id": "m73_reviewed_only",
+      "from_state": "pending_human_review",
+      "to_state": "reviewed_not_trusted",
+      "trusted_memory": false,
+      "requires_explicit_human_transition": true
+    },
+    {
+      "id": "m73_human_approved_candidate",
+      "from_state": "reviewed_not_trusted",
+      "to_state": "trusted_candidate",
+      "trusted_memory": false,
+      "requires_explicit_human_transition": true
+    },
+    {
+      "id": "m73_rejected_or_quarantined",
+      "from_state": "pending_human_review",
+      "to_state": "rejected_or_quarantined",
+      "trusted_memory": false,
+      "requires_explicit_human_transition": false
+    }
+  ],
+  "forbidden_infrastructure": [
+    "automatic-trust-scoring-system",
+    "automatic-promotion-worker",
+    "automatic-apply-worker",
+    "trusted-write-daemon",
+    "runtime-policy-engine",
+    "enterprise-workflow-engine",
+    "background-review-worker"
+  ]
+}
