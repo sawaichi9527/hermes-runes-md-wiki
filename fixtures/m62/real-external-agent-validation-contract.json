@@ -1,0 +1,66 @@
+{
+  "contract_version": "m62.1-real-external-agent-validation-contract-v1",
+  "contract_id": "m62-real-external-agent-validation-contract-001",
+  "status": "active",
+  "purpose": "Define the bounded validation contract for a real external agent integrating with Hermes Runes MD Wiki through Runes Shield.",
+  "agent_scope": "agent-agnostic",
+  "validation_kind": "real-external-agent-validation",
+  "scale": "personal-local",
+  "distinction": {
+    "simulated_onboarding": "M58/M59/M60 fixtures and lock runners validate the generic onboarding path.",
+    "real_external_validation": "M62 validates evidence from an actual external agent invocation path while preserving the same safety boundaries."
+  },
+  "required_passes": [
+    "m59_onboarding_lock",
+    "m60_external_agent_trial_lock",
+    "m61_real_agent_evidence"
+  ],
+  "required_boundaries": {
+    "read_only_validation": true,
+    "runes_shield_required": true,
+    "profile_metadata_only": true,
+    "no_direct_wiki_mutation": true,
+    "no_direct_database_mutation": true,
+    "no_automatic_apply": true,
+    "no_automatic_promotion": true,
+    "no_background_worker": true,
+    "no_orchestration_daemon": true,
+    "no_mcp_server_requirement": true,
+    "no_websocket_bridge_requirement": true
+  },
+  "external_agent_kinds": [
+    "generic-cli-agent",
+    "generic-openai-agent",
+    "generic-mcp-agent",
+    "openclaw-reference-agent",
+    "future-agent-framework"
+  ],
+  "forbidden_behaviors": [
+    "claiming PASS without M59/M60 evidence",
+    "treating profile metadata as permission grant",
+    "bypassing Runes Shield",
+    "directly mutating wiki files",
+    "directly mutating database state",
+    "automatically applying proposals",
+    "automatically promoting memory",
+    "persisting private transcripts in public fixtures",
+    "ingesting evidence into RAG memory"
+  ],
+  "evidence_policy": {
+    "summarized_only": true,
+    "public_safe_fixture_allowed": true,
+    "full_transcript_required": false,
+    "contains_secrets": false,
+    "contains_private_user_data": false,
+    "commit_local_evidence_to_repo": false,
+    "ingest_evidence_to_rag": false,
+    "write_to_observation_log": false
+  },
+  "expected_result": {
+    "status": "PASS",
+    "agent_scope": "agent-agnostic",
+    "write": false,
+    "issue_count": 0,
+    "ready_for_governed_access": true
+  }
+}
