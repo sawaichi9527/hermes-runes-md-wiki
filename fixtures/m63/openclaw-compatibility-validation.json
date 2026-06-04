@@ -1,0 +1,88 @@
+{
+  "contract_version": "m63.2-openclaw-compatibility-validation-v1",
+  "contract_id": "m63-openclaw-compatibility-validation-001",
+  "status": "active",
+  "purpose": "Validate OpenClaw-style external agent compatibility with Hermes Runes MD Wiki through the governed Runes Shield boundary without trusting local shell, file, plugin, skill, or persistent-state capabilities as memory authority.",
+  "agent_scope": "agent-agnostic",
+  "validation_kind": "openclaw-style-compatibility-validation",
+  "scale": "personal-local",
+  "compatibility_profile": {
+    "profile_id": "openclaw-style-agent",
+    "runtime_dependency_required": false,
+    "compatibility_mode": "profile-contract-only",
+    "transport": "local-process-or-tool-call-wrapper",
+    "expected_agent_traits": [
+      "local-agent-runtime",
+      "tool-oriented-invocation",
+      "shell-capable-agent-style",
+      "file-access-capable-agent-style",
+      "plugin-or-skill-capable-agent-style",
+      "persistent-state-capable-agent-style"
+    ]
+  },
+  "required_boundaries": {
+    "read_only_validation": true,
+    "runes_shield_required": true,
+    "profile_metadata_only": true,
+    "runtime_dependency_not_required": true,
+    "tool_call_is_not_authority_grant": true,
+    "shell_capability_is_not_authority_grant": true,
+    "file_access_is_not_authority_grant": true,
+    "plugin_skill_capability_is_not_authority_grant": true,
+    "persistent_state_is_not_authority_grant": true,
+    "no_direct_wiki_mutation": true,
+    "no_direct_database_mutation": true,
+    "no_automatic_apply": true,
+    "no_automatic_promotion": true,
+    "no_background_worker": true,
+    "no_orchestration_daemon": true,
+    "no_websocket_bridge": true,
+    "no_enterprise_telemetry_system": true,
+    "no_runtime_authority_escalation": true
+  },
+  "risk_alignment": {
+    "local_file_access_risk_acknowledged": true,
+    "shell_execution_risk_acknowledged": true,
+    "plugin_skill_risk_acknowledged": true,
+    "persistent_state_poisoning_risk_acknowledged": true,
+    "prompt_injection_risk_acknowledged": true,
+    "human_governance_boundary_required": true
+  },
+  "expected_wrapper_surface": {
+    "allowed_invocation_surface": [
+      "runes-shield read/search/recall style command",
+      "bounded json stdout response",
+      "public-safe summarized evidence"
+    ],
+    "forbidden_invocation_surface": [
+      "direct wiki path write",
+      "direct database connection write",
+      "automatic proposal apply",
+      "automatic memory promotion",
+      "runtime policy modification",
+      "background sync loop",
+      "continuous filesystem watcher",
+      "websocket control bridge",
+      "enterprise telemetry exporter"
+    ]
+  },
+  "evidence_policy": {
+    "summarized_only": true,
+    "public_safe_fixture_allowed": true,
+    "full_transcript_required": false,
+    "contains_secrets": false,
+    "contains_private_user_data": false,
+    "commit_local_evidence_to_repo": false,
+    "ingest_evidence_to_rag": false,
+    "write_to_observation_log": false
+  },
+  "expected_result": {
+    "status": "PASS",
+    "agent_scope": "agent-agnostic",
+    "compatibility_profile_id": "openclaw-style-agent",
+    "runtime_dependency_required": false,
+    "write": false,
+    "issue_count": 0,
+    "ready_for_m63_3_openai_compatible_wrapper_validation": true
+  }
+}
