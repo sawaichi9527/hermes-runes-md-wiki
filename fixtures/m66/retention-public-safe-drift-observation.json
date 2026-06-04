@@ -1,0 +1,89 @@
+{
+  "observation_version": "m66.5-retention-public-safe-drift-observation-v1",
+  "observation_id": "m66-retention-public-safe-drift-observation-001",
+  "status": "active",
+  "purpose": "Observe retention and public-safe boundary erosion risk without introducing DLP platforms, secret scanners, archive services, evidence databases, or telemetry pipelines.",
+  "scale": "personal-local",
+  "observation_principle": "retention-observation-is-summary-boundary-drift-detection-not-archive-scanning",
+  "depends_on": [
+    "m66.1-lightweight-governance-drift-observation-v1",
+    "m65.5-retention-public-safe-regression-v1"
+  ],
+  "protected_retention_observation_semantics": {
+    "summary_only_is_preserved": true,
+    "public_safe_is_preserved": true,
+    "raw_prompt_is_not_retained": true,
+    "raw_answer_is_not_retained": true,
+    "full_transcript_is_not_archived": true,
+    "secrets_are_not_retained": true,
+    "credentials_are_not_retained": true,
+    "private_user_data_is_not_retained": true,
+    "evidence_is_not_rag_ingestion_source": true,
+    "evidence_is_not_runtime_state": true,
+    "retention_observation_is_non_authoritative": true,
+    "retention_observation_is_non_blocking": true,
+    "retention_observation_is_human_review_support": true,
+    "automatic_correction": false,
+    "automatic_policy_mutation": false,
+    "runtime_dependency_required": false,
+    "write": false,
+    "authoritative": false
+  },
+  "retention_drift_targets": [
+    {
+      "id": "summary_only_boundary_drift",
+      "expected_state": "minimal-summary-only",
+      "drift_detection_only": true,
+      "automatic_correction": false
+    },
+    {
+      "id": "public_safe_boundary_drift",
+      "expected_state": "public-safe-summary-only",
+      "drift_detection_only": true,
+      "automatic_correction": false
+    },
+    {
+      "id": "rag_ingestion_boundary_drift",
+      "expected_state": "evidence-not-rag-source",
+      "drift_detection_only": true,
+      "automatic_correction": false
+    },
+    {
+      "id": "runtime_state_boundary_drift",
+      "expected_state": "evidence-not-runtime-state",
+      "drift_detection_only": true,
+      "automatic_correction": false
+    }
+  ],
+  "forbidden_retention_drift": [
+    "summary-evidence-becomes-full-transcript-archive",
+    "public-safe-evidence-retains-raw-prompt",
+    "public-safe-evidence-retains-raw-answer",
+    "evidence-retains-secrets",
+    "evidence-retains-credentials",
+    "evidence-retains-private-user-data",
+    "evidence-becomes-rag-ingestion-source",
+    "evidence-becomes-runtime-state",
+    "retention-observation-becomes-authority",
+    "retention-observation-becomes-automatic-correction"
+  ],
+  "forbidden_infrastructure": [
+    "dlp-platform",
+    "secret-scanner-service",
+    "enterprise-content-scanning-platform",
+    "archive-service",
+    "evidence-database",
+    "telemetry-pipeline",
+    "siem-platform",
+    "runtime-state-store"
+  ],
+  "expected_result": {
+    "status": "PASS",
+    "retention_drift_target_count": 4,
+    "runtime_dependency_required": false,
+    "authoritative": false,
+    "write": false,
+    "issue_count": 0,
+    "ready_for_m66_6_freeze_lock": true
+  }
+}
