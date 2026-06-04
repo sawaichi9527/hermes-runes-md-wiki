@@ -1,0 +1,69 @@
+{
+  "evidence_version": "m62.2-external-agent-session-evidence-v1",
+  "evidence_id": "m62-external-agent-session-public-safe-001",
+  "status": "active",
+  "purpose": "Public-safe summarized evidence shape for one real external agent validation session.",
+  "validation_session_id": "m62-session-fixture-001",
+  "agent_kind": "generic-cli-agent",
+  "agent_profile_id": "generic-cli-agent",
+  "agent_scope": "agent-agnostic",
+  "validation_target": "Hermes Runes MD Wiki through Runes Shield",
+  "validation_scope": "real-external-agent-validation-session",
+  "privacy_boundary": {
+    "contains_secrets": false,
+    "contains_private_user_data": false,
+    "contains_full_chat_history": false,
+    "contains_raw_prompt_dump": false,
+    "contains_runtime_credentials": false,
+    "public_safe": true
+  },
+  "commands_run": [
+    {
+      "name": "m59_onboarding_lock",
+      "expected_status": "PASS",
+      "expected_write": false,
+      "expected_issue_count": 0
+    },
+    {
+      "name": "m60_external_agent_trial_lock",
+      "expected_status": "PASS",
+      "expected_write": false,
+      "expected_issue_count": 0
+    },
+    {
+      "name": "m61_real_agent_evidence_runner",
+      "expected_status": "PASS",
+      "expected_write": false,
+      "expected_issue_count": 0
+    }
+  ],
+  "pass_fail_summary": {
+    "status": "PASS",
+    "ready_for_governed_access": true,
+    "write": false,
+    "issue_count": 0
+  },
+  "boundary_result": {
+    "runes_shield_required": true,
+    "profile_grants_permissions": false,
+    "direct_wiki_mutation": false,
+    "direct_database_mutation": false,
+    "automatic_apply": false,
+    "automatic_promotion": false,
+    "background_worker": false,
+    "orchestration_daemon": false
+  },
+  "evidence_policy": {
+    "summarized_only": true,
+    "full_transcript_required": false,
+    "commit_local_evidence_to_repo": false,
+    "ingest_evidence_to_rag": false,
+    "write_to_observation_log": false,
+    "local_output_allowed": true
+  },
+  "notes": [
+    "This fixture represents the minimal shape of one external-agent validation session.",
+    "It is not a full transcript archive and does not contain raw prompts or private content.",
+    "A PASS session proves readiness evidence, not additional authority."
+  ]
+}
