@@ -1,0 +1,115 @@
+{
+  "retention_version": "m64.2-evidence-retention-boundary-v1",
+  "retention_id": "m64-evidence-retention-boundary-001",
+  "status": "active",
+  "purpose": "Define lightweight personal-local evidence retention boundaries without creating a telemetry archive, transcript pipeline, runtime state store, or evidence authority layer.",
+  "scale": "personal-local",
+  "governance_principle": "retain-minimal-review-evidence-only",
+  "depends_on": [
+    "m64.1-evidence-classification-v1"
+  ],
+  "retention_boundary": {
+    "allowed_storage": [
+      "verification-doc-summary",
+      "repository-fixture-summary-only",
+      "profile-contract-summary",
+      "review-only-summary",
+      "short-summary-only"
+    ],
+    "forbidden_storage": [
+      "full-transcript-archive",
+      "raw-prompt-archive",
+      "raw-answer-archive",
+      "secret-store",
+      "credential-store",
+      "runtime-state-store",
+      "rag-ingestion-source",
+      "telemetry-pipeline",
+      "siem-export",
+      "distributed-tracing-store"
+    ],
+    "allowed_retention_style": "minimal-summary-retention",
+    "forbidden_retention_style": [
+      "collect-everything",
+      "retain-full-session",
+      "retain-private-transcript",
+      "retain-runtime-state",
+      "retain-authority-token",
+      "retain-sensitive-payload"
+    ]
+  },
+  "global_retention_rules": {
+    "summarized_only": true,
+    "public_safe": true,
+    "authoritative": false,
+    "write": false,
+    "contains_secrets": false,
+    "contains_private_user_data": false,
+    "full_transcript_allowed": false,
+    "raw_prompt_allowed": false,
+    "raw_answer_allowed": false,
+    "credential_allowed": false,
+    "rag_ingestion_allowed": false,
+    "runtime_state_allowed": false,
+    "authority_escalation_allowed": false,
+    "retention_failure_blocks_runtime": false
+  },
+  "retention_classes": [
+    {
+      "evidence_class": "smoke_evidence",
+      "retention": "repository-fixture-summary-only",
+      "max_detail": "status-mode-scale-write-issue-count",
+      "review_only": true,
+      "authoritative": false,
+      "write": false
+    },
+    {
+      "evidence_class": "validation_evidence",
+      "retention": "verification-doc-summary",
+      "max_detail": "validation-status-boundary-summary",
+      "review_only": true,
+      "authoritative": false,
+      "write": false
+    },
+    {
+      "evidence_class": "runtime_summary",
+      "retention": "short-summary-only",
+      "max_detail": "minimal-runtime-outcome-summary",
+      "review_only": true,
+      "authoritative": false,
+      "write": false
+    },
+    {
+      "evidence_class": "wrapper_profile_evidence",
+      "retention": "profile-contract-summary",
+      "max_detail": "profile-metadata-no-permission-grant",
+      "review_only": true,
+      "authoritative": false,
+      "write": false
+    },
+    {
+      "evidence_class": "replay_evidence",
+      "retention": "review-only-summary",
+      "max_detail": "replay-status-without-execution-authority",
+      "review_only": true,
+      "authoritative": false,
+      "write": false
+    },
+    {
+      "evidence_class": "governance_interpretation",
+      "retention": "verification-doc-summary",
+      "max_detail": "deterministic-interpretation-summary",
+      "review_only": true,
+      "authoritative": false,
+      "write": false
+    }
+  ],
+  "expected_result": {
+    "status": "PASS",
+    "retention_class_count": 6,
+    "authoritative": false,
+    "write": false,
+    "issue_count": 0,
+    "ready_for_m64_3_public_safe_evidence_verification": true
+  }
+}
