@@ -1,35 +1,36 @@
-## N-20260604-M65 Lightweight Evidence Regression Preservation
+## N-20260604-M66 Lightweight Governance Drift Observation
 
 Status: NEXT / PLANNED
 
 Current baseline:
 - M63 Real External Agent Trial-run: PASS / frozen.
 - M64 External Agent Evidence Lock: PASS / frozen.
-- Lightweight evidence governance boundary established.
-- Public-safe summarized evidence boundary established.
-- Replay boundary preserved.
-- Governance interpretation consistency preserved.
-- Evidence provenance remains non-authoritative.
+- M65 Lightweight Evidence Regression Preservation: PASS / frozen.
+- Lightweight semantic regression preservation established.
+- Replay review-only boundary preserved.
+- Provenance traceability-only semantics preserved.
+- Wrapper interpretation consistency preserved.
+- Public-safe summarized evidence boundary preserved.
 
 Recommended next milestone:
-- M65 Lightweight Evidence Regression Preservation
+- M66 Lightweight Governance Drift Observation
 
 Purpose:
-- Preserve the lightweight evidence governance baseline.
-- Prevent future enterprise-complexity drift.
-- Prevent evidence-authority escalation regressions.
-- Preserve deterministic wrapper interpretation behavior.
-- Preserve replay review-only semantics.
+- Observe long-term semantic drift risk.
+- Preserve lightweight governance boundaries over time.
+- Detect governance-boundary erosion early.
+- Preserve deterministic interpretation semantics.
+- Preserve non-enterprise operational simplicity.
 
 Suggested scope:
-- evidence governance regression fixtures
-- replay-boundary regression validation
-- wrapper interpretation regression validation
-- provenance regression validation
-- retention-boundary regression validation
-- public-safe evidence regression validation
-- lightweight baseline preservation
-- freeze-lock regression aggregation
+- lightweight drift-observation fixtures
+- semantic-boundary observation validation
+- wrapper drift observation
+- replay-boundary drift observation
+- provenance-boundary drift observation
+- retention/public-safe drift observation
+- governance-baseline preservation
+- freeze-lock observation aggregation
 
 Hard constraints:
 - no orchestration daemon
@@ -38,6 +39,7 @@ Hard constraints:
 - no SIEM platform
 - no distributed tracing
 - no workflow replay engine
+- no runtime governance daemon
 - no automatic proposal apply
 - no automatic promotion
 - no direct wiki mutation
@@ -46,15 +48,16 @@ Hard constraints:
 - no evidence-to-authority escalation
 
 Success criteria:
-- M64 frozen baseline remains PASS
-- evidence remains summarized/public-safe
-- provenance remains non-authoritative
+- M65 frozen baseline remains PASS
+- governance semantics remain deterministic
 - replay remains review-only
-- wrapper interpretation remains deterministic
-- regression suites remain PASS
+- provenance remains traceability-only
+- wrapper interpretation remains stable
+- evidence remains summarized/public-safe
+- observation suites remain PASS
 
 Reference:
-- `wiki/k6-freelancer/verification-m64.md`
+- `wiki/k6-freelancer/verification-m65.md`
 
 ---
 
