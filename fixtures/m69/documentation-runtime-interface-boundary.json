@@ -1,0 +1,47 @@
+{
+  "schema_version": "m69-documentation-runtime-interface-boundary-v1",
+  "milestone": "M69 Documentation / Runtime Interface Boundary",
+  "mode": "documentation-runtime-interface-boundary",
+  "scale": "personal-local",
+  "write": false,
+  "authoritative": false,
+  "runtime_dependency_required": false,
+  "principle": "documentation-describes-behavior-but-does-not-expose-runtime-capability",
+  "required_semantics": {
+    "documentation_is_not_api": true,
+    "roadmap_is_not_permission_grant": true,
+    "next_actions_are_not_runtime_commands": true,
+    "verification_docs_are_not_tool_specs": true,
+    "examples_are_not_authority": true,
+    "runes_shield_exposes_callable_behavior": true,
+    "wiki_docs_do_not_expose_callable_behavior": true,
+    "agent_must_not_execute_docs_as_commands": true,
+    "automatic_tool_discovery_from_docs": false,
+    "automatic_runtime_command_from_roadmap": false,
+    "automatic_permission_from_documentation": false
+  },
+  "boundary_targets": [
+    "roadmap_documents",
+    "verification_locks",
+    "next_actions",
+    "examples",
+    "system_docs"
+  ],
+  "forbidden_drift": [
+    "documentation-becomes-runtime-api",
+    "roadmap-becomes-permission-grant",
+    "next-actions-becomes-runtime-command",
+    "verification-doc-becomes-tool-spec",
+    "example-command-becomes-authority",
+    "agent-executes-docs-as-commands",
+    "wiki-index-becomes-tool-registry"
+  ],
+  "forbidden_infrastructure": [
+    "documentation-runtime-dispatcher",
+    "doc-driven-tool-executor",
+    "automatic-doc-command-runner",
+    "runtime-doc-parser-daemon",
+    "wiki-api-reflection-engine",
+    "agent-command-autoloader"
+  ]
+}
