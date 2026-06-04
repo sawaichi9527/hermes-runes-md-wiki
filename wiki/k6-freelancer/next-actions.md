@@ -1,35 +1,37 @@
-## N-20260604-M67 Lightweight Governance Observation Stability
+## N-20260604-M67-M70 Boundary Validation
 
-Status: NEXT / PLANNED
+Status: NEXT / PENDING USER VERIFICATION
 
 Current baseline:
 - M63 Real External Agent Trial-run: PASS / frozen.
 - M64 External Agent Evidence Lock: PASS / frozen.
 - M65 Lightweight Evidence Regression Preservation: PASS / frozen.
 - M66 Lightweight Governance Drift Observation: PASS / frozen.
-- Lightweight governance drift-observation layer established.
-- Wrapper drift observation preserved.
-- Replay-boundary drift observation preserved.
-- Provenance-boundary drift observation preserved.
-- Retention/public-safe drift observation preserved.
+- Python Command Compatibility Verification Lock: PASS / frozen / user verified.
 
-Recommended next milestone:
-- M67 Lightweight Governance Observation Stability
+Implemented boundary milestones:
+- M67 Observation Stability Boundary
+- M68 Runtime / Verification Separation Boundary
+- M69 Documentation / Runtime Interface Boundary
+- M70 Human Review / Machine Suggestion Boundary
 
 Purpose:
-- Preserve long-term observation stability.
-- Prevent observation-layer semantic inflation.
-- Preserve lightweight governance observation semantics.
-- Detect observation-to-enforcement drift early.
-- Preserve deterministic observation interpretation.
+- Preserve observation-layer stability.
+- Separate verification evidence from runtime permission.
+- Separate documentation from runtime callable interface.
+- Separate machine suggestions from human approval.
+- Preserve personal-local simplicity.
+- Avoid enterprise governance infrastructure.
+- Avoid adding runtime burden to Hermes-agent.
 
-Suggested scope:
-- observation stability fixtures
-- observation semantic consistency validation
-- observation inflation boundary validation
-- observation-to-authority drift observation
-- observation-to-enforcement drift observation
-- freeze-lock stability aggregation
+Verification commands:
+
+```bash
+python3 tools/runes_shield/smoke_m67_observation_stability_boundary.py
+python3 tools/runes_shield/smoke_m68_runtime_verification_separation_boundary.py
+python3 tools/runes_shield/smoke_m69_documentation_runtime_interface_boundary.py
+python3 tools/runes_shield/smoke_m70_human_review_machine_suggestion_boundary.py
+```
 
 Hard constraints:
 - no governance enforcement daemon
@@ -40,19 +42,24 @@ Hard constraints:
 - no trust scoring system
 - no automatic remediation
 - no runtime governance mesh
+- no documentation-driven tool executor
+- no automatic approval engine
 - no direct wiki mutation
 - no runtime authority escalation
 
 Success criteria:
-- M66 frozen baseline remains PASS
-- observation semantics remain lightweight
-- observation remains non-authoritative
-- observation remains non-blocking
-- governance boundaries remain deterministic
-- smoke/observation suites remain PASS
+- all M67-M70 smoke tests PASS
+- all boundaries remain read-only
+- all boundaries remain non-authoritative
+- no runtime dependency is introduced
+- no enterprise infrastructure is introduced
+- human review remains required for trust transition
 
-Reference:
-- `wiki/k6-freelancer/verification-m66.md`
+References:
+- `wiki/k6-freelancer/verification-m67.md`
+- `wiki/k6-freelancer/verification-m68.md`
+- `wiki/k6-freelancer/verification-m69.md`
+- `wiki/k6-freelancer/verification-m70.md`
 
 ---
 
