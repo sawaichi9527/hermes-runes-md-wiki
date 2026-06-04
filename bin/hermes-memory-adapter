@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-cd "$HOME/workspace/hermes-memory"
+PYTHON="${PYTHON:-python3}"
+ROOT="${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-memory}"
 
-python tools/importer/memory_adapter.py "$@"
+cd "$ROOT"
+
+"$PYTHON" tools/importer/memory_adapter.py "$@"
