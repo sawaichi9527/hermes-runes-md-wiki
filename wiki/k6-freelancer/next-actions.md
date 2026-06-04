@@ -30,64 +30,85 @@ References:
 
 ## N-20260604-M71 Controlled Trial-run Preparation Pack
 
-Status: NEXT / PENDING USER VERIFICATION
+Status: PASS / SMOKE VERIFIED
 
 Current baseline:
 - M63-M70 external-agent and governance-boundary validation is frozen.
 - Active wrapper Python command compatibility is frozen.
 - Observation, verification, documentation, and human-review boundaries are locked.
 
-Implemented preparation milestone:
-- M71 Controlled Trial-run Preparation Pack
+Final lock:
 
-Purpose:
-- Move from boundary validation into controlled real-world usage preparation.
-- Keep proposal generation governed and human-reviewed.
-- Preserve the P0 safety boundary while preparing realistic agent workflows.
-- Avoid autonomous trusted wiki mutation.
-- Avoid adding runtime burden to Hermes-agent.
-
-Suggested scope:
-- controlled proposal draft generation preparation
-- human review checklist
-- pre-trial smoke list
-- post-trial smoke list
-- boundary regression checks
-- retrieval/source citation checks
-
-Verification command:
-
-```bash
-python3 tools/runes_shield/smoke_m71_controlled_trial_run_preparation.py
+```text
+M71 Controlled Trial-run Preparation Pack
+PASS / smoke verified
 ```
-
-Hard constraints:
-- no autonomous trusted wiki mutation
-- no automatic apply execution
-- no background promotion worker
-- no trusted write daemon
-- no proposal orchestration daemon
-- no database mutation side effects outside approved importer paths
-- no enterprise workflow expansion
-- no runtime authority escalation
-
-Success criteria:
-- M71 smoke test PASS
-- proposal workflow remains governed
-- human review remains required
-- trusted memory transition remains explicit
-- Runes Shield boundary remains intact
-- no real trusted write is enabled
-- no automatic promotion is enabled
 
 Reference:
 - `wiki/k6-freelancer/verification-m71.md`
 
 ---
 
+## N-20260605-M73-M75 Human-approved Apply Path Validation
+
+Status: NEXT / PENDING USER VERIFICATION
+
+Current baseline:
+- M72 Controlled Proposal Trial-run: PASS / frozen / smoke verified.
+- M71 Controlled Trial-run Preparation Pack: PASS / smoke verified.
+- M67-M70 Boundary Validation Pack: PASS / frozen / smoke verified.
+
+Implemented milestones:
+- M73 Controlled Trusted Transition Boundary
+- M74 Trusted Memory Apply Rehearsal
+- M75 Minimal Human-approved Apply Path
+
+Purpose:
+- Preserve reviewed/trusted separation.
+- Require explicit human-approved trusted transition.
+- Define a dry-run apply plan before any future real write.
+- Define the smallest safe human-approved apply path.
+- Keep the system personal-local and deterministic.
+- Avoid adding runtime burden to Hermes-agent.
+
+Verification commands:
+
+```bash
+python3 tools/runes_shield/smoke_m73_controlled_trusted_transition_boundary.py
+python3 tools/runes_shield/smoke_m74_trusted_memory_apply_rehearsal.py
+python3 tools/runes_shield/smoke_m75_minimal_human_approved_apply_path.py
+```
+
+Hard constraints:
+- no automatic trust scoring system
+- no automatic promotion worker
+- no automatic apply worker
+- no trusted write daemon
+- no background write worker
+- no proposal orchestration daemon
+- no enterprise workflow engine
+- no runtime policy engine
+- no multi-agent apply orchestrator
+- no runtime authority escalation
+
+Success criteria:
+- all M73-M75 smoke tests PASS
+- reviewed proposal remains not trusted memory
+- trusted transition remains explicit and human-approved
+- apply rehearsal remains dry-run plan only
+- minimal apply path remains one candidate / one operation / one target path
+- no real write is enabled in this pack
+
+References:
+- `wiki/k6-freelancer/verification-m73.md`
+- `wiki/k6-freelancer/verification-m74.md`
+- `wiki/k6-freelancer/verification-m75.md`
+
+---
+
 ## N-20260603-M50 Controlled Trial-run Governance
 
-Status: HISTORICAL / SUPERSEDED BY N-20260604-M71 Controlled Trial-run Preparation Pack
+Status: HISTORICAL / SUPERSEDED BY N-20260605-M73-M75 Human-approved Apply Path Validation
 
 Current baseline:
 - M47 Governance Timeline: PASS / frozen.
