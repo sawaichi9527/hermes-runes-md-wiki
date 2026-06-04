@@ -1,0 +1,109 @@
+{
+  "classification_version": "m64.1-evidence-classification-v1",
+  "classification_id": "m64-evidence-classification-001",
+  "status": "active",
+  "purpose": "Define lightweight personal-local evidence classes for external-agent governance without turning evidence into authority or adding enterprise telemetry complexity.",
+  "scale": "personal-local",
+  "governance_principle": "evidence-is-review-material-not-authority",
+  "system_boundary": {
+    "no_daemon": true,
+    "no_websocket_bridge": true,
+    "no_enterprise_telemetry": true,
+    "no_siem": true,
+    "no_distributed_tracing": true,
+    "no_policy_engine": true,
+    "no_runtime_authority_escalation": true,
+    "no_direct_wiki_mutation": true,
+    "no_direct_database_mutation": true,
+    "no_automatic_apply": true,
+    "no_automatic_promotion": true
+  },
+  "global_evidence_rules": {
+    "authoritative": false,
+    "write": false,
+    "summarized_only": true,
+    "public_safe": true,
+    "contains_secrets": false,
+    "contains_private_user_data": false,
+    "full_transcript_allowed": false,
+    "rag_ingestion_allowed": false,
+    "runtime_state_allowed": false,
+    "authority_escalation_allowed": false
+  },
+  "evidence_classes": [
+    {
+      "id": "smoke_evidence",
+      "purpose": "Record bounded smoke result summaries for reproducible validation.",
+      "authoritative": false,
+      "write": false,
+      "summarized_only": true,
+      "public_safe": true,
+      "retention": "repository-fixture-summary-only",
+      "allowed_fields": ["smoke_version", "status", "mode", "scale", "write", "issue_count"],
+      "forbidden_fields": ["raw_prompt", "full_transcript", "secret", "token", "password", "api_key"]
+    },
+    {
+      "id": "validation_evidence",
+      "purpose": "Record external-agent validation summaries without granting trust authority.",
+      "authoritative": false,
+      "write": false,
+      "summarized_only": true,
+      "public_safe": true,
+      "retention": "verification-doc-summary",
+      "allowed_fields": ["validation_version", "status", "agent_scope", "scale", "write", "issue_count"],
+      "forbidden_fields": ["raw_prompt", "full_transcript", "secret", "token", "password", "api_key"]
+    },
+    {
+      "id": "runtime_summary",
+      "purpose": "Record minimal runtime outcome summaries only when needed for review.",
+      "authoritative": false,
+      "write": false,
+      "summarized_only": true,
+      "public_safe": true,
+      "retention": "short-summary-only",
+      "allowed_fields": ["profile_id", "mode", "status", "duration_class", "issue_count"],
+      "forbidden_fields": ["raw_prompt", "full_transcript", "secret", "token", "password", "api_key"]
+    },
+    {
+      "id": "wrapper_profile_evidence",
+      "purpose": "Record wrapper/profile metadata summaries without treating metadata as permission.",
+      "authoritative": false,
+      "write": false,
+      "summarized_only": true,
+      "public_safe": true,
+      "retention": "profile-contract-summary",
+      "allowed_fields": ["profile_id", "compatibility_mode", "runtime_dependency_required", "transport"],
+      "forbidden_fields": ["raw_prompt", "full_transcript", "secret", "token", "password", "api_key"]
+    },
+    {
+      "id": "replay_evidence",
+      "purpose": "Record review-only replay summaries; replay must not become execution or authority.",
+      "authoritative": false,
+      "write": false,
+      "summarized_only": true,
+      "public_safe": true,
+      "retention": "review-only-summary",
+      "allowed_fields": ["replay_id", "status", "mode", "write", "issue_count"],
+      "forbidden_fields": ["raw_prompt", "full_transcript", "secret", "token", "password", "api_key"]
+    },
+    {
+      "id": "governance_interpretation",
+      "purpose": "Record deterministic governance interpretation summaries without replacing human review.",
+      "authoritative": false,
+      "write": false,
+      "summarized_only": true,
+      "public_safe": true,
+      "retention": "verification-doc-summary",
+      "allowed_fields": ["interpretation_id", "status", "boundary", "decision_required", "issue_count"],
+      "forbidden_fields": ["raw_prompt", "full_transcript", "secret", "token", "password", "api_key"]
+    }
+  ],
+  "expected_result": {
+    "status": "PASS",
+    "evidence_class_count": 6,
+    "authoritative": false,
+    "write": false,
+    "issue_count": 0,
+    "ready_for_m64_2_retention_boundary": true
+  }
+}
