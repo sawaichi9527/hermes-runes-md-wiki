@@ -1,0 +1,81 @@
+{
+  "observation_version": "m66.2-wrapper-drift-observation-v1",
+  "observation_id": "m66-wrapper-drift-observation-001",
+  "status": "active",
+  "purpose": "Observe wrapper semantic erosion risk without introducing wrapper runtimes, adapters, monitoring daemons, or automatic governance correction.",
+  "scale": "personal-local",
+  "observation_principle": "wrapper-observation-is-drift-detection-not-trust-scoring",
+  "depends_on": [
+    "m66.1-lightweight-governance-drift-observation-v1",
+    "m65.3-wrapper-interpretation-regression-v1"
+  ],
+  "supported_wrapper_profiles": [
+    "generic-cli-wrapper",
+    "openclaw-style-agent",
+    "openai-compatible-wrapper"
+  ],
+  "protected_wrapper_observation_semantics": {
+    "wrapper_is_interface_not_authority": true,
+    "profile_is_metadata_not_permission": true,
+    "runtime_capability_is_not_trust_grant": true,
+    "tool_call_is_not_authority_grant": true,
+    "observation_is_non_authoritative": true,
+    "observation_is_non_blocking": true,
+    "observation_is_human_review_support": true,
+    "automatic_correction": false,
+    "automatic_policy_mutation": false,
+    "runtime_dependency_required": false,
+    "write": false,
+    "authoritative": false
+  },
+  "wrapper_drift_targets": [
+    {
+      "id": "generic_cli_wrapper_drift",
+      "wrapper_profile": "generic-cli-wrapper",
+      "expected_state": "review-only-non-authoritative",
+      "drift_detection_only": true,
+      "automatic_correction": false
+    },
+    {
+      "id": "openclaw_style_agent_drift",
+      "wrapper_profile": "openclaw-style-agent",
+      "expected_state": "review-only-non-authoritative",
+      "drift_detection_only": true,
+      "automatic_correction": false
+    },
+    {
+      "id": "openai_compatible_wrapper_drift",
+      "wrapper_profile": "openai-compatible-wrapper",
+      "expected_state": "review-only-non-authoritative",
+      "drift_detection_only": true,
+      "automatic_correction": false
+    }
+  ],
+  "forbidden_wrapper_drift": [
+    "wrapper-interface-becomes-authority",
+    "wrapper-profile-becomes-trust-grant",
+    "runtime-capability-becomes-apply-permission",
+    "tool-call-becomes-authority-grant",
+    "advanced-wrapper-bypasses-human-review",
+    "wrapper-observation-becomes-trust-scoring",
+    "wrapper-observation-becomes-automatic-correction"
+  ],
+  "forbidden_infrastructure": [
+    "wrapper-runtime-service",
+    "adapter-daemon",
+    "agent-specific-bridge",
+    "websocket-bridge",
+    "orchestration-daemon",
+    "wrapper-trust-score-system",
+    "wrapper-monitoring-daemon"
+  ],
+  "expected_result": {
+    "status": "PASS",
+    "wrapper_drift_target_count": 3,
+    "runtime_dependency_required": false,
+    "authoritative": false,
+    "write": false,
+    "issue_count": 0,
+    "ready_for_m66_3_replay_boundary_drift_observation": true
+  }
+}
