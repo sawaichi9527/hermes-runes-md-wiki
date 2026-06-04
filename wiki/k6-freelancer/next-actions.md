@@ -1,4 +1,4 @@
-## N-20260604-M63 Real External Agent Trial-run
+## N-20260604-M64 External Agent Evidence Lock
 
 Status: NEXT / PLANNED
 
@@ -8,28 +8,30 @@ Current baseline:
 - M60 External Agent Trial Baseline: PASS / frozen.
 - M61 Real Agent Invocation Evidence: PASS / frozen.
 - M62 Real External Agent Validation: PASS / frozen.
-- First real external validation baseline established.
-- `generic-cli-agent` runtime validation confirmed.
+- M63 Real External Agent Trial-run: PASS / frozen.
+- Cross-wrapper external-agent compatibility baseline established.
+- Generic CLI / OpenClaw-style / OpenAI-compatible wrapper validation confirmed.
 - P0 governance boundary remains preserved.
 
 Recommended next milestone:
-- M63 Real External Agent Trial-run
+- M64 External Agent Evidence Lock
 
 Purpose:
-- Validate Hermes Runes MD Wiki using real external agent invocation behavior.
-- Preserve the current personal-local governance boundary.
-- Verify compatibility behavior across lightweight agent styles.
-- Observe real onboarding/runtime behavior without introducing orchestration complexity.
+- Lock the external-agent evidence boundary.
+- Prevent evidence drift into runtime authority.
+- Preserve summarized/public-safe validation evidence.
+- Preserve deterministic governance interpretation.
+- Prevent orchestration-oriented evidence expansion.
 
 Suggested scope:
-- generic CLI wrapper validation
-- OpenClaw compatibility validation
-- OpenAI-compatible lightweight wrapper validation
-- onboarding/runtime behavior comparison
-- profile compatibility observation
-- boundary preservation verification
-- governance regression preservation
-- smoke/regression preservation
+- external-agent evidence classification
+- evidence retention boundary validation
+- summarized/public-safe evidence verification
+- evidence provenance verification
+- governance interpretation consistency
+- evidence replay boundary validation
+- wrapper evidence normalization
+- freeze-lock regression preservation
 
 Hard constraints:
 - no orchestration daemon
@@ -40,18 +42,19 @@ Hard constraints:
 - no direct wiki mutation
 - no direct database mutation
 - no runtime authority escalation
-- no multi-tenant governance expansion
+- no full transcript archival pipeline
+- no evidence-to-authority escalation
 
 Success criteria:
-- external validation remains PASS
-- runtime boundary remains preserved
-- Runes Shield remains mandatory
+- M63 frozen baseline remains PASS
 - evidence remains summarized/public-safe
-- profiles remain metadata-only
+- evidence remains non-authoritative
+- replay boundary remains preserved
+- governance interpretation remains deterministic
 - smoke/regression suites remain PASS
 
 Reference:
-- `wiki/k6-freelancer/verification-m62.md`
+- `wiki/k6-freelancer/verification-m63.md`
 
 ---
 
