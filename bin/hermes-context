@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+PYTHON="${PYTHON:-python3}"
 ROOT="${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-memory}"
 SCRIPT="$ROOT/tools/importer/context_builder_v2.py"
 
-exec python "$SCRIPT" "$@"
+exec "$PYTHON" "$SCRIPT" "$@"
