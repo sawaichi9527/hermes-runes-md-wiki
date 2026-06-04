@@ -5,8 +5,8 @@
 - Category: verification
 - Topic: m75-minimal-human-approved-apply-path
 - Note type: verification-lock
-- Status: pending-user-verification
-- Memory quality: pending
+- Status: frozen
+- Memory quality: verified
 - Related objective: k6-freelancer
 - Last reviewed: 2026-06-05
 
@@ -55,20 +55,28 @@ fixtures/m75/minimal-human-approved-apply-path.json
 python3 tools/runes_shield/smoke_m75_minimal_human_approved_apply_path.py
 ```
 
-## Expected Result
+## Verified Result
 
-```text
-status: PASS
-mode: minimal-human-approved-apply-path
-scale: personal-local
-write: false
-authoritative: false
-runtime_dependency_required: false
-apply_path_mode: bounded-human-approved-dry-run
-minimal_apply_step_count: 8
-issue_count: 0
+```json
+{
+  "smoke_version": "m75-minimal-human-approved-apply-path-v1",
+  "status": "PASS",
+  "mode": "minimal-human-approved-apply-path",
+  "scale": "personal-local",
+  "write": false,
+  "authoritative": false,
+  "runtime_dependency_required": false,
+  "apply_path_mode": "bounded-human-approved-dry-run",
+  "minimal_apply_step_count": 8,
+  "apply_guardrail_count": 6,
+  "issue_count": 0,
+  "issues": []
+}
 ```
 
-## Verification Status
+## Final Lock
 
-Pending user execution.
+```text
+M75 Minimal Human-approved Apply Path
+PASS / frozen / smoke verified
+```
