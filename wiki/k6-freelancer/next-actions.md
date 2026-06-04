@@ -1,3 +1,60 @@
+## N-20260604-M63 Real External Agent Trial-run
+
+Status: NEXT / PLANNED
+
+Current baseline:
+- M58 Summoning Trial: PASS / frozen.
+- M59 Generic Agent Onboarding Lock: PASS / frozen.
+- M60 External Agent Trial Baseline: PASS / frozen.
+- M61 Real Agent Invocation Evidence: PASS / frozen.
+- M62 Real External Agent Validation: PASS / frozen.
+- First real external validation baseline established.
+- `generic-cli-agent` runtime validation confirmed.
+- P0 governance boundary remains preserved.
+
+Recommended next milestone:
+- M63 Real External Agent Trial-run
+
+Purpose:
+- Validate Hermes Runes MD Wiki using real external agent invocation behavior.
+- Preserve the current personal-local governance boundary.
+- Verify compatibility behavior across lightweight agent styles.
+- Observe real onboarding/runtime behavior without introducing orchestration complexity.
+
+Suggested scope:
+- generic CLI wrapper validation
+- OpenClaw compatibility validation
+- OpenAI-compatible lightweight wrapper validation
+- onboarding/runtime behavior comparison
+- profile compatibility observation
+- boundary preservation verification
+- governance regression preservation
+- smoke/regression preservation
+
+Hard constraints:
+- no orchestration daemon
+- no websocket bridge
+- no enterprise telemetry system
+- no automatic proposal apply
+- no automatic promotion
+- no direct wiki mutation
+- no direct database mutation
+- no runtime authority escalation
+- no multi-tenant governance expansion
+
+Success criteria:
+- external validation remains PASS
+- runtime boundary remains preserved
+- Runes Shield remains mandatory
+- evidence remains summarized/public-safe
+- profiles remain metadata-only
+- smoke/regression suites remain PASS
+
+Reference:
+- `wiki/k6-freelancer/verification-m62.md`
+
+---
+
 ## N-20260603-M50 Controlled Trial-run Governance
 
 Status: NEXT / PLANNED
