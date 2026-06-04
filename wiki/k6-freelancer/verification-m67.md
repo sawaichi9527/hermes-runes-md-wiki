@@ -5,8 +5,8 @@
 - Category: verification
 - Topic: m67-observation-stability-boundary
 - Note type: verification-lock
-- Status: pending-user-verification
-- Memory quality: pending
+- Status: frozen
+- Memory quality: verified
 - Related objective: k6-freelancer
 - Last reviewed: 2026-06-04
 
@@ -56,16 +56,27 @@ fixtures/m67/observation-stability-boundary.json
 python3 tools/runes_shield/smoke_m67_observation_stability_boundary.py
 ```
 
-## Expected Result
+## Verified Result
 
-```text
-status: PASS
-write: false
-authoritative: false
-runtime_dependency_required: false
-observation_only: true
+```json
+{
+  "smoke_version": "m67-observation-stability-boundary-v1",
+  "status": "PASS",
+  "mode": "observation-stability-boundary",
+  "scale": "personal-local",
+  "write": false,
+  "authoritative": false,
+  "runtime_dependency_required": false,
+  "observation_only": true,
+  "stability_target_count": 5,
+  "issue_count": 0,
+  "issues": []
+}
 ```
 
-## Verification Status
+## Final Lock
 
-Pending user execution.
+```text
+M67 Observation Stability Boundary
+PASS / frozen / smoke verified
+```
