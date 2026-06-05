@@ -2,9 +2,10 @@
 set -euo pipefail
 
 PYTHON="${PYTHON:-python3}"
-ROOT="${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-memory}"
+ROOT="${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-runes-md-wiki}"
 IMPORTER_DIR="$ROOT/tools/importer"
-WIKI_DIR="$ROOT/wiki/k6-freelancer"
+WORKSPACE_SLUG="${HERMES_WORKSPACE_SLUG:-${HERMES_PROJECT:-k6-freelancer}}"
+WIKI_DIR="$ROOT/wiki/$WORKSPACE_SLUG"
 
 echo "== Hermes Memory Check =="
 
@@ -56,7 +57,7 @@ if [ -d ".venv" ]; then
 fi
 
 "$PYTHON" delete_source.py \
-  --project k6-freelancer \
+  --project "$WORKSPACE_SLUG" \
   --path __hermes_memory_check_probe_not_exist__.md \
   --json >/tmp/hermes-memory-check-delete-probe.json
 
