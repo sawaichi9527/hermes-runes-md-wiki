@@ -11,6 +11,7 @@ from observation_logger import write_observation
 
 ROOT = Path(__file__).resolve().parents[2]
 IMPORTER_DIR = ROOT / "tools" / "importer"
+M94_TRIAL_FIXTURE_QUERY = "M94 trial promotion fixture real agent-proposed memory draft"
 
 
 def workspace_slug() -> str:
@@ -101,6 +102,14 @@ def first_result(data: dict) -> dict:
     return results[0] if results else {}
 
 
+def forge_matches_reviewed_agent_memory(forge: dict) -> bool:
+    return (
+        forge.get("status") == "approved"
+        and forge.get("trust_class") in {"reviewed", "human-reviewed"}
+        and forge.get("proposal_type") == "agent_memory"
+    )
+
+
 def case_approved_agent_proposal_retrievable() -> dict:
     query = "real agent-proposed memory draft"
     data = run_recall(query)
@@ -173,44 +182,127 @@ def case_trusted_telegram_ordering() -> dict:
     )
 
 
-def main() -> int:
-    if not is_legacy_workspace():
-        cases = [
-            skip(
-                "promotion_governance_fixture_not_available_in_trial_workspace",
+def case_trial_promotion_fixture_retrievable(workspace: str) -> dict:
+    data = run_recall(M94_TRIAL_FIXTURE_QUERY, project=workspace, limit=5)
+    results = data.get("results") or []
+
+    if not results:
+        return skip(
+            "promotion_governance_fixture_not_available_in_trial_workspace",
+            {
+                "profile": f"workspace-{workspace}",
+                "workspace": workspace,
+                "query": M94_TRIAL_FIXTURE_QUERY,
+                "note": "Fresh trial workspace has no approved forge/proposal fixture imported yet.",
+            },
+        )
+
+    expected_prefix = f"wiki/{workspace}/forge-inbox/"
+
+    for item in results:
+        path = item.get("path", "")
+        forge = item.get("forge") or {}
+        content = item.get("content") or ""
+
+        if (
+            path.startswith(expected_prefix)
+            and forge_matches_reviewed_agent_memory(forge)
+            and "M94 trial promotion fixture" in content
+        ):
+            return passed(
+                "M20.4-TRIAL-A",
+                "approved reviewed trial promotion fixture is retrieval-visible",
                 {
-                    "profile": f"workspace-{workspace_slug()}",
-                    "workspace": workspace_slug(),
-                    "note": "Fresh trial workspace has no approved forge/proposal fixture; promotion governance smoke is legacy-only until a trial fixture is introduced.",
+                    "path": path,
+                    "workspace": workspace,
+                    "trust_bias": item.get("trust_bias"),
+                    "forge": forge,
                 },
             )
-        ]
+
+    return fail(
+        "M20.4-TRIAL-A",
+        "trial promotion fixture retrieval result did not match approved reviewed forge metadata",
+        {
+            "workspace": workspace,
+            "expected_path_prefix": expected_prefix,
+            "query": M94_TRIAL_FIXTURE_QUERY,
+            "results": results,
+        },
+    )
+
+
+def nonlegacy_workspace_cases(workspace: str) -> list[dict]:
+    return [
+        case_trial_promotion_fixture_retrievable(workspace),
+    ]
+
+
+def main() -> int:
+    if not is_legacy_workspace():
+        workspace = workspace_slug()
+        cases = nonlegacy_workspace_cases(workspace)
+
+        if all(c.get("status") == "SKIP" for c in cases):
+            out = {
+                "suite": "M20.4 Promotion Governance Smoke",
+                "profile": f"workspace-{workspace}",
+                "status": "SKIP",
+                "failed": 0,
+                "total": len(cases),
+                "results": cases,
+            }
+
+            write_observation(
+                {
+                    "event": "promotion_governance_smoke",
+                    "milestone": "M94",
+                    "suite": out["suite"],
+                    "status": out["status"],
+                    "failed": out["failed"],
+                    "total": out["total"],
+                    "workspace": workspace,
+                    "skip_reason": cases[0].get("reason"),
+                    "trust_policy": "m20.5-personal-governance-v1",
+                }
+            )
+
+            print(json.dumps(out, ensure_ascii=False, indent=2))
+            return 0
+
+        failed = [c for c in cases if c["status"] != "PASS"]
 
         out = {
             "suite": "M20.4 Promotion Governance Smoke",
-            "profile": f"workspace-{workspace_slug()}",
-            "status": "SKIP",
-            "failed": 0,
+            "profile": f"workspace-{workspace}",
+            "status": "FAIL" if failed else "PASS",
+            "failed": len(failed),
             "total": len(cases),
             "results": cases,
         }
 
+        case_a = next((c for c in cases if c.get("id") == "M20.4-TRIAL-A"), {})
+        case_a_data = case_a.get("data") or {}
+        forge = case_a_data.get("forge") or {}
+
         write_observation(
             {
                 "event": "promotion_governance_smoke",
-                "milestone": "M20.6a",
+                "milestone": "M94",
                 "suite": out["suite"],
                 "status": out["status"],
                 "failed": out["failed"],
                 "total": out["total"],
-                "workspace": workspace_slug(),
-                "skip_reason": cases[0]["reason"],
-                "trust_policy": "m20.5-personal-governance-v1",
+                "workspace": workspace,
+                "reviewed_proposal_visible": case_a.get("status") == "PASS",
+                "reviewed_trust_bias": case_a_data.get("trust_bias"),
+                "reviewed_proposal_path": case_a_data.get("path"),
+                "trust_policy": forge.get("trust_policy") or "m20.5-personal-governance-v1",
             }
         )
 
         print(json.dumps(out, ensure_ascii=False, indent=2))
-        return 0
+        return 1 if failed else 0
 
     cases = [
         case_approved_agent_proposal_retrievable(),
