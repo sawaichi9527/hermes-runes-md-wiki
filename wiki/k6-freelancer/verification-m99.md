@@ -1,6 +1,6 @@
 # M99 First Agent-facing Trial Usage Preparation
 
-Status: IMPLEMENTED / PENDING LOCAL VERIFICATION
+Status: PASS / PREPARATION LOCKED
 Date: 2026-06-06
 
 ## Purpose
@@ -170,9 +170,28 @@ git log --oneline -8
 python3 tools/importer/promotion_governance_smoke.py
 ```
 
+## Local Verification Result
+
+Developer checkout verification:
+
+```text
+repo: /home/eye/workspace/hermes-runes-md-wiki
+head: a006b52 Add M99 first agent-facing trial preparation
+working tree: clean
+```
+
+Content check confirmed:
+
+```text
+Status: IMPLEMENTED / PENDING LOCAL VERIFICATION
+Final Lock: IMPLEMENTED / pending local verification
+```
+
+The operator confirmed the preparation document is present and ready to lock.
+
 ## Completion Criteria
 
-M99 can be marked PASS when:
+M99 is marked PASS because:
 
 ```text
 M99 preparation document is present.
@@ -201,5 +220,5 @@ Run the first agent-facing trial scenario set and capture actual results.
 
 ```text
 M99 First Agent-facing Trial Usage Preparation
-IMPLEMENTED / pending local verification
+PASS / preparation locked
 ```
