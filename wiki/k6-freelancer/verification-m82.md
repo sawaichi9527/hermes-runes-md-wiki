@@ -5,8 +5,8 @@
 - Category: verification
 - Topic: m82-p0-governed-memory-operating-baseline
 - Note type: baseline-freeze
-- Status: pending-user-verification
-- Memory quality: pending
+- Status: frozen
+- Memory quality: verified
 - Related objective: k6-freelancer
 - Last reviewed: 2026-06-05
 
@@ -56,19 +56,27 @@ fixtures/m82/p0-governed-memory-operating-baseline.json
 python3 tools/runes_shield/smoke_m82_p0_governed_memory_operating_baseline.py
 ```
 
-## Expected Result
+## Verified Result
 
-```text
-status: PASS
-mode: p0-governed-memory-operating-baseline
-scale: personal-local
-write: false
-authoritative: false
-runtime_dependency_required: false
-baseline_mode: freeze-readiness-check
-issue_count: 0
+```json
+{
+  "smoke_version": "m82-p0-governed-memory-operating-baseline-v1",
+  "status": "PASS",
+  "mode": "p0-governed-memory-operating-baseline",
+  "scale": "personal-local",
+  "write": false,
+  "authoritative": false,
+  "runtime_dependency_required": false,
+  "baseline_mode": "freeze-readiness-check",
+  "baseline_component_count": 10,
+  "issue_count": 0,
+  "issues": []
+}
 ```
 
-## Verification Status
+## Final Lock
 
-Pending user execution.
+```text
+M82 P0 Governed Memory Operating Baseline
+PASS / frozen / smoke verified
+```
