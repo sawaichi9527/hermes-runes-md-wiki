@@ -1,0 +1,117 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+PYTHON_BIN="${PYTHON:-python3}"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+ROOT="${HERMES_MEMORY_ROOT:-$(cd "$SCRIPT_DIR/.." && pwd)}"
+KEEP_TMP=0
+TMP_DIR=""
+
+usage() {
+  cat <<'EOF'
+Hermes Memory embedding CPU clean verifier
+
+Usage:
+  bash ./bin/hermes-memory-embedding-cpu-clean-verify [--keep-tmp]
+
+Purpose:
+  Build a temporary clean venv, install the optional embedding profile,
+  and fail if GPU-oriented packages are pulled into that clean environment.
+
+Checks:
+  - torch imports
+  - sentence_transformers imports
+  - pip list has no package names beginning with cuda or nvidia
+  - pip list has no triton package
+
+Options:
+  --keep-tmp   Keep the temporary venv for inspection.
+EOF
+}
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --keep-tmp)
+      KEEP_TMP=1
+      shift
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "ERROR: unknown argument: $1" >&2
+      usage >&2
+      exit 2
+      ;;
+  esac
+done
+
+fail() {
+  echo "ERROR: $*" >&2
+  exit 1
+}
+
+[ -d "$ROOT" ] || fail "repo root not found: $ROOT"
+[ -f "$ROOT/requirements-core.txt" ] || fail "requirements-core.txt missing"
+[ -f "$ROOT/requirements-embedding.txt" ] || fail "requirements-embedding.txt missing"
+
+TMP_DIR="$(mktemp -d "${TMPDIR:-/tmp}/hermes-embedding-cpu-clean.XXXXXX")"
+cleanup() {
+  if [ "$KEEP_TMP" = "1" ]; then
+    echo "KEEP tmp_dir=$TMP_DIR"
+  else
+    rm -rf "$TMP_DIR"
+  fi
+}
+trap cleanup EXIT
+
+VENV_DIR="$TMP_DIR/.venv"
+"$PYTHON_BIN" -m venv "$VENV_DIR"
+# shellcheck disable=SC1091
+source "$VENV_DIR/bin/activate"
+
+python -m pip install --upgrade pip
+python -m pip install -r "$ROOT/requirements-core.txt"
+python -m pip install --index-url https://download.pytorch.org/whl/cpu "torch>=2.3,<3"
+python -m pip install -r "$ROOT/requirements-embedding.txt"
+
+python - <<'PY'
+import importlib
+import json
+import subprocess
+import sys
+
+required_imports = ["torch", "sentence_transformers"]
+import_failures = []
+for name in required_imports:
+    try:
+        importlib.import_module(name)
+    except Exception as exc:
+        import_failures.append({"module": name, "error": repr(exc)})
+
+proc = subprocess.run(
+    [sys.executable, "-m", "pip", "list", "--format=json"],
+    check=True,
+    text=True,
+    stdout=subprocess.PIPE,
+)
+packages = json.loads(proc.stdout)
+package_names = sorted(str(item.get("name", "")).lower() for item in packages)
+blocked = [
+    name for name in package_names
+    if name == "triton" or name.startswith("cuda") or name.startswith("nvidia")
+]
+
+output = {
+    "status": "PASS" if not import_failures and not blocked else "FAIL",
+    "check": "embedding-cpu-clean-verify",
+    "import_failures": import_failures,
+    "blocked_packages": blocked,
+    "package_count": len(package_names),
+}
+print(json.dumps(output, ensure_ascii=False, indent=2))
+
+if output["status"] != "PASS":
+    raise SystemExit(1)
+PY
