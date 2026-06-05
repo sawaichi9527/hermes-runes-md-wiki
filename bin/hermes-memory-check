@@ -51,12 +51,22 @@ done
 echo "PASS scripts"
 
 echo "[7/8] commands"
-command -v hermes-memory-sync >/dev/null
-command -v hermes-memory-check >/dev/null
-command -v hermes-memory-eval >/dev/null
-command -v hermes-memory-backup >/dev/null
-command -v hermes-memory-restore >/dev/null
-command -v hermes-memory-import >/dev/null
+for required_command in \
+  hermes-memory-sync \
+  hermes-memory-check \
+  hermes-memory-eval \
+  hermes-memory-restore \
+  hermes-memory-import
+do
+  if command -v "$required_command" >/dev/null 2>&1; then
+    echo "PASS command=$required_command"
+  elif [ -x "$ROOT/bin/$required_command" ]; then
+    echo "PASS repo_command=$ROOT/bin/$required_command"
+  else
+    echo "MISSING command=$required_command" >&2
+    exit 1
+  fi
+done
 echo "PASS commands"
 
 echo "[8/8] database/schema probe"
