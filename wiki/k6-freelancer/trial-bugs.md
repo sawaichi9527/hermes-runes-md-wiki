@@ -64,9 +64,9 @@ S3 minor
 
 ## TB-20260605-001 Fresh clone lacks dependency bootstrap
 
-Status: PARTIAL FIX
+Status: FIXED
 Severity: S1 major
-Milestone: M88 / M89 / M90
+Milestone: M88 / M89 / M90 / M90.1 / M90.2 / M90.3
 First observed: 2026-06-05
 
 ### Symptom
@@ -93,7 +93,7 @@ Manual installation also pulled a large default dependency set, including CUDA-r
 
 Create `tools/importer/.venv` and manually install runtime packages.
 
-### Partial Fix
+### Fix
 
 M90 added a bounded bootstrap path:
 
@@ -119,18 +119,33 @@ bash ./bin/hermes-memory-bootstrap --with-embedding
 
 The embedding path installs CPU-only torch first to avoid pulling large CUDA wheels by default.
 
-### Remaining Verification
+### Verification
 
-Run M90 from a clean or reset fresh clone and confirm:
+M90.1 confirmed core and optional embedding bootstrap verification in the trial clone:
 
 ```text
-bootstrap PASS
-memory check PASS
-core smoke PASS
-optional embedding/full smoke PASS or expected SKIP states
+core-python-imports: PASS
+embedding-python-imports: PASS
+embedding_imports: PASS
 ```
 
-Until that clean verification is completed, this bug remains `PARTIAL FIX` rather than `FIXED`.
+M90.2 confirmed optional embedding bootstrap in a clean temporary venv:
+
+```text
+status: PASS
+check: embedding-cpu-clean-verify
+import_failures: []
+blocked_packages: []
+package_count: 45
+```
+
+Observed clean package:
+
+```text
+torch-2.12.0+cpu
+```
+
+M90.3 marks the fresh clone bootstrap baseline ready for beta preparation.
 
 ---
 
@@ -520,10 +535,60 @@ failed: 0
 
 ---
 
+## TB-20260605-015 Embedding bootstrap CPU-only guarantee not proven on contaminated venv
+
+Status: FIXED
+Severity: S1 major
+Milestone: M90.2 / M90.3
+First observed: 2026-06-06
+Fixed by: bin/hermes-memory-embedding-cpu-clean-verify
+
+### Symptom
+
+M90.1 verified imports successfully, but the existing trial `.venv` already contained GPU-oriented packages from earlier manual installation.
+
+That environment could prove imports worked, but could not prove that the bootstrap path avoided GPU package bloat.
+
+### Fix
+
+M90.2 added a clean temporary venv verifier:
+
+```text
+bin/hermes-memory-embedding-cpu-clean-verify
+```
+
+### Verification
+
+The clean verifier returned:
+
+```text
+status: PASS
+check: embedding-cpu-clean-verify
+import_failures: []
+blocked_packages: []
+package_count: 45
+```
+
+Observed clean package:
+
+```text
+torch-2.12.0+cpu
+```
+
+The clean temp venv did not install package names matching:
+
+```text
+cuda*
+nvidia*
+triton
+```
+
+---
+
 ## Current Summary
 
 ```text
-TB-20260605-001 PARTIAL FIX  dependency bootstrap path added; clean verification pending
+TB-20260605-001 FIXED        dependency bootstrap path and clean verification
 TB-20260605-002 FIXED        fresh DB public schema missing
 TB-20260605-003 FIXED        workspace slug mismatch
 TB-20260605-004 FIXED        memory check missing-file diagnostic gap
@@ -537,4 +602,5 @@ TB-20260605-011 FIXED        M5.2 workspace-aware smoke
 TB-20260605-012 FIXED        M10 trial-aware model-env skip
 TB-20260605-013 FIXED        M11.6 workspace-aware smoke
 TB-20260605-014 FIXED        M20.4 trial fixture skip
+TB-20260605-015 FIXED        embedding CPU-only clean verifier
 ```
