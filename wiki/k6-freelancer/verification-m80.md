@@ -5,8 +5,8 @@
 - Category: verification
 - Topic: m80-first-manual-apply-execution
 - Note type: verification-lock
-- Status: pending-user-verification
-- Memory quality: pending
+- Status: frozen
+- Memory quality: verified
 - Related objective: k6-freelancer
 - Last reviewed: 2026-06-05
 
@@ -52,19 +52,27 @@ fixtures/m80/first-manual-apply-execution-record.json
 python3 tools/runes_shield/smoke_m80_first_manual_apply_execution.py
 ```
 
-## Expected Result
+## Verified Result
 
-```text
-status: PASS
-mode: first-manual-apply-execution-record
-scale: personal-local
-write: false
-authoritative: false
-runtime_dependency_required: false
-record_mode: manual-execution-record-template
-issue_count: 0
+```json
+{
+  "smoke_version": "m80-first-manual-apply-record-template-v1",
+  "status": "PASS",
+  "mode": "first-manual-apply-execution-record",
+  "scale": "personal-local",
+  "write": false,
+  "authoritative": false,
+  "runtime_dependency_required": false,
+  "record_mode": "manual-execution-record-template",
+  "manual_execution_record_field_count": 9,
+  "issue_count": 0,
+  "issues": []
+}
 ```
 
-## Verification Status
+## Final Lock
 
-Pending user execution.
+```text
+M80 First Manual Apply Execution
+PASS / frozen / smoke verified
+```
