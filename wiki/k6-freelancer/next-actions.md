@@ -28,27 +28,6 @@ References:
 
 ---
 
-## N-20260604-M71 Controlled Trial-run Preparation Pack
-
-Status: PASS / SMOKE VERIFIED
-
-Current baseline:
-- M63-M70 external-agent and governance-boundary validation is frozen.
-- Active wrapper Python command compatibility is frozen.
-- Observation, verification, documentation, and human-review boundaries are locked.
-
-Final lock:
-
-```text
-M71 Controlled Trial-run Preparation Pack
-PASS / smoke verified
-```
-
-Reference:
-- `wiki/k6-freelancer/verification-m71.md`
-
----
-
 ## N-20260605-M73-M75 Human-approved Apply Path Validation
 
 Status: PASS / FROZEN / SMOKE VERIFIED
@@ -60,44 +39,6 @@ Current baseline:
 - M73 Controlled Trusted Transition Boundary: PASS / frozen.
 - M74 Trusted Memory Apply Rehearsal: PASS / frozen.
 - M75 Minimal Human-approved Apply Path: PASS / frozen.
-
-Frozen milestones:
-- M73 Controlled Trusted Transition Boundary
-- M74 Trusted Memory Apply Rehearsal
-- M75 Minimal Human-approved Apply Path
-
-Purpose:
-- Preserve reviewed/trusted separation.
-- Require explicit human-approved trusted transition.
-- Define a dry-run apply plan before any future real write.
-- Define the smallest safe human-approved apply path.
-- Keep the system personal-local and deterministic.
-- Avoid adding runtime burden to Hermes-agent.
-
-Verified commands:
-
-```bash
-python3 tools/runes_shield/smoke_m73_controlled_trusted_transition_boundary.py
-python3 tools/runes_shield/smoke_m74_trusted_memory_apply_rehearsal.py
-python3 tools/runes_shield/smoke_m75_minimal_human_approved_apply_path.py
-```
-
-Result:
-- M73: PASS / issue_count: 0
-- M74: PASS / issue_count: 0
-- M75: PASS / issue_count: 0
-
-Hard constraints preserved:
-- no automatic trust scoring system
-- no automatic promotion worker
-- no automatic apply worker
-- no trusted write daemon
-- no background write worker
-- no proposal orchestration daemon
-- no enterprise workflow engine
-- no runtime policy engine
-- no multi-agent apply orchestrator
-- no runtime authority escalation
 
 Final lock:
 
@@ -113,56 +54,92 @@ References:
 
 ---
 
-## N-20260605-M76 First Manual Apply Readiness Gate
+## N-20260605-M76-M78 Manual Apply Gate Pack
 
-Status: NEXT / PLANNED
+Status: PASS / SMOKE VERIFIED
 
 Current baseline:
-- M73-M75 human-approved apply path validation is frozen.
-- Apply remains dry-run only.
-- No real trusted write is enabled yet.
+- M76 First Manual Apply Readiness Gate: PASS / smoke verified.
+- M77 First Manual Apply Dry-run Execution: PASS / frozen.
+- M78 First Manual Apply Commit Gate: PASS / smoke verified.
 
-Recommended next milestone:
-- M76 First Manual Apply Readiness Gate
+Final lock target:
+
+```text
+M76-M78 Manual Apply Gate Pack
+PASS / smoke verified
+```
+
+References:
+- `wiki/k6-freelancer/verification-m76.md`
+- `wiki/k6-freelancer/verification-m77.md`
+- `wiki/k6-freelancer/verification-m78.md`
+
+---
+
+## N-20260605-M79-M82 P0 Baseline Convergence
+
+Status: NEXT / PENDING USER VERIFICATION
+
+Current baseline:
+- Manual apply gates exist.
+- M79-M82 fixtures and smoke tests are implemented.
+- The implementation remains personal-local and bounded.
+
+Implemented milestones:
+- M79 First Manual Apply Execution Plan
+- M80 First Manual Apply Execution
+- M81 Post-Apply Verification Lock
+- M82 P0 Governed Memory Operating Baseline Freeze
 
 Purpose:
-- Decide whether the project is ready for one explicit manual apply operation.
-- Preserve one candidate / one operation / one target path.
-- Require pre/post smoke checks.
-- Keep apply human-approved and local.
-- Avoid introducing background workers or agent autonomy.
+- Define the first manual apply command checklist.
+- Define a manual execution record template.
+- Define post-apply verification evidence.
+- Freeze the P0 governed memory operating baseline.
+- Avoid enterprise workflow expansion.
+- Avoid adding runtime burden to Hermes-agent.
 
-Suggested scope:
-- manual apply readiness checklist
-- one candidate fixture
-- target path verification
-- source reference verification
-- pre/post smoke checklist
-- rollback note verification
+Verification commands:
+
+```bash
+python3 tools/runes_shield/smoke_m79_first_manual_apply_execution_plan.py
+python3 tools/runes_shield/smoke_m80_first_manual_apply_execution.py
+python3 tools/runes_shield/smoke_m81_post_apply_verification_lock.py
+python3 tools/runes_shield/smoke_m82_p0_governed_memory_operating_baseline.py
+```
 
 Hard constraints:
-- no automatic apply execution
-- no background write worker
-- no trusted write daemon
+- no automatic apply worker
+- no automatic commit worker
 - no batch apply engine
+- no trusted write daemon
 - no runtime policy engine
-- no enterprise workflow expansion
+- no enterprise workflow engine
+- no multi-agent orchestrator
+- no telemetry analytics platform
+- no background monitoring daemon
 
 Success criteria:
-- readiness gate remains explicit
-- apply target is single-path only
-- human approval is recorded
-- pre/post smoke commands are listed
-- no real write is performed by the readiness gate itself
+- all M79-M82 smoke tests PASS
+- M79 remains execution plan only
+- M80 remains human execution record template
+- M81 remains verification checklist only
+- M82 remains P0 baseline freeze-readiness check
+- no background worker is introduced
+- no runtime burden is added to Hermes-agent
 
-Reference:
-- `wiki/k6-freelancer/verification-m75.md`
+References:
+- `wiki/k6-freelancer/verification-m79.md`
+- `wiki/k6-freelancer/verification-m80.md`
+- `wiki/k6-freelancer/verification-m81.md`
+- `wiki/k6-freelancer/verification-m82.md`
 
 ---
 
 ## N-20260603-M50 Controlled Trial-run Governance
 
-Status: HISTORICAL / SUPERSEDED BY N-20260605-M76 First Manual Apply Readiness Gate
+Status: HISTORICAL / SUPERSEDED BY N-20260605-M79-M82 P0 Baseline Convergence
 
 Current baseline:
 - M47 Governance Timeline: PASS / frozen.
@@ -170,38 +147,6 @@ Current baseline:
 - M49 Governance Integrity Validation: PASS / frozen.
 - Cross-layer governance consistency engine established.
 - P0 apply execution boundary remains fully blocked.
-
-Recommended next milestone:
-- M50 Controlled Trial-run Governance
-
-Purpose:
-- Validate the governed proposal pipeline under controlled real-world usage.
-- Exercise mixed proposal states across multiple governance layers.
-- Preserve the current P0 safety boundary while observing real operational behavior.
-
-Suggested scope:
-- multiple proposal fixtures
-- mixed approve/reject/quarantine decisions
-- governance timeline observation
-- governance history observation
-- governance integrity regression preservation
-- retrieval isolation verification
-- provenance stability verification
-- observation-driven governance refinement
-
-Hard constraints:
-- no autonomous trusted wiki mutation
-- no automatic apply execution
-- no background promotion worker
-- no database mutation side effects
-- no enterprise workflow expansion
-
-Success criteria:
-- integrity validator remains PASS
-- governance history remains consistent
-- apply execution remains BLOCKED
-- reviewed vs trusted separation preserved
-- smoke/regression suites remain PASS
 
 Reference:
 - `wiki/k6-freelancer/verification-m49.md`
