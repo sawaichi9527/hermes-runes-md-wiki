@@ -1,11 +1,11 @@
 # M93.3 Developer M10 Model Smoke Verification
 
-Status: HOTFIX IMPLEMENTED / PENDING LOCAL VERIFICATION
+Status: PASS / DEVELOPER MODEL SMOKE VERIFIED
 Date: 2026-06-06
 
 ## Purpose
 
-M93.3 attempts to verify that developer checkout M10 observation smoke can move from clean SKIP to PASS when model env is configured.
+M93.3 verifies that developer checkout M10 observation smoke can move from clean SKIP to PASS when model env is configured.
 
 Initial local execution showed:
 
@@ -55,36 +55,22 @@ M10 reports root, importer, env_files, and loaded_keys in JSON output.
 
 This aligns M10 smoke with the M93 checker root behavior while keeping the implementation simple and local-only.
 
-## Expected Verification
+## Local Verification Result
 
-From developer checkout:
-
-```bash
-cd ~/workspace/hermes-runes-md-wiki
-bash ./bin/hermes-model-env-check
-python3 tools/importer/smoke/eval_smoke_m10_observation.py
-```
-
-Expected first command:
+Developer checkout verification:
 
 ```text
-status: PASS
-reason: model_env_ready
+repo: /home/eye/workspace/hermes-runes-md-wiki
+M93 model env check: PASS / model_env_ready
+M10 observation smoke: PASS
+profile: workspace-freelancer
+max_tokens: 1536
+finish_reason: stop
+extraction_path: message.content
+issues: []
 ```
 
-Expected second command after this hotfix:
-
-```text
-M10 should no longer SKIP because of missing_model_env when developer .env is configured.
-```
-
-If the endpoint and answer generation are healthy, M10 should return:
-
-```text
-status: PASS
-```
-
-If M10 returns FAIL, the failure should now represent a real endpoint, answer generation, citation, or observation issue rather than env-root mismatch.
+This confirms that M10 is no longer blocked by env/root mismatch and can complete through the local model path in the developer checkout.
 
 ## Trial Behavior
 
@@ -115,5 +101,5 @@ no runtime authority escalation
 
 ```text
 M93.3 Developer M10 Model Smoke Verification
-HOTFIX IMPLEMENTED / pending local verification
+PASS / developer model smoke verified
 ```
