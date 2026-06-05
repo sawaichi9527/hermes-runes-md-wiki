@@ -252,9 +252,40 @@ References:
 
 ---
 
+## N-20260605-M88 Fresh-user Trial Bootstrap Gap
+
+Status: PARTIAL FIX / TRIAL FINDINGS RECORDED
+
+Current findings:
+- Fresh clone lacked dependency bootstrap before smoke; observed `ModuleNotFoundError: No module named 'psycopg'`.
+- Full smoke then reached trial DB schema gap; observed `relation "public.chunks" does not exist`.
+- Trial workspace expectation is `wiki/freelancer`, but cloned repo still contains development workspace `wiki/k6-freelancer`.
+- `bin/hermes-memory-check` previously hardcoded `wiki/k6-freelancer` and `--project k6-freelancer`.
+
+Implemented partial fixes:
+- `bin/hermes-memory-check` now supports `HERMES_WORKSPACE_SLUG` / `HERMES_PROJECT`.
+- `migrations/postgres/002_public_memory_schema.sql` adds fresh-user public memory tables.
+
+Remaining decision:
+- Decide whether to create `wiki/freelancer` as a governed trial workspace or migrate/rename the existing `wiki/k6-freelancer` development workspace.
+
+Final lock:
+
+```text
+M88 Fresh-user Trial Bootstrap Gap
+PARTIAL FIX / trial findings recorded
+```
+
+References:
+- `wiki/k6-freelancer/verification-m88.md`
+- `bin/hermes-memory-check`
+- `migrations/postgres/002_public_memory_schema.sql`
+
+---
+
 ## N-20260605-Realistic Fresh-user Trial-run
 
-Status: NEXT / READY
+Status: IN PROGRESS / BLOCKED ON M88 WORKSPACE DECISION
 
 Current baseline:
 - P0 governed memory operating baseline is frozen.
@@ -263,20 +294,20 @@ Current baseline:
 - First real controlled observation trial is complete and post-change verified.
 - Trial-run environment isolation baseline is design ready and implemented.
 - Keystone trial-run baseline is ready.
+- Fresh-user bootstrap gaps are now recorded under M88.
 - The system remains personal-local, Markdown-native, deterministic, and simple.
 
 Recommended next phase:
-- Run a realistic fresh-user install trial from a separate trial clone.
+- Pull M88 hotfixes into developer and trial clone.
+- Run migration again in trial clone.
+- Decide `wiki/freelancer` workspace creation / migration strategy before continuing smoke.
 
-Suggested trial:
-- prepare isolated trial runtime database only
-- do not modify shared PostgreSQL Docker stack
-- clone into `~/workspace-trial/hermes-runes-md-wiki`
-- configure trial runtime DB target
-- run backend guard
-- run schema migration twice
-- run smoke / recall checks
-- keep trial artifacts local unless explicitly promoted
+Suggested trial continuation:
+- keep shared PostgreSQL Docker stack unchanged
+- keep trial DB isolated
+- set `HERMES_WORKSPACE_SLUG=freelancer` for trial-run
+- prepare `wiki/freelancer` through governed trial workspace flow
+- rerun backend guard, migration, memory check, importer, and smoke
 
 ---
 
