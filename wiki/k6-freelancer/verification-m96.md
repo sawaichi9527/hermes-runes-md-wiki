@@ -1,6 +1,6 @@
 # M96 Controlled Trial-run Execution Pack
 
-Status: IMPLEMENTED / PENDING LOCAL VERIFICATION
+Status: PASS / LOCALLY VERIFIED
 Date: 2026-06-06
 
 ## Purpose
@@ -77,6 +77,48 @@ If M10 returns finish_reason=length, try HERMES_M10_MAX_TOKENS=2048 for smoke ve
 Do not commit .env.
 ```
 
+## Developer Local Verification Result
+
+Developer checkout verification:
+
+```text
+repo: /home/eye/workspace/hermes-runes-md-wiki
+head: e73cff4 Add M96 controlled trial run execution pack
+working tree: clean
+```
+
+Compile checks completed:
+
+```text
+python3 -m py_compile tools/importer/answer_generator.py
+python3 -m py_compile tools/importer/smoke/eval_smoke_m10_observation.py
+python3 -m py_compile tools/importer/promotion_governance_smoke.py
+```
+
+Model env check:
+
+```text
+suite: M93 Model Env Minimal Beta Setting
+status: PASS
+reason: model_env_ready
+OPENAI_BASE_URL: configured
+OPENAI_MODEL: qwen3.6-35B-A3B
+OPENAI_API_KEY: set
+```
+
+M10 smoke result:
+
+```text
+suite: M10 Observation Log Smoke Test
+profile: workspace-freelancer
+status: PASS
+issues: []
+max_tokens: 1536
+selected_model_profile: qwen-forced-thinking
+extraction_path: message.content
+finish_reason: stop
+```
+
 ## Trial Checkout Command Pack
 
 Use the trial checkout for isolated trial workspace verification.
@@ -114,6 +156,61 @@ If M20.4 returns SKIP, confirm wiki/freelancer/forge-inbox/m94-trial-promotion-f
 If the fixture exists but M20.4 still SKIPs, rerun bash ./bin/hermes-memory-import.
 If import does not include the fixture, confirm HERMES_WORKSPACE_SLUG=freelancer and HERMES_PROJECT=freelancer.
 If M20.4 returns FAIL, inspect forge metadata on the retrieved result.
+```
+
+## Trial Local Verification Result
+
+Trial checkout verification:
+
+```text
+repo: /home/eye/workspace-trial/hermes-runes-md-wiki
+head: e73cff4 Add M96 controlled trial run execution pack
+working tree: clean
+```
+
+Compile checks completed:
+
+```text
+python3 -m py_compile tools/importer/smoke/eval_smoke_m10_observation.py
+python3 -m py_compile tools/importer/promotion_governance_smoke.py
+```
+
+Importer result:
+
+```text
+schema: public
+import_scope: freelancer
+M94 fixture path: skipped id=59 chunks=0 after prior import
+imported_or_changed: 0
+updated: 0
+skipped: 59
+chunks_written: 0
+PASS: Markdown incremental import completed
+```
+
+M20.4 smoke result:
+
+```text
+suite: M20.4 Promotion Governance Smoke
+profile: workspace-freelancer
+status: PASS
+failed: 0
+total: 1
+id: M20.4-TRIAL-A
+summary: approved reviewed trial promotion fixture is retrieval-visible
+path: wiki/freelancer/forge-inbox/m94-trial-promotion-fixture.md
+trust_bias: 0
+```
+
+Forge metadata verified:
+
+```text
+status: approved
+trust_class: reviewed
+proposal_type: agent_memory
+proposed_by: human
+provenance: manual_cli
+operation_id: M94-trial-promotion-fixture-20260606
 ```
 
 ## Optional Full Trial Smoke
@@ -157,19 +254,19 @@ runtime permission expansion
 
 ## Completion Criteria
 
-M96 can be marked PASS when:
+M96 is marked PASS because:
 
 ```text
-Developer command pack runs to expected PASS state.
-Trial command pack runs to expected PASS state.
-Both checkouts are clean and synced.
-No secrets are committed.
-M20.4 trial fixture remains retrieval-visible.
+Developer command pack ran to expected PASS state.
+Trial command pack ran to expected PASS state.
+Both checkouts were clean and synced.
+No secrets were committed.
+M20.4 trial fixture remained retrieval-visible.
 ```
 
 ## Final Lock
 
 ```text
 M96 Controlled Trial-run Execution Pack
-IMPLEMENTED / pending local verification
+PASS / locally verified
 ```
