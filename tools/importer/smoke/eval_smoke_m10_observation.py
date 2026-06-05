@@ -106,9 +106,18 @@ def source_count(answer: str) -> int:
     return len(citations)
 
 
+def m10_max_tokens() -> str:
+    # M93.5: Qwen thinking-style local models may spend most of a 512-token
+    # budget in reasoning_content and stop with finish_reason=length before a
+    # final answer is emitted.  Keep this a smoke-local default, and allow a
+    # simple local override without introducing model routing complexity.
+    return os.environ.get("HERMES_M10_MAX_TOKENS", "1536")
+
+
 def main():
     case = answer_case()
     missing, loaded_keys = missing_model_env()
+    max_tokens = m10_max_tokens()
 
     if missing:
         print(json.dumps({
@@ -121,6 +130,7 @@ def main():
             "env_files": env_source_summary(),
             "loaded_keys": loaded_keys,
             "missing": missing,
+            "max_tokens": max_tokens,
             "message": "OPENAI-compatible model env is not configured; skipping answer generation smoke.",
         }, ensure_ascii=False, indent=2))
         return
@@ -132,7 +142,7 @@ def main():
         "--project", case["project"],
         "--path", case["path"],
         "--heading", case["heading"],
-        "--max-tokens", "512",
+        "--max-tokens", max_tokens,
         "--json",
     ]
 
@@ -142,7 +152,7 @@ def main():
         text=True,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        timeout=120,
+        timeout=180,
     )
 
     if proc.returncode != 0:
@@ -155,6 +165,7 @@ def main():
             "importer": str(IMPORTER),
             "env_files": env_source_summary(),
             "loaded_keys": loaded_keys,
+            "max_tokens": max_tokens,
             "returncode": proc.returncode,
             "stderr_tail": proc.stderr[-2000:],
         }, ensure_ascii=False, indent=2))
@@ -197,6 +208,7 @@ def main():
         "importer": str(IMPORTER),
         "env_files": env_source_summary(),
         "loaded_keys": loaded_keys,
+        "max_tokens": max_tokens,
         "case": case,
         "summary": {
             "answer_chars": data.get("answer_chars"),
@@ -208,6 +220,7 @@ def main():
             "retry_success": data.get("retry_success"),
             "selected_model_profile": data.get("selected_model_profile"),
             "extraction_path": data.get("extraction_path"),
+            "finish_reason": data.get("finish_reason"),
         },
     }
 
