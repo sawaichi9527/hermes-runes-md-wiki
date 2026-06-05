@@ -266,8 +266,8 @@ Implemented partial fixes:
 - `bin/hermes-memory-check` now supports `HERMES_WORKSPACE_SLUG` / `HERMES_PROJECT`.
 - `migrations/postgres/002_public_memory_schema.sql` adds fresh-user public memory tables.
 
-Remaining decision:
-- Decide whether to create `wiki/freelancer` as a governed trial workspace or migrate/rename the existing `wiki/k6-freelancer` development workspace.
+Remaining gap:
+- Dependency/bootstrap setup remains manual and should be simplified later.
 
 Final lock:
 
@@ -283,9 +283,52 @@ References:
 
 ---
 
+## N-20260605-M89 Fresh-user Trial Smoke Hardening
+
+Status: PASS / TRIAL SMOKE HARDENED / VERIFIED
+
+Current baseline:
+- Scoped import now includes `wiki/_system/**`, `wiki/owner-runes/**`, `wiki/freelancer/**`, and root-level `wiki/*.md`.
+- Trial DB excludes legacy `wiki/k6-freelancer/**` and `wiki/sample-project/**` content.
+- Core FTS smoke is workspace-aware.
+- M5.2 evaluation smoke is workspace-aware.
+- M10 observation smoke skips cleanly when model env is not configured.
+- M11.6 sample-project smoke is workspace-aware.
+- M20.4 promotion governance smoke skips cleanly when no trial promotion fixture exists.
+
+Verified trial smoke chain:
+
+```text
+Core FTS                         PASS
+M5.2 workspace evaluation         PASS
+M10 observation log               SKIP / expected: missing model env
+M11 observation summary           PASS
+M11.6 workspace/sample smoke      PASS
+M20.4 promotion governance        SKIP / expected: no trial fixture
+```
+
+Fixed trial bugs:
+
+```text
+TB-20260605-010 through TB-20260605-014
+```
+
+Final lock:
+
+```text
+M89 Fresh-user Trial Smoke Hardening
+PASS / trial smoke hardened / verified
+```
+
+References:
+- `wiki/k6-freelancer/verification-m89.md`
+- `wiki/k6-freelancer/trial-bugs.md`
+
+---
+
 ## N-20260605-Realistic Fresh-user Trial-run
 
-Status: IN PROGRESS / BLOCKED ON M88 WORKSPACE DECISION
+Status: IN PROGRESS / SMOKE HARDENED / BOOTSTRAP GAP REMAINING
 
 Current baseline:
 - P0 governed memory operating baseline is frozen.
@@ -294,20 +337,23 @@ Current baseline:
 - First real controlled observation trial is complete and post-change verified.
 - Trial-run environment isolation baseline is design ready and implemented.
 - Keystone trial-run baseline is ready.
-- Fresh-user bootstrap gaps are now recorded under M88.
+- Fresh-user bootstrap gaps are recorded under M88.
+- Fresh-user trial smoke hardening is complete under M89.
 - The system remains personal-local, Markdown-native, deterministic, and simple.
 
 Recommended next phase:
-- Pull M88 hotfixes into developer and trial clone.
-- Run migration again in trial clone.
-- Decide `wiki/freelancer` workspace creation / migration strategy before continuing smoke.
+- Pull M89 documentation updates into developer and trial clone.
+- Decide the minimal dependency/bootstrap path for `TB-20260605-001`.
+- Keep shared PostgreSQL Docker stack unchanged.
+- Keep trial DB isolated.
+- Keep `HERMES_WORKSPACE_SLUG=freelancer` and `HERMES_PROJECT=freelancer` for trial-run.
+- Introduce real trial promotion fixture only through a governed human-reviewed proposal flow.
 
 Suggested trial continuation:
-- keep shared PostgreSQL Docker stack unchanged
-- keep trial DB isolated
-- set `HERMES_WORKSPACE_SLUG=freelancer` for trial-run
-- prepare `wiki/freelancer` through governed trial workspace flow
-- rerun backend guard, migration, memory check, importer, and smoke
+- define bounded bootstrap requirements without GPU/CUDA bloat by default
+- verify clean clone setup from scratch
+- keep model-dependent M10 smoke optional until a model endpoint is configured
+- keep M20.4 promotion governance skipped until an approved trial fixture exists
 
 ---
 
