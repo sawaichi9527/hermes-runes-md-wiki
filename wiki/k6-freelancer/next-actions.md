@@ -228,6 +228,30 @@ References:
 
 ---
 
+## N-20260605-M87 Keystone Trial-run Baseline
+
+Status: PASS / KEYSTONE READY
+
+Current baseline:
+- Keystone baseline has been migrated to the current M86 state.
+- Shared PostgreSQL Docker service remains unchanged.
+- Trial-run creates only the separate `hermes_memory_trial` runtime database.
+- Actual Hermes-agent trial-run is scoped only to `~/workspace-trial/hermes-runes-md-wiki`.
+- Actual Hermes-agent must not access or reason from the developer checkout at `~/workspace/hermes-runes-md-wiki`.
+
+Final lock:
+
+```text
+M87 Keystone Trial-run Baseline
+PASS / keystone ready
+```
+
+References:
+- `wiki/k6-freelancer/verification-m87.md`
+- `docs/keystone-trial-run-baseline.md`
+
+---
+
 ## N-20260605-Realistic Fresh-user Trial-run
 
 Status: NEXT / READY
@@ -238,13 +262,15 @@ Current baseline:
 - Controlled trial-use observation scaffold is frozen and verified.
 - First real controlled observation trial is complete and post-change verified.
 - Trial-run environment isolation baseline is design ready and implemented.
+- Keystone trial-run baseline is ready.
 - The system remains personal-local, Markdown-native, deterministic, and simple.
 
 Recommended next phase:
 - Run a realistic fresh-user install trial from a separate trial clone.
 
 Suggested trial:
-- prepare isolated trial runtime database
+- prepare isolated trial runtime database only
+- do not modify shared PostgreSQL Docker stack
 - clone into `~/workspace-trial/hermes-runes-md-wiki`
 - configure trial runtime DB target
 - run backend guard
