@@ -30,13 +30,22 @@ test -d "$WIKI_DIR"
 echo "PASS wiki=$WIKI_DIR"
 
 echo "[6/8] required scripts"
-test -f "$IMPORTER_DIR/importer.py"
-test -f "$IMPORTER_DIR/delete_source.py"
-test -f "$IMPORTER_DIR/smoke/eval_all.py"
-test -f "$IMPORTER_DIR/smoke/eval_smoke_m5_2.py"
-test -f "$IMPORTER_DIR/smoke/eval_smoke_m6_6.py"
-test -f "$IMPORTER_DIR/smoke/eval_smoke_m6_7_2_backup.py"
-test -f "$IMPORTER_DIR/smoke/eval_smoke_m6_7_3_restore.py"
+for required_file in \
+  "$IMPORTER_DIR/importer.py" \
+  "$IMPORTER_DIR/delete_source.py" \
+  "$IMPORTER_DIR/smoke/eval_all.py" \
+  "$IMPORTER_DIR/smoke/eval_smoke_m5_2.py" \
+  "$IMPORTER_DIR/smoke/eval_smoke_m6_6.py" \
+  "$IMPORTER_DIR/smoke/eval_smoke_m6_7_2_backup.py" \
+  "$IMPORTER_DIR/smoke/eval_smoke_m6_7_3_restore.py"
+do
+  if [ -f "$required_file" ]; then
+    echo "PASS required_file=$required_file"
+  else
+    echo "MISSING required_file=$required_file" >&2
+    exit 1
+  fi
+done
 echo "PASS scripts"
 
 echo "[7/8] commands"
