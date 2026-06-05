@@ -131,18 +131,54 @@ References:
 
 ---
 
+## N-20260605-M84 Controlled Trial-use Observation Readiness
+
+Status: PASS / FROZEN / STRUCTURE VERIFIED
+
+Current baseline:
+- Controlled trial-use observation scaffold is available.
+- Markdown-native trial observation template: PASS.
+- Lightweight structural checker: PASS.
+- No automatic apply or orchestration introduced.
+- The implementation remains personal-local, bounded, and human-reviewed.
+
+Verified command:
+
+```bash
+bash ./bin/hermes-trial-observation-check <trial-record.md>
+```
+
+Verified scope:
+- required-heading verification
+- obvious secret-marker detection
+- basic structural readiness validation
+
+Final lock:
+
+```text
+M84 Controlled Trial-use Observation Readiness
+PASS / frozen / structure verified
+```
+
+References:
+- `wiki/k6-freelancer/verification-m84.md`
+- `docs/trial-use-observation.md`
+- `templates/trial-observation-record.md`
+
+---
+
 ## N-20260605-Post-P0 Trial-use Observation
 
-Status: NEXT / PLANNED
+Status: NEXT / READY
 
 Current baseline:
 - P0 governed memory operating baseline is frozen.
-- The system has proposal, review, manual record, and verification checkpoints.
-- The system remains personal-local, Markdown-native, deterministic, and simple.
 - External backend prerequisite handling is frozen and smoke verified.
+- Controlled trial-use observation scaffold is frozen and verified.
+- The system remains personal-local, Markdown-native, deterministic, and simple.
 
 Recommended next phase:
-- Begin controlled real trial-use observation.
+- Begin the first real controlled observation trial.
 
 Suggested first trial:
 - one small real project-memory candidate
