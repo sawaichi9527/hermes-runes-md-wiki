@@ -1,6 +1,6 @@
 # M93 Model Env Minimal Beta Setting
 
-Status: IMPLEMENTED / PENDING LOCAL VERIFICATION
+Status: PASS / DEVELOPER MODEL ENV READY / TRIAL CLEAN SKIP VERIFIED
 Date: 2026-06-06
 
 ## Purpose
@@ -99,6 +99,33 @@ docs/model-env-beta.md
 
 The document records the local-only model env policy and expected verification behavior.
 
+## Local Verification Result
+
+Developer checkout:
+
+```text
+repo: /home/eye/workspace/hermes-runes-md-wiki
+status: PASS
+reason: model_env_ready
+OPENAI_MODEL: qwen3.6-35B-A3B
+```
+
+Trial checkout:
+
+```text
+repo: /home/eye/workspace-trial/hermes-runes-md-wiki
+status: SKIP
+reason: missing_model_env
+missing: OPENAI_BASE_URL, OPENAI_MODEL
+```
+
+This confirms the intended split:
+
+```text
+developer checkout can run model-dependent validation
+trial checkout remains clean and non-blocking when model env is absent
+```
+
 ## Expected Verification
 
 Without local model env:
@@ -139,5 +166,5 @@ no runtime authority escalation
 
 ```text
 M93 Model Env Minimal Beta Setting
-IMPLEMENTED / pending local verification
+PASS / developer model env ready / trial clean skip verified
 ```
