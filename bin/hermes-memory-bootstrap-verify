@@ -1,0 +1,126 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+PYTHON_BIN="${PYTHON:-python3}"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+ROOT="${HERMES_MEMORY_ROOT:-$(cd "$SCRIPT_DIR/.." && pwd)}"
+IMPORTER_DIR="$ROOT/tools/importer"
+VENV_DIR="$IMPORTER_DIR/.venv"
+CHECK_EMBEDDING=0
+
+usage() {
+  cat <<'EOF'
+Hermes Memory bootstrap verification helper
+
+Usage:
+  bash ./bin/hermes-memory-bootstrap-verify [--with-embedding]
+
+Default checks:
+  - repo root exists
+  - tools/importer/.venv exists
+  - requirements files exist
+  - core Python packages import successfully
+  - bootstrap helper exists
+
+Optional:
+  --with-embedding
+      Also require sentence_transformers and torch to import.
+
+This helper does not start Docker, run migrations, run importer, or run smoke tests.
+EOF
+}
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --with-embedding)
+      CHECK_EMBEDDING=1
+      shift
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "ERROR: unknown argument: $1" >&2
+      usage >&2
+      exit 2
+      ;;
+  esac
+done
+
+fail() {
+  echo "ERROR: $*" >&2
+  exit 1
+}
+
+[ -d "$ROOT" ] || fail "repo root not found: $ROOT"
+[ -d "$IMPORTER_DIR" ] || fail "importer dir not found: $IMPORTER_DIR"
+[ -d "$VENV_DIR" ] || fail "venv not found: $VENV_DIR"
+[ -f "$ROOT/requirements-core.txt" ] || fail "requirements-core.txt missing"
+[ -f "$ROOT/requirements-embedding.txt" ] || fail "requirements-embedding.txt missing"
+[ -f "$ROOT/bin/hermes-memory-bootstrap" ] || fail "bootstrap helper missing"
+
+# shellcheck disable=SC1091
+source "$VENV_DIR/bin/activate"
+
+python - <<'PY'
+import importlib
+import json
+
+required = ["psycopg", "pgvector", "dotenv", "numpy"]
+missing = []
+for name in required:
+    try:
+        importlib.import_module(name)
+    except Exception as exc:
+        missing.append({"module": name, "error": repr(exc)})
+
+print(json.dumps({
+    "check": "core-python-imports",
+    "status": "PASS" if not missing else "FAIL",
+    "missing": missing,
+}, ensure_ascii=False, indent=2))
+
+if missing:
+    raise SystemExit(1)
+PY
+
+if [ "$CHECK_EMBEDDING" = "1" ]; then
+  python - <<'PY'
+import importlib
+import json
+
+required = ["torch", "sentence_transformers"]
+missing = []
+for name in required:
+    try:
+        importlib.import_module(name)
+    except Exception as exc:
+        missing.append({"module": name, "error": repr(exc)})
+
+print(json.dumps({
+    "check": "embedding-python-imports",
+    "status": "PASS" if not missing else "FAIL",
+    "missing": missing,
+}, ensure_ascii=False, indent=2))
+
+if missing:
+    raise SystemExit(1)
+PY
+fi
+
+cat <<EOF
+{
+  "status": "PASS",
+  "tool": "hermes-memory-bootstrap-verify",
+  "root": "$ROOT",
+  "venv": "$VENV_DIR",
+  "core_imports": "PASS",
+  "embedding_imports": "$([ "$CHECK_EMBEDDING" = "1" ] && echo PASS || echo skipped)",
+  "notes": [
+    "Docker was not modified.",
+    "Migrations were not run.",
+    "Importer and smoke tests were not run."
+  ]
+}
+EOF
