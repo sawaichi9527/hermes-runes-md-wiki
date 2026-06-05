@@ -1,0 +1,40 @@
+{
+  "schema_version": "m81-post-apply-verification-lock-v1",
+  "milestone": "M81 Post-Apply Verification Lock",
+  "mode": "post-apply-verification-lock",
+  "scale": "personal-local",
+  "write": false,
+  "authoritative": false,
+  "runtime_dependency_required": false,
+  "principle": "post-apply-verification-confirms-manual-change-without-adding-runtime-burden",
+  "verification_mode": "post-apply-checklist-only",
+  "required_semantics": {
+    "post_apply_verification_required": true,
+    "smoke_verification_required": true,
+    "diff_review_required": true,
+    "recall_check_required": true,
+    "source_check_required": true,
+    "rollback_note_required": true,
+    "verification_is_not_runtime_policy": true,
+    "automatic_remediation_allowed": false,
+    "automatic_rollback_allowed": false,
+    "background_monitoring_required": false,
+    "enterprise_workflow_required": false
+  },
+  "verification_checks": [
+    "git_diff_review",
+    "target_file_review",
+    "index_reference_review",
+    "smoke_suite_result",
+    "recall_check_result",
+    "source_reference_check",
+    "rollback_note_present"
+  ],
+  "forbidden_infrastructure": [
+    "automatic-rollback-worker",
+    "background-monitoring-daemon",
+    "enterprise-audit-platform",
+    "runtime-policy-engine",
+    "telemetry-analytics-platform"
+  ]
+}
