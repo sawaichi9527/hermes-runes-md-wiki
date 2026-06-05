@@ -1,0 +1,43 @@
+{
+  "schema_version": "m82-p0-governed-memory-operating-baseline-v1",
+  "milestone": "M82 P0 Governed Memory Operating Baseline Freeze",
+  "mode": "p0-governed-memory-operating-baseline",
+  "scale": "personal-local",
+  "write": false,
+  "authoritative": false,
+  "runtime_dependency_required": false,
+  "principle": "p0-baseline-freezes-governed-memory-loop-without-enterprise-expansion",
+  "baseline_mode": "freeze-readiness-check",
+  "required_semantics": {
+    "proposal_generation_governed": true,
+    "human_review_required": true,
+    "trusted_transition_explicit": true,
+    "manual_apply_path_defined": true,
+    "post_apply_verification_defined": true,
+    "agent_runtime_burden_added": false,
+    "enterprise_workflow_required": false,
+    "automatic_apply_allowed": false,
+    "automatic_promotion_allowed": false,
+    "background_worker_required": false
+  },
+  "baseline_components": [
+    "external_agent_trial_run",
+    "evidence_lock",
+    "boundary_validation",
+    "controlled_proposal_trial_run",
+    "human_approved_apply_path",
+    "manual_apply_readiness_gate",
+    "dry_run_execution",
+    "commit_gate",
+    "execution_plan",
+    "post_apply_verification"
+  ],
+  "forbidden_infrastructure": [
+    "enterprise-workflow-engine",
+    "runtime-policy-engine",
+    "trust-scoring-system",
+    "background-apply-worker",
+    "multi-agent-orchestrator",
+    "telemetry-analytics-platform"
+  ]
+}
