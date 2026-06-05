@@ -12,9 +12,9 @@ Recommended environment:
 
 - Linux
 - Python 3.12+
-- PostgreSQL 16+
+- PostgreSQL 16+ or 17
 - pgvector
-- Docker / Docker Compose for PostgreSQL deployment
+- Docker / Docker Compose for the external PostgreSQL reference backend
 - local or LAN OpenAI-compatible LLM endpoint
 
 Optional but recommended:
@@ -55,7 +55,27 @@ The environment variable is still named `HERMES_MEMORY_ROOT` for compatibility w
 
 ---
 
-# 3. Python Virtual Environment
+# 3. Read Agent Bootstrap Instructions
+
+Humans and agents should read:
+
+```text
+README.md
+AGENTS.md
+docs/reference-postgres-backend.md
+```
+
+`AGENTS.md` is the repository-level bootstrap guide for agent acquisition, backend prerequisite checks, schema migration, missing workspace behavior, and forbidden actions.
+
+Detailed governed runtime policy still lives under:
+
+```text
+wiki/_system/
+```
+
+---
+
+# 4. Python Virtual Environment
 
 Create the virtual environment under `tools/importer`, then install the lightweight core dependencies from the repository root requirements file:
 
@@ -80,7 +100,7 @@ pip install -r ../../requirements-embedding.txt
 
 ---
 
-# 4. Environment Configuration
+# 5. Environment Configuration
 
 The importer runtime environment lives beside the importer tools.
 
@@ -125,38 +145,101 @@ Never commit real `.env` files.
 
 ---
 
-# 5. PostgreSQL / pgvector
+# 6. Memory Backend Prerequisite
 
-Hermes Runes uses PostgreSQL as the retrieval backend.
+Hermes Runes MD Wiki requires a compatible memory backend before importer, recall, hybrid search, evaluation, or smoke tests can run.
 
-A recommended local Docker stack path is:
+For P0, the reference backend is PostgreSQL + pgvector.
 
-```text
-~/docker-stacks/hermes-memory-postgres/
-```
+The PostgreSQL Docker service is an external prerequisite. It is not automatically created, reset, or owned by the core repository install flow.
 
-This is only a recommendation. Users may choose another location.
-
-The database must provide:
-
-- PostgreSQL
-- pgvector extension
-- database user
-- database password
-- target database
-- schema initialization
-
-Typical database URL format:
+Reference backend guide:
 
 ```text
-postgresql://USER:PASSWORD@HOST:PORT/DBNAME
+docs/reference-postgres-backend.md
 ```
 
-Keep the actual value only in your local `tools/importer/.env` file.
+Recommended local Docker stack path:
+
+```text
+~/docker-stacks/hermes-memory-postgres
+```
+
+Freelancer reference host default:
+
+```text
+/home/eye/docker-stacks/hermes-memory-postgres
+```
+
+If the stack lives somewhere else, set:
+
+```bash
+export HERMES_POSTGRES_STACK="/path/to/hermes-memory-postgres"
+```
+
+The backend stack owns:
+
+- PostgreSQL service startup
+- database user, password, target database, and volume
+- pgvector service-level availability
+- container health checks
+
+Hermes Runes MD Wiki owns:
+
+- backend readiness checks
+- Hermes application schema migration
+- importer / recall / smoke verification
+- Markdown wiki governance and source-of-truth rules
 
 ---
 
-# 6. Markdown Wiki Source
+# 7. Backend Guard
+
+Before DB-dependent operations, verify the external backend:
+
+```bash
+cd "${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-runes-md-wiki}"
+
+bash ./bin/hermes-backend-check
+```
+
+Expected success:
+
+```json
+{"status":"PASS","backend":"postgres","stack":"...","message":"Backend prerequisite is available."}
+```
+
+If the backend is missing, stopped, unhealthy, unreachable, or missing pgvector, the command reports a blocked state and exits non-zero.
+
+A blocked backend is not the same as empty memory.
+
+Do not print the backend stack `.env` file.
+
+---
+
+# 8. Hermes Schema Migration
+
+After backend guard passes, initialize or migrate the Hermes application schema from this repository:
+
+```bash
+cd "${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-runes-md-wiki}"
+
+bash ./bin/hermes-memory-migrate
+```
+
+This command does not create or manage the PostgreSQL Docker service.
+
+It applies idempotent migrations from:
+
+```text
+migrations/postgres/
+```
+
+Failed migrations must not be treated as PASS. Restore backend availability, then rerun the migration command.
+
+---
+
+# 9. Markdown Wiki Source
 
 The Markdown wiki is the curated source-of-truth.
 
@@ -186,9 +269,11 @@ Engineering projects should generally use folder-based layouts.
 
 Small personal knowledge areas may use flat filenames until they grow large enough to justify folders.
 
+If no host/workspace mapping exists, agents should not create wiki files directly. They should offer a governed workspace proposal.
+
 ---
 
-# 7. Import Markdown
+# 10. Import Markdown
 
 Run the importer:
 
@@ -207,7 +292,7 @@ PASS: Markdown incremental import completed
 
 ---
 
-# 8. Run Smoke Tests
+# 11. Run Smoke Tests
 
 Run the smoke baseline:
 
@@ -237,7 +322,7 @@ If only the core dependencies are installed, the smoke wrapper should run the co
 
 ---
 
-# 9. First Recall Query
+# 12. First Recall Query
 
 Core-only public-safe recall query using FTS:
 
@@ -272,7 +357,7 @@ Private engineering recall example, only if `wiki/k6-freelancer/` exists locally
 
 ---
 
-# 10. First Governed Answer
+# 13. First Governed Answer
 
 Public-safe example:
 
@@ -297,7 +382,7 @@ This should produce a governed answer with metadata such as:
 
 ---
 
-# 11. Observation Summary
+# 14. Observation Summary
 
 Observation logs are local runtime data.
 
@@ -321,7 +406,7 @@ They should not be ingested back into RAG memory.
 
 ---
 
-# 12. Repository Safety
+# 15. Repository Safety
 
 Before publishing or committing:
 
@@ -353,7 +438,7 @@ The only expected database-password-related code reference is the shared compati
 
 ---
 
-# 13. Re-clone Migration Check
+# 16. Re-clone Migration Check
 
 For validating the GitHub-first external-user flow, move the old local working tree aside and clone into the new repository-named path:
 
@@ -370,11 +455,11 @@ export HERMES_MEMORY_ROOT="$HOME/workspace/hermes-runes-md-wiki"
 
 Then continue from section 3.
 
-Do not delete the old backup until the new clone has passed import, smoke, recall, and governed-answer checks.
+Do not delete the old backup until the new clone has passed backend guard, schema migration, import, smoke, recall, and governed-answer checks.
 
 ---
 
-# 14. Current Baseline
+# 17. Current Baseline
 
 Current expected baseline:
 
@@ -387,11 +472,13 @@ Requirements Split: PASS
 Importer-local Environment Layout: PASS
 Runtime Safety Audit: PASS
 DB Config Portability Cleanup: PASS
+External Backend Prerequisite Policy: DESIGN READY
+Simple Backend Guard Policy: DESIGN READY
 ```
 
 ---
 
-# 15. Next Steps
+# 18. Next Steps
 
 Planned future work:
 
@@ -407,7 +494,7 @@ Planned future work:
 
 ---
 
-# 16. Guiding Principle
+# 19. Guiding Principle
 
 A local-first project may have a friendly default path.
 
