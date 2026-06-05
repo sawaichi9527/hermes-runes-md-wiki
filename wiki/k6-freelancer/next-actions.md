@@ -92,6 +92,45 @@ References:
 
 ---
 
+## N-20260605-M83 External Backend Boundary + Simple Backend Guard
+
+Status: PASS / FROZEN / SMOKE VERIFIED
+
+Current baseline:
+- External PostgreSQL backend remains an external prerequisite.
+- PostgreSQL Docker lifecycle is not owned by the core repository install flow.
+- Hermes-owned schema migration wrapper: PASS.
+- Simple backend guard wrapper: PASS.
+- Migration idempotency: PASS.
+- The implementation remains personal-local, bounded, and non-enterprise.
+
+Verified commands:
+
+```bash
+bash ./bin/hermes-backend-check
+bash ./bin/hermes-memory-migrate
+bash ./bin/hermes-memory-migrate
+```
+
+Verified result:
+- Backend prerequisite guard: PASS
+- PostgreSQL stack discovery: PASS
+- pgvector availability: PASS
+- First schema migration: PASS
+- Second migration idempotency: PASS
+
+Final lock:
+
+```text
+M83 External Backend Boundary + Simple Backend Guard
+PASS / frozen / smoke verified
+```
+
+References:
+- `wiki/k6-freelancer/verification-m83.md`
+
+---
+
 ## N-20260605-Post-P0 Trial-use Observation
 
 Status: NEXT / PLANNED
@@ -100,6 +139,7 @@ Current baseline:
 - P0 governed memory operating baseline is frozen.
 - The system has proposal, review, manual record, and verification checkpoints.
 - The system remains personal-local, Markdown-native, deterministic, and simple.
+- External backend prerequisite handling is frozen and smoke verified.
 
 Recommended next phase:
 - Begin controlled real trial-use observation.
