@@ -1,6 +1,6 @@
 # M90.2 CPU Embedding Clean Verification
 
-Status: PASS / clean verifier added / pending local run
+Status: PASS / clean verifier added / local run verified
 Date: 2026-06-06
 
 ## Purpose
@@ -48,6 +48,38 @@ nvidia*
 triton
 ```
 
+## Local Verification Evidence
+
+Verified in trial clone:
+
+```text
+~/workspace-trial/hermes-runes-md-wiki
+```
+
+The verifier created a temporary clean venv under `/tmp`, installed the optional embedding profile, and returned:
+
+```text
+status: PASS
+check: embedding-cpu-clean-verify
+import_failures: []
+blocked_packages: []
+package_count: 45
+```
+
+Observed torch package:
+
+```text
+torch-2.12.0+cpu
+```
+
+This confirms the clean temp venv path did not install package names matching:
+
+```text
+cuda*
+nvidia*
+triton
+```
+
 ## Boundary
 
 The helper only verifies package behavior in a temporary venv.
@@ -58,5 +90,5 @@ It does not run Docker, migrations, importer, smoke tests, or database mutation.
 
 ```text
 M90.2 CPU Embedding Clean Verification
-PASS / clean verifier added / pending local run
+PASS / clean verifier added / local run verified
 ```
