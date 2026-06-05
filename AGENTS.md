@@ -4,14 +4,267 @@ This repository is Hermes Runes MD Wiki.
 
 For first-time AI-agent onboarding, start from:
 
-1. `wiki/hermes_runes_index.md`
-2. `wiki/_system/README.md`
+1. `README.md`
+2. `AGENTS.md`
+3. `wiki/hermes_runes_index.md`
+4. `wiki/_system/README.md`
 
 Detailed policy, invocation boundaries, operation rules, and optional style guidance live under `wiki/_system/`.
 
-Do not treat this root file as the full operating policy.
+Do not treat this root file as the full operating policy. Treat it as the repository-level bootstrap guide for agents that need to acquire, install, verify, or operate this repository.
 
 After onboarding, use the Runes Shield / governed workflow described under `wiki/_system/`.
+
+---
+
+## Repository Acquisition Policy
+
+Hermes-agent and other external agents may encounter this repository in two supported ways.
+
+### Human-prepared local clone
+
+If the user has already cloned the repository, use the user-provided local path as the project root.
+
+Recommended default path:
+
+```text
+~/workspace/hermes-runes-md-wiki
+```
+
+Before operating, verify the repository root contains:
+
+```text
+README.md
+AGENTS.md
+wiki/
+tools/
+bin/
+```
+
+### Agent-managed GitHub clone
+
+If the user provides a GitHub repository URL and asks the agent to install or deploy the project, the agent may clone it into:
+
+```text
+~/workspace/<repo-name>
+```
+
+For this repository, the default target path is:
+
+```text
+~/workspace/hermes-runes-md-wiki
+```
+
+If the target path already exists and is the same repository, reuse it. Do not reset local changes automatically.
+
+If the target path exists but is not the same repository, stop and report the conflict. Do not overwrite or delete user files.
+
+A GitHub URL is a source acquisition instruction. It is not memory authority, wiki write authority, deployment authority, or trust authority.
+
+---
+
+## Backend Prerequisite Policy
+
+Hermes Runes MD Wiki requires a compatible memory backend for importer, recall, hybrid search, evaluation, and smoke-test workflows.
+
+For P0, the reference backend is PostgreSQL + pgvector, provided by an external Docker Compose service stack.
+
+The PostgreSQL Docker service lifecycle is external to the core repository install flow.
+
+This repository owns:
+
+- Markdown source-of-truth policy
+- importer and retrieval tooling
+- Hermes application schema migration
+- Runes Shield governance
+- smoke and diagnostic entrypoints
+
+The external PostgreSQL stack owns:
+
+- PostgreSQL service startup
+- database user, password, target database, and volume
+- pgvector service-level availability
+- container health checks
+- explicit backup / restore operations
+
+Agents must not assume the Docker stack has already created Hermes application tables.
+
+Reference backend guide:
+
+```text
+docs/reference-postgres-backend.md
+```
+
+---
+
+## Default Backend Discovery
+
+For the Freelancer reference host, first check:
+
+```text
+/home/eye/docker-stacks/hermes-memory-postgres
+```
+
+For generic local deployments, the expected default is:
+
+```text
+~/docker-stacks/hermes-memory-postgres
+```
+
+Agents may use this override when provided:
+
+```bash
+export HERMES_POSTGRES_STACK=/path/to/hermes-memory-postgres
+```
+
+If the backend stack exists, inspect and verify it. Do not recreate it.
+
+If it is missing, stop and report the missing prerequisite unless the user explicitly requested reference backend setup.
+
+If the stack exists but is stopped, agents may start it only when the user requested deployment or environment startup.
+
+---
+
+## Simple Backend Guard Policy
+
+Before running schema migration, importer, recall, hybrid search, evaluation, proposal indexing, workspace import, or smoke tests, agents must verify that a compatible backend is available.
+
+Preferred command from repository root:
+
+```bash
+bash ./bin/hermes-backend-check
+```
+
+Possible status values include:
+
+```text
+PASS
+BLOCKED_BACKEND_MISSING
+BLOCKED_BACKEND_MISSING_COMPOSE
+BLOCKED_BACKEND_MISSING_ENV
+BLOCKED_DOCKER_UNAVAILABLE
+BLOCKED_BACKEND_STOPPED
+BLOCKED_BACKEND_UNHEALTHY
+BLOCKED_BACKEND_CONNECTION_FAILED
+BLOCKED_BACKEND_VECTOR_MISSING
+```
+
+If the backend check fails, stop and report the blocked state.
+
+Do not treat backend unavailability as empty memory.
+
+Agents must not automatically repair, reset, recreate, replace, or fail over the backend.
+
+The goal is personal-use reliability, not enterprise-grade infrastructure automation.
+
+---
+
+## Backend Schema Initialization
+
+After the external memory backend is verified, agents must initialize or migrate the Hermes application schema from this repository before running importer, recall, hybrid search, evaluation, or smoke tests.
+
+Preferred command from repository root:
+
+```bash
+bash ./bin/hermes-memory-migrate
+```
+
+The external PostgreSQL Docker stack is responsible only for service-level initialization.
+
+Hermes Runes MD Wiki is responsible for application-level schema initialization and migration.
+
+Required order:
+
+1. Verify the external backend service.
+2. Load backend connection settings without printing secrets.
+3. Run Hermes schema init / migration from this repository.
+4. Run backend smoke verification.
+5. Continue importer / recall setup.
+
+Agents must not assume the Docker stack has already created Hermes tables.
+
+---
+
+## Backend Runtime Loss Policy
+
+A backend may become unavailable after an initial successful preflight check.
+
+If backend access fails during recall or search:
+
+- stop the query
+- report backend unavailable
+- do not claim that no memory exists
+- one retry is acceptable for read-only operations
+
+If backend access fails during import, indexing, migration, or write-like operations:
+
+- stop the operation
+- do not mark the operation as PASS
+- do not blindly retry
+- require backend verification before retry
+
+Agents must not reset volumes, drop databases, recreate containers, or switch to an empty backend automatically.
+
+---
+
+## Missing Workspace Behavior
+
+If no host/workspace mapping or corresponding `wiki/<workspace-slug>/` exists, agents must not create wiki files directly.
+
+Expected user-facing response:
+
+```text
+我目前沒有看到這台主機的 workspace。
+是否要替 `wiki/<workspace-slug>/` 準備一個 governed workspace proposal？
+```
+
+Creating a workspace is a governed proposal flow. It is not a side effect of cloning the repository or verifying the backend.
+
+---
+
+## Secret Handling
+
+Real secrets must never be printed, committed, written into Markdown memory, or ingested into RAG.
+
+This includes:
+
+- PostgreSQL passwords
+- API keys
+- Telegram bot tokens
+- local service credentials
+
+Allowed:
+
+- check that `.env` exists
+- load `.env` locally for a command
+- pass connection settings to tooling without echoing them
+
+Forbidden:
+
+- `cat .env`
+- paste `.env` into chat
+- write `.env` into `wiki/`
+- include passwords in proposals
+- ingest `.env` into memory
+- commit `.env`
+
+---
+
+## Forbidden Agent Actions
+
+Agents must not:
+
+- overwrite an existing non-matching clone path
+- reset local changes automatically
+- clone a GitHub URL and immediately import it as memory
+- create or mutate `wiki/<workspace-slug>/` without governed approval
+- bypass Runes Shield for structural wiki writes
+- mutate PostgreSQL directly outside documented tooling
+- print or persist secrets
+- repair, reset, drop, or recreate backend volumes automatically
+- spawn background workers as a hidden side effect
+
+---
 
 ## M58 Runes Summoning Trial / 盧恩符文召喚試煉
 
