@@ -1,6 +1,6 @@
 # M94 Trial Promotion Fixture Minimal Path
 
-Status: IMPLEMENTED / PENDING LOCAL VERIFICATION
+Status: PASS / TRIAL FIXTURE VERIFIED
 Date: 2026-06-06
 
 ## Purpose
@@ -70,27 +70,53 @@ If a fixture-like result is found but metadata is wrong, report FAIL.
 
 Legacy `k6-freelancer` behavior remains unchanged.
 
-## Expected Verification
+## Local Verification Result
 
-From trial checkout:
+Trial checkout verification:
 
-```bash
-cd ~/workspace-trial/hermes-runes-md-wiki
-
-git pull
-python3 -m py_compile tools/importer/promotion_governance_smoke.py
-bash ./bin/hermes-memory-import
-python3 tools/importer/promotion_governance_smoke.py
+```text
+repo: /home/eye/workspace-trial/hermes-runes-md-wiki
+head: 7f330c5 Add M94 trial promotion fixture verification lock
+working tree: clean
 ```
 
-Expected after import:
+Fixture file present:
+
+```text
+wiki/freelancer/forge-inbox/m94-trial-promotion-fixture.md
+```
+
+Importer result:
+
+```text
+inserted: id=59 chunks=2 project=freelancer path=wiki/freelancer/forge-inbox/m94-trial-promotion-fixture.md
+summary: schema=public import_scope=freelancer imported_or_changed=1 updated=0 skipped=58 chunks_written=2
+PASS: Markdown incremental import completed
+```
+
+M20.4 promotion governance smoke result:
 
 ```text
 suite: M20.4 Promotion Governance Smoke
 profile: workspace-freelancer
 status: PASS
+failed: 0
+total: 1
 id: M20.4-TRIAL-A
 summary: approved reviewed trial promotion fixture is retrieval-visible
+path: wiki/freelancer/forge-inbox/m94-trial-promotion-fixture.md
+trust_bias: 0
+```
+
+Forge metadata verified:
+
+```text
+status: approved
+trust_class: reviewed
+proposal_type: agent_memory
+proposed_by: human
+provenance: manual_cli
+operation_id: M94-trial-promotion-fixture-20260606
 ```
 
 ## Boundaries
@@ -111,5 +137,5 @@ no runtime authority escalation
 
 ```text
 M94 Trial Promotion Fixture Minimal Path
-IMPLEMENTED / pending local verification
+PASS / trial fixture verified
 ```
