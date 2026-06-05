@@ -72,10 +72,15 @@ def filter_markdown_files(md_files: list[Path]) -> tuple[list[Path], str]:
     allowed_roots = {
         WIKI_ROOT / workspace,
         WIKI_ROOT / "_system",
+        WIKI_ROOT / "owner-runes",
     }
 
     filtered: list[Path] = []
     for md in md_files:
+        if md.parent == WIKI_ROOT:
+            filtered.append(md)
+            continue
+
         try:
             if any(md.is_relative_to(root) for root in allowed_roots):
                 filtered.append(md)
