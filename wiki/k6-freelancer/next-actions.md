@@ -267,7 +267,7 @@ Implemented partial fixes:
 - `migrations/postgres/002_public_memory_schema.sql` adds fresh-user public memory tables.
 
 Remaining gap:
-- Dependency/bootstrap setup remains manual and should be simplified later.
+- Dependency/bootstrap setup remains pending clean verification under M90.
 
 Final lock:
 
@@ -326,9 +326,37 @@ References:
 
 ---
 
+## N-20260605-M90 Fresh Clone Bootstrap Minimal Path
+
+Status: PASS / BOOTSTRAP PATH ADDED / PENDING CLEAN VERIFICATION
+
+Current baseline:
+- `requirements-core.txt` defines the minimal fresh-clone runtime dependencies.
+- `requirements-embedding.txt` remains optional for hybrid/vector/full-smoke support.
+- `bin/hermes-memory-bootstrap` creates `tools/importer/.venv` and installs core dependencies by default.
+- `bin/hermes-memory-bootstrap --with-embedding` installs CPU-only torch first, then optional embedding dependencies.
+- Bootstrap does not touch Docker, secrets, migrations, imports, model endpoints, or runtime DB state.
+- The implementation remains personal-local, bounded, and explicit.
+
+Final lock:
+
+```text
+M90 Fresh Clone Bootstrap Minimal Path
+PASS / bootstrap path added / pending local verification
+```
+
+References:
+- `wiki/k6-freelancer/verification-m90.md`
+- `docs/fresh-clone-bootstrap.md`
+- `requirements-core.txt`
+- `requirements-embedding.txt`
+- `bin/hermes-memory-bootstrap`
+
+---
+
 ## N-20260605-Realistic Fresh-user Trial-run
 
-Status: IN PROGRESS / SMOKE HARDENED / BOOTSTRAP GAP REMAINING
+Status: IN PROGRESS / SMOKE HARDENED / BOOTSTRAP PATH ADDED
 
 Current baseline:
 - P0 governed memory operating baseline is frozen.
@@ -339,18 +367,19 @@ Current baseline:
 - Keystone trial-run baseline is ready.
 - Fresh-user bootstrap gaps are recorded under M88.
 - Fresh-user trial smoke hardening is complete under M89.
+- Fresh clone bootstrap minimal path is added under M90.
 - The system remains personal-local, Markdown-native, deterministic, and simple.
 
 Recommended next phase:
-- Pull M89 documentation updates into developer and trial clone.
-- Decide the minimal dependency/bootstrap path for `TB-20260605-001`.
+- Pull M90 documentation updates into developer and trial clone.
+- Run clean-clone verification for the M90 bootstrap path before beta test run.
 - Keep shared PostgreSQL Docker stack unchanged.
 - Keep trial DB isolated.
 - Keep `HERMES_WORKSPACE_SLUG=freelancer` and `HERMES_PROJECT=freelancer` for trial-run.
 - Introduce real trial promotion fixture only through a governed human-reviewed proposal flow.
 
 Suggested trial continuation:
-- define bounded bootstrap requirements without GPU/CUDA bloat by default
+- verify M90 bounded bootstrap requirements without GPU/CUDA bloat by default
 - verify clean clone setup from scratch
 - keep model-dependent M10 smoke optional until a model endpoint is configured
 - keep M20.4 promotion governance skipped until an approved trial fixture exists

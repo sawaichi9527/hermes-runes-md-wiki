@@ -64,9 +64,9 @@ S3 minor
 
 ## TB-20260605-001 Fresh clone lacks dependency bootstrap
 
-Status: OPEN
+Status: PARTIAL FIX
 Severity: S1 major
-Milestone: M88 / M89 follow-up
+Milestone: M88 / M89 / M90
 First observed: 2026-06-05
 
 ### Symptom
@@ -85,7 +85,7 @@ Observed during realistic fresh-user trial-run after creating a clean trial clon
 
 ### Root Cause
 
-The repository does not yet provide a clear, bounded fresh-user bootstrap command/file for installing the runtime dependencies needed by memory check and smoke commands.
+The repository previously did not provide a clear, bounded fresh-user bootstrap command/file for installing the runtime dependencies needed by memory check and smoke commands.
 
 Manual installation also pulled a large default dependency set, including CUDA-related packages, which is not ideal for a personal-local CPU-oriented fresh-user bootstrap.
 
@@ -93,17 +93,44 @@ Manual installation also pulled a large default dependency set, including CUDA-r
 
 Create `tools/importer/.venv` and manually install runtime packages.
 
-### Required Fix
+### Partial Fix
 
-Add a simple personal-local bootstrap path, likely one of:
+M90 added a bounded bootstrap path:
 
 ```text
 requirements-core.txt
 requirements-embedding.txt
 bin/hermes-memory-bootstrap
+docs/fresh-clone-bootstrap.md
+wiki/k6-freelancer/verification-m90.md
 ```
 
-The fix should avoid enterprise installers, hidden background setup, and unnecessary GPU/CUDA package bloat unless explicitly requested.
+Core bootstrap:
+
+```bash
+bash ./bin/hermes-memory-bootstrap
+```
+
+Optional embedding/full-smoke bootstrap:
+
+```bash
+bash ./bin/hermes-memory-bootstrap --with-embedding
+```
+
+The embedding path installs CPU-only torch first to avoid pulling large CUDA wheels by default.
+
+### Remaining Verification
+
+Run M90 from a clean or reset fresh clone and confirm:
+
+```text
+bootstrap PASS
+memory check PASS
+core smoke PASS
+optional embedding/full smoke PASS or expected SKIP states
+```
+
+Until that clean verification is completed, this bug remains `PARTIAL FIX` rather than `FIXED`.
 
 ---
 
@@ -496,18 +523,18 @@ failed: 0
 ## Current Summary
 
 ```text
-TB-20260605-001 OPEN   dependency bootstrap missing
-TB-20260605-002 FIXED  fresh DB public schema missing
-TB-20260605-003 FIXED  workspace slug mismatch
-TB-20260605-004 FIXED  memory check missing-file diagnostic gap
-TB-20260605-005 FIXED  obsolete memory-check smoke requirements
-TB-20260605-006 FIXED  repo-local command discovery
-TB-20260605-007 FIXED  delete_source shared DB config
-TB-20260605-008 FIXED  importer workspace filter
-TB-20260605-009 FIXED  core FTS workspace-aware smoke
-TB-20260605-010 FIXED  scoped import root wiki + owner-runes
-TB-20260605-011 FIXED  M5.2 workspace-aware smoke
-TB-20260605-012 FIXED  M10 trial-aware model-env skip
-TB-20260605-013 FIXED  M11.6 workspace-aware smoke
-TB-20260605-014 FIXED  M20.4 trial fixture skip
+TB-20260605-001 PARTIAL FIX  dependency bootstrap path added; clean verification pending
+TB-20260605-002 FIXED        fresh DB public schema missing
+TB-20260605-003 FIXED        workspace slug mismatch
+TB-20260605-004 FIXED        memory check missing-file diagnostic gap
+TB-20260605-005 FIXED        obsolete memory-check smoke requirements
+TB-20260605-006 FIXED        repo-local command discovery
+TB-20260605-007 FIXED        delete_source shared DB config
+TB-20260605-008 FIXED        importer workspace filter
+TB-20260605-009 FIXED        core FTS workspace-aware smoke
+TB-20260605-010 FIXED        scoped import root wiki + owner-runes
+TB-20260605-011 FIXED        M5.2 workspace-aware smoke
+TB-20260605-012 FIXED        M10 trial-aware model-env skip
+TB-20260605-013 FIXED        M11.6 workspace-aware smoke
+TB-20260605-014 FIXED        M20.4 trial fixture skip
 ```
