@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import json
+import os
 import subprocess
-import sys
 from pathlib import Path
 
 
@@ -9,14 +9,36 @@ IMPORTER = Path(__file__).resolve().parents[1]
 ROOT = IMPORTER.parents[1]
 
 
+def workspace_config() -> tuple[str, str, str, str]:
+    project = (
+        os.environ.get("HERMES_SMOKE_PROJECT")
+        or os.environ.get("HERMES_PROJECT")
+        or os.environ.get("HERMES_WORKSPACE_SLUG")
+        or "sample-project"
+    )
+    path = os.environ.get("HERMES_SMOKE_PATH") or f"wiki/{project}"
+
+    if project == "sample-project":
+        query = os.environ.get("HERMES_SMOKE_QUERY") or "sample project"
+        expected_prefix = os.environ.get("HERMES_SMOKE_EXPECTED_PREFIX") or "wiki/sample-project/"
+    else:
+        query = os.environ.get("HERMES_SMOKE_QUERY") or "Trial-run Workspace Baseline"
+        expected_prefix = os.environ.get("HERMES_SMOKE_EXPECTED_PREFIX") or f"wiki/{project}/"
+
+    return project, path, query, expected_prefix
+
+
 def run_fts_recall():
+    project, path, query, expected_prefix = workspace_config()
     cmd = [
         str(ROOT / "bin/hermes-recall"),
-        "sample project",
+        query,
         "--project",
-        "sample-project",
+        project,
         "--mode",
         "fts",
+        "--path",
+        path,
         "--limit",
         "5",
         "--json",
@@ -31,9 +53,11 @@ def run_fts_recall():
         timeout=60,
     )
 
+    test_name = f"{project}_fts_recall"
+
     if proc.returncode != 0:
         return {
-            "name": "sample_project_fts_recall",
+            "name": test_name,
             "status": "FAIL",
             "error": "fts_recall_failed",
             "stderr_tail": proc.stderr[-2000:],
@@ -49,12 +73,16 @@ def run_fts_recall():
         failures.append("status_not_pass")
     if not results:
         failures.append("no_results")
-    if not any(path.startswith("wiki/sample-project/") for path in paths):
-        failures.append("missing_sample_project_result")
+    if not any(path.startswith(expected_prefix) for path in paths):
+        failures.append("missing_expected_project_result")
 
     return {
-        "name": "sample_project_fts_recall",
+        "name": test_name,
         "status": "PASS" if not failures else "FAIL",
+        "project": project,
+        "path": path,
+        "query": query,
+        "expected_prefix": expected_prefix,
         "failures": failures,
         "result_count": len(results),
         "paths": paths,
