@@ -1,3 +1,51 @@
+## B-20260605-P0 Runes Keystone Baseline
+
+Status: FROZEN
+Codename: P0 Runes Keystone
+Chinese name: P0 符文拱心石基線
+Scope: M82 + T001-T004 Post-P0 trial-use observation lock
+
+### Summary
+
+P0 Runes Keystone Baseline is now the official P0 baseline for Hermes Runes MD Wiki.
+
+This baseline supersedes treating M82 alone as the final P0 baseline.
+
+The baseline is defined as:
+
+```text
+M82 P0 Governed Memory Operating Baseline
++
+T001-T004 Post-P0 Trial-use Observation Lock
+```
+
+### Why this is the new baseline
+
+M82 proved the governed operating loop was structurally ready.
+
+T001-T004 proved the same loop can preserve multiple real project-memory types:
+
+- P0 baseline fact
+- design decision
+- operational workflow
+- known limitation / future task
+
+### Final lock
+
+```text
+P0 Runes Keystone Baseline
+PASS / frozen / smoke verified / observation baseline
+```
+
+### References
+
+- `wiki/k6-freelancer/baseline-p0-runes-keystone.md`
+- `wiki/k6-freelancer/verification-m82.md`
+- `wiki/k6-freelancer/verification-post-p0-trial-use.md`
+- `wiki/k6-freelancer/post-p0-trial-use.md`
+
+---
+
 ## B-20260531-M8 Local Agentic RAG Governance Baseline
 
 Status: FROZEN
