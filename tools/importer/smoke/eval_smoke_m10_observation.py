@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import json
+import os
 import re
 import subprocess
 import sys
@@ -14,6 +15,60 @@ from root_resolver import resolve_root, resolve_importer_dir
 
 ROOT = resolve_root()
 IMPORTER = resolve_importer_dir()
+MODEL_ENV_KEYS = ("OPENAI_BASE_URL", "OPENAI_MODEL")
+
+
+def load_env_file(path: Path) -> None:
+    if not path.exists():
+        return
+
+    for line in path.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or "=" not in line:
+            continue
+
+        key, value = line.split("=", 1)
+        key = key.strip()
+        value = value.strip().strip('"').strip("'")
+
+        if key and key not in os.environ:
+            os.environ[key] = value
+
+
+def missing_model_env() -> list[str]:
+    load_env_file(ROOT / ".env")
+    load_env_file(IMPORTER / ".env")
+    return [key for key in MODEL_ENV_KEYS if not os.environ.get(key)]
+
+
+def workspace_slug() -> str:
+    return (
+        os.environ.get("HERMES_SMOKE_PROJECT")
+        or os.environ.get("HERMES_PROJECT")
+        or os.environ.get("HERMES_WORKSPACE_SLUG")
+        or "k6-freelancer"
+    ).strip()
+
+
+def answer_case() -> dict[str, str]:
+    workspace = workspace_slug()
+
+    if workspace in ("", "k6-freelancer"):
+        return {
+            "profile": "legacy-k6-freelancer",
+            "query": "Telegram integration 是什麼？",
+            "project": "k6-freelancer",
+            "path": "services.md",
+            "heading": "Telegram",
+        }
+
+    return {
+        "profile": f"workspace-{workspace}",
+        "query": "Trial-run Workspace Baseline 是什麼？",
+        "project": workspace,
+        "path": f"wiki/{workspace}",
+        "heading": "Trial-run Workspace Baseline",
+    }
 
 
 def source_count(answer: str) -> int:
@@ -24,13 +79,27 @@ def source_count(answer: str) -> int:
 
 
 def main():
+    case = answer_case()
+    missing = missing_model_env()
+
+    if missing:
+        print(json.dumps({
+            "suite": "M10 Observation Log Smoke Test",
+            "profile": case["profile"],
+            "status": "SKIP",
+            "reason": "missing_model_env",
+            "missing": missing,
+            "message": "OPENAI-compatible model env is not configured; skipping answer generation smoke.",
+        }, ensure_ascii=False, indent=2))
+        return
+
     cmd = [
         sys.executable,
         "answer_generator.py",
-        "Telegram integration 是什麼？",
-        "--project", "k6-freelancer",
-        "--path", "services.md",
-        "--heading", "Telegram",
+        case["query"],
+        "--project", case["project"],
+        "--path", case["path"],
+        "--heading", case["heading"],
         "--max-tokens", "512",
         "--json",
     ]
@@ -47,6 +116,7 @@ def main():
     if proc.returncode != 0:
         print(json.dumps({
             "suite": "M10 Observation Log Smoke Test",
+            "profile": case["profile"],
             "status": "FAIL",
             "step": "answer_generator",
             "returncode": proc.returncode,
@@ -84,8 +154,10 @@ def main():
 
     output = {
         "suite": "M10 Observation Log Smoke Test",
+        "profile": case["profile"],
         "status": "FAIL" if issues else "PASS",
         "issues": issues,
+        "case": case,
         "summary": {
             "answer_chars": data.get("answer_chars"),
             "actual_chars": len(answer),
