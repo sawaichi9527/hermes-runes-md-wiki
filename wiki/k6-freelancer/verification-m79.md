@@ -5,8 +5,8 @@
 - Category: verification
 - Topic: m79-first-manual-apply-execution-plan
 - Note type: verification-lock
-- Status: pending-user-verification
-- Memory quality: pending
+- Status: frozen
+- Memory quality: verified
 - Related objective: k6-freelancer
 - Last reviewed: 2026-06-05
 
@@ -54,19 +54,27 @@ fixtures/m79/first-manual-apply-execution-plan.json
 python3 tools/runes_shield/smoke_m79_first_manual_apply_execution_plan.py
 ```
 
-## Expected Result
+## Verified Result
 
-```text
-status: PASS
-mode: first-manual-apply-execution-plan
-scale: personal-local
-write: false
-authoritative: false
-runtime_dependency_required: false
-plan_mode: manual-command-checklist-only
-issue_count: 0
+```json
+{
+  "smoke_version": "m79-first-manual-apply-execution-plan-v1",
+  "status": "PASS",
+  "mode": "first-manual-apply-execution-plan",
+  "scale": "personal-local",
+  "write": false,
+  "authoritative": false,
+  "runtime_dependency_required": false,
+  "plan_mode": "manual-command-checklist-only",
+  "execution_plan_step_count": 9,
+  "issue_count": 0,
+  "issues": []
+}
 ```
 
-## Verification Status
+## Final Lock
 
-Pending user execution.
+```text
+M79 First Manual Apply Execution Plan
+PASS / frozen / smoke verified
+```
