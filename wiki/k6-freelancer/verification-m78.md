@@ -5,8 +5,8 @@
 - Category: verification
 - Topic: m78-first-manual-apply-commit-gate
 - Note type: verification-lock
-- Status: pending-user-verification
-- Memory quality: pending
+- Status: frozen
+- Memory quality: verified
 - Related objective: k6-freelancer
 - Last reviewed: 2026-06-05
 
@@ -56,19 +56,28 @@ fixtures/m78/first-manual-apply-commit-gate.json
 python3 tools/runes_shield/smoke_m78_first_manual_apply_commit_gate.py
 ```
 
-## Expected Result
+## Verified Result
 
-```text
-status: PASS
-mode: first-manual-apply-commit-gate
-scale: personal-local
-write: false
-authoritative: false
-runtime_dependency_required: false
-gate_mode: final-pre-write-gate-only
-issue_count: 0
+```json
+{
+  "smoke_version": "m78-first-manual-apply-commit-gate-v1",
+  "status": "PASS",
+  "mode": "first-manual-apply-commit-gate",
+  "scale": "personal-local",
+  "write": false,
+  "authoritative": false,
+  "runtime_dependency_required": false,
+  "gate_mode": "final-pre-write-gate-only",
+  "required_commit_gate_field_count": 9,
+  "gate_review_sequence_count": 8,
+  "issue_count": 0,
+  "issues": []
+}
 ```
 
-## Verification Status
+## Final Lock
 
-Pending user execution.
+```text
+M78 First Manual Apply Commit Gate
+PASS / frozen / smoke verified
+```
