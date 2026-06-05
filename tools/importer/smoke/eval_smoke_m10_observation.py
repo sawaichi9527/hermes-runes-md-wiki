@@ -10,17 +10,30 @@ IMPORTER_PARENT = Path(__file__).resolve().parents[1]
 if str(IMPORTER_PARENT) not in sys.path:
     sys.path.insert(0, str(IMPORTER_PARENT))
 
-from root_resolver import resolve_root, resolve_importer_dir
+
+# M93.3 hardening:
+# M10 is a checkout-local smoke by default.  Do not let a stale exported
+# HERMES_MEMORY_ROOT from another shell/session redirect this smoke to a
+# different clone.  Use HERMES_M10_SMOKE_ROOT only for an explicit override.
+def resolve_smoke_root() -> Path:
+    explicit_root = os.environ.get("HERMES_M10_SMOKE_ROOT")
+    if explicit_root:
+        return Path(explicit_root).expanduser().resolve()
+
+    # tools/importer/smoke/eval_smoke_m10_observation.py -> repo root
+    return Path(__file__).resolve().parents[3]
 
 
-ROOT = resolve_root()
-IMPORTER = resolve_importer_dir()
+ROOT = resolve_smoke_root()
+IMPORTER = ROOT / "tools" / "importer"
 MODEL_ENV_KEYS = ("OPENAI_BASE_URL", "OPENAI_MODEL")
+ENV_PATHS = (ROOT / ".env", IMPORTER / ".env")
 
 
-def load_env_file(path: Path) -> None:
+def load_env_file(path: Path) -> list[str]:
+    loaded = []
     if not path.exists():
-        return
+        return loaded
 
     for line in path.read_text(encoding="utf-8").splitlines():
         line = line.strip()
@@ -33,12 +46,27 @@ def load_env_file(path: Path) -> None:
 
         if key and key not in os.environ:
             os.environ[key] = value
+            loaded.append(key)
+
+    return loaded
 
 
-def missing_model_env() -> list[str]:
-    load_env_file(ROOT / ".env")
-    load_env_file(IMPORTER / ".env")
-    return [key for key in MODEL_ENV_KEYS if not os.environ.get(key)]
+def env_source_summary() -> list[dict[str, object]]:
+    return [
+        {
+            "path": str(path),
+            "exists": path.exists(),
+        }
+        for path in ENV_PATHS
+    ]
+
+
+def missing_model_env() -> tuple[list[str], list[str]]:
+    loaded = []
+    for path in ENV_PATHS:
+        loaded.extend(load_env_file(path))
+    missing = [key for key in MODEL_ENV_KEYS if not os.environ.get(key)]
+    return missing, sorted(set(loaded))
 
 
 def workspace_slug() -> str:
@@ -80,7 +108,7 @@ def source_count(answer: str) -> int:
 
 def main():
     case = answer_case()
-    missing = missing_model_env()
+    missing, loaded_keys = missing_model_env()
 
     if missing:
         print(json.dumps({
@@ -88,6 +116,10 @@ def main():
             "profile": case["profile"],
             "status": "SKIP",
             "reason": "missing_model_env",
+            "root": str(ROOT),
+            "importer": str(IMPORTER),
+            "env_files": env_source_summary(),
+            "loaded_keys": loaded_keys,
             "missing": missing,
             "message": "OPENAI-compatible model env is not configured; skipping answer generation smoke.",
         }, ensure_ascii=False, indent=2))
@@ -119,6 +151,10 @@ def main():
             "profile": case["profile"],
             "status": "FAIL",
             "step": "answer_generator",
+            "root": str(ROOT),
+            "importer": str(IMPORTER),
+            "env_files": env_source_summary(),
+            "loaded_keys": loaded_keys,
             "returncode": proc.returncode,
             "stderr_tail": proc.stderr[-2000:],
         }, ensure_ascii=False, indent=2))
@@ -157,6 +193,10 @@ def main():
         "profile": case["profile"],
         "status": "FAIL" if issues else "PASS",
         "issues": issues,
+        "root": str(ROOT),
+        "importer": str(IMPORTER),
+        "env_files": env_source_summary(),
+        "loaded_keys": loaded_keys,
         "case": case,
         "summary": {
             "answer_chars": data.get("answer_chars"),
