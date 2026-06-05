@@ -1,3 +1,4 @@
+import os
 import re
 import json
 import hashlib
@@ -49,6 +50,40 @@ def should_ingest_forge_doc(path_str: str, content: str) -> tuple[bool, str]:
 
     return False, f"forge-status-{status}"
 
+
+
+def import_workspace_slug() -> str | None:
+    value = (
+        os.environ.get("HERMES_IMPORT_WORKSPACE_SLUG")
+        or os.environ.get("HERMES_WORKSPACE_SLUG")
+        or os.environ.get("HERMES_PROJECT")
+    )
+    if not value:
+        return None
+    value = value.strip().strip("/")
+    return value or None
+
+
+def filter_markdown_files(md_files: list[Path]) -> tuple[list[Path], str]:
+    workspace = import_workspace_slug()
+    if not workspace:
+        return md_files, "all"
+
+    allowed_roots = {
+        WIKI_ROOT / workspace,
+        WIKI_ROOT / "_system",
+    }
+
+    filtered: list[Path] = []
+    for md in md_files:
+        try:
+            if any(md.is_relative_to(root) for root in allowed_roots):
+                filtered.append(md)
+        except AttributeError:
+            if any(str(md).startswith(str(root) + "/") or md == root for root in allowed_roots):
+                filtered.append(md)
+
+    return filtered, workspace
 
 
 FRONT_MATTER_PATTERN = re.compile(
@@ -380,12 +415,10 @@ def deindex_document_by_path(cur, project: str, rel_path: str) -> int:
     )
 
     row = cur.fetchone()
-
     if row is None:
         return 0
 
     doc_id = row[0]
-
     cur.execute(
         """
         DELETE FROM public.chunks
@@ -393,7 +426,6 @@ def deindex_document_by_path(cur, project: str, rel_path: str) -> int:
         """,
         (doc_id,),
     )
-
     cur.execute(
         """
         UPDATE public.documents
@@ -405,7 +437,6 @@ def deindex_document_by_path(cur, project: str, rel_path: str) -> int:
         """,
         (doc_id,),
     )
-
     return 1
 
 
@@ -422,15 +453,12 @@ def import_public(cur, project: str, rel_path: str, title: str, checksum: str, n
     )
 
     row = cur.fetchone()
-
     if row is not None:
         doc_id, old_checksum, old_metadata = row
-
         forge_metadata_missing = (
             "/forge-inbox/" in rel_path
             and not (old_metadata or {}).get("forge", {}).get("is_forge")
         )
-
         if old_checksum == checksum and not forge_metadata_missing:
             return doc_id, 0, "skipped"
     else:
@@ -611,10 +639,8 @@ def import_memory_legacy(cur, project: str, rel_path: str, title: str, checksum:
     )
 
     row = cur.fetchone()
-
     if row is not None:
         doc_id, old_checksum = row
-
         if old_checksum == checksum:
             return doc_id, 0, "skipped"
     else:
@@ -703,7 +729,7 @@ def import_memory_legacy(cur, project: str, rel_path: str, title: str, checksum:
 
 def main() -> None:
     conninfo = build_conninfo()
-    md_files = sorted(WIKI_ROOT.rglob("*.md"))
+    md_files, import_scope = filter_markdown_files(sorted(WIKI_ROOT.rglob("*.md")))
 
     imported = 0
     updated = 0
@@ -716,8 +742,8 @@ def main() -> None:
         with conn.cursor() as cur:
             for md in md_files:
                 text = md.read_text(encoding="utf-8")
-
                 rel_path = str(md.relative_to(ROOT))
+                project = guess_project(md)
 
                 allowed, reason = should_ingest_forge_doc(
                     rel_path,
@@ -741,7 +767,6 @@ def main() -> None:
                     continue
 
                 normalized = normalize_markdown(text)
-                project = guess_project(md)
                 title = title_from_markdown(normalized, md.stem)
                 checksum = sha256_text(normalized)
 
@@ -774,17 +799,14 @@ def main() -> None:
                     imported += 1
 
                 chunks_total += chunk_count
+                print(f"{action}: id={doc_id} chunks={chunk_count} project={project} path={rel_path}")
 
-                print(
-                    f"{action}: id={doc_id} "
-                    f"chunks={chunk_count} "
-                    f"project={project} "
-                    f"path={rel_path}"
-                )
+        conn.commit()
 
     print(
         "summary: "
         f"schema={mode} "
+        f"import_scope={import_scope} "
         f"imported_or_changed={imported} "
         f"updated={updated} "
         f"skipped={skipped} "
