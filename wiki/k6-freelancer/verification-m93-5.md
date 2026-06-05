@@ -1,6 +1,6 @@
 # M93.5 M10 Thinking-model Smoke Token Budget
 
-Status: IMPLEMENTED / PENDING LOCAL VERIFICATION
+Status: PASS / LOCALLY VERIFIED
 Date: 2026-06-06
 
 ## Purpose
@@ -13,7 +13,7 @@ After root/env resolution and Bearer auth were fixed, M10 reached the answer-gen
 finish_reason: length
 ```
 
-This is a smoke-budget issue, not an auth or env issue.
+This was a smoke-budget issue, not an auth or env issue.
 
 ## Implemented Change
 
@@ -36,28 +36,27 @@ This is intentionally limited to M10 smoke validation.
 
 It does not change the global answer-generation defaults or introduce a model router.
 
-## Expected Verification
+## Local Verification Result
 
-From developer checkout:
-
-```bash
-cd ~/workspace/hermes-runes-md-wiki
-
-git pull
-python3 -m py_compile tools/importer/smoke/eval_smoke_m10_observation.py
-bash ./bin/hermes-model-env-check
-python3 tools/importer/smoke/eval_smoke_m10_observation.py
-```
-
-Expected:
+Developer checkout verification:
 
 ```text
+repo: /home/eye/workspace/hermes-runes-md-wiki
 M93 model env check: PASS / model_env_ready
 M10 observation smoke: PASS
 max_tokens: 1536
+finish_reason: stop
+selected_model_profile: qwen-forced-thinking
+extraction_path: message.content
+answer_chars: 57
+issues: []
 ```
 
-If the local thinking model still stops with `finish_reason=length`, increase only the smoke override locally:
+This confirms that the smoke-local token budget is sufficient for the current Qwen thinking-model path.
+
+## Override
+
+If a future local thinking model still stops with `finish_reason=length`, increase only the smoke override locally:
 
 ```bash
 HERMES_M10_MAX_TOKENS=2048 python3 tools/importer/smoke/eval_smoke_m10_observation.py
@@ -81,5 +80,5 @@ no runtime authority escalation
 
 ```text
 M93.5 M10 Thinking-model Smoke Token Budget
-IMPLEMENTED / pending local verification
+PASS / locally verified
 ```
