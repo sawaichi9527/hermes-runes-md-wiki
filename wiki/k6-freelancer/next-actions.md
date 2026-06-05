@@ -204,27 +204,53 @@ References:
 
 ---
 
-## N-20260605-Post-P0 Trial-use Observation
+## N-20260605-M86 Trial-run Environment Isolation Baseline
 
-Status: PASS / FIRST REAL TRIAL COMPLETE
+Status: PASS / DESIGN READY / IMPLEMENTED
+
+Current baseline:
+- Developer checkout remains under `~/workspace/hermes-runes-md-wiki`.
+- Realistic fresh-user trial-run should use `~/workspace-trial/hermes-runes-md-wiki`.
+- Shared PostgreSQL Docker service is acceptable for P0 trial-run.
+- Developer and trial-run runtime databases must be separate.
+- `bin/hermes-memory-migrate` now prefers runtime DB configuration before falling back to the Docker stack default database.
+
+Final lock:
+
+```text
+M86 Trial-run Environment Isolation Baseline
+PASS / design ready / implemented
+```
+
+References:
+- `wiki/k6-freelancer/verification-m86.md`
+- `docs/trial-run-environment-isolation.md`
+
+---
+
+## N-20260605-Realistic Fresh-user Trial-run
+
+Status: NEXT / READY
 
 Current baseline:
 - P0 governed memory operating baseline is frozen.
 - External backend prerequisite handling is frozen and smoke verified.
 - Controlled trial-use observation scaffold is frozen and verified.
 - First real controlled observation trial is complete and post-change verified.
+- Trial-run environment isolation baseline is design ready and implemented.
 - The system remains personal-local, Markdown-native, deterministic, and simple.
 
 Recommended next phase:
-- Continue controlled trial-use observation with another small user-provided memory candidate only when needed.
+- Run a realistic fresh-user install trial from a separate trial clone.
 
-Suggested next trial:
-- one small real project-memory candidate
-- one source reference
-- one target Markdown path
-- one manual review
-- one manual record
-- one post-change verification pass
+Suggested trial:
+- prepare isolated trial runtime database
+- clone into `~/workspace-trial/hermes-runes-md-wiki`
+- configure trial runtime DB target
+- run backend guard
+- run schema migration twice
+- run smoke / recall checks
+- keep trial artifacts local unless explicitly promoted
 
 ---
 
