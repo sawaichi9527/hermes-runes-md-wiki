@@ -1,0 +1,16 @@
+# Hermes Runes MD Wiki fresh-clone core runtime requirements
+#
+# Scope:
+# - personal-local fresh clone bootstrap
+# - database access
+# - importer / memory check / migration support
+# - core FTS smoke support
+#
+# This file intentionally excludes sentence-transformers and torch.
+# Use requirements-embedding.txt or bin/hermes-memory-bootstrap --with-embedding
+# when hybrid/vector/full smoke support is needed.
+
+psycopg[binary]>=3.2,<4
+pgvector>=0.3,<1
+python-dotenv>=1,<2
+numpy>=1.26,<3
