@@ -1,0 +1,45 @@
+{
+  "schema_version": "m79-first-manual-apply-execution-plan-v1",
+  "milestone": "M79 First Manual Apply Execution Plan",
+  "mode": "first-manual-apply-execution-plan",
+  "scale": "personal-local",
+  "write": false,
+  "authoritative": false,
+  "runtime_dependency_required": false,
+  "principle": "execution-plan-is-command-checklist-not-apply-executor",
+  "plan_mode": "manual-command-checklist-only",
+  "required_semantics": {
+    "plan_is_not_executor": true,
+    "human_confirmation_required": true,
+    "single_candidate_required": true,
+    "single_operation_required": true,
+    "single_target_path_required": true,
+    "pre_apply_smokes_required": true,
+    "post_apply_smokes_required": true,
+    "rollback_note_required": true,
+    "real_write_performed_by_m79": false,
+    "automatic_apply_allowed": false,
+    "automatic_commit_allowed": false,
+    "batch_operation_allowed": false,
+    "runtime_authority_escalation_allowed": false
+  },
+  "execution_plan_steps": [
+    "confirm_single_candidate",
+    "confirm_target_path",
+    "confirm_source_reference",
+    "confirm_diff_preview",
+    "confirm_rollback_note",
+    "run_pre_apply_smokes",
+    "perform_manual_apply_outside_m79_only_after_human_confirmation",
+    "run_post_apply_smokes",
+    "record_result"
+  ],
+  "forbidden_infrastructure": [
+    "automatic-apply-worker",
+    "automatic-commit-worker",
+    "batch-apply-engine",
+    "trusted-write-daemon",
+    "runtime-policy-engine",
+    "enterprise-workflow-engine"
+  ]
+}
