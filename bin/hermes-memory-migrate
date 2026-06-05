@@ -1,0 +1,97 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Hermes-owned application schema migration entrypoint.
+# This command verifies the external backend first, then applies simple,
+# idempotent PostgreSQL migrations from migrations/postgres/*.sql.
+# It does not create or manage the PostgreSQL Docker service.
+
+ROOT="${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-runes-md-wiki}"
+STACK="${HERMES_POSTGRES_STACK:-$HOME/docker-stacks/hermes-memory-postgres}"
+MIGRATIONS_DIR="${HERMES_POSTGRES_MIGRATIONS_DIR:-$ROOT/migrations/postgres}"
+
+json() {
+  local status="$1"
+  local message="$2"
+  printf '{"status":"%s","backend":"postgres","message":"%s"}\n' "$status" "$message"
+}
+
+fail() {
+  local status="$1"
+  local message="$2"
+  json "$status" "$message"
+  exit 1
+}
+
+if [ ! -d "$ROOT" ]; then
+  fail "BLOCKED_REPO_ROOT_MISSING" "HERMES_MEMORY_ROOT does not exist."
+fi
+
+cd "$ROOT"
+
+bash ./bin/hermes-backend-check >/tmp/hermes-backend-check.$$.json || {
+  cat /tmp/hermes-backend-check.$$.json 2>/dev/null || true
+  rm -f /tmp/hermes-backend-check.$$.json
+  exit 1
+}
+rm -f /tmp/hermes-backend-check.$$.json
+
+if ! command -v psql >/dev/null 2>&1; then
+  fail "BLOCKED_PSQL_MISSING" "psql command is required for schema migration."
+fi
+
+if [ ! -d "$MIGRATIONS_DIR" ]; then
+  fail "BLOCKED_MIGRATIONS_MISSING" "migrations/postgres directory not found."
+fi
+
+set -a
+# shellcheck disable=SC1090
+. "$STACK/.env"
+set +a
+
+: "${POSTGRES_USER:?POSTGRES_USER missing from backend .env}"
+: "${POSTGRES_PASSWORD:?POSTGRES_PASSWORD missing from backend .env}"
+: "${POSTGRES_DB:?POSTGRES_DB missing from backend .env}"
+: "${POSTGRES_PORT:?POSTGRES_PORT missing from backend .env}"
+
+export PGPASSWORD="$POSTGRES_PASSWORD"
+
+psql_base=(psql -h 127.0.0.1 -p "$POSTGRES_PORT" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -v ON_ERROR_STOP=1)
+
+"${psql_base[@]}" >/dev/null <<'SQL'
+CREATE TABLE IF NOT EXISTS hermes_schema_migrations (
+  version text PRIMARY KEY,
+  applied_at timestamptz NOT NULL DEFAULT now()
+);
+SQL
+
+applied=0
+skipped=0
+
+shopt -s nullglob
+migration_files=("$MIGRATIONS_DIR"/*.sql)
+shopt -u nullglob
+
+if [ "${#migration_files[@]}" -eq 0 ]; then
+  json "PASS" "No PostgreSQL migrations found; schema migration no-op."
+  exit 0
+fi
+
+for file in "${migration_files[@]}"; do
+  version="$(basename "$file")"
+  already="$(${psql_base[@]} -Atqc "select count(*) from hermes_schema_migrations where version = '$version';")"
+  if [ "${already:-0}" = "1" ]; then
+    skipped=$((skipped + 1))
+    continue
+  fi
+
+  "${psql_base[@]}" >/dev/null <<SQL
+BEGIN;
+\i $file
+INSERT INTO hermes_schema_migrations(version) VALUES ('$version');
+COMMIT;
+SQL
+  applied=$((applied + 1))
+done
+
+printf '{"status":"PASS","backend":"postgres","applied":%s,"skipped":%s,"message":"Hermes schema migration completed."}\n' "$applied" "$skipped"
