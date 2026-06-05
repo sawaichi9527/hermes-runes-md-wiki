@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -10,6 +11,28 @@ from observation_logger import write_observation
 
 ROOT = Path(__file__).resolve().parents[2]
 IMPORTER_DIR = ROOT / "tools" / "importer"
+
+
+def workspace_slug() -> str:
+    return (
+        os.environ.get("HERMES_SMOKE_PROJECT")
+        or os.environ.get("HERMES_PROJECT")
+        or os.environ.get("HERMES_WORKSPACE_SLUG")
+        or "k6-freelancer"
+    ).strip()
+
+
+def is_legacy_workspace() -> bool:
+    return workspace_slug() in ("", "k6-freelancer")
+
+
+def skip(reason: str, data: dict | None = None) -> dict:
+    return {
+        "id": "M20.4-SKIP",
+        "status": "SKIP",
+        "reason": reason,
+        "data": data or {},
+    }
 
 
 def run_recall(query: str, project: str = "k6-freelancer", limit: int = 5) -> dict:
@@ -151,6 +174,44 @@ def case_trusted_telegram_ordering() -> dict:
 
 
 def main() -> int:
+    if not is_legacy_workspace():
+        cases = [
+            skip(
+                "promotion_governance_fixture_not_available_in_trial_workspace",
+                {
+                    "profile": f"workspace-{workspace_slug()}",
+                    "workspace": workspace_slug(),
+                    "note": "Fresh trial workspace has no approved forge/proposal fixture; promotion governance smoke is legacy-only until a trial fixture is introduced.",
+                },
+            )
+        ]
+
+        out = {
+            "suite": "M20.4 Promotion Governance Smoke",
+            "profile": f"workspace-{workspace_slug()}",
+            "status": "SKIP",
+            "failed": 0,
+            "total": len(cases),
+            "results": cases,
+        }
+
+        write_observation(
+            {
+                "event": "promotion_governance_smoke",
+                "milestone": "M20.6a",
+                "suite": out["suite"],
+                "status": out["status"],
+                "failed": out["failed"],
+                "total": out["total"],
+                "workspace": workspace_slug(),
+                "skip_reason": cases[0]["reason"],
+                "trust_policy": "m20.5-personal-governance-v1",
+            }
+        )
+
+        print(json.dumps(out, ensure_ascii=False, indent=2))
+        return 0
+
     cases = [
         case_approved_agent_proposal_retrievable(),
         case_trusted_telegram_ordering(),
@@ -160,6 +221,7 @@ def main() -> int:
 
     out = {
         "suite": "M20.4 Promotion Governance Smoke",
+        "profile": "legacy-k6-freelancer",
         "status": "FAIL" if failed else "PASS",
         "failed": len(failed),
         "total": len(cases),
