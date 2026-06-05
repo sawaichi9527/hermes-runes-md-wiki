@@ -3,8 +3,25 @@ set -euo pipefail
 
 PYTHON="${PYTHON:-python3}"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-ROOT="${HERMES_MEMORY_ROOT:-$(cd "$SCRIPT_DIR/.." && pwd)}"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+# M93.1 hardening:
+# This check is intentionally checkout-local by default so a stale exported
+# HERMES_MEMORY_ROOT from another shell/session cannot redirect the command
+# to a different clone, such as the trial workspace.
+#
+# Advanced override remains available only through an explicit command-scoped
+# variable to avoid surprising normal use:
+#
+#   HERMES_MODEL_ENV_CHECK_ROOT=/path/to/repo bash ./bin/hermes-model-env-check
+ROOT="${HERMES_MODEL_ENV_CHECK_ROOT:-$REPO_ROOT}"
 IMPORTER_DIR="$ROOT/tools/importer"
+
+if [ ! -f "$IMPORTER_DIR/smoke/eval_smoke_m93_model_env.py" ]; then
+  echo "ERROR: M93 verifier not found under IMPORTER_DIR=$IMPORTER_DIR" >&2
+  echo "Hint: run this command from the intended repository checkout, or set HERMES_MODEL_ENV_CHECK_ROOT explicitly." >&2
+  exit 1
+fi
 
 cd "$IMPORTER_DIR"
 
@@ -13,4 +30,4 @@ if [ -d ".venv" ]; then
   source ".venv/bin/activate"
 fi
 
-"$PYTHON" smoke/eval_smoke_m93_model_env.py
+HERMES_MEMORY_ROOT="$ROOT" "$PYTHON" smoke/eval_smoke_m93_model_env.py
