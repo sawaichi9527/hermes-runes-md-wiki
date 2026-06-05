@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -15,7 +16,7 @@ from root_resolver import resolve_importer_dir
 IMPORTER = resolve_importer_dir()
 
 
-CASES = [
+LEGACY_CASES = [
     {
         "name": "sample_markdown_source_of_truth",
         "query": "Markdown source-of-truth",
@@ -39,6 +40,48 @@ CASES = [
         ],
     },
 ]
+
+
+def workspace_slug() -> str:
+    return (
+        os.environ.get("HERMES_SMOKE_PROJECT")
+        or os.environ.get("HERMES_PROJECT")
+        or os.environ.get("HERMES_WORKSPACE_SLUG")
+        or "sample-project"
+    ).strip()
+
+
+def active_cases():
+    workspace = workspace_slug()
+
+    if workspace in ("", "sample-project", "k6-freelancer"):
+        return "legacy-sample-project", LEGACY_CASES
+
+    return f"workspace-{workspace}", [
+        {
+            "name": f"{workspace}_workspace_seed",
+            "query": "Trial-run Workspace Baseline",
+            "project": workspace,
+            "path": f"wiki/{workspace}",
+            "must_contain": [
+                "Trial-run Workspace Baseline",
+                "ACTIVE / TRIAL-RUN",
+                "fresh-user trial-run memory namespace",
+            ],
+        },
+        {
+            "name": "owner_runes_seed",
+            "query": "owner preferences personal operating data",
+            "project": "owner-runes",
+            "path": "wiki/owner-runes",
+            "must_contain": [
+                "Owner Runes",
+                "durable owner preferences",
+                "agent-agnostic",
+                "must not contain secrets",
+            ],
+        },
+    ]
 
 
 def run_case(case):
@@ -100,11 +143,13 @@ def run_case(case):
 
 
 def main():
-    results = [run_case(c) for c in CASES]
+    profile, cases = active_cases()
+    results = [run_case(c) for c in cases]
     failed = sum(1 for r in results if r["status"] != "PASS")
 
     output = {
         "suite": "M11.6 Sample Project Smoke Test",
+        "profile": profile,
         "status": "PASS" if failed == 0 else "FAIL",
         "failed": failed,
         "total": len(results),
