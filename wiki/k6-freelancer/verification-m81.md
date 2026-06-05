@@ -5,8 +5,8 @@
 - Category: verification
 - Topic: m81-post-apply-verification-lock
 - Note type: verification-lock
-- Status: pending-user-verification
-- Memory quality: pending
+- Status: frozen
+- Memory quality: verified
 - Related objective: k6-freelancer
 - Last reviewed: 2026-06-05
 
@@ -53,19 +53,27 @@ fixtures/m81/post-apply-verification-lock.json
 python3 tools/runes_shield/smoke_m81_post_apply_verification_lock.py
 ```
 
-## Expected Result
+## Verified Result
 
-```text
-status: PASS
-mode: post-apply-verification-lock
-scale: personal-local
-write: false
-authoritative: false
-runtime_dependency_required: false
-verification_mode: post-apply-checklist-only
-issue_count: 0
+```json
+{
+  "smoke_version": "m81-post-apply-verification-lock-v1",
+  "status": "PASS",
+  "mode": "post-apply-verification-lock",
+  "scale": "personal-local",
+  "write": false,
+  "authoritative": false,
+  "runtime_dependency_required": false,
+  "verification_mode": "post-apply-checklist-only",
+  "verification_check_count": 7,
+  "issue_count": 0,
+  "issues": []
+}
 ```
 
-## Verification Status
+## Final Lock
 
-Pending user execution.
+```text
+M81 Post-Apply Verification Lock
+PASS / frozen / smoke verified
+```
