@@ -1,0 +1,97 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Hermes Runes MD Wiki simple backend guard.
+# Personal-use scope: verify the external PostgreSQL/pgvector prerequisite,
+# report a clear blocked state, and do not attempt repair/reset/failover.
+
+ROOT="${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-runes-md-wiki}"
+STACK="${HERMES_POSTGRES_STACK:-$HOME/docker-stacks/hermes-memory-postgres}"
+SERVICE="${HERMES_POSTGRES_SERVICE:-postgres}"
+CONTAINER="${HERMES_POSTGRES_CONTAINER:-hermes-memory-postgres}"
+
+json() {
+  local status="$1"
+  local message="$2"
+  printf '{"status":"%s","backend":"postgres","stack":"%s","message":"%s"}\n' \
+    "$status" "$STACK" "$message"
+}
+
+fail() {
+  local status="$1"
+  local message="$2"
+  json "$status" "$message"
+  exit 1
+}
+
+if [ ! -d "$STACK" ]; then
+  fail "BLOCKED_BACKEND_MISSING" "PostgreSQL stack path does not exist."
+fi
+
+if [ ! -f "$STACK/compose.yaml" ] && [ ! -f "$STACK/docker-compose.yml" ]; then
+  fail "BLOCKED_BACKEND_MISSING_COMPOSE" "compose.yaml or docker-compose.yml not found in backend stack."
+fi
+
+if [ ! -f "$STACK/.env" ]; then
+  fail "BLOCKED_BACKEND_MISSING_ENV" ".env not found in backend stack. Create it from .env.example without committing or printing secrets."
+fi
+
+if ! command -v docker >/dev/null 2>&1; then
+  fail "BLOCKED_DOCKER_UNAVAILABLE" "docker command is not available."
+fi
+
+cd "$STACK"
+
+if ! docker compose ps >/dev/null 2>&1; then
+  fail "BLOCKED_DOCKER_UNAVAILABLE" "docker compose cannot inspect the backend stack."
+fi
+
+container_id="$(docker compose ps -q "$SERVICE" 2>/dev/null || true)"
+if [ -z "$container_id" ]; then
+  container_id="$(docker ps -aqf "name=^/${CONTAINER}$" 2>/dev/null || true)"
+fi
+
+if [ -z "$container_id" ]; then
+  fail "BLOCKED_BACKEND_STOPPED" "PostgreSQL container is not created or not visible."
+fi
+
+running="$(docker inspect -f '{{.State.Running}}' "$container_id" 2>/dev/null || true)"
+if [ "$running" != "true" ]; then
+  fail "BLOCKED_BACKEND_STOPPED" "PostgreSQL container is not running."
+fi
+
+health="$(docker inspect -f '{{if .State.Health}}{{.State.Health.Status}}{{else}}none{{end}}' "$container_id" 2>/dev/null || true)"
+if [ "$health" != "healthy" ] && [ "$health" != "none" ]; then
+  fail "BLOCKED_BACKEND_UNHEALTHY" "PostgreSQL container healthcheck is not healthy."
+fi
+
+# Load the stack .env for local checks without printing it.
+set -a
+# shellcheck disable=SC1091
+. "$STACK/.env"
+set +a
+
+: "${POSTGRES_USER:?POSTGRES_USER missing from backend .env}"
+: "${POSTGRES_DB:?POSTGRES_DB missing from backend .env}"
+: "${POSTGRES_PORT:?POSTGRES_PORT missing from backend .env}"
+
+if command -v pg_isready >/dev/null 2>&1; then
+  if ! pg_isready -h 127.0.0.1 -p "$POSTGRES_PORT" -U "$POSTGRES_USER" -d "$POSTGRES_DB" >/dev/null 2>&1; then
+    fail "BLOCKED_BACKEND_CONNECTION_FAILED" "pg_isready could not reach PostgreSQL on 127.0.0.1:${POSTGRES_PORT}."
+  fi
+fi
+
+if command -v psql >/dev/null 2>&1; then
+  if [ -z "${POSTGRES_PASSWORD:-}" ]; then
+    fail "BLOCKED_BACKEND_CONNECTION_FAILED" "POSTGRES_PASSWORD is missing from backend .env."
+  fi
+  if ! PGPASSWORD="$POSTGRES_PASSWORD" psql -h 127.0.0.1 -p "$POSTGRES_PORT" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -Atqc "select 1;" >/dev/null 2>&1; then
+    fail "BLOCKED_BACKEND_CONNECTION_FAILED" "psql connection check failed."
+  fi
+  vector_count="$(PGPASSWORD="$POSTGRES_PASSWORD" psql -h 127.0.0.1 -p "$POSTGRES_PORT" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -Atqc "select count(*) from pg_extension where extname='vector';" 2>/dev/null || echo 0)"
+  if [ "${vector_count:-0}" != "1" ]; then
+    fail "BLOCKED_BACKEND_VECTOR_MISSING" "pgvector extension is not installed in the target database."
+  fi
+fi
+
+json "PASS" "Backend prerequisite is available."
