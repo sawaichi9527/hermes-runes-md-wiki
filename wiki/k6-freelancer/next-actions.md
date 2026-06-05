@@ -167,20 +167,58 @@ References:
 
 ---
 
+## N-20260605-M85 First Real Controlled Observation Trial
+
+Status: PASS / FROZEN / POST-CHANGE VERIFIED
+
+Current baseline:
+- First real controlled observation trial completed.
+- Trial candidate came from an actual M84 checker false-positive discovered during local verification.
+- The false positive was fixed by narrowing secret detection from safety wording to likely secret values.
+- Trial record captured the issue, human review, fix, and post-change verification.
+- The implementation remains personal-local, bounded, and low-noise.
+
+Verified command:
+
+```bash
+bash ./bin/hermes-trial-observation-check wiki/k6-freelancer/trials/trial-20260605-test.md
+```
+
+Verified result:
+
+```json
+{"status":"PASS","check":"trial-observation","file":"wiki/k6-freelancer/trials/trial-20260605-test.md","message":"Trial observation record structure is ready for human review."}
+```
+
+Final lock:
+
+```text
+M85 First Real Controlled Observation Trial
+PASS / frozen / post-change verified
+```
+
+References:
+- `wiki/k6-freelancer/verification-m85.md`
+- `wiki/k6-freelancer/trials/trial-20260605-m84-checker-hotfix.md`
+- `wiki/k6-freelancer/trials/trial-20260605-external-backend-boundary.md`
+
+---
+
 ## N-20260605-Post-P0 Trial-use Observation
 
-Status: NEXT / READY
+Status: PASS / FIRST REAL TRIAL COMPLETE
 
 Current baseline:
 - P0 governed memory operating baseline is frozen.
 - External backend prerequisite handling is frozen and smoke verified.
 - Controlled trial-use observation scaffold is frozen and verified.
+- First real controlled observation trial is complete and post-change verified.
 - The system remains personal-local, Markdown-native, deterministic, and simple.
 
 Recommended next phase:
-- Begin the first real controlled observation trial.
+- Continue controlled trial-use observation with another small user-provided memory candidate only when needed.
 
-Suggested first trial:
+Suggested next trial:
 - one small real project-memory candidate
 - one source reference
 - one target Markdown path
