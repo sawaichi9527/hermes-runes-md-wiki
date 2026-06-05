@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -8,7 +9,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parents[1]
 
 
-TESTS = [
+LEGACY_TESTS = [
     {
         "name": "telegram_context_recall",
         "query": "Telegram integration",
@@ -41,7 +42,8 @@ TESTS = [
             "OPENAI_API_KEY=sk-",
             "PGPASSWORD=change-this",
         ],
-    },    {
+    },
+    {
         "name": "phase3_m5_baseline_recall",
         "query": "M9.7 governed output baseline",
         "project": "k6-freelancer",
@@ -58,6 +60,70 @@ TESTS = [
         ],
     },
 ]
+
+
+def workspace_slug() -> str:
+    return (
+        os.environ.get("HERMES_SMOKE_PROJECT")
+        or os.environ.get("HERMES_PROJECT")
+        or os.environ.get("HERMES_WORKSPACE_SLUG")
+        or "k6-freelancer"
+    ).strip()
+
+
+def active_tests():
+    workspace = workspace_slug()
+
+    if workspace in ("", "k6-freelancer"):
+        return "legacy-k6-freelancer", LEGACY_TESTS
+
+    return f"workspace-{workspace}", [
+        {
+            "name": f"{workspace}_baseline_context_recall",
+            "query": "Trial-run Workspace Baseline",
+            "project": workspace,
+            "min_rerank_score": "1",
+            "must_contain": [
+                "Trial-run Workspace Baseline",
+                "ACTIVE / TRIAL-RUN",
+                "fresh-user trial-run memory namespace",
+            ],
+            "must_not_contain": [
+                "OPENAI_API_KEY=sk-",
+                "PGPASSWORD=change-this",
+            ],
+        },
+        {
+            "name": "owner_runes_context_recall",
+            "query": "owner preferences personal operating data",
+            "project": "owner-runes",
+            "min_rerank_score": "1",
+            "must_contain": [
+                "Owner Runes",
+                "durable owner preferences",
+                "agent-agnostic",
+                "must not contain secrets",
+            ],
+            "must_not_contain": [
+                "OPENAI_API_KEY=sk-",
+                "PGPASSWORD=change-this",
+            ],
+        },
+        {
+            "name": "root_index_context_recall",
+            "query": "Hermes Runes index memory wiki",
+            "project": "default",
+            "min_rerank_score": "1",
+            "must_contain": [
+                "Hermes",
+                "Runes",
+            ],
+            "must_not_contain": [
+                "OPENAI_API_KEY=sk-",
+                "PGPASSWORD=change-this",
+            ],
+        },
+    ]
 
 
 def run_context_builder(test):
@@ -129,10 +195,11 @@ def evaluate(test, payload):
 
 
 def main():
+    profile, tests = active_tests()
     all_results = []
     failed = 0
 
-    for test in TESTS:
+    for test in tests:
         result = run_context_builder(test)
 
         if not result["ok"]:
@@ -157,15 +224,17 @@ def main():
             "name": test["name"],
             "status": status,
             "query": test["query"],
+            "project": test["project"],
             "debug": payload.get("debug", {}),
             "failures": failures,
         })
 
     print(json.dumps({
         "suite": "M5.2 Evaluation Smoke Test",
+        "profile": profile,
         "status": "PASS" if failed == 0 else "FAIL",
         "failed": failed,
-        "total": len(TESTS),
+        "total": len(tests),
         "results": all_results,
     }, ensure_ascii=False, indent=2))
 
