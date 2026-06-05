@@ -2,18 +2,29 @@
 set -euo pipefail
 
 # Hermes-owned application schema migration entrypoint.
-# This command verifies the external backend first, then applies simple,
+# This command verifies the external backend service first, then applies simple,
 # idempotent PostgreSQL migrations from migrations/postgres/*.sql.
 # It does not create or manage the PostgreSQL Docker service.
+#
+# Database target resolution:
+# 1. HERMES_MEMORY_DATABASE_URL from current environment
+# 2. HERMES_MEMORY_DATABASE_URL from tools/importer/.env
+# 3. fallback to the external PostgreSQL stack .env default database
+#
+# This prevents trial-run clones from accidentally migrating the developer
+# default database when their tools/importer/.env points to a separate trial DB.
 
 ROOT="${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-runes-md-wiki}"
 STACK="${HERMES_POSTGRES_STACK:-$HOME/docker-stacks/hermes-memory-postgres}"
 MIGRATIONS_DIR="${HERMES_POSTGRES_MIGRATIONS_DIR:-$ROOT/migrations/postgres}"
+IMPORTER_ENV="$ROOT/tools/importer/.env"
+
+db_source="unset"
 
 json() {
   local status="$1"
   local message="$2"
-  printf '{"status":"%s","backend":"postgres","message":"%s"}\n' "$status" "$message"
+  printf '{"status":"%s","backend":"postgres","db_source":"%s","message":"%s"}\n' "$status" "$db_source" "$message"
 }
 
 fail() {
@@ -44,19 +55,38 @@ if [ ! -d "$MIGRATIONS_DIR" ]; then
   fail "BLOCKED_MIGRATIONS_MISSING" "migrations/postgres directory not found."
 fi
 
-set -a
-# shellcheck disable=SC1090
-. "$STACK/.env"
-set +a
+# Load importer-local runtime env if present. Do not print it.
+if [ -f "$IMPORTER_ENV" ]; then
+  set -a
+  # shellcheck disable=SC1090
+  . "$IMPORTER_ENV"
+  set +a
+fi
 
-: "${POSTGRES_USER:?POSTGRES_USER missing from backend .env}"
-: "${POSTGRES_PASSWORD:?POSTGRES_PASSWORD missing from backend .env}"
-: "${POSTGRES_DB:?POSTGRES_DB missing from backend .env}"
-: "${POSTGRES_PORT:?POSTGRES_PORT missing from backend .env}"
+psql_base=()
 
-export PGPASSWORD="$POSTGRES_PASSWORD"
+if [ -n "${HERMES_MEMORY_DATABASE_URL:-}" ]; then
+  db_source="HERMES_MEMORY_DATABASE_URL"
+  psql_base=(psql "$HERMES_MEMORY_DATABASE_URL" -v ON_ERROR_STOP=1)
+else
+  db_source="backend_stack_env"
+  set -a
+  # shellcheck disable=SC1090
+  . "$STACK/.env"
+  set +a
 
-psql_base=(psql -h 127.0.0.1 -p "$POSTGRES_PORT" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -v ON_ERROR_STOP=1)
+  : "${POSTGRES_USER:?POSTGRES_USER missing from backend .env}"
+  : "${POSTGRES_PASSWORD:?POSTGRES_PASSWORD missing from backend .env}"
+  : "${POSTGRES_DB:?POSTGRES_DB missing from backend .env}"
+  : "${POSTGRES_PORT:?POSTGRES_PORT missing from backend .env}"
+
+  export PGPASSWORD="$POSTGRES_PASSWORD"
+  psql_base=(psql -h 127.0.0.1 -p "$POSTGRES_PORT" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -v ON_ERROR_STOP=1)
+fi
+
+if ! "${psql_base[@]}" -Atqc "select 1;" >/dev/null 2>&1; then
+  fail "BLOCKED_RUNTIME_DB_CONNECTION_FAILED" "Runtime database connection failed. Check tools/importer/.env or HERMES_MEMORY_DATABASE_URL."
+fi
 
 "${psql_base[@]}" >/dev/null <<'SQL'
 CREATE TABLE IF NOT EXISTS hermes_schema_migrations (
@@ -94,4 +124,4 @@ SQL
   applied=$((applied + 1))
 done
 
-printf '{"status":"PASS","backend":"postgres","applied":%s,"skipped":%s,"message":"Hermes schema migration completed."}\n' "$applied" "$skipped"
+printf '{"status":"PASS","backend":"postgres","db_source":"%s","applied":%s,"skipped":%s,"message":"Hermes schema migration completed."}\n' "$db_source" "$applied" "$skipped"
