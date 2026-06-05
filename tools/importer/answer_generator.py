@@ -84,6 +84,10 @@ def call_llm(prompt: str, args):
     base_url = os.getenv("OPENAI_BASE_URL", "").rstrip("/")
     model = os.getenv("OPENAI_MODEL", "")
     api_key = os.getenv("OPENAI_API_KEY", "not-needed")
+    auth_mode = os.getenv("OPENAI_AUTH_MODE", "auto").strip().lower()
+
+    if auth_mode not in {"auto", "none", "bearer"}:
+        raise SystemExit("ERROR: OPENAI_AUTH_MODE must be one of: auto, none, bearer")
 
     if not base_url or not model:
         raise SystemExit("ERROR: OPENAI_BASE_URL and OPENAI_MODEL must be set in .env")
@@ -103,13 +107,26 @@ def call_llm(prompt: str, args):
 
     data = json.dumps(payload).encode("utf-8")
 
+    headers = {
+        "Content-Type": "application/json",
+    }
+
+    placeholder_keys = {"", "not-needed", "not-set", "none", "null", "local"}
+    should_send_auth = (
+        auth_mode == "bearer"
+        or (
+            auth_mode == "auto"
+            and api_key.strip().lower() not in placeholder_keys
+        )
+    )
+
+    if should_send_auth:
+        headers["Authorization"] = f"Bearer {api_key}"
+
     req = urllib.request.Request(
         url,
         data=data,
-        headers={
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {api_key}",
-        },
+        headers=headers,
         method="POST",
     )
 
