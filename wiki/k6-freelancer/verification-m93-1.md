@@ -1,6 +1,6 @@
 # M93.1 Model Env Check Root Resolution Hardening
 
-Status: IMPLEMENTED / PENDING LOCAL VERIFICATION
+Status: PASS / LOCALLY VERIFIED
 Date: 2026-06-06
 
 ## Purpose
@@ -53,6 +53,28 @@ Explicit override example:
 HERMES_MODEL_ENV_CHECK_ROOT=/path/to/repo bash ./bin/hermes-model-env-check
 ```
 
+## Local Verification Result
+
+Developer checkout:
+
+```text
+repo: /home/eye/workspace/hermes-runes-md-wiki
+status: PASS
+reason: model_env_ready
+env_files path correctly points to developer checkout
+```
+
+Trial checkout:
+
+```text
+repo: /home/eye/workspace-trial/hermes-runes-md-wiki
+status: SKIP
+reason: missing_model_env
+env_files path correctly points to trial checkout
+```
+
+This confirms that stale `HERMES_MEMORY_ROOT` no longer redirects the checker to the wrong clone.
+
 ## Expected Verification
 
 From developer checkout:
@@ -62,11 +84,11 @@ cd ~/workspace/hermes-runes-md-wiki
 bash ./bin/hermes-model-env-check
 ```
 
-Expected without model env:
+Expected with developer model env:
 
 ```text
-status: SKIP
-reason: missing_model_env
+status: PASS
+reason: model_env_ready
 ```
 
 From trial checkout:
@@ -76,7 +98,7 @@ cd ~/workspace-trial/hermes-runes-md-wiki
 bash ./bin/hermes-model-env-check
 ```
 
-Expected without model env:
+Expected without trial model env:
 
 ```text
 status: SKIP
@@ -103,5 +125,5 @@ no runtime authority escalation
 
 ```text
 M93.1 Model Env Check Root Resolution Hardening
-IMPLEMENTED / pending local verification
+PASS / locally verified
 ```
