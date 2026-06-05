@@ -1,0 +1,107 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+PYTHON_BIN="${PYTHON:-python3}"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+ROOT="${HERMES_MEMORY_ROOT:-$(cd "$SCRIPT_DIR/.." && pwd)}"
+IMPORTER_DIR="$ROOT/tools/importer"
+WITH_EMBEDDING=0
+
+usage() {
+  cat <<'EOF'
+Hermes Memory fresh-clone bootstrap
+
+Usage:
+  bash ./bin/hermes-memory-bootstrap [--with-embedding]
+
+Default behavior:
+  - creates tools/importer/.venv if missing
+  - installs requirements-core.txt only
+  - does not touch Docker
+  - does not create or edit .env secrets
+  - does not run migrations
+  - does not install embedding/full-smoke dependencies
+
+Optional:
+  --with-embedding
+      Install CPU-only torch first, then requirements-embedding.txt.
+      This enables hybrid/vector/full-smoke support while avoiding CUDA wheels
+      during personal-local fresh clone setup.
+
+Environment:
+  PYTHON              Python executable, default: python3
+  HERMES_MEMORY_ROOT  Repo root override, default: parent of this bin directory
+EOF
+}
+
+while [ "$#" -gt 0 ]; do
+  case "$1" in
+    --with-embedding)
+      WITH_EMBEDDING=1
+      shift
+      ;;
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    *)
+      echo "ERROR: unknown argument: $1" >&2
+      usage >&2
+      exit 2
+      ;;
+  esac
+done
+
+if [ ! -d "$ROOT" ]; then
+  echo "ERROR: repo root not found: $ROOT" >&2
+  exit 1
+fi
+
+if [ ! -d "$IMPORTER_DIR" ]; then
+  echo "ERROR: importer dir not found: $IMPORTER_DIR" >&2
+  exit 1
+fi
+
+if [ ! -f "$ROOT/requirements-core.txt" ]; then
+  echo "ERROR: missing requirements-core.txt" >&2
+  exit 1
+fi
+
+cd "$IMPORTER_DIR"
+
+if [ ! -d ".venv" ]; then
+  "$PYTHON_BIN" -m venv .venv
+fi
+
+# shellcheck disable=SC1091
+source .venv/bin/activate
+
+python -m pip install --upgrade pip
+python -m pip install -r "$ROOT/requirements-core.txt"
+
+if [ "$WITH_EMBEDDING" = "1" ]; then
+  if [ ! -f "$ROOT/requirements-embedding.txt" ]; then
+    echo "ERROR: missing requirements-embedding.txt" >&2
+    exit 1
+  fi
+
+  # Install CPU-only torch first so sentence-transformers does not pull CUDA wheels.
+  python -m pip install --index-url https://download.pytorch.org/whl/cpu "torch>=2.3,<3"
+  python -m pip install -r "$ROOT/requirements-embedding.txt"
+fi
+
+cat <<EOF
+{
+  "status": "PASS",
+  "tool": "hermes-memory-bootstrap",
+  "root": "$ROOT",
+  "venv": "$IMPORTER_DIR/.venv",
+  "core_requirements": "installed",
+  "embedding_requirements": "$([ "$WITH_EMBEDDING" = "1" ] && echo installed || echo skipped)",
+  "notes": [
+    "Docker was not modified.",
+    ".env secrets were not created or modified.",
+    "Migrations were not run."
+  ]
+}
+EOF
