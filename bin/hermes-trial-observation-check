@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Lightweight structural check for a controlled trial-use observation record.
+# This is intentionally shallow: it checks required headings and obvious
+# forbidden secret markers. It does not approve, apply, import, or mutate wiki.
+
+file="${1:-}"
+
+json() {
+  local status="$1"
+  local message="$2"
+  printf '{"status":"%s","check":"trial-observation","file":"%s","message":"%s"}\n' \
+    "$status" "${file:-}" "$message"
+}
+
+fail() {
+  json "$1" "$2"
+  exit 1
+}
+
+if [ -z "$file" ]; then
+  fail "BLOCKED_MISSING_FILE_ARG" "Usage: bash ./bin/hermes-trial-observation-check <trial-record.md>"
+fi
+
+if [ ! -f "$file" ]; then
+  fail "BLOCKED_TRIAL_FILE_MISSING" "Trial observation file does not exist."
+fi
+
+required_headings=(
+  "## Metadata"
+  "## Candidate Summary"
+  "## Source Reference"
+  "## Target Markdown Path"
+  "## Proposed Memory Content"
+  "## Governance Checks"
+  "## Manual Review"
+  "## Manual Record"
+  "## Post-change Verification"
+  "## Observation Notes"
+  "## Final Status"
+)
+
+missing=0
+for heading in "${required_headings[@]}"; do
+  if ! grep -Fqx "$heading" "$file"; then
+    printf 'missing heading: %s\n' "$heading" >&2
+    missing=$((missing + 1))
+  fi
+done
+
+if [ "$missing" -ne 0 ]; then
+  fail "BLOCKED_TRIAL_STRUCTURE_INCOMPLETE" "Trial observation record is missing required headings."
+fi
+
+# Obvious secret markers only. This is not a full secret scanner.
+if grep -Ein '(api[_-]?key|telegram.*token|postgres.*password|password *=|BEGIN .*PRIVATE KEY|PGPASSWORD=|HERMES_MEMORY_DATABASE_URL=.*:.*@)' "$file" >/tmp/hermes-trial-secret-scan.$$.txt 2>/dev/null; then
+  cat /tmp/hermes-trial-secret-scan.$$.txt >&2 || true
+  rm -f /tmp/hermes-trial-secret-scan.$$.txt
+  fail "BLOCKED_POSSIBLE_SECRET_MARKER" "Possible secret marker found. Review manually before proceeding."
+fi
+rm -f /tmp/hermes-trial-secret-scan.$$.txt
+
+json "PASS" "Trial observation record structure is ready for human review."
