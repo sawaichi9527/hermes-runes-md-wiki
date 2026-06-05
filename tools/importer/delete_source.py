@@ -1,26 +1,10 @@
 #!/usr/bin/env python3
 import argparse
 import json
-import os
-from pathlib import Path
 
 import psycopg
-from dotenv import load_dotenv
 
-ROOT = Path.home() / "workspace/hermes-memory"
-ENV_FILE = ROOT / "tools/importer/.env"
-
-
-def load_db_url():
-    load_dotenv(ENV_FILE)
-    db_url = (
-        os.getenv("DATABASE_URL")
-        or os.getenv("POSTGRES_DSN")
-        or os.getenv("HERMES_MEMORY_DATABASE_URL")
-    )
-    if not db_url:
-        raise RuntimeError("Missing DATABASE_URL / POSTGRES_DSN / HERMES_MEMORY_DATABASE_URL")
-    return db_url
+from db_config import build_conninfo
 
 
 def get_columns(cur, table):
@@ -60,7 +44,7 @@ def main():
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args()
 
-    db_url = load_db_url()
+    db_url = build_conninfo()
     path_candidates = normalize_paths(args.project, args.path)
 
     with psycopg.connect(db_url) as conn:
