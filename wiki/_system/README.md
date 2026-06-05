@@ -1,6 +1,6 @@
 # Hermes Runes System Policy Index
 
-Status: P0 policy baseline  
+Status: P0 Runes Keystone policy baseline  
 Scope: Hermes Runes MD Wiki system governance
 
 ## Purpose
@@ -42,13 +42,14 @@ Hermes Agent should decipher this policy bundle before performing Hermes Runes o
 3. `wiki/_system/source-priority.md`
 4. `wiki/_system/access-boundary.md`
 5. `wiki/_system/wiki-operation-policy.md`
-6. `wiki/_system/agent-operation-guide.md`
-7. `wiki/_system/ingestion-policy.md`
-8. `wiki/_system/security-policy.md`
-9. `wiki/_system/observation-policy.md`
-10. `wiki/_system/developer-policy.md`
-11. `wiki/README.md`
-12. `wiki/long-term-objectives-index.md`
+6. `wiki/_system/default-wiki-seed-layout.md`
+7. `wiki/_system/agent-operation-guide.md`
+8. `wiki/_system/ingestion-policy.md`
+9. `wiki/_system/security-policy.md`
+10. `wiki/_system/observation-policy.md`
+11. `wiki/_system/developer-policy.md`
+12. `wiki/README.md`
+13. `wiki/long-term-objectives-index.md`
 
 ## Command Vocabulary
 
@@ -83,6 +84,7 @@ Hermes Runes is not:
 ## Change Log
 
 - 2026-06-01: Initial P0 system policy index.
+- 2026-06-05: Registered default wiki seed layout policy in the required policy read order.
 
 ## Agent Style Overlay
 
@@ -90,6 +92,17 @@ Hermes Runes is not:
   - Optional presentation guidance for Hermes-agent when interacting with Hermes Runes MD Wiki through Runes Shield.
   - Defines Runes-themed terms such as forge, attunement, relic, seal, resonance, and inscription.
   - Style only; does not override `soul.md`, governance policy, security policy, or human approval requirements.
+
+## Default Wiki Seed Layout
+
+- `default-wiki-seed-layout.md`
+  - Defines the canonical top-level wiki layers:
+    - `wiki/_system/`
+    - `wiki/owner-runes/`
+    - `wiki/<workspace>/`
+    - `wiki/*.md`
+  - Defines first-bootstrap workspace suggestion behavior.
+  - Defines owner-runes boundaries for preferences, RSS lists, research sources, and local operating data.
 
 ## Runes Shield Discovery
 
