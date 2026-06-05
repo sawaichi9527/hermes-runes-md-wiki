@@ -1,0 +1,44 @@
+{
+  "schema_version": "m80-first-manual-apply-execution-record-v1",
+  "milestone": "M80 First Manual Apply Execution",
+  "mode": "first-manual-apply-execution-record",
+  "scale": "personal-local",
+  "write": false,
+  "authoritative": false,
+  "runtime_dependency_required": false,
+  "principle": "manual-apply-execution-must-be-explicit-human-operation-not-background-automation",
+  "record_mode": "manual-execution-record-template",
+  "required_semantics": {
+    "manual_apply_must_be_human_executed": true,
+    "one_candidate_required": true,
+    "one_operation_required": true,
+    "one_target_path_required": true,
+    "source_reference_required": true,
+    "post_apply_verification_required": true,
+    "rollback_note_required": true,
+    "tool_performs_real_write": false,
+    "automatic_apply_allowed": false,
+    "automatic_commit_allowed": false,
+    "batch_operation_allowed": false,
+    "runtime_authority_escalation_allowed": false
+  },
+  "manual_execution_record_fields": [
+    "candidate_id",
+    "operation_id",
+    "target_path",
+    "source_reference",
+    "human_operator",
+    "manual_command_summary",
+    "pre_apply_smoke_result",
+    "post_apply_smoke_result",
+    "rollback_note"
+  ],
+  "forbidden_infrastructure": [
+    "automatic-apply-worker",
+    "automatic-commit-worker",
+    "batch-apply-engine",
+    "trusted-write-daemon",
+    "runtime-policy-engine",
+    "enterprise-workflow-engine"
+  ]
+}
