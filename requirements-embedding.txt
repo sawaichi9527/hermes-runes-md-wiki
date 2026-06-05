@@ -1,4 +1,13 @@
-# Hermes Runes MD Wiki - optional local embedding dependencies
-# Install this only when local vector embedding is needed.
+# Hermes Runes MD Wiki optional embedding/full-smoke requirements
+#
+# This profile is optional. It enables hybrid/vector/full smoke behavior.
+#
+# Recommended install path:
+#
+#   bash ./bin/hermes-memory-bootstrap --with-embedding
+#
+# The bootstrap script installs CPU-only torch first, then installs these
+# dependencies, to avoid pulling large CUDA wheels during personal-local
+# fresh clone setup.
 
-sentence-transformers==5.5.1
+sentence-transformers>=3,<6
