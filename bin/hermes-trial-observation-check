@@ -3,7 +3,7 @@ set -euo pipefail
 
 # Lightweight structural check for a controlled trial-use observation record.
 # This is intentionally shallow: it checks required headings and obvious
-# forbidden secret markers. It does not approve, apply, import, or mutate wiki.
+# forbidden secret values. It does not approve, apply, import, or mutate wiki.
 
 file="${1:-}"
 
@@ -53,11 +53,14 @@ if [ "$missing" -ne 0 ]; then
   fail "BLOCKED_TRIAL_STRUCTURE_INCOMPLETE" "Trial observation record is missing required headings."
 fi
 
-# Obvious secret markers only. This is not a full secret scanner.
-if grep -Ein '(api[_-]?key|telegram.*token|postgres.*password|password *=|BEGIN .*PRIVATE KEY|PGPASSWORD=|HERMES_MEMORY_DATABASE_URL=.*:.*@)' "$file" >/tmp/hermes-trial-secret-scan.$$.txt 2>/dev/null; then
+# Obvious secret value markers only. This is not a full secret scanner.
+# Avoid matching safety guidance such as "PostgreSQL passwords" or
+# "Telegram tokens" in the template. The patterns below look for assignment,
+# URL credentials, private keys, or common token prefixes.
+if grep -Ein '(api[_-]?key|telegram[_-]?token|bot[_-]?token|password|PGPASSWORD|HERMES_MEMORY_DATABASE_URL)[[:space:]]*[:=][[:space:]]*[^ <][^ >]*|postgresql://[^[:space:]]+:[^[:space:]@]+@|BEGIN [A-Z ]*PRIVATE KEY|ghp_[A-Za-z0-9_]{20,}|xox[baprs]-[A-Za-z0-9-]+' "$file" >/tmp/hermes-trial-secret-scan.$$.txt 2>/dev/null; then
   cat /tmp/hermes-trial-secret-scan.$$.txt >&2 || true
   rm -f /tmp/hermes-trial-secret-scan.$$.txt
-  fail "BLOCKED_POSSIBLE_SECRET_MARKER" "Possible secret marker found. Review manually before proceeding."
+  fail "BLOCKED_POSSIBLE_SECRET_VALUE" "Possible secret value found. Review manually before proceeding."
 fi
 rm -f /tmp/hermes-trial-secret-scan.$$.txt
 
