@@ -1,3 +1,33 @@
+## N-20260606-M119-M132 Compact Bootstrap Stable Baseline Recap
+
+Status: PASS / STABLE BASELINE RECAP ADDED
+
+Current baseline:
+- M119-M124 compact bootstrap prompt/checklist baseline: PASS / frozen.
+- M126 compact bootstrap documentation freeze: PASS / frozen.
+- M127 M125 runtime constraint record: PASS.
+- M128 P0 compact bootstrap documentation recap: PASS.
+- M129 external agent trial preparation checklist: PASS.
+- M130 OpenClaw runtime availability check: PASS / runtime unavailable confirmed.
+- M131 external agent trial evidence template: PASS / template ready.
+- M132 compact bootstrap documentation stable baseline recap: PASS.
+- M125 remains IMPLEMENTED / PENDING until a real OpenClaw or clearly identified non-Hermes local governed agent runtime exists.
+- The system remains personal-local, Markdown-native, human-reviewed, and intentionally non-enterprise.
+
+Final lock:
+
+```text
+M132 Compact Bootstrap Documentation Stable Baseline Recap
+PASS / stable baseline recap added / M125 remains pending
+```
+
+References:
+- `docs/compact-bootstrap-stable-baseline-recap.md`
+- `templates/external-agent-trial-evidence.md`
+- `wiki/k6-freelancer/verification-m132.md`
+
+---
+
 ## N-20260604-M67-M70 Boundary Validation
 
 Status: PASS / FROZEN / SMOKE VERIFIED
