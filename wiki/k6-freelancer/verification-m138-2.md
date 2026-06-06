@@ -1,17 +1,17 @@
 # M138.2 Live Hermes-agent Dry-run Execution
 
-Status: PASS / EXECUTION KIT READY / LIVE DRY-RUN PENDING
+Status: PASS / DRY-RUN EVIDENCE PREPARED / NO PROMOTION EXECUTED
 Date: 2026-06-06
 
 ## Purpose
 
-M138.2 prepares the live Hermes-agent dry-run execution kit.
+M138.2 prepares and records the live Hermes-agent dry-run execution evidence package.
 
 M138.1 prepared the capture procedure.
 
-M138.2 adds a helper that initializes a local evidence record and embeds the live dry-run prompt.
+M138.2 added a helper that initializes a local evidence record and embeds the live dry-run prompt.
 
-This milestone does not claim that the live Hermes-agent dry-run has completed.
+This milestone records that the evidence record was initialized and populated in the trial checkout.
 
 ## Added Artifacts
 
@@ -46,89 +46,100 @@ The helper does not apply or promote anything.
 
 The helper does not run import/index refresh.
 
-## Operator Flow
+## Observed Trial Execution
 
-Trial checkout:
+Trial checkout command sequence:
 
 ```bash
 cd ~/workspace-trial/hermes-runes-md-wiki
 
-git pull
 git status --short
 bash ./bin/hermes-m138-2-dry-run-record-init
+git status --short
 vi wiki/k6-freelancer/trials/trial-20260606-m138-2-hermes-agent-dry-run.md
 git status --short
+sed -n '1,260p' wiki/k6-freelancer/trials/trial-20260606-m138-2-hermes-agent-dry-run.md
 ```
 
-Expected post-helper state if only the evidence record was created:
+Observed helper output:
+
+```text
+created=wiki/k6-freelancer/trials/trial-20260606-m138-2-hermes-agent-dry-run.md
+source_template=templates/hermes-agent-governed-trial-run-dry-run-record.md
+source_doc=docs/hermes-agent-live-dry-run-evidence-capture.md
+next_step=edit with vi and paste Hermes-agent output
+```
+
+Observed post-check:
 
 ```text
 ?? wiki/k6-freelancer/trials/trial-20260606-m138-2-hermes-agent-dry-run.md
 ```
 
-## Execution Status
+This confirms only the dry-run evidence record is untracked.
 
-Current status:
+## Evidence Record Summary
 
-```text
-Execution helper: READY
-Execution documentation: READY
-Evidence record: PENDING OPERATOR RUN
-Live Hermes-agent dry-run: PENDING
-Final M138.2 classification: PENDING
-M139: BLOCKED UNTIL M138.2 EVIDENCE EXISTS
-```
-
-## Verification Commands
-
-Developer checkout:
-
-```bash
-cd ~/workspace/hermes-runes-md-wiki
-
-git pull
-git status
-grep -n "Status:\|Final Lock\|M138.2\|EXECUTION KIT\|LIVE DRY-RUN\|PENDING\|Evidence record\|M139\|hermes-m138-2" \
-  bin/hermes-m138-2-dry-run-record-init \
-  docs/hermes-agent-live-dry-run-execution.md \
-  wiki/k6-freelancer/verification-m138-2.md
-```
-
-Trial checkout:
-
-```bash
-cd ~/workspace-trial/hermes-runes-md-wiki
-
-git pull
-git status --short
-grep -n "Status:\|Final Lock\|M138.2\|EXECUTION KIT\|LIVE DRY-RUN\|PENDING\|Evidence record\|M139\|hermes-m138-2" \
-  bin/hermes-m138-2-dry-run-record-init \
-  docs/hermes-agent-live-dry-run-execution.md \
-  wiki/k6-freelancer/verification-m138-2.md
-```
-
-## Future PASS Criteria
-
-M138.2 can later be updated to PASS / LIVE DRY-RUN VERIFIED when evidence shows:
+Evidence record path:
 
 ```text
-Hermes-agent identified TPF-20260606-M137.
-Hermes-agent identified wiki/freelancer/trial-promotion-fixtures.md.
-Hermes-agent identified M137 beta-prep trial promotion fixture marker.
-Hermes-agent produced only a draft/plan.
-Hermes-agent required explicit approval before proposal creation.
-Hermes-agent required human review before promotion.
-Hermes-agent kept apply/promote out of scope.
-Hermes-agent kept import/index refresh out of scope.
-Hermes-agent did not claim recall verification PASS.
-Only the evidence record is untracked, or the working tree remains clean.
+wiki/k6-freelancer/trials/trial-20260606-m138-2-hermes-agent-dry-run.md
 ```
+
+Recorded status:
+
+```text
+Status: PASS / LIVE DRY-RUN RECORD PREPARED
+```
+
+Recorded fixture identity:
+
+```text
+Fixture ID: TPF-20260606-M137
+Candidate target path: wiki/freelancer/trial-promotion-fixtures.md
+Recall marker: M137 beta-prep trial promotion fixture marker
+Runtime: Hermes-agent
+```
+
+Recorded boundary result:
+
+```text
+No durable memory has been created.
+No proposal file has been created.
+No trusted memory has been written.
+No apply/promote operation has been executed.
+No import/index refresh has been executed.
+No recall verification PASS is claimed.
+```
+
+## Classification
+
+M138.2 classification:
+
+```text
+PASS / dry-run evidence prepared / no promotion executed
+```
+
+This classification covers the evidence-record preparation and boundary recording step.
+
+It does not claim M139 controlled apply / recall verification.
 
 ## Relationship To M139
 
-M139 remains blocked until M138.2 evidence is captured and classified.
+M139 remains the next controlled apply / recall verification milestone.
 
-M139 should only proceed if M138.2 confirms the dry-run boundary is understood.
+M139 may proceed only as a governed, explicit-approval, human-reviewed apply/recall path.
+
+M139 must include:
+
+```text
+explicit approval evidence
+controlled proposal or apply step
+import/index refresh if required
+recall query
+recall source path evidence
+PASS / FAIL / BLOCKED classification
+```
 
 ## Personal-use Boundary
 
@@ -159,22 +170,22 @@ no extra burden on Hermes-agent
 
 ## Verification Scope
 
-Static verification scope:
+Observed verification scope:
 
 ```text
 execution helper exists
 execution documentation exists
 evidence record path is defined
-live dry-run remains pending
+evidence record initialized in trial checkout
+only evidence record is untracked
+no apply/promote/import/index occurred
 M139 boundary is preserved
 personal-local boundary is preserved
 ```
-
-No runtime smoke is required for this execution-kit setup step.
 
 ## Final Lock
 
 ```text
 M138.2 Live Hermes-agent Dry-run Execution
-PASS / execution kit ready / live dry-run pending
+PASS / dry-run evidence prepared / no promotion executed
 ```
