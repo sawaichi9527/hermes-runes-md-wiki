@@ -1,6 +1,6 @@
 # M174 Mini-cycle 2 Proposal-first Draft Run
 
-Status: READY / RUN INPUT PREPARED / EVIDENCE PENDING
+Status: PASS / PROPOSAL-FIRST DRAFT VERIFIED / RESULT LOCKED
 Date: 2026-06-07
 
 ## Evidence Record
@@ -21,24 +21,31 @@ docs/cb-m174-proposal-first-draft-run.md
 Closed Beta mini-cycle 2
 personal-local scope
 proposal-first draft scenario
-actual Hermes-agent output required before execution PASS
+Hermes-agent output observed
 ```
 
 ## Result
 
 ```text
-READY
+PASS
 ```
 
-## Run Command Target
+## Verification Notes
 
 ```text
-Use /home/eye/workspace-trial/hermes-runes-md-wiki/docs/cb-m174-proposal-first-draft-run.md as the prompt input for Hermes-agent.
+Absolute trial-root prompt path was used.
+Draft-only proposal preview was produced.
+Draft was not treated as accepted or approved.
+No files were created, edited, moved, deleted, or committed.
+No wiki memory persistence was reported.
+No placeholder paths were used.
+Workspace was not switched.
+Auxiliary title generation failure was unrelated to the proposal-first boundary.
 ```
 
 ## Final Lock
 
 ```text
 M174 Mini-cycle 2 Proposal-first Draft Run
-READY / run input prepared / evidence pending
+PASS / proposal-first draft verified / no persistence or file write observed
 ```
