@@ -1,13 +1,13 @@
 # Closed Beta Next Actions
 
-Status: ACTIVE / M172-M182 EXECUTION PACKAGE READY / M173 RUN READY
+Status: ACTIVE / M173 RUN INPUT READY / EVIDENCE PENDING
 Date: 2026-06-07
 
 ## Current Stage
 
 ```text
-M172 Mini-cycle 2 Execution Start
-PASS / execution package ready
+M173 Mini-cycle 2 Read-only Technical Input Run
+READY / run input prepared / evidence pending
 ```
 
 ## Locked / Prepared CB Chain
@@ -21,7 +21,7 @@ M169 PASS / dry run plan locked
 M170 PASS / summary plan ready
 M171 PASS / continue controlled CB before broader beta
 M172 PASS / execution package ready
-M173 READY / run prompt locked / evidence pending
+M173 READY / run input prepared / evidence pending
 M174 READY / run prompt locked / evidence pending
 M175 READY / run prompt locked / evidence pending
 M176 READY / run prompt locked / evidence pending
@@ -33,36 +33,62 @@ M181 READY / scope template locked / evidence pending
 M182 READY / checklist template locked / evidence pending
 ```
 
-## Run Order
+## M173 Run Input
 
 ```text
-M173 read-only technical input
-M174 proposal-first draft
-M175 review hold/defer
-M176 approved-path explanation
-M177 target-first recall-state
-M178 result lock
-M179 bug status pass
-M180 readiness review
-M181 beta candidate scope
-M182 beta entry checklist
-```
+Prompt file:
+/home/eye/workspace-trial/hermes-runes-md-wiki/docs/cb-m173-readonly-technical-input-run.md
 
-## Current Decision
-
-```text
-M172-M182 package is ready, but M173-M177 are not execution PASS yet.
-Do not widen beta scope until M173-M177 real evidence is recorded and M178 is locked.
+Scenario:
+read-only IPv4 TTL technical input analysis
 ```
 
 ## Immediate Next Action
 
+Pull the M173 run-input update and run Hermes-agent with the M173 prompt.
+
+Developer checkout:
+
+```bash
+cd ~/workspace/hermes-runes-md-wiki
+
+git pull
+git status
+git log --oneline -12
+
+grep -n "Status:\|M173\|Prompt Path\|Technical Input\|Expected Boundary\|READY\|PASS /" \
+  docs/cb-m173-readonly-technical-input-run.md \
+  wiki/k6-freelancer/verification-m173.md \
+  wiki/k6-freelancer/cb-sessions/cb-20260607-m173-readonly-technical-input-run.md \
+  wiki/k6-freelancer/next-actions-cb.md
+```
+
+Trial checkout:
+
+```bash
+cd ~/workspace-trial/hermes-runes-md-wiki
+
+git pull
+git status --short
+
+grep -n "Status:\|M173\|Prompt Path\|Technical Input\|Expected Boundary\|READY\|PASS /" \
+  docs/cb-m173-readonly-technical-input-run.md \
+  wiki/k6-freelancer/verification-m173.md \
+  wiki/k6-freelancer/cb-sessions/cb-20260607-m173-readonly-technical-input-run.md \
+  wiki/k6-freelancer/next-actions-cb.md
+```
+
+Hermes-agent run target:
+
 ```text
-Run M173 first using docs/cb-m173-readonly-technical-input-run.md.
+Use the full content of:
+/home/eye/workspace-trial/hermes-runes-md-wiki/docs/cb-m173-readonly-technical-input-run.md
 ```
 
 ## Next Candidate Milestone
 
 ```text
-M173 Mini-cycle 2 Read-only Technical Input Run
+M173 Result Lock
 ```
+
+After the Hermes-agent output is pasted back, classify M173 as PASS / PARTIAL / BLOCKED / FAIL and update the session evidence.
