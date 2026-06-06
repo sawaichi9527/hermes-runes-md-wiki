@@ -44,6 +44,7 @@ wiki/hermes_runes_index.md
 wiki/_system/runes_shield_contract.md
 wiki/_system/runes_invocation_policy.md
 wiki/_system/runes_agent_guidance.md
+wiki/_system/p0_local_agent_invocation_policy.md
 ```
 
 These files define the required P0 agent-facing knowledge boundary.
@@ -97,6 +98,12 @@ Defines practical interaction guidance for Hermes-agent.
 
 Use this to understand when Hermes-agent should offer Runes knowledge solidification, how to ask the user for consent, and how to explain proposal results.
 
+### `wiki/_system/p0_local_agent_invocation_policy.md`
+
+Defines the repeated P0 practical local-agent invocation flow validated by M112 through M115.
+
+Use this as the short checklist for read-only first, proposal draft first, explicit approval before file creation, separate approval before promotion, import/index refresh if needed, recall verification before PASS freeze, no autonomous writer behavior, no external/public Runes API, and no secrets.
+
 ---
 
 ## P0 Bootstrap Summary
@@ -111,6 +118,8 @@ A compliant P0 Hermes-agent should be able to answer:
 6. What does user consent look like?
 7. What is the difference between draft proposal and trusted memory?
 8. How should trusted recall evidence be used?
+9. What is the repeated practical P0 local-agent invocation flow?
+10. When is a practical P0 trial-run allowed to be frozen as PASS?
 
 ---
 
