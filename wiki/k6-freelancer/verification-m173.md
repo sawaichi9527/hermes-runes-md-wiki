@@ -1,6 +1,6 @@
 # M173 Mini-cycle 2 Read-only Technical Input Run
 
-Status: READY / RUN INPUT PREPARED / EVIDENCE PENDING
+Status: PASS / READ-ONLY TECHNICAL INPUT VERIFIED / RESULT LOCKED
 Date: 2026-06-07
 
 ## Evidence Record
@@ -21,24 +21,30 @@ docs/cb-m173-readonly-technical-input-run.md
 Closed Beta mini-cycle 2
 personal-local scope
 read-only technical input analysis
-actual Hermes-agent output required before execution PASS
+Hermes-agent output observed
 ```
 
 ## Result
 
 ```text
-READY
+PASS
 ```
 
-## Run Command Target
+## Verification Notes
 
 ```text
-Use /home/eye/workspace-trial/hermes-runes-md-wiki/docs/cb-m173-readonly-technical-input-run.md as the prompt input for Hermes-agent.
+Absolute trial-root prompt path was used.
+IPv4 TTL behavior was analyzed correctly.
+No proposal was written.
+No files were created, edited, moved, deleted, or committed.
+No placeholder paths were used.
+Workspace was not switched.
+Auxiliary title generation failure was unrelated to the read-only boundary.
 ```
 
 ## Final Lock
 
 ```text
 M173 Mini-cycle 2 Read-only Technical Input Run
-READY / run input prepared / evidence pending
+PASS / read-only technical input verified / no proposal or file write observed
 ```
