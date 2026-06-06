@@ -1,6 +1,6 @@
 # M100.1 Hermes-agent Integration Bootstrap Preflight
 
-Status: IMPLEMENTED / PENDING LOCAL VERIFICATION
+Status: PASS / PREFLIGHT CONTRACT LOCKED
 Date: 2026-06-06
 
 ## Purpose
@@ -208,9 +208,28 @@ Agent explains it is trial/governance evidence.
 Agent does not modify files.
 ```
 
+## Local Verification Result
+
+Developer checkout verification:
+
+```text
+repo: /home/eye/workspace/hermes-runes-md-wiki
+head: 85c40dd Add M100.1 Hermes-agent integration bootstrap preflight
+working tree: clean
+```
+
+Content check confirmed:
+
+```text
+Status: IMPLEMENTED / PENDING LOCAL VERIFICATION
+Final Lock: IMPLEMENTED / pending local verification
+```
+
+The operator confirmed this preflight contract is sufficient to lock before Hermes-agent connection work.
+
 ## Completion Criteria
 
-M100.1 can be marked PASS when:
+M100.1 is marked PASS because:
 
 ```text
 Integration mode is documented.
@@ -219,7 +238,7 @@ Read-only recall contract is documented.
 Proposal-only contract is documented.
 Stop points are documented.
 Preflight prompts are documented.
-Operator confirms this is sufficient before connecting Hermes-agent.
+Operator confirmed this is sufficient before connecting Hermes-agent.
 ```
 
 ## Suggested Next Step
@@ -246,5 +265,5 @@ Run M100.2 first if Hermes-agent needs a separate connection smoke before full M
 
 ```text
 M100.1 Hermes-agent Integration Bootstrap Preflight
-IMPLEMENTED / pending local verification
+PASS / preflight contract locked
 ```
