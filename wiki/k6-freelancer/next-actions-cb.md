@@ -1,13 +1,13 @@
 # Closed Beta Next Actions
 
-Status: ACTIVE / M158 RESULT LOCKED / M159 READY
+Status: ACTIVE / M159 REVIEW DECISION SESSION READY
 Date: 2026-06-07
 
 ## Current Stage
 
 ```text
-M158 Proposal-first CB Session
-PASS / proposal-first draft verified / no promotion / no trusted wiki mutation
+M159 Human Review Reject / Defer Path CB Evidence
+PASS / review decision session record ready / real agent run pending
 ```
 
 ## Locked CB Chain
@@ -31,32 +31,20 @@ M158 PASS / proposal-first draft verified / no promotion / no trusted wiki mutat
 ## Prepared Remaining CB Evidence Ladder
 
 ```text
-M159 PASS / reject-defer prompt ready / real agent run pending
+M159 PASS / review decision session record ready / real agent run pending
 M160 PASS / human-approved promotion prompt ready / real agent run pending
 M161 PASS / post-promotion recall prompt ready / real agent run pending
 M162 PASS / observation review plan ready / evidence accumulation pending
 M163 PASS / CB mini baseline plan ready / early CB results pending
 ```
 
-## M158 Result
+## M159 Files
 
 ```text
-Evidence record:
-wiki/k6-freelancer/cb-sessions/cb-20260607-m158-proposal-first.md
-
-Result:
-PASS
+docs/cb-m159-reject-defer-path-prompt.md
+wiki/k6-freelancer/verification-m159.md
+wiki/k6-freelancer/cb-sessions/cb-20260607-m159-review-decision.md
 ```
-
-Hermes-agent prepared draft-only proposal content, marked it as `status: draft` and `trust_class: unreviewed`, and did not promote or modify trusted wiki content.
-
-## TB-20260607-003 Observation
-
-```text
-repeated: no
-```
-
-M158 used the trial-root absolute prompt path correctly.
 
 ## Current Open CB Bug Records
 
@@ -68,19 +56,19 @@ TB-20260607-004 OPEN / placeholder append path caused local append failure
 TB-20260607-005 OPEN / M158 optional reference file lookup failed but did not block session
 ```
 
-## Required Registry Follow-up
+## M159 Path Rule
 
-Append TB-20260607-005 to:
+Use trial-root absolute prompt path during Hermes-agent execution:
 
 ```text
-wiki/k6-freelancer/trial-bugs.md
+/home/eye/workspace-trial/hermes-runes-md-wiki/docs/cb-m159-reject-defer-path-prompt.md
 ```
 
-Use local edit / grep / diff / commit to avoid large-file overwrite risk.
+Observe whether TB-20260607-005 repeats.
 
 ## Immediate Next Action
 
-Pull the M158 result lock and verify the session record.
+Pull the M159 session record, then run Hermes-agent with a human-review decision scenario.
 
 Developer checkout:
 
@@ -92,11 +80,12 @@ git status
 git log --oneline -12
 
 for f in \
-  wiki/k6-freelancer/verification-m158.md \
-  wiki/k6-freelancer/cb-sessions/cb-20260607-m158-proposal-first.md \
+  docs/cb-m159-reject-defer-path-prompt.md \
+  wiki/k6-freelancer/verification-m159.md \
+  wiki/k6-freelancer/cb-sessions/cb-20260607-m159-review-decision.md \
   wiki/k6-freelancer/next-actions-cb.md; do
   echo "== $f =="
-  grep -n "Status:\|Final Lock\|M158\|TB-20260607-005\|PROPOSAL-FIRST\|proposal-first\|Boundary Check\|PASS /" "$f"
+  grep -n "Status:\|Final Lock\|M159\|REVIEW DECISION\|Session Input\|Agent Path\|Actual Behavior\|Observation Evidence\|Boundary Check\|PASS /" "$f"
 done
 ```
 
@@ -108,16 +97,36 @@ cd ~/workspace-trial/hermes-runes-md-wiki
 git pull
 git status --short
 
-grep -n "Status:\|Final Lock\|M158\|TB-20260607-005\|PROPOSAL-FIRST\|proposal-first\|Boundary Check\|PASS /" \
-  wiki/k6-freelancer/verification-m158.md \
-  wiki/k6-freelancer/cb-sessions/cb-20260607-m158-proposal-first.md \
-  wiki/k6-freelancer/next-actions-cb.md
+ls -l docs/cb-m159-reject-defer-path-prompt.md
+ls -l wiki/k6-freelancer/verification-m159.md
+ls -l wiki/k6-freelancer/cb-sessions/cb-20260607-m159-review-decision.md
+```
+
+## M159 Execution Input
+
+Use the M158 draft-like scenario and explicitly state that the human reviewer is not approving it now.
+
+Suggested structure:
+
+```text
+Here is a M159 human review decision scenario:
+
+Draft under review:
+<short sanitized draft summary>
+
+Human review decision:
+Defer this draft. Do not treat it as trusted memory yet.
+
+Please follow /home/eye/workspace-trial/hermes-runes-md-wiki/docs/cb-m159-reject-defer-path-prompt.md.
+Do not promote memory.
+Do not modify trusted wiki.
+Do not run import or index refresh.
 ```
 
 ## Next Candidate Milestone
 
 ```text
-M159 Human Review Reject / Defer Path CB Evidence
+M159 Result Lock
 ```
 
-Before or during M159 preparation, append the TB-20260607-005 record to `trial-bugs.md` using a local edit.
+After Hermes-agent output is available, update the M159 session record and classify the result as PASS / PARTIAL / BLOCKED / FAIL.
