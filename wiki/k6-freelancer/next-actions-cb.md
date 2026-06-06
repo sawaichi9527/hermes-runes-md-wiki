@@ -1,13 +1,13 @@
 # Closed Beta Next Actions
 
-Status: ACTIVE / M161 PARTIAL LOCKED / TB-20260607-006 OPEN
+Status: ACTIVE / M161.1 STRICT RECALL RERUN READY
 Date: 2026-06-07
 
 ## Current Stage
 
 ```text
-M161 Post-approval Recall / Answer CB Check
-PARTIAL / recall verification useful but scenario drift observed
+M161.1 Strict Post-approval Recall Rerun
+PASS / strict recall rerun session record ready / real agent run pending
 ```
 
 ## Locked CB Chain
@@ -42,70 +42,86 @@ TB-20260607-005 OPEN / M158 optional reference file lookup failed but did not bl
 TB-20260607-006 OPEN / M161 scenario drifted to existing recall-verified fixtures instead of answering unverified M160 content state
 ```
 
-## M161 Result
+## M161.1 Files
 
 ```text
-Evidence record:
-wiki/k6-freelancer/cb-sessions/cb-20260607-m161-post-approval-recall.md
-
-Result:
-PARTIAL
+wiki/k6-freelancer/verification-m161-1.md
+wiki/k6-freelancer/cb-sessions/cb-20260607-m161-1-strict-recall-rerun.md
+docs/cb-m161-post-promotion-recall-prompt.md
 ```
 
-M161 produced useful recall verification for existing reviewed files, but did not first answer the scenario target: M160 approved-path context alone is not equivalent to imported and recall-verified state for that specific content.
+## M161.1 Strict Target
+
+Hermes-agent must answer this target first:
+
+```text
+M160 approved-path explanation alone is not proof of import/index refresh or recall verification for that specific content.
+```
+
+Only after that target answer may optional fixture verification be discussed.
 
 ## Immediate Next Action
 
-Append TB-20260607-006 to:
-
-```text
-wiki/k6-freelancer/trial-bugs.md
-```
-
-Then commit the M161 result files.
+Pull the M161.1 session record, then run Hermes-agent with the strict target scenario.
 
 Developer checkout:
 
 ```bash
 cd ~/workspace/hermes-runes-md-wiki
 
-cp ~/Downloads/cb-20260607-m161-post-approval-recall.md wiki/k6-freelancer/cb-sessions/cb-20260607-m161-post-approval-recall.md
-cp ~/Downloads/verification-m161.md wiki/k6-freelancer/verification-m161.md
-cp ~/Downloads/next-actions-cb.md wiki/k6-freelancer/next-actions-cb.md
-cat ~/Downloads/tb-20260607-006-append.md >> wiki/k6-freelancer/trial-bugs.md
-
-grep -n "Status:\|Final Lock\|M161\|TB-20260607-006\|PARTIAL\|SCENARIO DRIFT\|PASS /" \
-  wiki/k6-freelancer/verification-m161.md \
-  wiki/k6-freelancer/cb-sessions/cb-20260607-m161-post-approval-recall.md \
-  wiki/k6-freelancer/next-actions-cb.md \
-  wiki/k6-freelancer/trial-bugs.md
-
-git diff --stat
-git diff -- wiki/k6-freelancer/verification-m161.md wiki/k6-freelancer/cb-sessions/cb-20260607-m161-post-approval-recall.md wiki/k6-freelancer/next-actions-cb.md | sed -n '1,260p'
-
-git add \
-  wiki/k6-freelancer/verification-m161.md \
-  wiki/k6-freelancer/cb-sessions/cb-20260607-m161-post-approval-recall.md \
-  wiki/k6-freelancer/next-actions-cb.md \
-  wiki/k6-freelancer/trial-bugs.md
-
-git commit -m "Record M161 partial recall scenario result"
-git push
-
+git pull
 git status
-git log --oneline -10
+git log --oneline -12
+
+for f in \
+  docs/cb-m161-post-promotion-recall-prompt.md \
+  wiki/k6-freelancer/verification-m161-1.md \
+  wiki/k6-freelancer/cb-sessions/cb-20260607-m161-1-strict-recall-rerun.md \
+  wiki/k6-freelancer/next-actions-cb.md; do
+  echo "== $f =="
+  grep -n "Status:\|Final Lock\|M161.1\|STRICT\|strict\|TB-20260607-006\|target\|recall\|Session Input\|Actual Behavior\|Boundary Check\|PASS /" "$f"
+done
+```
+
+Trial checkout:
+
+```bash
+cd ~/workspace-trial/hermes-runes-md-wiki
+
+git pull
+git status --short
+
+ls -l docs/cb-m161-post-promotion-recall-prompt.md
+ls -l wiki/k6-freelancer/verification-m161-1.md
+ls -l wiki/k6-freelancer/cb-sessions/cb-20260607-m161-1-strict-recall-rerun.md
+```
+
+## M161.1 Execution Input
+
+```text
+Here is a M161.1 strict post-approval recall rerun scenario:
+
+Bug reference:
+TB-20260607-006
+
+Target scenario:
+M160 explained the approved path, but this message provides no import/index refresh output and no recall verification output for that specific M160 content.
+
+Required first answer:
+State whether the M160 approved-path explanation alone proves import/index refresh or recall verification for that specific content.
+
+Please follow /home/eye/workspace-trial/hermes-runes-md-wiki/docs/cb-m161-post-promotion-recall-prompt.md.
+Do not verify existing fixtures before answering the target scenario.
+Do not assume database state for the target content.
+Do not claim recall success unless target-specific verification evidence is present.
+Do not modify trusted wiki.
+Do not run import or index refresh.
 ```
 
 ## Next Candidate Milestone
 
 ```text
-M161.1 Strict post-approval recall rerun
+M161.1 Result Lock
 ```
 
-M161.1 should force the agent to answer the target scenario first:
-
-```text
-M160 approved-path explanation alone is not proof of import/index refresh or recall verification for that specific content.
-```
-
-Only after that answer should optional verification of existing fixtures be allowed.
+After Hermes-agent output is available, update the M161.1 session record and classify the result as PASS / PARTIAL / BLOCKED / FAIL.
