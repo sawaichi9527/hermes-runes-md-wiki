@@ -1,13 +1,13 @@
 # Closed Beta Next Actions
 
-Status: ACTIVE / M163 MINI BASELINE LOCKED / M164 READY
+Status: ACTIVE / M164 CLEANUP PLAN LOCKED / M165 READY
 Date: 2026-06-07
 
 ## Current Stage
 
 ```text
-M163 Closed Beta Mini Baseline Lock
-PASS / CB mini baseline locked / continue controlled CB iteration
+M164 Trial Bug Cleanup Plan
+PASS / cleanup classification locked / no registry status mutation performed
 ```
 
 ## Locked CB Chain
@@ -32,6 +32,7 @@ M161 PARTIAL / recall verification useful but scenario drift observed
 M161.1 PASS / strict target answer verified / no target state assumed
 M162 PASS / observation review completed / lightweight tuning candidates recorded
 M163 PASS / CB mini baseline locked / continue controlled CB iteration
+M164 PASS / cleanup classification locked / no registry status mutation performed
 ```
 
 ## Current Open CB Bug Records
@@ -45,29 +46,38 @@ TB-20260607-005 OPEN / M158 optional reference file lookup failed but did not bl
 TB-20260607-006 OPEN / M161 scenario drifted to existing recall-verified fixtures instead of answering unverified M160 content state; M161.1 mitigation evidence recorded
 ```
 
-## M163 Result
+## M164 Result
 
 ```text
 Evidence record:
-wiki/k6-freelancer/cb-sessions/cb-20260607-m163-mini-baseline.md
+wiki/k6-freelancer/cb-sessions/cb-20260607-m164-trial-bug-cleanup-plan.md
 
 Result:
 PASS
 ```
 
-M163 locks the first Closed Beta mini baseline. The baseline is stable enough for continued controlled testing, while keeping M161 marked PARTIAL and preserving TB-20260607-006 as an open bug with M161.1 mitigation evidence.
+M164 classifies open Trial Bugs without directly mutating registry statuses.
 
-## Baseline Decision
+## Cleanup Classification
 
 ```text
-M163 mini baseline can be treated as CB-stable for continued controlled testing.
-Open bugs are documentation / prompt / workflow-hardening items, not CB blockers.
-Continue CB iteration with focused cleanup and mini-cycle planning.
+Fix now candidates:
+- TB-20260607-003
+- TB-20260607-004
+- TB-20260607-005
+
+Keep open as guidance evidence:
+- TB-20260607-001
+- TB-20260607-002
+- TB-20260607-006
+
+Defer to later CB mini-cycle:
+- none as blocker
 ```
 
 ## Immediate Next Action
 
-Pull the M163 result lock and verify the mini baseline record.
+Pull the M164 result lock and verify the cleanup plan.
 
 Developer checkout:
 
@@ -79,11 +89,11 @@ git status
 git log --oneline -12
 
 for f in \
-  wiki/k6-freelancer/verification-m163.md \
-  wiki/k6-freelancer/cb-sessions/cb-20260607-m163-mini-baseline.md \
+  wiki/k6-freelancer/verification-m164.md \
+  wiki/k6-freelancer/cb-sessions/cb-20260607-m164-trial-bug-cleanup-plan.md \
   wiki/k6-freelancer/next-actions-cb.md; do
   echo "== $f =="
-  grep -n "Status:\|Final Lock\|M163\|M164\|Mini Baseline\|mini baseline\|CB-stable\|PASS /" "$f"
+  grep -n "Status:\|Final Lock\|M164\|M165\|cleanup\|Cleanup\|TB-20260607\|PASS /" "$f"
 done
 ```
 
@@ -95,16 +105,16 @@ cd ~/workspace-trial/hermes-runes-md-wiki
 git pull
 git status --short
 
-grep -n "Status:\|Final Lock\|M163\|M164\|Mini Baseline\|mini baseline\|CB-stable\|PASS /" \
-  wiki/k6-freelancer/verification-m163.md \
-  wiki/k6-freelancer/cb-sessions/cb-20260607-m163-mini-baseline.md \
+grep -n "Status:\|Final Lock\|M164\|M165\|cleanup\|Cleanup\|TB-20260607\|PASS /" \
+  wiki/k6-freelancer/verification-m164.md \
+  wiki/k6-freelancer/cb-sessions/cb-20260607-m164-trial-bug-cleanup-plan.md \
   wiki/k6-freelancer/next-actions-cb.md
 ```
 
 ## Next Candidate Milestone
 
 ```text
-M164 Trial Bug Cleanup Plan
+M165 Strict Prompt Hardening Sweep
 ```
 
-M164 should classify open Trial Bugs into: fix now, keep open as guidance evidence, or defer to later CB mini-cycle.
+M165 should implement the fix-now prompt/workflow hardening candidates identified by M164 without changing runtime behavior.
