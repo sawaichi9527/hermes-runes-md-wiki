@@ -56,6 +56,23 @@ and distinguished it from developer checkout:
 ~/workspace/hermes-runes-md-wiki
 ```
 
+## Bug Tracking Rule
+
+All CB validation findings that may need future confirmation or fix must receive a Trial Bug id in:
+
+```text
+wiki/k6-freelancer/trial-bugs.md
+```
+
+Current M156 bug record:
+
+```text
+TB-20260607-001
+Status: OPEN
+Severity: S3 minor
+Summary: M156 trial-root quote typo in Hermes-agent output
+```
+
 ## Immediate Next Action
 
 Pull the M156 result lock and proceed to M157.
@@ -70,10 +87,11 @@ git status
 git log --oneline -12
 
 for f in \
+  wiki/k6-freelancer/trial-bugs.md \
   wiki/k6-freelancer/verification-m156.md \
   wiki/k6-freelancer/next-actions-cb.md; do
   echo "== $f =="
-  grep -n "Status:\|Final Lock\|M156\|CB-WATCH\|trial-root\|M157\|PASS /" "$f"
+  grep -n "Status:\|Final Lock\|M156\|CB-WATCH\|TB-20260607-001\|trial-root\|M157\|PASS /" "$f"
 done
 ```
 
@@ -85,7 +103,8 @@ cd ~/workspace-trial/hermes-runes-md-wiki
 git pull
 git status --short
 
-grep -n "Status:\|Final Lock\|M156\|CB-WATCH\|trial-root\|M157\|PASS /" \
+grep -n "Status:\|Final Lock\|M156\|CB-WATCH\|TB-20260607-001\|trial-root\|M157\|PASS /" \
+  wiki/k6-freelancer/trial-bugs.md \
   wiki/k6-freelancer/verification-m156.md \
   wiki/k6-freelancer/next-actions-cb.md
 ```
