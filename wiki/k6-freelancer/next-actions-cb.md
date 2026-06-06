@@ -1,13 +1,13 @@
 # Closed Beta Next Actions
 
-Status: ACTIVE / M162 RESULT LOCKED / M163 READY
+Status: ACTIVE / M163 MINI BASELINE LOCKED / M164 READY
 Date: 2026-06-07
 
 ## Current Stage
 
 ```text
-M162 Observation Evidence Review
-PASS / observation review completed / lightweight tuning candidates recorded
+M163 Closed Beta Mini Baseline Lock
+PASS / CB mini baseline locked / continue controlled CB iteration
 ```
 
 ## Locked CB Chain
@@ -31,6 +31,7 @@ M160 PASS / approved path explained / governed workflow boundary preserved
 M161 PARTIAL / recall verification useful but scenario drift observed
 M161.1 PASS / strict target answer verified / no target state assumed
 M162 PASS / observation review completed / lightweight tuning candidates recorded
+M163 PASS / CB mini baseline locked / continue controlled CB iteration
 ```
 
 ## Current Open CB Bug Records
@@ -44,31 +45,29 @@ TB-20260607-005 OPEN / M158 optional reference file lookup failed but did not bl
 TB-20260607-006 OPEN / M161 scenario drifted to existing recall-verified fixtures instead of answering unverified M160 content state; M161.1 mitigation evidence recorded
 ```
 
-## M162 Result
+## M163 Result
 
 ```text
 Evidence record:
-wiki/k6-freelancer/cb-sessions/cb-20260607-m162-observation-review.md
+wiki/k6-freelancer/cb-sessions/cb-20260607-m163-mini-baseline.md
 
 Result:
 PASS
 ```
 
-M162 reviewed accumulated CB observations and recorded lightweight tuning candidates without adding enterprise telemetry, background daemons, automatic policy mutation, or automatic proposal handling.
+M163 locks the first Closed Beta mini baseline. The baseline is stable enough for continued controlled testing, while keeping M161 marked PARTIAL and preserving TB-20260607-006 as an open bug with M161.1 mitigation evidence.
 
-## Key M162 Findings
+## Baseline Decision
 
 ```text
-Absolute trial-root prompt paths improve reliability.
-Large registries should be append-only or locally edited.
-Placeholder paths in commands are unsafe for this workflow.
-Recall-state prompts need target-first wording.
-Optional reference files should be present or explicitly optional.
+M163 mini baseline can be treated as CB-stable for continued controlled testing.
+Open bugs are documentation / prompt / workflow-hardening items, not CB blockers.
+Continue CB iteration with focused cleanup and mini-cycle planning.
 ```
 
 ## Immediate Next Action
 
-Pull the M162 result lock and verify the observation review.
+Pull the M163 result lock and verify the mini baseline record.
 
 Developer checkout:
 
@@ -80,11 +79,11 @@ git status
 git log --oneline -12
 
 for f in \
-  wiki/k6-freelancer/verification-m162.md \
-  wiki/k6-freelancer/cb-sessions/cb-20260607-m162-observation-review.md \
+  wiki/k6-freelancer/verification-m163.md \
+  wiki/k6-freelancer/cb-sessions/cb-20260607-m163-mini-baseline.md \
   wiki/k6-freelancer/next-actions-cb.md; do
   echo "== $f =="
-  grep -n "Status:\|Final Lock\|M162\|M163\|Observation\|observation\|lightweight\|PASS /" "$f"
+  grep -n "Status:\|Final Lock\|M163\|M164\|Mini Baseline\|mini baseline\|CB-stable\|PASS /" "$f"
 done
 ```
 
@@ -96,16 +95,16 @@ cd ~/workspace-trial/hermes-runes-md-wiki
 git pull
 git status --short
 
-grep -n "Status:\|Final Lock\|M162\|M163\|Observation\|observation\|lightweight\|PASS /" \
-  wiki/k6-freelancer/verification-m162.md \
-  wiki/k6-freelancer/cb-sessions/cb-20260607-m162-observation-review.md \
+grep -n "Status:\|Final Lock\|M163\|M164\|Mini Baseline\|mini baseline\|CB-stable\|PASS /" \
+  wiki/k6-freelancer/verification-m163.md \
+  wiki/k6-freelancer/cb-sessions/cb-20260607-m163-mini-baseline.md \
   wiki/k6-freelancer/next-actions-cb.md
 ```
 
 ## Next Candidate Milestone
 
 ```text
-M163 CB Mini Baseline Plan / Early CB Results Lock
+M164 Trial Bug Cleanup Plan
 ```
 
-M163 should summarize the mini CB baseline and decide whether to continue CB iteration, rerun selected scenarios, or prepare a narrower beta baseline.
+M164 should classify open Trial Bugs into: fix now, keep open as guidance evidence, or defer to later CB mini-cycle.
