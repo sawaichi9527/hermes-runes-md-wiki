@@ -719,3 +719,69 @@ TB-20260605-015 FIXED        embedding CPU-only clean verifier
 TB-20260607-001 OPEN         M156 trial-root quote typo
 TB-20260607-002 OPEN         trial-bugs registry truncation caused by incomplete overwrite
 ```
+---
+
+## TB-20260607-003 M157 prompt path initially resolved outside repo before fallback
+
+Status: OPEN
+Severity: S3 minor
+Milestone: M157
+First observed: 2026-06-07
+
+### Symptom
+
+During M157 Hermes-agent read-only technical input validation, the agent first attempted to read the M157 prompt from:
+
+```text
+/home/eye/docs/cb-m157-technical-input-readonly-prompt.md
+```
+
+That path was not the repository path.
+
+The agent then recovered and read the correct prompt from the controlled trial checkout:
+
+```text
+/home/eye/workspace-trial/hermes-runes-md-wiki/docs/cb-m157-technical-input-readonly-prompt.md
+```
+
+### Context
+
+Observed during:
+
+```text
+M157 First Real User Technical Input CB Session
+```
+
+The session result remained PASS because Hermes-agent recovered safely, used the correct prompt, and preserved read-only behavior.
+
+### Impact
+
+```text
+Non-blocking path-resolution issue.
+No proposal was created.
+No promotion occurred.
+No trusted memory mutation occurred.
+M157 read-only analysis result remains valid.
+```
+
+### Tracking Decision
+
+Keep this bug open until prompt path guidance is clarified.
+
+Potential future fixes:
+
+```text
+Use absolute trial-root prompt paths in CB instructions.
+Require Hermes-agent to resolve docs paths relative to active repository root.
+Add a boundary self-check field for prompt_path_used.
+```
+
+### Next Check
+
+During M158, verify whether Hermes-agent resolves prompt paths under:
+
+```text
+/home/eye/workspace-trial/hermes-runes-md-wiki
+```
+
+before falling back to developer checkout or home-relative paths.
