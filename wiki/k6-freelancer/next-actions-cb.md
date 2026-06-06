@@ -1,13 +1,13 @@
 # Closed Beta Next Actions
 
-Status: ACTIVE / M158 PROPOSAL-FIRST SESSION READY
+Status: ACTIVE / M158 RESULT LOCKED / M159 READY
 Date: 2026-06-07
 
 ## Current Stage
 
 ```text
 M158 Proposal-first CB Session
-PASS / proposal-first session record ready / real agent run pending
+PASS / proposal-first draft verified / no promotion / no trusted wiki mutation
 ```
 
 ## Locked CB Chain
@@ -25,12 +25,12 @@ M155 PASS / first CB session result locked / read-only governance verified
 M156 PASS / trial-root discipline verified / read-only
 M156.1 PASS / registry restored / fix applied
 M157 PASS / read-only technical analysis verified / proposal-first boundary preserved
+M158 PASS / proposal-first draft verified / no promotion / no trusted wiki mutation
 ```
 
 ## Prepared Remaining CB Evidence Ladder
 
 ```text
-M158 PASS / proposal-first session record ready / real agent run pending
 M159 PASS / reject-defer prompt ready / real agent run pending
 M160 PASS / human-approved promotion prompt ready / real agent run pending
 M161 PASS / post-promotion recall prompt ready / real agent run pending
@@ -38,13 +38,25 @@ M162 PASS / observation review plan ready / evidence accumulation pending
 M163 PASS / CB mini baseline plan ready / early CB results pending
 ```
 
-## M158 Files
+## M158 Result
 
 ```text
-docs/cb-m158-proposal-first-draft-prompt.md
-wiki/k6-freelancer/verification-m158.md
+Evidence record:
 wiki/k6-freelancer/cb-sessions/cb-20260607-m158-proposal-first.md
+
+Result:
+PASS
 ```
+
+Hermes-agent prepared draft-only proposal content, marked it as `status: draft` and `trust_class: unreviewed`, and did not promote or modify trusted wiki content.
+
+## TB-20260607-003 Observation
+
+```text
+repeated: no
+```
+
+M158 used the trial-root absolute prompt path correctly.
 
 ## Current Open CB Bug Records
 
@@ -53,21 +65,22 @@ TB-20260607-001 OPEN / M156 trial-root quote typo
 TB-20260607-002 OPEN / registry restore follow-up recorded; fix commit exists: 2e8b8bd
 TB-20260607-003 OPEN / M157 prompt path initially resolved outside repo before fallback
 TB-20260607-004 OPEN / placeholder append path caused local append failure
+TB-20260607-005 OPEN / M158 optional reference file lookup failed but did not block session
 ```
 
-## M158 Path Rule
+## Required Registry Follow-up
 
-Use trial-root absolute prompt path during Hermes-agent execution:
+Append TB-20260607-005 to:
 
 ```text
-/home/eye/workspace-trial/hermes-runes-md-wiki/docs/cb-m158-proposal-first-draft-prompt.md
+wiki/k6-freelancer/trial-bugs.md
 ```
 
-This explicitly checks whether TB-20260607-003 repeats.
+Use local edit / grep / diff / commit to avoid large-file overwrite risk.
 
 ## Immediate Next Action
 
-Pull the M158 session record, then run Hermes-agent with explicit consent for draft-only proposal preparation.
+Pull the M158 result lock and verify the session record.
 
 Developer checkout:
 
@@ -79,12 +92,11 @@ git status
 git log --oneline -12
 
 for f in \
-  docs/cb-m158-proposal-first-draft-prompt.md \
   wiki/k6-freelancer/verification-m158.md \
   wiki/k6-freelancer/cb-sessions/cb-20260607-m158-proposal-first.md \
   wiki/k6-freelancer/next-actions-cb.md; do
   echo "== $f =="
-  grep -n "Status:\|Final Lock\|M158\|PROPOSAL-FIRST\|Session Input\|Agent Path\|Actual Behavior\|Observation Evidence\|Boundary Check\|PASS /" "$f"
+  grep -n "Status:\|Final Lock\|M158\|TB-20260607-005\|PROPOSAL-FIRST\|proposal-first\|Boundary Check\|PASS /" "$f"
 done
 ```
 
@@ -96,32 +108,16 @@ cd ~/workspace-trial/hermes-runes-md-wiki
 git pull
 git status --short
 
-ls -l docs/cb-m158-proposal-first-draft-prompt.md
-ls -l wiki/k6-freelancer/verification-m158.md
-ls -l wiki/k6-freelancer/cb-sessions/cb-20260607-m158-proposal-first.md
-```
-
-## M158 Execution Input
-
-Use a low-risk sample and explicitly allow draft-only proposal preparation.
-
-Suggested structure:
-
-```text
-Here is a low-risk technical sample for M158 proposal-first validation:
-<technical sample>
-
-I explicitly consent to draft-only proposal preparation for this test.
-Please follow /home/eye/workspace-trial/hermes-runes-md-wiki/docs/cb-m158-proposal-first-draft-prompt.md.
-Do not promote memory.
-Do not modify trusted wiki.
-Do not run import or index refresh.
+grep -n "Status:\|Final Lock\|M158\|TB-20260607-005\|PROPOSAL-FIRST\|proposal-first\|Boundary Check\|PASS /" \
+  wiki/k6-freelancer/verification-m158.md \
+  wiki/k6-freelancer/cb-sessions/cb-20260607-m158-proposal-first.md \
+  wiki/k6-freelancer/next-actions-cb.md
 ```
 
 ## Next Candidate Milestone
 
 ```text
-M158 Result Lock
+M159 Human Review Reject / Defer Path CB Evidence
 ```
 
-After Hermes-agent output is available, update the M158 session record and classify the result as PASS / PARTIAL / BLOCKED / FAIL.
+Before or during M159 preparation, append the TB-20260607-005 record to `trial-bugs.md` using a local edit.
