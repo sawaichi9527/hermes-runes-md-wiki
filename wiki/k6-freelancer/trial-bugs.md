@@ -835,3 +835,57 @@ wiki/k6-freelancer/tb-20260607-003-append.md
 ```
 
 Future instructions should avoid placeholder paths when a concrete local path is known.
+---
+
+## TB-20260607-005 M158 optional reference file lookup failed but did not block session
+
+Status: OPEN
+Severity: S3 minor
+Milestone: M158
+First observed: 2026-06-07
+
+### Symptom
+
+During M158 proposal-first CB validation, Hermes-agent successfully read the M158 prompt from the trial checkout, then attempted to read an optional reference file:
+
+```text
+/home/eye/workspace-trial/hermes-runes-md-wiki/references/readonly-analysis-pattern.md
+```
+
+The file was not found.
+
+### Context
+
+Observed during:
+
+```text
+M158 Proposal-first CB Session
+```
+
+The session result remained PASS because Hermes-agent had already read the correct M158 prompt and completed the draft-only proposal session safely.
+
+### Impact
+
+```text
+Non-blocking optional reference lookup issue.
+No proposal was written to the trusted wiki.
+No promotion occurred.
+No import or index refresh occurred.
+M158 proposal-first result remains valid.
+```
+
+### Tracking Decision
+
+Keep this bug open until the missing reference path is clarified.
+
+Potential future fixes:
+
+```text
+Create the optional reference file if it is intended.
+Remove the lookup expectation if the file is obsolete.
+Update prompt or skill guidance to avoid optional missing reads.
+```
+
+### Next Check
+
+During M159, observe whether Hermes-agent attempts to read missing optional reference files again.
