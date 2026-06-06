@@ -54,12 +54,24 @@ proposal created: no
 promotion attempted: no
 ```
 
-## Non-blocking Observation
+## Non-blocking Bug
+
+```text
+TB-20260607-001
+Status: OPEN
+Severity: S3 minor
+```
 
 Hermes-agent cited one line as `hermes-rnes-md-wiki`, which appears to be a typo in the quoted text. This does not block M156 because the actual identified trial root and boundary self-check used the correct path:
 
 ```text
 ~/workspace-trial/hermes-runes-md-wiki
+```
+
+Tracking record:
+
+```text
+wiki/k6-freelancer/trial-bugs.md#tb-20260607-001-m156-trial-root-quote-typo-in-hermes-agent-output
 ```
 
 ## Watch Item Status
