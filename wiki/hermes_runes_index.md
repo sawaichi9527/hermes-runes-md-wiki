@@ -46,6 +46,7 @@ wiki/_system/runes_invocation_policy.md
 wiki/_system/runes_agent_guidance.md
 wiki/_system/p0_local_agent_invocation_policy.md
 wiki/_system/p0_compact_agent_bootstrap_prompt.md
+wiki/_system/p0_compact_bootstrap_regression_checklist.md
 ```
 
 These files define the required P0 agent-facing knowledge boundary.
@@ -111,6 +112,12 @@ Defines a compact reusable bootstrap prompt for future Hermes-agent, OpenClaw, o
 
 Use this when starting a new local governed session so the agent can bootstrap from `wiki/hermes_runes_index.md` and `wiki/_system/p0_local_agent_invocation_policy.md` instead of long milestone verification history.
 
+### `wiki/_system/p0_compact_bootstrap_regression_checklist.md`
+
+Defines a compact regression checklist for future edits to the P0 bootstrap index, local invocation policy, and compact bootstrap prompt.
+
+Use this before and after modifying compact bootstrap policy files to confirm read-only-first, proposal-first, two-stage approval, recall-before-freeze, no autonomous writer, no external/public Runes authority, and no-secrets behavior remain intact.
+
 ---
 
 ## P0 Bootstrap Summary
@@ -128,6 +135,7 @@ A compliant P0 Hermes-agent should be able to answer:
 9. What is the repeated practical P0 local-agent invocation flow?
 10. When is a practical P0 trial-run allowed to be frozen as PASS?
 11. What compact bootstrap prompt should be used for a new local governed agent session?
+12. Which checklist should be used before and after compact bootstrap policy edits?
 
 ---
 
