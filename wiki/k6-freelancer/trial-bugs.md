@@ -934,3 +934,25 @@ M161 result should be classified as PARTIAL rather than PASS.
 Run M161.1 with a stricter prompt that requires the target scenario answer before any optional fixture verification.
 
 ---
+
+### M161.1 Mitigation Evidence for TB-20260607-006
+
+Date: 2026-06-07
+Related milestone: M161.1 Strict Post-approval Recall Rerun
+Status: MITIGATION EVIDENCE RECORDED
+
+M161.1 reran the M161 scenario with a stricter target-first instruction.
+
+Observed result:
+
+```text
+M161.1 PASS / strict target answer verified / no target state assumed
+```
+
+Hermes-agent first answered that M160 approved-path explanation alone is not proof of import/index refresh or recall verification for that specific content.
+
+This mitigates the behavior observed in M161, where the session drifted to existing reviewed fixtures before answering the target scenario.
+
+TB-20260607-006 remains OPEN until a later cleanup pass decides whether to mark it FIXED or keep it as guidance evidence.
+
+---
