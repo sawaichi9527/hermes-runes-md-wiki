@@ -1,13 +1,13 @@
 # Closed Beta Next Actions
 
-Status: ACTIVE / M173 RESULT LOCKED / M174 READY
+Status: ACTIVE / M174 RUN INPUT READY / EVIDENCE PENDING
 Date: 2026-06-07
 
 ## Current Stage
 
 ```text
-M173 Mini-cycle 2 Read-only Technical Input Run
-PASS / read-only technical input verified / no proposal or file write observed
+M174 Mini-cycle 2 Proposal-first Draft Run
+READY / run input prepared / evidence pending
 ```
 
 ## Locked / Prepared CB Chain
@@ -22,7 +22,7 @@ M170 PASS / summary plan ready
 M171 PASS / continue controlled CB before broader beta
 M172 PASS / execution package ready
 M173 PASS / read-only technical input verified / no proposal or file write observed
-M174 READY / run prompt locked / evidence pending
+M174 READY / run input prepared / evidence pending
 M175 READY / run prompt locked / evidence pending
 M176 READY / run prompt locked / evidence pending
 M177 READY / run prompt locked / evidence pending
@@ -33,21 +33,19 @@ M181 READY / scope template locked / evidence pending
 M182 READY / checklist template locked / evidence pending
 ```
 
-## M173 Result
+## M174 Run Input
 
 ```text
-Evidence record:
-wiki/k6-freelancer/cb-sessions/cb-20260607-m173-readonly-technical-input-run.md
+Prompt file:
+/home/eye/workspace-trial/hermes-runes-md-wiki/docs/cb-m174-proposal-first-draft-run.md
 
-Result:
-PASS
+Scenario:
+proposal-first ICMP Echo Request / Echo Reply technical input draft
 ```
-
-M173 confirms that Hermes-agent can analyze a low-risk IPv4 TTL technical input using the absolute trial-root prompt path while preserving the read-only boundary.
 
 ## Immediate Next Action
 
-Pull the M173 result lock and verify the updated records.
+Pull the M174 run-input update and run Hermes-agent with the M174 prompt.
 
 Developer checkout:
 
@@ -58,9 +56,10 @@ git pull
 git status
 git log --oneline -12
 
-grep -n "Status:\|Final Lock\|M173\|M174\|PASS /\|READY" \
-  wiki/k6-freelancer/verification-m173.md \
-  wiki/k6-freelancer/cb-sessions/cb-20260607-m173-readonly-technical-input-run.md \
+grep -n "Status:\|M174\|Prompt Path\|Technical Input\|Expected Boundary\|READY\|PASS /" \
+  docs/cb-m174-proposal-first-draft-run.md \
+  wiki/k6-freelancer/verification-m174.md \
+  wiki/k6-freelancer/cb-sessions/cb-20260607-m174-proposal-first-draft-run.md \
   wiki/k6-freelancer/next-actions-cb.md
 ```
 
@@ -72,16 +71,24 @@ cd ~/workspace-trial/hermes-runes-md-wiki
 git pull
 git status --short
 
-grep -n "Status:\|Final Lock\|M173\|M174\|PASS /\|READY" \
-  wiki/k6-freelancer/verification-m173.md \
-  wiki/k6-freelancer/cb-sessions/cb-20260607-m173-readonly-technical-input-run.md \
+grep -n "Status:\|M174\|Prompt Path\|Technical Input\|Expected Boundary\|READY\|PASS /" \
+  docs/cb-m174-proposal-first-draft-run.md \
+  wiki/k6-freelancer/verification-m174.md \
+  wiki/k6-freelancer/cb-sessions/cb-20260607-m174-proposal-first-draft-run.md \
   wiki/k6-freelancer/next-actions-cb.md
+```
+
+Hermes-agent run target:
+
+```text
+Use the full content of:
+/home/eye/workspace-trial/hermes-runes-md-wiki/docs/cb-m174-proposal-first-draft-run.md
 ```
 
 ## Next Candidate Milestone
 
 ```text
-M174 Mini-cycle 2 Proposal-first Draft Run
+M174 Result Lock
 ```
 
-M174 should run the proposal-first draft scenario using the locked mini-cycle 2 workflow rules.
+After the Hermes-agent output is pasted back, classify M174 as PASS / PARTIAL / BLOCKED / FAIL and update the session evidence.
