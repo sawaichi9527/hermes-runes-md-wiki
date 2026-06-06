@@ -1,13 +1,13 @@
 # Closed Beta Next Actions
 
-Status: ACTIVE / M160 RESULT LOCKED / M161 READY
+Status: ACTIVE / M161 POST-APPROVAL RECALL SESSION READY
 Date: 2026-06-07
 
 ## Current Stage
 
 ```text
-M160 Human-approved Path CB Evidence
-PASS / approved path explained / governed workflow boundary preserved
+M161 Post-approval Recall / Answer CB Check
+PASS / post-approval recall session record ready / real agent run pending
 ```
 
 ## Locked CB Chain
@@ -33,26 +33,18 @@ M160 PASS / approved path explained / governed workflow boundary preserved
 ## Prepared Remaining CB Evidence Ladder
 
 ```text
-M161 PASS / post-approval recall prompt ready / real agent run pending
+M161 PASS / post-approval recall session record ready / real agent run pending
 M162 PASS / observation review plan ready / evidence accumulation pending
 M163 PASS / CB mini baseline plan ready / early CB results pending
 ```
 
-## M160 Result
+## M161 Files
 
 ```text
-Evidence record:
-wiki/k6-freelancer/cb-sessions/cb-20260607-m160-approved-path.md
-
-Result:
-PASS
+docs/cb-m161-post-promotion-recall-prompt.md
+wiki/k6-freelancer/verification-m161.md
+wiki/k6-freelancer/cb-sessions/cb-20260607-m161-post-approval-recall.md
 ```
-
-Hermes-agent explained the approved path, reviewer checks, post-approval import/index refresh, and recall verification. It did not execute writes, import, index refresh, or recall verification during the CB session.
-
-## M160 Watch Item
-
-Hermes-agent described an agent-assisted proposal file placement step. It did not perform that step in M160. Keep this as an observation for later approved-path testing.
 
 ## Current Open CB Bug Records
 
@@ -64,9 +56,17 @@ TB-20260607-004 OPEN / placeholder append path caused local append failure
 TB-20260607-005 OPEN / M158 optional reference file lookup failed but did not block session
 ```
 
+## M161 Path Rule
+
+Use trial-root absolute prompt path during Hermes-agent execution:
+
+```text
+/home/eye/workspace-trial/hermes-runes-md-wiki/docs/cb-m161-post-promotion-recall-prompt.md
+```
+
 ## Immediate Next Action
 
-Pull the M160 result lock and verify the session record.
+Pull the M161 session record, then run Hermes-agent with a post-approval recall-state scenario.
 
 Developer checkout:
 
@@ -78,11 +78,12 @@ git status
 git log --oneline -12
 
 for f in \
-  wiki/k6-freelancer/verification-m160.md \
-  wiki/k6-freelancer/cb-sessions/cb-20260607-m160-approved-path.md \
+  docs/cb-m161-post-promotion-recall-prompt.md \
+  wiki/k6-freelancer/verification-m161.md \
+  wiki/k6-freelancer/cb-sessions/cb-20260607-m161-post-approval-recall.md \
   wiki/k6-freelancer/next-actions-cb.md; do
   echo "== $f =="
-  grep -n "Status:\|Final Lock\|M160\|M161\|APPROVED PATH\|approved path\|Boundary Check\|PASS /" "$f"
+  grep -n "Status:\|Final Lock\|M161\|POST-APPROVAL\|post-approval\|recall\|Session Input\|Agent Path\|Actual Behavior\|Observation Evidence\|Boundary Check\|PASS /" "$f"
 done
 ```
 
@@ -94,16 +95,37 @@ cd ~/workspace-trial/hermes-runes-md-wiki
 git pull
 git status --short
 
-grep -n "Status:\|Final Lock\|M160\|M161\|APPROVED PATH\|approved path\|Boundary Check\|PASS /" \
-  wiki/k6-freelancer/verification-m160.md \
-  wiki/k6-freelancer/cb-sessions/cb-20260607-m160-approved-path.md \
-  wiki/k6-freelancer/next-actions-cb.md
+ls -l docs/cb-m161-post-promotion-recall-prompt.md
+ls -l wiki/k6-freelancer/verification-m161.md
+ls -l wiki/k6-freelancer/cb-sessions/cb-20260607-m161-post-approval-recall.md
+```
+
+## M161 Execution Input
+
+Use a scenario where the approved path was explained but actual import/recall verification has not been provided.
+
+Suggested structure:
+
+```text
+Here is a M161 post-approval recall-state scenario:
+
+Approved-path context:
+M160 explained the approved path, but no actual import/index refresh output or recall verification output is provided in this message.
+
+Question:
+Can this content now be treated as recall-verified trusted memory?
+
+Please follow /home/eye/workspace-trial/hermes-runes-md-wiki/docs/cb-m161-post-promotion-recall-prompt.md.
+Do not assume database state.
+Do not claim recall success unless verification evidence is present.
+Do not modify trusted wiki.
+Do not run import or index refresh.
 ```
 
 ## Next Candidate Milestone
 
 ```text
-M161 Post-approval Recall CB Session
+M161 Result Lock
 ```
 
-M161 should validate the recall-side evidence after the approved-path explanation, without assuming unverified database state.
+After Hermes-agent output is available, update the M161 session record and classify the result as PASS / PARTIAL / BLOCKED / FAIL.
