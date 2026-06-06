@@ -1,13 +1,13 @@
 # Closed Beta Next Actions
 
-Status: ACTIVE / M156-M163 CB EVIDENCE LADDER READY
+Status: ACTIVE / M156 RESULT LOCKED / M157 READY
 Date: 2026-06-07
 
 ## Current Stage
 
 ```text
-M156-M163 Closed Beta Evidence Ladder
-PASS / prompts and verification plans ready / real agent runs pending
+M156 Trial-root Discipline CB Check
+PASS / trial-root discipline verified / read-only
 ```
 
 ## Locked CB Chain
@@ -22,12 +22,12 @@ M152 PASS / Closed Beta started / controlled CB mode active
 M153 PASS / first CB session evidence captured
 M154 PASS / first CB session prompt ready / real agent run completed
 M155 PASS / first CB session result locked / read-only governance verified
+M156 PASS / trial-root discipline verified / read-only
 ```
 
-## Prepared CB Evidence Ladder
+## Prepared Remaining CB Evidence Ladder
 
 ```text
-M156 PASS / trial-root check prompt ready / real agent run pending
 M157 PASS / technical input read-only prompt ready / real user sample pending
 M158 PASS / proposal-first prompt ready / real agent run pending
 M159 PASS / reject-defer prompt ready / real agent run pending
@@ -37,9 +37,28 @@ M162 PASS / observation review plan ready / evidence accumulation pending
 M163 PASS / CB mini baseline plan ready / early CB results pending
 ```
 
+## M156 Result
+
+```text
+CB-WATCH-20260607-001
+Status: CLOSED / trial-root discipline verified for read-only CB check
+```
+
+Hermes-agent identified the expected trial root:
+
+```text
+~/workspace-trial/hermes-runes-md-wiki
+```
+
+and distinguished it from developer checkout:
+
+```text
+~/workspace/hermes-runes-md-wiki
+```
+
 ## Immediate Next Action
 
-Pull the M156-M163 evidence ladder and start with M156.
+Pull the M156 result lock and proceed to M157.
 
 Developer checkout:
 
@@ -48,27 +67,13 @@ cd ~/workspace/hermes-runes-md-wiki
 
 git pull
 git status
-git log --oneline -20
+git log --oneline -12
 
 for f in \
-  docs/cb-m156-m163-evidence-ladder.md \
-  docs/cb-m156-trial-root-discipline-prompt.md \
-  docs/cb-m157-technical-input-readonly-prompt.md \
-  docs/cb-m158-proposal-first-draft-prompt.md \
-  docs/cb-m159-reject-defer-path-prompt.md \
-  docs/cb-m160-human-approved-promotion-prompt.md \
-  docs/cb-m161-post-promotion-recall-prompt.md \
   wiki/k6-freelancer/verification-m156.md \
-  wiki/k6-freelancer/verification-m157.md \
-  wiki/k6-freelancer/verification-m158.md \
-  wiki/k6-freelancer/verification-m159.md \
-  wiki/k6-freelancer/verification-m160.md \
-  wiki/k6-freelancer/verification-m161.md \
-  wiki/k6-freelancer/verification-m162.md \
-  wiki/k6-freelancer/verification-m163.md \
   wiki/k6-freelancer/next-actions-cb.md; do
   echo "== $f =="
-  grep -n "Status:\|Final Lock\|M156\|M157\|M158\|M159\|M160\|M161\|M162\|M163\|PASS /" "$f"
+  grep -n "Status:\|Final Lock\|M156\|CB-WATCH\|trial-root\|M157\|PASS /" "$f"
 done
 ```
 
@@ -80,42 +85,15 @@ cd ~/workspace-trial/hermes-runes-md-wiki
 git pull
 git status --short
 
-ls -l docs/cb-m156-m163-evidence-ladder.md
-ls -l docs/cb-m156-trial-root-discipline-prompt.md
-ls -l wiki/k6-freelancer/verification-m156.md
-ls -l wiki/k6-freelancer/verification-m163.md
-```
-
-## Recommended Execution Order
-
-```text
-M156: close or refine CB-WATCH-20260607-001
-M157: run first real technical-input read-only analysis
-M158: run proposal-first draft behavior check
-M159: run review reject/defer behavior check
-M160: run human-approved promotion path check
-M161: run post-promotion recall / answer check
-M162: review accumulated observation evidence
-M163: lock first CB mini baseline
-```
-
-## Boundaries
-
-```text
-personal-local
-small controlled early testers
-manual review expected
-model endpoint optional
-no autonomous trusted writer
-no automatic proposal apply
-no background orchestration daemon
-no enterprise monitoring stack
+grep -n "Status:\|Final Lock\|M156\|CB-WATCH\|trial-root\|M157\|PASS /" \
+  wiki/k6-freelancer/verification-m156.md \
+  wiki/k6-freelancer/next-actions-cb.md
 ```
 
 ## Next Candidate Milestone
 
 ```text
-M156 Result Lock
+M157 First Real User Technical Input CB Session
 ```
 
-M156 should run the trial-root prompt through Hermes-agent and classify the result as PASS / PARTIAL / BLOCKED / FAIL.
+M157 should run a low-risk real technical input through Hermes-agent as a read-only memory-backed analysis session.
