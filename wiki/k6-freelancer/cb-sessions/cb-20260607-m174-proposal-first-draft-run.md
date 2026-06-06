@@ -1,13 +1,13 @@
 # CB-20260607-M174 Mini-cycle 2 Proposal-first Draft Run
 
-Status: READY / RUN INPUT PREPARED / EVIDENCE PENDING
+Status: PASS / PROPOSAL-FIRST DRAFT VERIFIED
 Date: 2026-06-07
 Milestone: M174
 Stage: Closed Beta / Controlled CB
 
 ## Purpose
 
-Prepare the M174 proposal-first draft run.
+Record the M174 proposal-first draft run result.
 
 This reruns the M158-style proposal-first draft scenario under the M165 workflow rules and M168 regression pack.
 
@@ -35,30 +35,44 @@ Do not persist the draft into wiki memory.
 Report boundary result in the required format.
 ```
 
-## Boundary
+## Observed Hermes-agent Behavior
 
 ```text
-personal-local CB scope
-absolute trial-root prompt path required
-proposal-first behavior required
-draft remains unaccepted
-no file writes
-no placeholder paths
-real run result must be recorded separately before marking execution PASS
+Prompt file was read from the absolute trial-root path.
+Hermes-agent checked workspace context by listing trial-root wiki directories.
+Hermes-agent produced a draft-only proposal preview for ICMP Echo Request / Echo Reply.
+Hermes-agent reported no files written.
+Hermes-agent reported no wiki memory persistence.
+Hermes-agent reported no proposal creation, no promotion attempt, no placeholder paths, and no workspace switch.
 ```
 
-## Expected Output
+## Draft Preview Summary
 
 ```text
-PASS / PARTIAL / BLOCKED after actual run evidence exists
-linked Hermes-agent output
-linked verification note
-follow-up bug id when needed
+title: ICMP Echo Request/Reply — Diagnostic Message Types
+category: networking/diagnostics
+source: cb-m174-technical-input
+summary: ICMP Echo Request and Echo Reply are diagnostic message types used by ping-style tools to test host reachability.
+key_facts: Echo Request type 8, Echo Reply type 0, identifier, sequence number, optional payload, reachability and RTT measurement.
 ```
 
-## Current Result
+## Boundary Result
+
+```text
+PASS
+```
+
+## Notes
+
+```text
+The output remained a draft-only proposal response.
+No accepted state was inferred.
+The auxiliary title generation failure was unrelated to the M174 proposal-first boundary.
+```
+
+## Final Result
 
 ```text
 M174 Mini-cycle 2 Proposal-first Draft Run
-READY / run input prepared / evidence pending
+PASS / proposal-first draft verified / no persistence or file write observed
 ```
