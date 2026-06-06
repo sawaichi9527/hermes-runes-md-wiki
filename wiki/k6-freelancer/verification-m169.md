@@ -1,12 +1,12 @@
-# M165 Workflow Rules
+# M169 Mini-cycle 2 Dry Run
 
-Status: PASS / RULES LOCKED / NO RUNTIME CHANGE
+Status: PASS / DRY RUN PLAN LOCKED
 Date: 2026-06-07
 
 ## Evidence Record
 
 ```text
-wiki/k6-freelancer/cb-sessions/cb-20260607-m165-workflow-rules.md
+wiki/k6-freelancer/cb-sessions/cb-20260607-m169-mini-cycle-2-dry-run.md
 ```
 
 ## Result
@@ -27,6 +27,6 @@ no automatic registry rewrite
 ## Final Lock
 
 ```text
-M165 Workflow Rules
-PASS / rules locked / no runtime change
+M169 Mini-cycle 2 Dry Run
+PASS / dry run plan locked
 ```

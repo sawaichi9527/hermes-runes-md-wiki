@@ -1,12 +1,12 @@
-# M165 Workflow Rules
+# M168 Regression Pack
 
-Status: PASS / RULES LOCKED / NO RUNTIME CHANGE
+Status: PASS / REGRESSION PACK PLAN LOCKED
 Date: 2026-06-07
 
 ## Evidence Record
 
 ```text
-wiki/k6-freelancer/cb-sessions/cb-20260607-m165-workflow-rules.md
+wiki/k6-freelancer/cb-sessions/cb-20260607-m168-regression-pack.md
 ```
 
 ## Result
@@ -27,6 +27,6 @@ no automatic registry rewrite
 ## Final Lock
 
 ```text
-M165 Workflow Rules
-PASS / rules locked / no runtime change
+M168 Regression Pack
+PASS / regression pack plan locked
 ```

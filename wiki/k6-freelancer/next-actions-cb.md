@@ -1,13 +1,13 @@
 # Closed Beta Next Actions
 
-Status: ACTIVE / M164 CLEANUP PLAN LOCKED / M165 READY
+Status: ACTIVE / M171 PRE-BETA SCOPE DECISION LOCKED
 Date: 2026-06-07
 
 ## Current Stage
 
 ```text
-M164 Trial Bug Cleanup Plan
-PASS / cleanup classification locked / no registry status mutation performed
+M171 Pre-beta Scope Decision
+PASS / continue controlled CB before broader beta
 ```
 
 ## Locked CB Chain
@@ -33,88 +33,64 @@ M161.1 PASS / strict target answer verified / no target state assumed
 M162 PASS / observation review completed / lightweight tuning candidates recorded
 M163 PASS / CB mini baseline locked / continue controlled CB iteration
 M164 PASS / cleanup classification locked / no registry status mutation performed
+M165 PASS / rules locked / no runtime change
+M166 PASS / entry criteria locked
+M167 PASS / status cleanup plan locked
+M168 PASS / regression pack plan locked
+M169 PASS / dry run plan locked
+M170 PASS / summary plan ready
+M171 PASS / continue controlled CB before broader beta
 ```
 
-## Current Open CB Bug Records
+## M165-M171 Result Summary
 
 ```text
-TB-20260607-001 OPEN / M156 trial-root quote typo
-TB-20260607-002 OPEN / registry restore follow-up recorded; fix commit exists: 2e8b8bd
-TB-20260607-003 OPEN / M157 prompt path initially resolved outside repo before fallback
-TB-20260607-004 OPEN / placeholder append path caused local append failure
-TB-20260607-005 OPEN / M158 optional reference file lookup failed but did not block session
-TB-20260607-006 OPEN / M161 scenario drifted to existing recall-verified fixtures instead of answering unverified M160 content state; M161.1 mitigation evidence recorded
+M165: workflow rules locked
+M166: mini-cycle 2 entry criteria locked
+M167: bug status cleanup plan locked
+M168: regression pack plan locked
+M169: mini-cycle 2 dry run plan locked
+M170: cycle summary shape ready
+M171: pre-beta scope decision locked
 ```
 
-## M164 Result
+## Decision
 
 ```text
-Evidence record:
-wiki/k6-freelancer/cb-sessions/cb-20260607-m164-trial-bug-cleanup-plan.md
-
-Result:
-PASS
-```
-
-M164 classifies open Trial Bugs without directly mutating registry statuses.
-
-## Cleanup Classification
-
-```text
-Fix now candidates:
-- TB-20260607-003
-- TB-20260607-004
-- TB-20260607-005
-
-Keep open as guidance evidence:
-- TB-20260607-001
-- TB-20260607-002
-- TB-20260607-006
-
-Defer to later CB mini-cycle:
-- none as blocker
+Continue controlled CB iteration before broader beta.
+Use M165-M170 as the mini-cycle 2 planning package.
+Do not widen beta scope until mini-cycle 2 evidence is available.
 ```
 
 ## Immediate Next Action
 
-Pull the M164 result lock and verify the cleanup plan.
-
-Developer checkout:
+Pull the M165-M171 planning package and verify all records.
 
 ```bash
 cd ~/workspace/hermes-runes-md-wiki
 
 git pull
 git status
-git log --oneline -12
+git log --oneline -20
 
 for f in \
-  wiki/k6-freelancer/verification-m164.md \
-  wiki/k6-freelancer/cb-sessions/cb-20260607-m164-trial-bug-cleanup-plan.md \
+  wiki/k6-freelancer/verification-m165.md \
+  wiki/k6-freelancer/verification-m166.md \
+  wiki/k6-freelancer/verification-m167.md \
+  wiki/k6-freelancer/verification-m168.md \
+  wiki/k6-freelancer/verification-m169.md \
+  wiki/k6-freelancer/verification-m170.md \
+  wiki/k6-freelancer/verification-m171.md \
   wiki/k6-freelancer/next-actions-cb.md; do
   echo "== $f =="
-  grep -n "Status:\|Final Lock\|M164\|M165\|cleanup\|Cleanup\|TB-20260607\|PASS /" "$f"
+  grep -n "Status:\|Final Lock\|M16[5-9]\|M17[0-1]\|PASS /" "$f"
 done
-```
-
-Trial checkout:
-
-```bash
-cd ~/workspace-trial/hermes-runes-md-wiki
-
-git pull
-git status --short
-
-grep -n "Status:\|Final Lock\|M164\|M165\|cleanup\|Cleanup\|TB-20260607\|PASS /" \
-  wiki/k6-freelancer/verification-m164.md \
-  wiki/k6-freelancer/cb-sessions/cb-20260607-m164-trial-bug-cleanup-plan.md \
-  wiki/k6-freelancer/next-actions-cb.md
 ```
 
 ## Next Candidate Milestone
 
 ```text
-M165 Strict Prompt Hardening Sweep
+M172 Mini-cycle 2 Execution Start
 ```
 
-M165 should implement the fix-now prompt/workflow hardening candidates identified by M164 without changing runtime behavior.
+M172 should begin executing the M168 regression pack under the M165 workflow rules.

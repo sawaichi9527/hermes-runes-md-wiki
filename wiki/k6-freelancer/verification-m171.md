@@ -1,12 +1,12 @@
-# M165 Workflow Rules
+# M171 Pre-beta Scope Decision
 
-Status: PASS / RULES LOCKED / NO RUNTIME CHANGE
+Status: PASS / CONTINUE CONTROLLED CB BEFORE BROADER BETA
 Date: 2026-06-07
 
 ## Evidence Record
 
 ```text
-wiki/k6-freelancer/cb-sessions/cb-20260607-m165-workflow-rules.md
+wiki/k6-freelancer/cb-sessions/cb-20260607-m171-pre-beta-scope.md
 ```
 
 ## Result
@@ -27,6 +27,6 @@ no automatic registry rewrite
 ## Final Lock
 
 ```text
-M165 Workflow Rules
-PASS / rules locked / no runtime change
+M171 Pre-beta Scope Decision
+PASS / continue controlled CB before broader beta
 ```
