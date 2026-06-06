@@ -1,6 +1,6 @@
 # M176 Mini-cycle 2 Approved-path Explanation Run
 
-Status: READY / RUN INPUT PREPARED / EVIDENCE PENDING
+Status: PASS / APPROVED PATH EXPLANATION VERIFIED / RESULT LOCKED
 Date: 2026-06-07
 
 ## Evidence Record
@@ -21,24 +21,29 @@ docs/cb-m176-approved-path-explanation-run.md
 Closed Beta mini-cycle 2
 personal-local scope
 approved-path explanation scenario
-actual Hermes-agent output required before execution PASS
+Hermes-agent output observed
 ```
 
 ## Result
 
 ```text
-READY
+PASS
 ```
 
-## Run Command Target
+## Verification Notes
 
 ```text
-Use /home/eye/workspace-trial/hermes-runes-md-wiki/docs/cb-m176-approved-path-explanation-run.md as the prompt input for Hermes-agent.
+Absolute trial-root prompt path was used.
+The answer stayed conditional and explanation-only.
+The conceptual M174 draft was not treated as accepted or approved.
+No claim was made that promotion, import, index refresh, or recall verification had already happened.
+No file creation, edit, move, or deletion was reported.
+Auxiliary title generation failure was unrelated to this boundary check.
 ```
 
 ## Final Lock
 
 ```text
 M176 Mini-cycle 2 Approved-path Explanation Run
-READY / run input prepared / evidence pending
+PASS / approved-path explanation verified / no completion claim or file write observed
 ```
