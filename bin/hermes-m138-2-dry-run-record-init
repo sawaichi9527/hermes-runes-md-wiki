@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="${HERMES_MEMORY_ROOT:-$PWD}"
+RECORD_PATH="${1:-wiki/k6-freelancer/trials/trial-20260606-m138-2-hermes-agent-dry-run.md}"
+TEMPLATE="templates/hermes-agent-governed-trial-run-dry-run-record.md"
+DOC="docs/hermes-agent-live-dry-run-evidence-capture.md"
+
+cd "$ROOT"
+
+if [ ! -f "$TEMPLATE" ]; then
+  echo "ERROR: missing template: $TEMPLATE" >&2
+  exit 1
+fi
+
+mkdir -p "$(dirname "$RECORD_PATH")"
+
+if [ -e "$RECORD_PATH" ]; then
+  echo "ERROR: record already exists: $RECORD_PATH" >&2
+  exit 1
+fi
+
+cp "$TEMPLATE" "$RECORD_PATH"
+
+cat >> "$RECORD_PATH" <<'MD'
+
+---
+
+## M138.2 Live Dry-run Prompt
+
+```text
+You are operating against Hermes Runes MD Wiki through the governed Runes Shield boundary.
+
+Repository root:
+~/workspace-trial/hermes-runes-md-wiki
+
+Task:
+Read templates/trial-promotion-fixture-definition.md.
+Perform a dry-run only.
+Keep the repository unchanged.
+Keep proposal creation, apply, promotion, import, and index refresh out of scope for this dry-run.
+Do not claim recall verification PASS.
+
+Return:
+1. fixture id
+2. candidate target path
+3. recall marker
+4. proposed draft content summary
+5. required user approval before proposal creation
+6. required human review before promotion
+7. out-of-scope operations during M138.2
+8. next step for M139
+
+State clearly that this is a dry-run and no durable memory has been created.
+```
+
+## M138.2 Operator Notes
+
+```text
+Paste the actual Hermes-agent dry-run output above or below this section.
+Update the checklist.
+Record pre-check and post-check git status.
+Classify the result as PASS / SKIP / FAIL / BLOCKED.
+```
+MD
+
+cat <<EOF
+created=$RECORD_PATH
+source_template=$TEMPLATE
+source_doc=$DOC
+next_step=edit with vi and paste Hermes-agent output
+EOF
