@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+PYTHON="${PYTHON:-python3}"
+ROOT="${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-runes-md-wiki}"
+IMPORTER_DIR="$ROOT/tools/importer"
+
+cd "$IMPORTER_DIR"
+
+if [ -d ".venv" ]; then
+  # shellcheck disable=SC1091
+  source ".venv/bin/activate"
+fi
+
+exec "$PYTHON" check_model_endpoint.py "$@"
