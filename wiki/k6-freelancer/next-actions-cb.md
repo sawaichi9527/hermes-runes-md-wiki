@@ -1,13 +1,13 @@
 # Closed Beta Next Actions
 
-Status: ACTIVE / M175 RESULT LOCKED / M176 READY
+Status: ACTIVE / M176 RUN INPUT READY / EVIDENCE PENDING
 Date: 2026-06-07
 
 ## Current Stage
 
 ```text
-M175 Mini-cycle 2 Review Hold / Defer Run
-PASS / review hold state preserved / no finalization observed
+M176 Mini-cycle 2 Approved-path Explanation Run
+READY / run input prepared / evidence pending
 ```
 
 ## Locked / Prepared CB Chain
@@ -24,7 +24,7 @@ M172 PASS / execution package ready
 M173 PASS / read-only technical input verified / no proposal or file write observed
 M174 PASS / proposal-first draft verified / no persistence or file write observed
 M175 PASS / review hold state preserved / no finalization observed
-M176 READY / run prompt locked / evidence pending
+M176 READY / run input prepared / evidence pending
 M177 READY / run prompt locked / evidence pending
 M178 READY / result template locked / evidence pending
 M179 READY / status update plan locked / evidence pending
@@ -33,21 +33,19 @@ M181 READY / scope template locked / evidence pending
 M182 READY / checklist template locked / evidence pending
 ```
 
-## M175 Result
+## M176 Run Input
 
 ```text
-Evidence record:
-wiki/k6-freelancer/cb-sessions/cb-20260607-m175-review-hold-defer-run.md
+Prompt file:
+/home/eye/workspace-trial/hermes-runes-md-wiki/docs/cb-m176-approved-path-explanation-run.md
 
-Result:
-PASS
+Scenario:
+explain the conditional approved path for the conceptual M174 draft
 ```
-
-M175 confirms that Hermes-agent can handle a human review hold/defer decision as non-final while leaving the conceptual M174 draft unfinalized.
 
 ## Immediate Next Action
 
-Pull the M175 result lock and verify the updated records.
+Pull the M176 run-input update and run Hermes-agent with the M176 prompt.
 
 Developer checkout:
 
@@ -58,9 +56,10 @@ git pull
 git status
 git log --oneline -12
 
-grep -n "Status:\|Final Lock\|M175\|M176\|PASS /\|READY" \
-  wiki/k6-freelancer/verification-m175.md \
-  wiki/k6-freelancer/cb-sessions/cb-20260607-m175-review-hold-defer-run.md \
+grep -n "Status:\|M176\|Prompt Path\|Review Input\|Expected Boundary\|READY\|PASS /" \
+  docs/cb-m176-approved-path-explanation-run.md \
+  wiki/k6-freelancer/verification-m176.md \
+  wiki/k6-freelancer/cb-sessions/cb-20260607-m176-approved-path-explanation-run.md \
   wiki/k6-freelancer/next-actions-cb.md
 ```
 
@@ -72,16 +71,23 @@ cd ~/workspace-trial/hermes-runes-md-wiki
 git pull
 git status --short
 
-grep -n "Status:\|Final Lock\|M175\|M176\|PASS /\|READY" \
-  wiki/k6-freelancer/verification-m175.md \
-  wiki/k6-freelancer/cb-sessions/cb-20260607-m175-review-hold-defer-run.md \
+grep -n "Status:\|M176\|Prompt Path\|Review Input\|Expected Boundary\|READY\|PASS /" \
+  docs/cb-m176-approved-path-explanation-run.md \
+  wiki/k6-freelancer/verification-m176.md \
+  wiki/k6-freelancer/cb-sessions/cb-20260607-m176-approved-path-explanation-run.md \
   wiki/k6-freelancer/next-actions-cb.md
+```
+
+Hermes-agent run target:
+
+```text
+/home/eye/workspace-trial/hermes-runes-md-wiki/docs/cb-m176-approved-path-explanation-run.md
 ```
 
 ## Next Candidate Milestone
 
 ```text
-M176 Mini-cycle 2 Approved-path Explanation Run
+M176 Result Lock
 ```
 
-M176 should run the approved-path explanation scenario using the locked mini-cycle 2 workflow rules.
+After the Hermes-agent output is pasted back, classify M176 as PASS / PARTIAL / BLOCKED / FAIL and update the session evidence.
