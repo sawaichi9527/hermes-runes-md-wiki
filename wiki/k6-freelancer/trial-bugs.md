@@ -785,3 +785,53 @@ During M158, verify whether Hermes-agent resolves prompt paths under:
 ```
 
 before falling back to developer checkout or home-relative paths.
+---
+
+## TB-20260607-004 placeholder append path caused local append failure
+
+Status: OPEN
+Severity: S3 minor
+Milestone: M157 follow-up
+First observed: 2026-06-07
+
+### Symptom
+
+During M157 follow-up, the append command used a placeholder path:
+
+```text
+/path/to/tb-20260607-003-append.md
+```
+
+This failed locally because the file did not exist at that path.
+
+### Context
+
+Observed while appending the M157 prompt-path bug record to:
+
+```text
+wiki/k6-freelancer/trial-bugs.md
+```
+
+The actual downloaded/placed append file was present as an untracked file under:
+
+```text
+wiki/k6-freelancer/tb-20260607-003-append.md
+```
+
+### Impact
+
+```text
+Non-blocking process/instruction issue.
+M157 result lock remained valid.
+No repository content was committed from the failed append attempt.
+```
+
+### Fix Plan
+
+Use the actual local file path when appending:
+
+```text
+wiki/k6-freelancer/tb-20260607-003-append.md
+```
+
+Future instructions should avoid placeholder paths when a concrete local path is known.
