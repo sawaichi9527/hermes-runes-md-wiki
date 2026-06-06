@@ -1,6 +1,6 @@
 # M136 Beta-prep Model Endpoint Configuration Check
 
-Status: PASS / CHECKER ADDED / LOCAL VERIFICATION PENDING
+Status: PASS / TRIAL VERIFIED / SKIP EXPECTED
 Date: 2026-06-06
 
 ## Purpose
@@ -79,6 +79,8 @@ Developer checkout:
 ```bash
 cd ~/workspace/hermes-runes-md-wiki
 
+git pull
+git status
 python3 -m py_compile tools/importer/check_model_endpoint.py
 bash ./bin/hermes-model-endpoint-check --json
 ```
@@ -94,11 +96,42 @@ python3 -m py_compile tools/importer/check_model_endpoint.py
 bash ./bin/hermes-model-endpoint-check --json
 ```
 
+## Observed Local Result
+
+Developer checkout pull/status and artifact existence were verified.
+
+The developer `py_compile` command was inconclusive because the Python command resolved the path under the trial workspace during execution. This appears to be an execution environment/path mix-up, not a checker source issue.
+
+Trial checkout verification completed:
+
+```text
+python3 -m py_compile tools/importer/check_model_endpoint.py
+bash ./bin/hermes-model-endpoint-check --json
+```
+
+Observed checker result:
+
+```json
+{
+  "auth_header_would_be_sent": false,
+  "auth_mode": "auto",
+  "base_url_configured": false,
+  "check": "model-endpoint",
+  "env_file_exists": true,
+  "expected": true,
+  "model_configured": false,
+  "probe_requested": false,
+  "reason": "OPENAI_BASE_URL and OPENAI_MODEL are required for model-dependent smoke.",
+  "status": "SKIP",
+  "write": false
+}
+```
+
 ## Current Classification Rule
 
-If the checker reports SKIP with expected=true, then M136 remains acceptable for beta-prep because model-dependent smoke is optional until a model endpoint is configured.
+The checker reported SKIP with expected=true.
 
-If the checker reports PASS, then the model endpoint is configured enough for model-dependent smoke preflight.
+This is acceptable for beta-prep because model-dependent smoke is optional until a model endpoint is configured.
 
 ## Relationship To M137
 
@@ -147,8 +180,8 @@ Static and local verification scope:
 checker exists
 wrapper exists
 documentation exists
-checker compiles
-checker returns PASS or SKIP / expected
+checker compiles in trial checkout
+checker returns SKIP / expected
 no credential output
 no write/import/index/apply/promote behavior
 M137 remains next controllable gap
@@ -158,5 +191,5 @@ M137 remains next controllable gap
 
 ```text
 M136 Beta-prep Model Endpoint Configuration Check
-PASS / checker added / local verification pending
+PASS / trial verified / SKIP expected
 ```
