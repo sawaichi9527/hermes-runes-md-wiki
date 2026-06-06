@@ -1,13 +1,13 @@
 # Closed Beta Next Actions
 
-Status: ACTIVE / M155 FIRST CB SESSION RESULT LOCKED
+Status: ACTIVE / M156-M163 CB EVIDENCE LADDER READY
 Date: 2026-06-07
 
 ## Current Stage
 
 ```text
-M155 First CB Session Evidence Apply / Lock
-PASS / first CB session result locked / read-only governance verified
+M156-M163 Closed Beta Evidence Ladder
+PASS / prompts and verification plans ready / real agent runs pending
 ```
 
 ## Locked CB Chain
@@ -24,9 +24,22 @@ M154 PASS / first CB session prompt ready / real agent run completed
 M155 PASS / first CB session result locked / read-only governance verified
 ```
 
+## Prepared CB Evidence Ladder
+
+```text
+M156 PASS / trial-root check prompt ready / real agent run pending
+M157 PASS / technical input read-only prompt ready / real user sample pending
+M158 PASS / proposal-first prompt ready / real agent run pending
+M159 PASS / reject-defer prompt ready / real agent run pending
+M160 PASS / human-approved promotion prompt ready / real agent run pending
+M161 PASS / post-promotion recall prompt ready / real agent run pending
+M162 PASS / observation review plan ready / evidence accumulation pending
+M163 PASS / CB mini baseline plan ready / early CB results pending
+```
+
 ## Immediate Next Action
 
-Pull the M155 result lock and verify the updated CB evidence record.
+Pull the M156-M163 evidence ladder and start with M156.
 
 Developer checkout:
 
@@ -35,14 +48,27 @@ cd ~/workspace/hermes-runes-md-wiki
 
 git pull
 git status
-git log --oneline -10
+git log --oneline -20
 
 for f in \
-  wiki/k6-freelancer/cb-sessions/cb-20260607-m153-first-session.md \
-  wiki/k6-freelancer/verification-m155.md \
+  docs/cb-m156-m163-evidence-ladder.md \
+  docs/cb-m156-trial-root-discipline-prompt.md \
+  docs/cb-m157-technical-input-readonly-prompt.md \
+  docs/cb-m158-proposal-first-draft-prompt.md \
+  docs/cb-m159-reject-defer-path-prompt.md \
+  docs/cb-m160-human-approved-promotion-prompt.md \
+  docs/cb-m161-post-promotion-recall-prompt.md \
+  wiki/k6-freelancer/verification-m156.md \
+  wiki/k6-freelancer/verification-m157.md \
+  wiki/k6-freelancer/verification-m158.md \
+  wiki/k6-freelancer/verification-m159.md \
+  wiki/k6-freelancer/verification-m160.md \
+  wiki/k6-freelancer/verification-m161.md \
+  wiki/k6-freelancer/verification-m162.md \
+  wiki/k6-freelancer/verification-m163.md \
   wiki/k6-freelancer/next-actions-cb.md; do
   echo "== $f =="
-  grep -n "Status:\|Final Lock\|M155\|PASS / FIRST CB\|CB-WATCH\|read-only\|trial checkout\|M156" "$f"
+  grep -n "Status:\|Final Lock\|M156\|M157\|M158\|M159\|M160\|M161\|M162\|M163\|PASS /" "$f"
 done
 ```
 
@@ -54,35 +80,24 @@ cd ~/workspace-trial/hermes-runes-md-wiki
 git pull
 git status --short
 
-grep -n "Status:\|M155\|PASS / FIRST CB\|CB-WATCH\|M156" \
-  wiki/k6-freelancer/cb-sessions/cb-20260607-m153-first-session.md \
-  wiki/k6-freelancer/verification-m155.md
+ls -l docs/cb-m156-m163-evidence-ladder.md
+ls -l docs/cb-m156-trial-root-discipline-prompt.md
+ls -l wiki/k6-freelancer/verification-m156.md
+ls -l wiki/k6-freelancer/verification-m163.md
 ```
 
-## First CB Session Result
+## Recommended Execution Order
 
 ```text
-PASS
+M156: close or refine CB-WATCH-20260607-001
+M157: run first real technical-input read-only analysis
+M158: run proposal-first draft behavior check
+M159: run review reject/defer behavior check
+M160: run human-approved promotion path check
+M161: run post-promotion recall / answer check
+M162: review accumulated observation evidence
+M163: lock first CB mini baseline
 ```
-
-Hermes-agent preserved:
-
-```text
-read-only behavior
-Runes Shield governance boundary
-proposal-first / human-review distinction
-model endpoint optional policy
-observation evidence recommendation
-```
-
-## Watch Item
-
-```text
-CB-WATCH-20260607-001
-Future Hermes-agent CB sessions should prefer the controlled trial checkout root ~/workspace-trial/hermes-runes-md-wiki when explicitly validating trial execution behavior.
-```
-
-This is not a failure for M155 because the first CB session was read-only and made no mutation.
 
 ## Boundaries
 
@@ -100,7 +115,7 @@ no enterprise monitoring stack
 ## Next Candidate Milestone
 
 ```text
-M156 Trial-root Discipline CB Check
+M156 Result Lock
 ```
 
-M156 should verify that Hermes-agent uses or reports the intended controlled trial checkout path when the task explicitly concerns trial execution behavior.
+M156 should run the trial-root prompt through Hermes-agent and classify the result as PASS / PARTIAL / BLOCKED / FAIL.
