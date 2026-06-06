@@ -1,13 +1,13 @@
 # Closed Beta Next Actions
 
-Status: ACTIVE / M156 RESULT LOCKED / M157 READY
+Status: ACTIVE / M157 TECHNICAL INPUT SESSION READY
 Date: 2026-06-07
 
 ## Current Stage
 
 ```text
-M156 Trial-root Discipline CB Check
-PASS / trial-root discipline verified / read-only
+M157 First Real User Technical Input CB Session
+PASS / technical input session record ready / real user sample pending
 ```
 
 ## Locked CB Chain
@@ -23,12 +23,13 @@ M153 PASS / first CB session evidence captured
 M154 PASS / first CB session prompt ready / real agent run completed
 M155 PASS / first CB session result locked / read-only governance verified
 M156 PASS / trial-root discipline verified / read-only
+M156.1 PASS / registry restored / fix applied
 ```
 
 ## Prepared Remaining CB Evidence Ladder
 
 ```text
-M157 PASS / technical input read-only prompt ready / real user sample pending
+M157 PASS / technical input session record ready / real user sample pending
 M158 PASS / proposal-first prompt ready / real agent run pending
 M159 PASS / reject-defer prompt ready / real agent run pending
 M160 PASS / human-approved promotion prompt ready / real agent run pending
@@ -37,23 +38,12 @@ M162 PASS / observation review plan ready / evidence accumulation pending
 M163 PASS / CB mini baseline plan ready / early CB results pending
 ```
 
-## M156 Result
+## M157 Files
 
 ```text
-CB-WATCH-20260607-001
-Status: CLOSED / trial-root discipline verified for read-only CB check
-```
-
-Hermes-agent identified the expected trial root:
-
-```text
-~/workspace-trial/hermes-runes-md-wiki
-```
-
-and distinguished it from developer checkout:
-
-```text
-~/workspace/hermes-runes-md-wiki
+docs/cb-m157-technical-input-readonly-prompt.md
+wiki/k6-freelancer/verification-m157.md
+wiki/k6-freelancer/cb-sessions/cb-20260607-m157-technical-input.md
 ```
 
 ## Bug Tracking Rule
@@ -64,18 +54,16 @@ All CB validation findings that may need future confirmation or fix must receive
 wiki/k6-freelancer/trial-bugs.md
 ```
 
-Current M156 bug record:
+Current open CB bug records:
 
 ```text
-TB-20260607-001
-Status: OPEN
-Severity: S3 minor
-Summary: M156 trial-root quote typo in Hermes-agent output
+TB-20260607-001 OPEN / M156 trial-root quote typo
+TB-20260607-002 OPEN / registry restore follow-up recorded; fix commit exists: 2e8b8bd
 ```
 
 ## Immediate Next Action
 
-Pull the M156 result lock and proceed to M157.
+Pull the M157 session record, then run Hermes-agent with a low-risk technical sample.
 
 Developer checkout:
 
@@ -87,11 +75,12 @@ git status
 git log --oneline -12
 
 for f in \
-  wiki/k6-freelancer/trial-bugs.md \
-  wiki/k6-freelancer/verification-m156.md \
+  docs/cb-m157-technical-input-readonly-prompt.md \
+  wiki/k6-freelancer/verification-m157.md \
+  wiki/k6-freelancer/cb-sessions/cb-20260607-m157-technical-input.md \
   wiki/k6-freelancer/next-actions-cb.md; do
   echo "== $f =="
-  grep -n "Status:\|Final Lock\|M156\|CB-WATCH\|TB-20260607-001\|trial-root\|M157\|PASS /" "$f"
+  grep -n "Status:\|Final Lock\|M157\|TECHNICAL INPUT\|Session Input\|Agent Path\|Actual Behavior\|Observation Evidence\|Boundary Check\|PASS /" "$f"
 done
 ```
 
@@ -103,16 +92,31 @@ cd ~/workspace-trial/hermes-runes-md-wiki
 git pull
 git status --short
 
-grep -n "Status:\|Final Lock\|M156\|CB-WATCH\|TB-20260607-001\|trial-root\|M157\|PASS /" \
-  wiki/k6-freelancer/trial-bugs.md \
-  wiki/k6-freelancer/verification-m156.md \
-  wiki/k6-freelancer/next-actions-cb.md
+ls -l docs/cb-m157-technical-input-readonly-prompt.md
+ls -l wiki/k6-freelancer/verification-m157.md
+ls -l wiki/k6-freelancer/cb-sessions/cb-20260607-m157-technical-input.md
+```
+
+## M157 Execution Input
+
+Use a short sanitized technical note. Avoid values that should not be written into Markdown evidence.
+
+Suggested structure:
+
+```text
+Here is a low-risk technical sample for M157 read-only analysis:
+<technical sample>
+
+Please follow docs/cb-m157-technical-input-readonly-prompt.md.
+Do not create a proposal.
+Do not promote memory.
+Do not modify wiki.
 ```
 
 ## Next Candidate Milestone
 
 ```text
-M157 First Real User Technical Input CB Session
+M157 Result Lock
 ```
 
-M157 should run a low-risk real technical input through Hermes-agent as a read-only memory-backed analysis session.
+After Hermes-agent output is available, update the M157 session record and classify the result as PASS / PARTIAL / BLOCKED / FAIL.
