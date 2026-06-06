@@ -1,3 +1,47 @@
+## N-20260607-M140.2 Agent-facing Trial Status Lock
+
+Status: PASS / AGENT-FACING READ-ONLY TRIAL VERIFIED
+
+Current baseline:
+- M139.2 Local Import / Recall Check: PASS / trial verified / marker indexed.
+- M140.0 Agent-facing Trial Prompt / Expected Behavior Lock: PASS / prompt ready / agent run pending.
+- M140.1 Agent Output Classification: PASS / agent output verified / read-only boundary preserved.
+- Hermes-agent successfully read the required repo guidance and current fixture evidence.
+- Hermes-agent correctly identified workspace `freelancer`.
+- Hermes-agent correctly identified fixture `TPF-20260606-M137`.
+- Hermes-agent correctly identified `wiki/freelancer/trial-promotion-fixtures.md`.
+- Hermes-agent correctly identified marker `M137 beta-prep trial promotion fixture marker`.
+- Hermes-agent correctly recognized M139.2 as `PASS / TRIAL VERIFIED / MARKER INDEXED`.
+- Hermes-agent preserved the read-only boundary and did not claim file modification, import, migration, backend reset, background worker startup, proposal creation, or memory promotion.
+- The trial-run mainline is now back on agent-facing validation rather than preparation-only or tool-development milestones.
+
+Final lock:
+
+```text
+M140.2 Agent-facing Trial Status Lock
+PASS / agent-facing read-only trial verified / next action updated
+```
+
+Recommended next milestone:
+- M141 Governed Proposal Drafting Trial
+
+M141 scope:
+- Use Hermes-agent to draft a governed proposal or status summary from existing evidence.
+- Keep the operation read-only unless explicit human approval is given for proposal creation.
+- Do not directly edit trusted wiki files.
+- Do not promote memory.
+- Do not run import/index refresh unless the trial explicitly reaches a human-approved recall verification step.
+- Validate whether the agent can distinguish proposal drafting from trusted memory mutation.
+
+References:
+- `wiki/k6-freelancer/verification-m139-2.md`
+- `docs/m140-agent-facing-trial-prompt.md`
+- `wiki/k6-freelancer/verification-m140-0.md`
+- `wiki/k6-freelancer/verification-m140-1.md`
+- `wiki/k6-freelancer/verification-m140-2.md`
+
+---
+
 ## N-20260606-M135 Beta-prep Mainline Re-entry
 
 Status: PASS / MAINLINE RE-ENTRY ADDED
@@ -355,6 +399,7 @@ Current baseline:
 - Core FTS smoke is workspace-aware.
 - M5.2 evaluation smoke is workspace-aware.
 - M10 observation smoke skips cleanly when model env is not configured.
+- M11 observation summary PASS.
 - M11.6 sample-project smoke is workspace-aware.
 - M20.4 promotion governance smoke skips cleanly when no trial promotion fixture exists.
 
