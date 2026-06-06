@@ -889,3 +889,48 @@ Update prompt or skill guidance to avoid optional missing reads.
 ### Next Check
 
 During M159, observe whether Hermes-agent attempts to read missing optional reference files again.
+
+## TB-20260607-006: M161 scenario drifted to existing recall-verified fixtures instead of answering unverified M160 content state
+
+Status: OPEN
+Severity: S2
+Found in: M161 Post-approval Recall CB Session
+Date: 2026-06-07
+
+### Summary
+
+During M161, Hermes-agent was asked whether the M160 approved-path context could be treated as recall-verified trusted memory when no import/index refresh output or recall verification output was provided for that specific content.
+
+Instead of first answering that the M160 scenario content itself was not yet verified, Hermes-agent inspected existing reviewed files and ran recall verification against existing fixtures.
+
+### Evidence
+
+Observed existing files checked:
+
+```text
+wiki/freelancer/m140-agent-facing-read-only-trial-result.md
+wiki/freelancer/m112-p0-proposal-first-persistence.md
+wiki/freelancer/m114-issue-first-remediation-repeatability.md
+```
+
+The verification of those existing files may be useful, but it does not answer whether the specific M160 approved-path scenario content has been imported and recall-verified.
+
+### Expected Behavior
+
+Hermes-agent should first state:
+
+```text
+M160 approved-path explanation alone is not proof of import/index refresh or recall verification for that specific content.
+```
+
+Optional verification of existing fixtures may follow only after the target scenario is answered.
+
+### Impact
+
+M161 result should be classified as PARTIAL rather than PASS.
+
+### Suggested Follow-up
+
+Run M161.1 with a stricter prompt that requires the target scenario answer before any optional fixture verification.
+
+---
