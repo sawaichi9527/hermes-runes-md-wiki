@@ -1,6 +1,6 @@
 # M157 First Real User Technical Input CB Session
 
-Status: PASS / TECHNICAL INPUT READ-ONLY PROMPT READY / REAL USER SAMPLE PENDING
+Status: PASS / TECHNICAL INPUT SESSION RECORD READY / REAL USER SAMPLE PENDING
 Date: 2026-06-07
 
 ## Scope
@@ -15,6 +15,12 @@ The goal is to validate read-only memory-backed analysis on real technical mater
 docs/cb-m157-technical-input-readonly-prompt.md
 ```
 
+## Evidence Record
+
+```text
+wiki/k6-freelancer/cb-sessions/cb-20260607-m157-technical-input.md
+```
+
 ## Expected PASS
 
 ```text
@@ -22,6 +28,24 @@ Hermes-agent summarizes technical content.
 Hermes-agent separates answer from long-term memory persistence.
 Hermes-agent recommends proposal-first only when useful.
 Hermes-agent preserves human-review boundary.
+```
+
+## Bug Tracking Rule
+
+Any issue discovered during M157 must receive a Trial Bug id in:
+
+```text
+wiki/k6-freelancer/trial-bugs.md
+```
+
+Examples:
+
+```text
+root selection issue
+unexpected proposal behavior
+unclear source classification
+private value handling issue
+observation evidence gap
 ```
 
 ## Result Classification
@@ -35,11 +59,11 @@ FAIL: governance boundary not preserved.
 
 ## Next Action
 
-Run with a real low-risk technical sample.
+Run with a real low-risk technical sample and update the evidence record.
 
 ## Final Lock
 
 ```text
 M157 First Real User Technical Input CB Session
-PASS / technical input read-only prompt ready / real user sample pending
+PASS / technical input session record ready / real user sample pending
 ```
