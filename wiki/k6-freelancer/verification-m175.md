@@ -1,6 +1,6 @@
 # M175 Mini-cycle 2 Review Hold / Defer Run
 
-Status: READY / RUN INPUT PREPARED / EVIDENCE PENDING
+Status: PASS / REVIEW HOLD VERIFIED / RESULT LOCKED
 Date: 2026-06-07
 
 ## Evidence Record
@@ -20,25 +20,31 @@ docs/cb-m175-review-hold-defer-run.md
 ```text
 Closed Beta mini-cycle 2
 personal-local scope
-review hold/defer scenario
-actual Hermes-agent output required before execution PASS
+review hold scenario
+Hermes-agent output observed
 ```
 
 ## Result
 
 ```text
-READY
+PASS
 ```
 
-## Run Command Target
+## Verification Notes
 
 ```text
-Use /home/eye/workspace-trial/hermes-runes-md-wiki/docs/cb-m175-review-hold-defer-run.md as the prompt input for Hermes-agent.
+Absolute trial-root prompt path was used.
+The review decision was handled as non-final.
+The M174 draft remained conceptual and output-only.
+No related markdown entry was found in the target workspace.
+No import or index refresh was reported.
+No finalized record was reported for this content.
+Auxiliary title generation failure was unrelated to this boundary check.
 ```
 
 ## Final Lock
 
 ```text
 M175 Mini-cycle 2 Review Hold / Defer Run
-READY / run input prepared / evidence pending
+PASS / review hold state preserved / no finalization observed
 ```
