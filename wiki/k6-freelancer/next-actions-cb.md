@@ -1,38 +1,18 @@
 # Closed Beta Next Actions
 
-Status: ACTIVE / M171 PRE-BETA SCOPE DECISION LOCKED
+Status: ACTIVE / M172-M182 EXECUTION PACKAGE READY / M173 RUN READY
 Date: 2026-06-07
 
 ## Current Stage
 
 ```text
-M171 Pre-beta Scope Decision
-PASS / continue controlled CB before broader beta
+M172 Mini-cycle 2 Execution Start
+PASS / execution package ready
 ```
 
-## Locked CB Chain
+## Locked / Prepared CB Chain
 
 ```text
-M147 PASS / post-trial baseline locked / CB-prep roadmap set
-M148 PASS / observation mechanism CB-ready / minimal evidence path locked
-M149 PASS / model endpoint optional for CB entry
-M150 PASS / CB smoke bundle defined / existing checks only
-M151 PASS / CB entry criteria locked / personal-scope early test ready
-M152 PASS / Closed Beta started / controlled CB mode active
-M153 PASS / first CB session evidence captured
-M154 PASS / first CB session prompt ready / real agent run completed
-M155 PASS / first CB session result locked / read-only governance verified
-M156 PASS / trial-root discipline verified / read-only
-M156.1 PASS / registry restored / fix applied
-M157 PASS / read-only technical analysis verified / proposal-first boundary preserved
-M158 PASS / proposal-first draft verified / no trusted wiki mutation
-M159 PASS / hold decision respected / trusted memory unchanged
-M160 PASS / approved path explained / governed workflow boundary preserved
-M161 PARTIAL / recall verification useful but scenario drift observed
-M161.1 PASS / strict target answer verified / no target state assumed
-M162 PASS / observation review completed / lightweight tuning candidates recorded
-M163 PASS / CB mini baseline locked / continue controlled CB iteration
-M164 PASS / cleanup classification locked / no registry status mutation performed
 M165 PASS / rules locked / no runtime change
 M166 PASS / entry criteria locked
 M167 PASS / status cleanup plan locked
@@ -40,57 +20,49 @@ M168 PASS / regression pack plan locked
 M169 PASS / dry run plan locked
 M170 PASS / summary plan ready
 M171 PASS / continue controlled CB before broader beta
+M172 PASS / execution package ready
+M173 READY / run prompt locked / evidence pending
+M174 READY / run prompt locked / evidence pending
+M175 READY / run prompt locked / evidence pending
+M176 READY / run prompt locked / evidence pending
+M177 READY / run prompt locked / evidence pending
+M178 READY / result template locked / evidence pending
+M179 READY / status update plan locked / evidence pending
+M180 READY / readiness review template locked / evidence pending
+M181 READY / scope template locked / evidence pending
+M182 READY / checklist template locked / evidence pending
 ```
 
-## M165-M171 Result Summary
+## Run Order
 
 ```text
-M165: workflow rules locked
-M166: mini-cycle 2 entry criteria locked
-M167: bug status cleanup plan locked
-M168: regression pack plan locked
-M169: mini-cycle 2 dry run plan locked
-M170: cycle summary shape ready
-M171: pre-beta scope decision locked
+M173 read-only technical input
+M174 proposal-first draft
+M175 review hold/defer
+M176 approved-path explanation
+M177 target-first recall-state
+M178 result lock
+M179 bug status pass
+M180 readiness review
+M181 beta candidate scope
+M182 beta entry checklist
 ```
 
-## Decision
+## Current Decision
 
 ```text
-Continue controlled CB iteration before broader beta.
-Use M165-M170 as the mini-cycle 2 planning package.
-Do not widen beta scope until mini-cycle 2 evidence is available.
+M172-M182 package is ready, but M173-M177 are not execution PASS yet.
+Do not widen beta scope until M173-M177 real evidence is recorded and M178 is locked.
 ```
 
 ## Immediate Next Action
 
-Pull the M165-M171 planning package and verify all records.
-
-```bash
-cd ~/workspace/hermes-runes-md-wiki
-
-git pull
-git status
-git log --oneline -20
-
-for f in \
-  wiki/k6-freelancer/verification-m165.md \
-  wiki/k6-freelancer/verification-m166.md \
-  wiki/k6-freelancer/verification-m167.md \
-  wiki/k6-freelancer/verification-m168.md \
-  wiki/k6-freelancer/verification-m169.md \
-  wiki/k6-freelancer/verification-m170.md \
-  wiki/k6-freelancer/verification-m171.md \
-  wiki/k6-freelancer/next-actions-cb.md; do
-  echo "== $f =="
-  grep -n "Status:\|Final Lock\|M16[5-9]\|M17[0-1]\|PASS /" "$f"
-done
+```text
+Run M173 first using docs/cb-m173-readonly-technical-input-run.md.
 ```
 
 ## Next Candidate Milestone
 
 ```text
-M172 Mini-cycle 2 Execution Start
+M173 Mini-cycle 2 Read-only Technical Input Run
 ```
-
-M172 should begin executing the M168 regression pack under the M165 workflow rules.
