@@ -1,3 +1,35 @@
+## N-20260606-M135 Beta-prep Mainline Re-entry
+
+Status: PASS / MAINLINE RE-ENTRY ADDED
+
+Current baseline:
+- M134 locked the external runtime / OpenClaw line into wait-state.
+- M125 remains IMPLEMENTED / PENDING until a real external runtime exists.
+- External-agent preparation is ready and should not continue as preparation-only milestones.
+- Mainline is restored to beta-prep / Hermes-agent governed trial-run.
+- Next controllable gaps are model endpoint configuration and trial promotion fixture.
+- The system remains personal-local, Markdown-native, human-reviewed, simple, and bounded.
+
+Recommended next milestones:
+- M136 Beta-prep Model Endpoint Configuration Check
+- M137 Trial Promotion Fixture Definition
+- M138 Hermes-agent Governed Trial-run Dry-run
+- M139 Trial Promotion Fixture Apply / Recall Verification
+
+Final lock:
+
+```text
+M135 Beta-prep Mainline Re-entry
+PASS / mainline re-entry added / external runtime remains wait-state
+```
+
+References:
+- `docs/beta-prep-mainline-reentry.md`
+- `docs/external-runtime-wait-state-lock.md`
+- `wiki/k6-freelancer/verification-m135.md`
+
+---
+
 ## N-20260606-M119-M132 Compact Bootstrap Stable Baseline Recap
 
 Status: PASS / STABLE BASELINE RECAP ADDED
