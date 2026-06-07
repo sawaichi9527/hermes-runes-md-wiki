@@ -2,7 +2,14 @@
 set -euo pipefail
 
 PYTHON="${PYTHON:-python3}"
-ROOT="${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-memory}"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+ROOT="${HERMES_MEMORY_ROOT:-$(cd "$SCRIPT_DIR/.." && pwd)}"
 SCRIPT="$ROOT/tools/importer/hermes_observe.py"
+
+if [ ! -f "$SCRIPT" ]; then
+  echo "ERROR: hermes_observe.py not found: $SCRIPT" >&2
+  echo "Set HERMES_MEMORY_ROOT to the Hermes Runes MD Wiki repository root if using a custom path." >&2
+  exit 1
+fi
 
 exec "$PYTHON" "$SCRIPT" "$@"
