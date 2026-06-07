@@ -1,28 +1,20 @@
 # Personal Index
 
-Status: P0 baseline
+Status: runtime-clean-seed
 
 ## Purpose
 
-Tracks flat-first personal preference and personal workflow memory files.
+Index for reviewed personal preferences, habits, and operating style in the active workspace.
 
-## Naming
-
-```text
-wiki/personal-<topic>-<note_type>.md
-```
-
-## Planned Note Types
+## Active Workspace
 
 ```text
-preference
-profile
-habit
-workflow
-note
-reference
+wiki/freelancer/preferences.md
+wiki/freelancer/operating-style.md
 ```
 
-## Current Entries
+For other installations, replace `freelancer` with the local hostname-derived workspace slug.
 
-No flat-first personal entries yet.
+## Safety
+
+Do not store secrets, account credentials, private tokens, or raw sensitive logs.
