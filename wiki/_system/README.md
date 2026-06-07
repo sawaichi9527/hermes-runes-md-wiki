@@ -106,3 +106,18 @@ Hermes Runes is not:
 - 2026-06-01: Initial P0 system policy index.
 - 2026-06-05: Registered default wiki seed layout policy in the required policy read order.
 - 2026-06-08: Cleaned runtime seed boundary and moved developer history outside `wiki/`.
+
+## Runtime Seed Boundary
+
+`wiki/_system/` is the runtime system-policy seed for normal users and agent-facing guidance.
+
+Milestone implementation records and historical P0/M-series development notes are retained under:
+
+```text
+dev/wiki-history/_system/
+```
+
+Normal users and fresh Open Beta testers should not need to read or import `dev/wiki-history/_system/` for routine operation.
+
+The runtime `_system` directory should remain focused on active policies, source priorities, invocation boundaries, memory rules, observation policy, and wiki operation guidance.
+
