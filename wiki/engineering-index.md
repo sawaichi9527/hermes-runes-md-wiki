@@ -1,29 +1,26 @@
 # Engineering Index
 
-Status: P0 baseline
+Status: runtime-clean-seed
 
 ## Purpose
 
-Tracks flat-first engineering and architecture memory files.
+Index for reviewed engineering notes in the active workspace.
 
-## Naming
-
-```text
-wiki/engineering-<topic>-<note_type>.md
-```
-
-## Planned Note Types
+## Active Workspace
 
 ```text
-design
-baseline
-architecture
-runbook
-troubleshooting
-benchmark
-verification
+wiki/freelancer/
 ```
 
-## Current Entries
+For other installations, replace `freelancer` with the local hostname-derived workspace slug.
 
-No flat-first engineering entries yet.
+## Developer Boundary
+
+Historical engineering evidence, milestone verification, and development-only specs belong under:
+
+```text
+dev/wiki-history/
+dev/docs/
+```
+
+They should not be imported as runtime user memory by default.
