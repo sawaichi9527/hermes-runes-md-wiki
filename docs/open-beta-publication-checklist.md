@@ -1,13 +1,13 @@
 # Open Beta Publication Checklist
 
-Status: MANUAL SEND URL BACKFILL BLOCKED / RELEASE AND FEEDBACK URLS PENDING / NOT SENT
+Status: OPEN BETA PUBLICATION PREP RECAP COMPLETE / BETA RUN ENTRY READY
 Date: 2026-06-08
 
 ## Purpose
 
 Prepare Hermes Runes MD Wiki for Open Beta publication as a public GitHub repository.
 
-This record tracks publication readiness, release tag status, public tester notification draft/final review status, channel selection status, and remaining manual URL backfill work.
+This record tracks publication readiness, release tag status, public tester notification package readiness, deferred manual URL backfill status, and Beta Run entry readiness.
 
 ## Current Repository State
 
@@ -15,7 +15,7 @@ This record tracks publication readiness, release tag status, public tester noti
 repository: sawaichi9527/hermes-runes-md-wiki
 visibility: public
 open_beta_target: public GitHub repository
-current_phase: waiting for manual GitHub Release and feedback issue URLs
+current_phase: Open Beta publication prep recap complete / Beta Run entry ready
 ```
 
 ## Open Beta Boundary
@@ -57,7 +57,8 @@ First Open Beta tag: created
 Public tester notification draft: prepared
 Public tester notification final: reviewed / send-ready / not sent
 Public notification channel lock: GitHub Release + GitHub Issue
-Manual send URL backfill: blocked / URLs pending
+Manual send URL backfill: deferred / URLs pending / not required for Beta Run entry
+Beta Run entry point: ready
 ```
 
 ## Workspace Slug Note
@@ -123,7 +124,6 @@ remaining_blocker: release lock and tag creation
 ```text
 release_lock: PASS
 release_tag_ready: yes
-public_tester_notification_ready: not yet
 tag_name: v0.1.0-beta.1
 tag_status: created
 ```
@@ -173,7 +173,6 @@ final_file: docs/public-tester-notification-final.md
 
 ```text
 send_record_scaffold: PASS
-selected_channel: pending
 notification_sent: no
 manual_send_required: yes
 send_record_file: docs/public-notification-send-record.md
@@ -192,11 +191,22 @@ manual_send_required: yes
 ## M219 Manual Send Result Record / URL Backfill Template
 
 ```text
-url_backfill_template: BLOCKED
-release_url: missing
-feedback_issue_url: missing
+url_backfill_template: BLOCKED / DEFERRED
+release_url: pending_manual_publication
+feedback_issue_url: pending_manual_publication
 notification_sent: no
-next_step: M219.1 manual send result backfill after URLs are available
+m219_1_status: deferred until manual URLs exist
+```
+
+## M220 Open Beta Publication Final Recap / Beta Run Entry Point
+
+```text
+publication_recap: PASS
+entry_version: 0.1.0-beta.1
+entry_tag: v0.1.0-beta.1
+beta_run_entry_ready: yes
+new_runtime_functionality_added: no
+release_automation_added: no
 ```
 
 ## License Note
@@ -208,17 +218,23 @@ copyright_holder: Chehan Lin
 year: 2026
 ```
 
-## Remaining Before Public Notification Send Record Completion
+## Remaining / Deferred
 
 ```text
-Create GitHub Release using docs/github-release-note-v0.1.0-beta.1.md.
-Create GitHub Issue using docs/open-beta-feedback-issue-draft.md.
-Backfill release_url and feedback_issue_url in M219.1.
+M219.1 manual URL backfill: deferred until release_url and feedback_issue_url exist.
+GitHub Release creation: optional manual publication task.
+GitHub Issue creation: optional manual feedback-channel task.
+```
+
+## Next Step
+
+```text
+M221 Beta Run Entry Criteria Lock / First Beta Smoke Plan
 ```
 
 ## Final Lock
 
 ```text
 Open Beta Publication Checklist
-MANUAL SEND URL BACKFILL BLOCKED / release and feedback URLs pending / notification not recorded as sent
+OPEN BETA PUBLICATION PREP RECAP COMPLETE / beta run entry ready
 ```
