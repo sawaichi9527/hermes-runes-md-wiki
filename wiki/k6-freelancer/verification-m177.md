@@ -1,6 +1,6 @@
 # M177 Mini-cycle 2 Target-first Recall-state Run
 
-Status: READY / RUN INPUT PREPARED / EVIDENCE PENDING
+Status: PASS / TARGET-FIRST LOOKUP STATE VERIFIED / RESULT LOCKED
 Date: 2026-06-07
 
 ## Evidence Record
@@ -21,24 +21,31 @@ docs/cb-m177-target-first-recall-state-run.md
 Closed Beta mini-cycle 2
 personal-local scope
 target-first lookup-state scenario
-actual Hermes-agent output required before execution PASS
+Hermes-agent output observed
 ```
 
 ## Result
 
 ```text
-READY
+PASS
 ```
 
-## Run Command Target
+## Verification Notes
 
 ```text
-Use /home/eye/workspace-trial/hermes-runes-md-wiki/docs/cb-m177-target-first-recall-state-run.md as the prompt input for Hermes-agent.
+Absolute trial-root prompt path was used.
+Hermes-agent answered the ICMP target scenario before running checks.
+The target answer stated that ICMP Echo Request/Reply should not currently be considered lookup-ready curated wiki memory.
+Read-only target checks were performed after the target answer.
+No target matches were reported in curated workspace files, index, or forge-inbox entries.
+ICMP references were reported only in session records, not curated wiki memory.
+No unrelated fixture check occurred before the target answer.
+No file change operation was reported.
 ```
 
 ## Final Lock
 
 ```text
 M177 Mini-cycle 2 Target-first Recall-state Run
-READY / run input prepared / evidence pending
+PASS / target-first lookup-state verified / no availability claim without target evidence
 ```
