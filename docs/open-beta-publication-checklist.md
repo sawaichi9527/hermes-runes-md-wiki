@@ -1,13 +1,13 @@
 # Open Beta Publication Checklist
 
-Status: OPEN BETA PUBLICATION PREP RECAP COMPLETE / BETA RUN ENTRY READY
+Status: BETA RUN ENTRY CRITERIA LOCKED / FIRST BETA SMOKE PLAN READY
 Date: 2026-06-08
 
 ## Purpose
 
-Prepare Hermes Runes MD Wiki for Open Beta publication as a public GitHub repository.
+Prepare Hermes Runes MD Wiki for Open Beta publication as a public GitHub repository and transition from publication prep into Beta Run entry.
 
-This record tracks publication readiness, release tag status, public tester notification package readiness, deferred manual URL backfill status, and Beta Run entry readiness.
+This record tracks publication readiness, release tag status, public tester notification package readiness, deferred manual URL backfill status, and Beta Run entry criteria readiness.
 
 ## Current Repository State
 
@@ -15,7 +15,7 @@ This record tracks publication readiness, release tag status, public tester noti
 repository: sawaichi9527/hermes-runes-md-wiki
 visibility: public
 open_beta_target: public GitHub repository
-current_phase: Open Beta publication prep recap complete / Beta Run entry ready
+current_phase: Beta Run entry criteria locked / first smoke plan ready
 ```
 
 ## Open Beta Boundary
@@ -58,7 +58,8 @@ Public tester notification draft: prepared
 Public tester notification final: reviewed / send-ready / not sent
 Public notification channel lock: GitHub Release + GitHub Issue
 Manual send URL backfill: deferred / URLs pending / not required for Beta Run entry
-Beta Run entry point: ready
+Beta Run entry criteria: locked
+First beta smoke plan: ready
 ```
 
 ## Workspace Slug Note
@@ -209,6 +210,18 @@ new_runtime_functionality_added: no
 release_automation_added: no
 ```
 
+## M221 Beta Run Entry Criteria Lock / First Beta Smoke Plan
+
+```text
+entry_criteria: PASS
+entry_version: 0.1.0-beta.1
+entry_tag: v0.1.0-beta.1
+first_beta_smoke_plan: ready
+new_runtime_functionality_added: no
+release_automation_added: no
+next_step: M222 First Beta Smoke Execution / Evidence Capture
+```
+
 ## License Note
 
 ```text
@@ -229,12 +242,12 @@ GitHub Issue creation: optional manual feedback-channel task.
 ## Next Step
 
 ```text
-M221 Beta Run Entry Criteria Lock / First Beta Smoke Plan
+M222 First Beta Smoke Execution / Evidence Capture
 ```
 
 ## Final Lock
 
 ```text
 Open Beta Publication Checklist
-OPEN BETA PUBLICATION PREP RECAP COMPLETE / beta run entry ready
+BETA RUN ENTRY CRITERIA LOCKED / first beta smoke plan ready
 ```
