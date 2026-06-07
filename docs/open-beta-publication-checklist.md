@@ -1,6 +1,6 @@
 # Open Beta Publication Checklist
 
-Status: OPEN BETA RELEASE POLISH PARTIAL / FINAL CHECK PENDING
+Status: OPEN BETA BASELINE FROZEN / RELEASE-READY
 Date: 2026-06-08
 
 ## Purpose
@@ -15,7 +15,7 @@ This record tracks publication readiness, release tag status, public tester noti
 repository: sawaichi9527/hermes-runes-md-wiki
 visibility: public
 open_beta_target: public GitHub repository
-current_phase: Open Beta release polish partial / final local check pending
+current_phase: Open Beta baseline frozen / release-ready
 ```
 
 ## Open Beta Boundary
@@ -77,9 +77,10 @@ Beta Run status lock: PASS / observed / no blocker / no patch required
 Beta known limitations / public notes: PASS / no runtime change
 Beta public notes alignment review: PASS / no patch required
 Beta public notes alignment decision: PASS / no patch required
-Open Beta final check plan: PASS / local check pending
-Open Beta final recap gate: pending M235.1 evidence
-Open Beta baseline freeze gate: pending M235.1 and M236
+Open Beta final check plan: PASS
+Open Beta final check evidence: PASS
+Open Beta final recap: PASS / freeze ready
+Open Beta baseline freeze: PASS / release-ready
 ```
 
 ## Workspace Slug Note
@@ -436,25 +437,46 @@ next_step: M235 Open Beta Final Check Plan
 
 ```text
 final_check_plan_locked: yes
-local_check_done: no
-evidence_capture_pending: yes
+local_check_done: yes
+evidence_captured: yes
 runtime_change_required: no
-next_step: M235.1 Open Beta Final Check Evidence Capture
+next_step: M236 Open Beta Final Recap
 ```
 
-## M236 Open Beta Final Recap Gate
+## M235.1 Open Beta Final Check Evidence Capture
 
 ```text
-final_recap_ready: no
-waiting_for: M235.1 Open Beta Final Check Evidence Capture
+final_local_check_done: yes
+evidence_captured: yes
+blocker_found: no
+patch_required_now: no
+runtime_change_required: no
+proceed_to_final_recap: yes
+next_step: M236 Open Beta Final Recap
 ```
 
-## M237 Open Beta Baseline Freeze Gate
+## M236 Open Beta Final Recap
 
 ```text
-open_beta_baseline_freeze_ready: no
-waiting_for: M235.1 and M236
+final_recap_ready: yes
+blocker_found: no
+patch_required_now: no
+runtime_change_required: no
 release_action_required_now: no
+open_beta_baseline_freeze_ready: yes
+next_step: M237 Open Beta Baseline Freeze
+```
+
+## M237 Open Beta Baseline Freeze
+
+```text
+open_beta_baseline_freeze: PASS
+release_ready_baseline: yes
+blocker_found: no
+patch_pending: no
+runtime_change_required: no
+release_action_required_now: no
+next_step: M238 Open Beta Manual Publication Decision
 ```
 
 ## License Note
@@ -477,12 +499,12 @@ GitHub Issue creation: optional manual feedback-channel task.
 ## Next Step
 
 ```text
-M235.1 Open Beta Final Check Evidence Capture
+M238 Open Beta Manual Publication Decision
 ```
 
 ## Final Lock
 
 ```text
 Open Beta Publication Checklist
-OPEN BETA RELEASE POLISH PARTIAL / final check pending
+OPEN BETA BASELINE FROZEN / release-ready
 ```
