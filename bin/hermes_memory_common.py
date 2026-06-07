@@ -86,12 +86,12 @@ def parse_simple_config(path):
     # Minimal YAML reader for this known config shape.
     # Avoids requiring PyYAML during M3.1 bootstrap.
     cfg = {
-        "default_project": "k6-freelancer",
+        "default_project": "freelancer",
         "projects": {
-            "k6-freelancer": {
+            "freelancer": {
                 "root": str(resolve_root()),
-                "source_paths": ["wiki/k6-freelancer", "imports"],
-                "eval_path": "eval/k6-freelancer",
+                "source_paths": ["wiki/freelancer", "imports"],
+                "eval_path": "eval/freelancer",
                 "backup_path": "backups",
                 "database_url_env": "HERMES_MEMORY_DATABASE_URL",
             }
@@ -105,15 +105,15 @@ def parse_simple_config(path):
         for line in text.splitlines():
             stripped = line.strip()
             if stripped.startswith("root:"):
-                cfg["projects"]["k6-freelancer"]["root"] = stripped.split(":", 1)[1].strip()
+                cfg["projects"]["freelancer"]["root"] = stripped.split(":", 1)[1].strip()
             elif stripped.startswith("url_env:"):
-                cfg["projects"]["k6-freelancer"]["database_url_env"] = stripped.split(":", 1)[1].strip()
+                cfg["projects"]["freelancer"]["database_url_env"] = stripped.split(":", 1)[1].strip()
     return cfg
 
 def get_project_cfg(args):
     cfg_path = read_config_path(args)
     cfg = parse_simple_config(cfg_path)
-    project = getattr(args, "project", None) or cfg.get("default_project", "k6-freelancer")
+    project = getattr(args, "project", None) or cfg.get("default_project", "freelancer")
     pcfg = cfg["projects"].get(project)
     if not pcfg:
         raise RuntimeError(f"Unknown project: {project}")
@@ -126,7 +126,7 @@ def get_project_cfg(args):
 def sha256_file(path):
     h = hashlib.sha256()
     with path.open("rb") as f:
-        for chunk in iter(lambda: f.read(1024 * 1024), b""):
+        for chunk in iter(lambda: f.read(1024 * 1024), b=""):
             h.update(chunk)
     return h.hexdigest()
 
@@ -169,10 +169,8 @@ def psql_scalar(sql, timeout=10):
 
 def base_parser(description):
     p = argparse.ArgumentParser(description=description)
-    p.add_argument("--version", action="store_true", help="print version and exit")
-    p.add_argument("--project", default=None, help="project name")
-    p.add_argument("--config", default=None, help="config file path")
-    p.add_argument("--json", action="store_true", help="machine-readable JSON output")
-    p.add_argument("--quiet", action="store_true", help="minimal output")
-    p.add_argument("--verbose", action="store_true", help="verbose output")
+    p.add_argument("--project", default=None)
+    p.add_argument("--config")
+    p.add_argument("--json", action="store_true")
+    p.add_argument("--quiet", action="store_true")
     return p
