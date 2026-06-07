@@ -1,6 +1,6 @@
 # Open Beta Publication Checklist
 
-Status: BETA PUBLIC NOTES LOCKED / NO RUNTIME CHANGE
+Status: OPEN BETA RELEASE POLISH PARTIAL / FINAL CHECK PENDING
 Date: 2026-06-08
 
 ## Purpose
@@ -15,7 +15,7 @@ This record tracks publication readiness, release tag status, public tester noti
 repository: sawaichi9527/hermes-runes-md-wiki
 visibility: public
 open_beta_target: public GitHub repository
-current_phase: Beta public notes locked / no runtime change
+current_phase: Open Beta release polish partial / final local check pending
 ```
 
 ## Open Beta Boundary
@@ -75,6 +75,11 @@ Beta regression smoke replay evidence: PASS
 Beta observation / regression recap: PASS / status lock ready
 Beta Run status lock: PASS / observed / no blocker / no patch required
 Beta known limitations / public notes: PASS / no runtime change
+Beta public notes alignment review: PASS / no patch required
+Beta public notes alignment decision: PASS / no patch required
+Open Beta final check plan: PASS / local check pending
+Open Beta final recap gate: pending M235.1 evidence
+Open Beta baseline freeze gate: pending M235.1 and M236
 ```
 
 ## Workspace Slug Note
@@ -406,6 +411,52 @@ beta_status_lock_changed: no
 next_step: M233 Beta Public Notes Review / Release Note Alignment
 ```
 
+## M233 Beta Public Notes Review / Release Note Alignment
+
+```text
+alignment_reviewed: yes
+release_note_patch_required_now: no
+tester_notification_patch_required_now: no
+feedback_issue_patch_required_now: no
+runtime_change_required: no
+next_step: M234 Beta Public Notes Alignment Decision Lock
+```
+
+## M234 Beta Public Notes Alignment Decision Lock
+
+```text
+decision_locked: yes
+no_patch_required: yes
+runtime_change_required: no
+proceed_to_final_check: yes
+next_step: M235 Open Beta Final Check Plan
+```
+
+## M235 Open Beta Final Check Plan
+
+```text
+final_check_plan_locked: yes
+local_check_done: no
+evidence_capture_pending: yes
+runtime_change_required: no
+next_step: M235.1 Open Beta Final Check Evidence Capture
+```
+
+## M236 Open Beta Final Recap Gate
+
+```text
+final_recap_ready: no
+waiting_for: M235.1 Open Beta Final Check Evidence Capture
+```
+
+## M237 Open Beta Baseline Freeze Gate
+
+```text
+open_beta_baseline_freeze_ready: no
+waiting_for: M235.1 and M236
+release_action_required_now: no
+```
+
 ## License Note
 
 ```text
@@ -426,12 +477,12 @@ GitHub Issue creation: optional manual feedback-channel task.
 ## Next Step
 
 ```text
-M233 Beta Public Notes Review / Release Note Alignment
+M235.1 Open Beta Final Check Evidence Capture
 ```
 
 ## Final Lock
 
 ```text
 Open Beta Publication Checklist
-BETA PUBLIC NOTES LOCKED / no runtime change
+OPEN BETA RELEASE POLISH PARTIAL / final check pending
 ```
