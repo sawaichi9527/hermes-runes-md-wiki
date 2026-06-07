@@ -1,13 +1,13 @@
 # Open Beta Publication Checklist
 
-Status: BETA RUN EVIDENCE LOG TEMPLATE LOCKED / READY FOR BETA OBSERVATIONS
+Status: FIRST REAL BETA USAGE SCENARIO LOCKED / EXECUTION PENDING
 Date: 2026-06-08
 
 ## Purpose
 
 Prepare Hermes Runes MD Wiki for Open Beta publication as a public GitHub repository and transition from publication prep into Beta Run evidence collection.
 
-This record tracks publication readiness, release tag status, public tester notification package readiness, deferred manual URL backfill status, Beta Run entry criteria readiness, first beta smoke evidence, beta observation readiness, and evidence log template readiness.
+This record tracks publication readiness, release tag status, public tester notification package readiness, deferred manual URL backfill status, Beta Run entry criteria readiness, first beta smoke evidence, beta observation readiness, evidence log template readiness, and the first real beta usage scenario.
 
 ## Current Repository State
 
@@ -15,7 +15,7 @@ This record tracks publication readiness, release tag status, public tester noti
 repository: sawaichi9527/hermes-runes-md-wiki
 visibility: public
 open_beta_target: public GitHub repository
-current_phase: Beta Run evidence log template locked / ready for beta observations
+current_phase: First real beta usage scenario locked / execution pending
 ```
 
 ## Open Beta Boundary
@@ -64,6 +64,7 @@ First beta smoke evidence: PASS
 Beta observation loop baseline: locked
 Usage evidence plan: ready
 Beta Run evidence log template: locked
+First real beta usage scenario: locked / execution pending
 ```
 
 ## Workspace Slug Note
@@ -259,6 +260,19 @@ new_runtime_functionality_added: no
 next_step: M225 First Real Beta Usage Scenario
 ```
 
+## M225 First Real Beta Usage Scenario
+
+```text
+scenario_lock: PASS
+observation_id: beta-obs-20260608-001
+scenario: starter_followthrough
+host: Freelancer
+workspace_slug: freelancer
+execution_done: no
+evidence_captured: no
+next_step: M225.1 First Real Beta Usage Evidence Capture
+```
+
 ## License Note
 
 ```text
@@ -279,12 +293,12 @@ GitHub Issue creation: optional manual feedback-channel task.
 ## Next Step
 
 ```text
-M225 First Real Beta Usage Scenario
+M225.1 First Real Beta Usage Evidence Capture
 ```
 
 ## Final Lock
 
 ```text
 Open Beta Publication Checklist
-BETA RUN EVIDENCE LOG TEMPLATE LOCKED / ready for beta observations
+FIRST REAL BETA USAGE SCENARIO LOCKED / execution pending
 ```
