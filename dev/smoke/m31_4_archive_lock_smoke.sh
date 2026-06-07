@@ -9,7 +9,7 @@ fail=0
 echo "== M31.4 Archive Move Lock Smoke =="
 
 echo "[1/5] root milestone shell archive count"
-shell_count="$(find archive/root-milestone-shell -maxdepth 1 -type f -name '*.sh' | wc -l)"
+shell_count="$(find dev/archive/root-milestone-shell -maxdepth 1 -type f -name '*.sh' | wc -l)"
 test "$shell_count" = "13" || { echo "FAIL shell_count=$shell_count expected=13"; fail=1; }
 
 echo "[2/5] root has no active m24/m25/m26 shell"

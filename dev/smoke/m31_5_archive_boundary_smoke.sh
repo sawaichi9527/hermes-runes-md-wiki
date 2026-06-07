@@ -9,7 +9,7 @@ fail=0
 echo "== M31.5 Archive Boundary Enforcement Smoke =="
 
 echo "[1/6] archive directories exist"
-test -d archive/root-milestone-shell || { echo "FAIL missing archive/root-milestone-shell"; fail=1; }
+test -d dev/archive/root-milestone-shell || { echo "FAIL missing dev/archive/root-milestone-shell"; fail=1; }
 test -d tools/archive/milestone-shell || { echo "FAIL missing tools/archive/milestone-shell"; fail=1; }
 
 echo "[2/6] root milestone shell scripts remain archived"
@@ -45,7 +45,7 @@ active_symlink_hits="$(
     | while read -r link; do
         target="$(readlink "$link" || true)"
         case "$target" in
-          *archive/root-milestone-shell*|*tools/archive/milestone-shell*)
+          *dev/archive/root-milestone-shell*|*tools/archive/milestone-shell*)
             echo "$link -> $target"
             ;;
         esac
@@ -58,7 +58,7 @@ if [ -n "$active_symlink_hits" ]; then
 fi
 
 echo "[6/6] archive policy README files exist"
-test -f archive/root-milestone-shell/README.md || { echo "FAIL missing archive/root-milestone-shell/README.md"; fail=1; }
+test -f dev/archive/root-milestone-shell/README.md || { echo "FAIL missing dev/archive/root-milestone-shell/README.md"; fail=1; }
 test -f tools/archive/milestone-shell/README.md || { echo "FAIL missing tools/archive/milestone-shell/README.md"; fail=1; }
 
 if [ "$fail" = "0" ]; then

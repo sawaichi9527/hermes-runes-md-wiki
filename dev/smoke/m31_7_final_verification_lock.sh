@@ -32,7 +32,7 @@ echo "[4/7] hermes-memory-smoke"
 ./bin/hermes-memory-smoke || fail=1
 
 echo "[5/7] archive README verification"
-test -f archive/root-milestone-shell/README.md || fail=1
+test -f dev/archive/root-milestone-shell/README.md || fail=1
 test -f tools/archive/milestone-shell/README.md || fail=1
 
 echo "[6/7] operations policy verification"
@@ -48,7 +48,7 @@ test -f docs/operations-local-retention.md || {
 
 echo "[7/7] final archive milestone verification"
 
-archive_shell_count="$(find archive/root-milestone-shell -type f -name '*.sh' | wc -l)"
+archive_shell_count="$(find dev/archive/root-milestone-shell -type f -name '*.sh' | wc -l)"
 archive_py_count="$(find tools/archive/milestone-shell -type f -name '*.py' | wc -l)"
 
 echo "archive_shell_count=$archive_shell_count"
