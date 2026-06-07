@@ -4,6 +4,35 @@ All notable Hermes Runes MD Wiki Open Beta changes are recorded here.
 
 This project uses SemVer-style versioning during Open Beta.
 
+## [0.5.0-dev] - 2026-06-08
+
+### Added
+
+- CPU-only embedding writer for runtime use.
+- Runtime release-readiness documentation for the v0.5.0 line.
+- Accepted SKIP gates for local-only unavailable LLM endpoint and absent fresh-workspace governance fixtures.
+
+### Changed
+
+- Runtime seed smoke fixtures were realigned to the current `freelancer` workspace.
+- Hybrid/vector recall was restored for the current PostgreSQL/pgvector runtime.
+- Runtime CLI and tools surface were cleaned:
+  - user-facing wrappers remain in `bin/`
+  - runtime/support tools remain in root `tools/`
+  - development-only smoke, fixture, regression, trial, and historical assets moved under `dev/`
+- Runtime support tool filenames no longer carry old milestone suffixes.
+
+### Fixed
+
+- `security_scan.py` now resolves the current repository root instead of the old `~/workspace/hermes-memory` default.
+- Executable bits were restored for runtime check scripts.
+
+### Release status
+
+- This is still the development line for v0.5.0.
+- Do not tag final `v0.5.0` until VERSION is changed from `0.5.0-dev` and the final smoke gate passes.
+
+
 ## [0.3.0] - 2026-06-08
 
 Status: RELEASE CANDIDATE / DOCS PREPARED / TAG PENDING
