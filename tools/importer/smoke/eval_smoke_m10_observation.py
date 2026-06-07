@@ -28,6 +28,21 @@ ROOT = resolve_smoke_root()
 IMPORTER = ROOT / "tools" / "importer"
 MODEL_ENV_KEYS = ("OPENAI_BASE_URL", "OPENAI_MODEL")
 ENV_PATHS = (ROOT / ".env", IMPORTER / ".env")
+BUG_ID_LLM_ENDPOINT_GATE = "TB-M1989-FS001"
+
+
+LLM_ENDPOINT_BLOCKER_PATTERNS = (
+    "Connection refused",
+    "[Errno 111]",
+    "urlopen error",
+    "timed out",
+    "TimeoutError",
+    "ConnectionError",
+    "Max retries exceeded",
+    "Name or service not known",
+    "Temporary failure in name resolution",
+    "Failed to establish a new connection",
+)
 
 
 def load_env_file(path: Path) -> list[str]:
@@ -90,12 +105,15 @@ def answer_case() -> dict[str, str]:
             "heading": "Telegram",
         }
 
+    # v0.5.0-dev runtime seed smoke.
+    # Historical Trial-run Workspace Baseline content is retained under
+    # dev/wiki-history and is no longer a public runtime seed target.
     return {
         "profile": f"workspace-{workspace}",
-        "query": "Trial-run Workspace Baseline 是什麼？",
+        "query": "forge inbox boundary 是什麼？",
         "project": workspace,
         "path": f"wiki/{workspace}",
-        "heading": "Trial-run Workspace Baseline",
+        "heading": "Boundaries",
     }
 
 
@@ -114,25 +132,43 @@ def m10_max_tokens() -> str:
     return os.environ.get("HERMES_M10_MAX_TOKENS", "1536")
 
 
+def llm_endpoint_blocked(stderr: str) -> bool:
+    text = stderr or ""
+    return any(pattern in text for pattern in LLM_ENDPOINT_BLOCKER_PATTERNS)
+
+
+def print_skip(case, loaded_keys, max_tokens, reason, message, **extra):
+    print(json.dumps({
+        "suite": "M10 Observation Log Smoke Test",
+        "profile": case["profile"],
+        "status": "SKIP",
+        "reason": reason,
+        "bug_id": BUG_ID_LLM_ENDPOINT_GATE,
+        "root": str(ROOT),
+        "importer": str(IMPORTER),
+        "env_files": env_source_summary(),
+        "loaded_keys": loaded_keys,
+        "max_tokens": max_tokens,
+        "case": case,
+        "message": message,
+        **extra,
+    }, ensure_ascii=False, indent=2))
+
+
 def main():
     case = answer_case()
     missing, loaded_keys = missing_model_env()
     max_tokens = m10_max_tokens()
 
     if missing:
-        print(json.dumps({
-            "suite": "M10 Observation Log Smoke Test",
-            "profile": case["profile"],
-            "status": "SKIP",
-            "reason": "missing_model_env",
-            "root": str(ROOT),
-            "importer": str(IMPORTER),
-            "env_files": env_source_summary(),
-            "loaded_keys": loaded_keys,
-            "missing": missing,
-            "max_tokens": max_tokens,
-            "message": "OPENAI-compatible model env is not configured; skipping answer generation smoke.",
-        }, ensure_ascii=False, indent=2))
+        print_skip(
+            case,
+            loaded_keys,
+            max_tokens,
+            "missing_model_env",
+            "OPENAI-compatible model env is not configured; skipping answer generation smoke.",
+            missing=missing,
+        )
         return
 
     cmd = [
@@ -156,6 +192,18 @@ def main():
     )
 
     if proc.returncode != 0:
+        if llm_endpoint_blocked(proc.stderr):
+            print_skip(
+                case,
+                loaded_keys,
+                max_tokens,
+                "llm_endpoint_unavailable",
+                "OPENAI-compatible endpoint is configured but unavailable; skipping answer generation smoke.",
+                returncode=proc.returncode,
+                stderr_tail=proc.stderr[-2000:],
+            )
+            return
+
         print(json.dumps({
             "suite": "M10 Observation Log Smoke Test",
             "profile": case["profile"],
@@ -166,6 +214,7 @@ def main():
             "env_files": env_source_summary(),
             "loaded_keys": loaded_keys,
             "max_tokens": max_tokens,
+            "case": case,
             "returncode": proc.returncode,
             "stderr_tail": proc.stderr[-2000:],
         }, ensure_ascii=False, indent=2))
