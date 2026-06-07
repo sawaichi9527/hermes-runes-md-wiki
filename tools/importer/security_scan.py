@@ -3,9 +3,10 @@ import argparse
 import json
 import re
 from pathlib import Path
+import os
 
 
-ROOT = Path.home() / "workspace" / "hermes-memory"
+ROOT = Path(os.environ.get("HERMES_MEMORY_ROOT", str(Path(__file__).resolve().parents[2]))).expanduser()
 WIKI_DIR = ROOT / "wiki"
 
 

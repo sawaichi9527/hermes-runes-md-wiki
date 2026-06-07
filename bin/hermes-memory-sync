@@ -69,7 +69,7 @@ fi
 
 if [ "$RUN_SECURE" -eq 1 ]; then
   echo "[hermes-memory-sync] running security scan..."
-  "$PYTHON" security_scan_m6_3.py --fail-on-findings
+  "$PYTHON" security_scan.py --fail-on-findings
 fi
 
 echo "[hermes-memory-sync] running importer..."

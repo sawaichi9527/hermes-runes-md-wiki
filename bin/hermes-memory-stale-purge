@@ -11,4 +11,4 @@ if [ -d ".venv" ]; then
   source ".venv/bin/activate"
 fi
 
-"$PYTHON" stale_purge_m6_2.py "$@"
+"$PYTHON" stale_purge.py "$@"

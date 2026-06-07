@@ -12,4 +12,4 @@ if [ -d ".venv" ]; then
   source ".venv/bin/activate"
 fi
 
-"$PYTHON" security_scan_m6_3.py "$@"
+"$PYTHON" security_scan.py "$@"
