@@ -1,13 +1,13 @@
 # Closed Beta Next Actions
 
-Status: PARTIAL / M188 BT-001 RECORDED
+Status: COMPLETE / M189 LOCKED / M188 PARTIAL PRESERVED
 Date: 2026-06-07
 
 ## Current Stage
 
 ```text
-M188 Beta Trial Execution Round 1
-PARTIAL / BT-001 run evidence recorded / follow-up required
+M189 Beta Trial Result Lock / Follow-up Plan
+PASS / M188 PARTIAL locked / follow-up plan ready
 ```
 
 ## Locked CB Chain
@@ -37,14 +37,14 @@ M185 PASS
 M186 PASS
 M187 PASS
 M188 PARTIAL
+M189 PASS
 ```
 
-## M188 Records
+## M189 Records
 
 ```text
-docs/cb-m188-bt001-readonly-technical-input-run.md
-wiki/k6-freelancer/cb-sessions/cb-20260607-m188-beta-trial-execution-round-1.md
-wiki/k6-freelancer/verification-m188.md
+wiki/k6-freelancer/cb-sessions/cb-20260607-m189-beta-trial-result-lock-follow-up-plan.md
+wiki/k6-freelancer/verification-m189.md
 ```
 
 ## Follow-up
@@ -63,17 +63,16 @@ git pull
 git status
 git log --oneline -12
 
-grep -n "Status:\|Final Lock\|M187\|M188\|M189\|BT-001\|PASS /\|PARTIAL\|READY\|PENDING" \
-  docs/cb-m188-bt001-readonly-technical-input-run.md \
-  wiki/k6-freelancer/verification-m187.md \
+grep -n "Status:\|Final Lock\|M188\|M189\|M190\|BT-001\|PASS /\|PARTIAL\|FOLLOW-UP\|READY" \
   wiki/k6-freelancer/verification-m188.md \
-  wiki/k6-freelancer/cb-sessions/cb-20260607-m187-beta-trial-case-pack.md \
+  wiki/k6-freelancer/verification-m189.md \
   wiki/k6-freelancer/cb-sessions/cb-20260607-m188-beta-trial-execution-round-1.md \
+  wiki/k6-freelancer/cb-sessions/cb-20260607-m189-beta-trial-result-lock-follow-up-plan.md \
   wiki/k6-freelancer/next-actions-cb.md
 ```
 
 ## Next Candidate Milestone
 
 ```text
-M189 Beta Trial Result Lock / Follow-up Plan
+M190 Read-only Prompt Tightening / BT-001 Rerun Prep
 ```
