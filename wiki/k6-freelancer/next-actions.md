@@ -1,3 +1,45 @@
+## N-20260607-M197 CB Usage Evidence Capture
+
+Status: READY / FIRST USAGE EVIDENCE CAPTURE BASELINE PREPARED
+
+Current baseline:
+- M191 PASS: read-only BT-001 rerun verified and path-isolated.
+- M192 PASS: read-only edge cases verified and path-isolated.
+- M193 PASS: governed proposal-path verified and bug-ID discipline verified.
+- M194 PASS: review gate verified.
+- M195 PASS: Closed Beta ready.
+- M196 PASS: first Closed Beta kickoff started.
+- M197 READY: first usage evidence capture baseline prepared.
+
+M197 purpose:
+- Start real small-group Closed Beta usage evidence capture after kickoff.
+- Record sanitized usage evidence without promoting it into trusted memory by default.
+- Keep secrets, raw confidential payloads, and unreviewed full prompts/outputs out of wiki records.
+- Require a bug ID in `cb-bugs.md` before turning any finding into development work.
+
+First capture slot:
+
+```text
+CB-USE-20260607-001: RESERVED / awaiting first real small-group usage evidence
+```
+
+Recommended next milestone:
+- M198 CB Feedback Intake / Finding Classification
+
+M198 scope:
+- Review the first real usage evidence records.
+- Classify each record as evidence_only, candidate_bug, candidate_improvement, candidate_docs_update, or defer.
+- Assign bug IDs before any development work.
+- Keep personal/local scope and avoid enterprise workflow expansion.
+
+References:
+- `docs/cb-usage-evidence-template.md`
+- `wiki/k6-freelancer/verification-m197.md`
+- `wiki/k6-freelancer/cb-sessions/cb-20260607-m197-cb-usage-evidence-capture.md`
+- `wiki/k6-freelancer/cb-bugs.md`
+
+---
+
 ## N-20260607-M140.2 Agent-facing Trial Status Lock
 
 Status: PASS / AGENT-FACING READ-ONLY TRIAL VERIFIED
@@ -158,376 +200,3 @@ References:
 ---
 
 ## N-20260605-M79-M82 P0 Baseline Convergence
-
-Status: PASS / FROZEN / SMOKE VERIFIED
-
-Current baseline:
-- M79 First Manual Apply Execution Plan: PASS / frozen.
-- M80 First Manual Apply Execution: PASS / frozen.
-- M81 Post-Apply Verification Lock: PASS / frozen.
-- M82 P0 Governed Memory Operating Baseline Freeze: PASS / frozen.
-- The implementation remains personal-local and bounded.
-
-Verified commands:
-
-```bash
-python3 tools/runes_shield/smoke_m79_first_manual_apply_execution_plan.py
-python3 tools/runes_shield/smoke_m80_first_manual_apply_execution.py
-python3 tools/runes_shield/smoke_m81_post_apply_verification_lock.py
-python3 tools/runes_shield/smoke_m82_p0_governed_memory_operating_baseline.py
-```
-
-Verified result:
-- M79: PASS / issue_count: 0
-- M80: PASS / issue_count: 0
-- M81: PASS / issue_count: 0
-- M82: PASS / issue_count: 0
-
-Final lock:
-
-```text
-M82 P0 Governed Memory Operating Baseline
-PASS / frozen / smoke verified
-```
-
-References:
-- `wiki/k6-freelancer/verification-m79.md`
-- `wiki/k6-freelancer/verification-m80.md`
-- `wiki/k6-freelancer/verification-m81.md`
-- `wiki/k6-freelancer/verification-m82.md`
-
----
-
-## N-20260605-M83 External Backend Boundary + Simple Backend Guard
-
-Status: PASS / FROZEN / SMOKE VERIFIED
-
-Current baseline:
-- External PostgreSQL backend remains an external prerequisite.
-- PostgreSQL Docker lifecycle is not owned by the core repository install flow.
-- Hermes-owned schema migration wrapper: PASS.
-- Simple backend guard wrapper: PASS.
-- Migration idempotency: PASS.
-- The implementation remains personal-local, bounded, and non-enterprise.
-
-Verified commands:
-
-```bash
-bash ./bin/hermes-backend-check
-bash ./bin/hermes-memory-migrate
-bash ./bin/hermes-memory-migrate
-```
-
-Verified result:
-- Backend prerequisite guard: PASS
-- PostgreSQL stack discovery: PASS
-- pgvector availability: PASS
-- First schema migration: PASS
-- Second migration idempotency: PASS
-
-Final lock:
-
-```text
-M83 External Backend Boundary + Simple Backend Guard
-PASS / frozen / smoke verified
-```
-
-References:
-- `wiki/k6-freelancer/verification-m83.md`
-
----
-
-## N-20260605-M84 Controlled Trial-use Observation Readiness
-
-Status: PASS / FROZEN / STRUCTURE VERIFIED
-
-Current baseline:
-- Controlled trial-use observation scaffold is available.
-- Markdown-native trial observation template: PASS.
-- Lightweight structural checker: PASS.
-- No automatic apply or orchestration introduced.
-- The implementation remains personal-local, bounded, and human-reviewed.
-
-Verified command:
-
-```bash
-bash ./bin/hermes-trial-observation-check <trial-record.md>
-```
-
-Verified scope:
-- required-heading verification
-- obvious secret-marker detection
-- basic structural readiness validation
-
-Final lock:
-
-```text
-M84 Controlled Trial-use Observation Readiness
-PASS / frozen / structure verified
-```
-
-References:
-- `wiki/k6-freelancer/verification-m84.md`
-- `docs/trial-use-observation.md`
-- `templates/trial-observation-record.md`
-
----
-
-## N-20260605-M85 First Real Controlled Observation Trial
-
-Status: PASS / FROZEN / POST-CHANGE VERIFIED
-
-Current baseline:
-- First real controlled observation trial completed.
-- Trial candidate came from an actual M84 checker false-positive discovered during local verification.
-- The false positive was fixed by narrowing secret detection from safety wording to likely secret values.
-- Trial record captured the issue, human review, fix, and post-change verification.
-- The implementation remains personal-local, bounded, and low-noise.
-
-Verified command:
-
-```bash
-bash ./bin/hermes-trial-observation-check wiki/k6-freelancer/trials/trial-20260605-test.md
-```
-
-Verified result:
-
-```json
-{"status":"PASS","check":"trial-observation","file":"wiki/k6-freelancer/trials/trial-20260605-test.md","message":"Trial observation record structure is ready for human review."}
-```
-
-Final lock:
-
-```text
-M85 First Real Controlled Observation Trial
-PASS / frozen / post-change verified
-```
-
-References:
-- `wiki/k6-freelancer/verification-m85.md`
-- `wiki/k6-freelancer/trials/trial-20260605-m84-checker-hotfix.md`
-- `wiki/k6-freelancer/trials/trial-20260605-external-backend-boundary.md`
-
----
-
-## N-20260605-M86 Trial-run Environment Isolation Baseline
-
-Status: PASS / DESIGN READY / IMPLEMENTED
-
-Current baseline:
-- Developer checkout remains under `~/workspace/hermes-runes-md-wiki`.
-- Realistic fresh-user trial-run should use `~/workspace-trial/hermes-runes-md-wiki`.
-- Shared PostgreSQL Docker service is acceptable for P0 trial-run.
-- Developer and trial-run runtime databases must be separate.
-- `bin/hermes-memory-migrate` now prefers runtime DB configuration before falling back to the Docker stack default database.
-
-Final lock:
-
-```text
-M86 Trial-run Environment Isolation Baseline
-PASS / design ready / implemented
-```
-
-References:
-- `wiki/k6-freelancer/verification-m86.md`
-- `docs/trial-run-environment-isolation.md`
-
----
-
-## N-20260605-M87 Keystone Trial-run Baseline
-
-Status: PASS / KEYSTONE READY
-
-Current baseline:
-- Keystone baseline has been migrated to the current M86 state.
-- Shared PostgreSQL Docker service remains unchanged.
-- Trial-run creates only the separate `hermes_memory_trial` runtime database.
-- Actual Hermes-agent trial-run is scoped only to `~/workspace-trial/hermes-runes-md-wiki`.
-- Actual Hermes-agent must not access or reason from the developer checkout at `~/workspace/hermes-runes-md-wiki`.
-
-Final lock:
-
-```text
-M87 Keystone Trial-run Baseline
-PASS / keystone ready
-```
-
-References:
-- `wiki/k6-freelancer/verification-m87.md`
-- `docs/keystone-trial-run-baseline.md`
-
----
-
-## N-20260605-M88 Fresh-user Trial Bootstrap Gap
-
-Status: PARTIAL FIX / TRIAL FINDINGS RECORDED
-
-Current findings:
-- Fresh clone lacked dependency bootstrap before smoke; observed `ModuleNotFoundError: No module named 'psycopg'`.
-- Full smoke then reached trial DB schema gap; observed `relation "public.chunks" does not exist`.
-- Trial workspace expectation is `wiki/freelancer`, but cloned repo still contains development workspace `wiki/k6-freelancer`.
-- `bin/hermes-memory-check` previously hardcoded `wiki/k6-freelancer` and `--project k6-freelancer`.
-
-Implemented partial fixes:
-- `bin/hermes-memory-check` now supports `HERMES_WORKSPACE_SLUG` / `HERMES_PROJECT`.
-- `migrations/postgres/002_public_memory_schema.sql` adds fresh-user public memory tables.
-
-Remaining gap:
-- Dependency/bootstrap setup remains pending clean verification under M90.
-
-Final lock:
-
-```text
-M88 Fresh-user Trial Bootstrap Gap
-PARTIAL FIX / trial findings recorded
-```
-
-References:
-- `wiki/k6-freelancer/verification-m88.md`
-- `bin/hermes-memory-check`
-- `migrations/postgres/002_public_memory_schema.sql`
-
----
-
-## N-20260605-M89 Fresh-user Trial Smoke Hardening
-
-Status: PASS / TRIAL SMOKE HARDENED / VERIFIED
-
-Current baseline:
-- Scoped import now includes `wiki/_system/**`, `wiki/owner-runes/**`, `wiki/freelancer/**`, and root-level `wiki/*.md`.
-- Trial DB excludes legacy `wiki/k6-freelancer/**` and `wiki/sample-project/**` content.
-- Core FTS smoke is workspace-aware.
-- M5.2 evaluation smoke is workspace-aware.
-- M10 observation smoke skips cleanly when model env is not configured.
-- M11 observation summary PASS.
-- M11.6 sample-project smoke is workspace-aware.
-- M20.4 promotion governance smoke skips cleanly when no trial promotion fixture exists.
-
-Verified trial smoke chain:
-
-```text
-Core FTS                         PASS
-M5.2 workspace evaluation         PASS
-M10 observation log               SKIP / expected: missing model env
-M11 observation summary           PASS
-M11.6 workspace/sample smoke      PASS
-M20.4 promotion governance        SKIP / expected: no trial fixture
-```
-
-Fixed trial bugs:
-
-```text
-TB-20260605-010 through TB-20260605-014
-```
-
-Final lock:
-
-```text
-M89 Fresh-user Trial Smoke Hardening
-PASS / trial smoke hardened / verified
-```
-
-References:
-- `wiki/k6-freelancer/verification-m89.md`
-- `wiki/k6-freelancer/trial-bugs.md`
-
----
-
-## N-20260605-M90 Fresh Clone Bootstrap Minimal Path
-
-Status: PASS / BOOTSTRAP PATH ADDED / PENDING CLEAN VERIFICATION
-
-Current baseline:
-- `requirements-core.txt` defines the minimal fresh-clone runtime dependencies.
-- `requirements-embedding.txt` remains optional for hybrid/vector/full-smoke support.
-- `bin/hermes-memory-bootstrap` creates `tools/importer/.venv` and installs core dependencies by default.
-- `bin/hermes-memory-bootstrap --with-embedding` installs CPU-only torch first, then optional embedding dependencies.
-- Bootstrap does not touch Docker, secrets, migrations, imports, model endpoints, or runtime DB state.
-- The implementation remains personal-local, bounded, and explicit.
-
-Final lock:
-
-```text
-M90 Fresh Clone Bootstrap Minimal Path
-PASS / bootstrap path added / pending local verification
-```
-
-References:
-- `wiki/k6-freelancer/verification-m90.md`
-- `docs/fresh-clone-bootstrap.md`
-- `requirements-core.txt`
-- `requirements-embedding.txt`
-- `bin/hermes-memory-bootstrap`
-
----
-
-## N-20260606-M90.3 Fresh Clone Bootstrap Baseline Ready
-
-Status: PASS / BETA-PREP BOOTSTRAP BASELINE READY
-
-Current baseline:
-- M90 added the minimal fresh-clone bootstrap path.
-- M90.1 added bootstrap verification helper and local verification.
-- M90.2 added clean temporary venv CPU embedding verification.
-- Clean verification confirmed `blocked_packages: []`.
-- Observed clean torch package: `torch-2.12.0+cpu`.
-- M90.3 closes the bootstrap trial-run line for beta preparation.
-- TB-20260605-001 is fixed.
-- TB-20260605-015 is fixed.
-
-Final lock:
-
-```text
-M90.3 Fresh Clone Bootstrap Baseline Ready
-PASS / beta-prep bootstrap baseline ready
-```
-
-References:
-- `wiki/k6-freelancer/verification-m90.md`
-- `wiki/k6-freelancer/verification-m90-1.md`
-- `wiki/k6-freelancer/verification-m90-2.md`
-- `wiki/k6-freelancer/verification-m90-3.md`
-- `wiki/k6-freelancer/trial-bugs.md`
-- `bin/hermes-memory-bootstrap`
-- `bin/hermes-memory-bootstrap-verify`
-- `bin/hermes-memory-embedding-cpu-clean-verify`
-
----
-
-## N-20260605-Realistic Fresh-user Trial-run
-
-Status: IN PROGRESS / SMOKE HARDENED / BOOTSTRAP BASELINE READY
-
-Current baseline:
-- P0 governed memory operating baseline is frozen.
-- External backend prerequisite handling is frozen and smoke verified.
-- Controlled trial-use observation scaffold is frozen and verified.
-- First real controlled observation trial is complete and post-change verified.
-- Trial-run environment isolation baseline is design ready and implemented.
-- Keystone trial-run baseline is ready.
-- Fresh-user bootstrap gaps are recorded under M88.
-- Fresh-user trial smoke hardening is complete under M89.
-- Fresh clone bootstrap baseline is ready through M90.3.
-- The system remains personal-local, Markdown-native, deterministic, and simple.
-
-Recommended next phase:
-- Pull M90.3 documentation updates into developer and trial clone.
-- Continue toward beta test run using the verified bootstrap baseline.
-- Keep shared PostgreSQL Docker stack unchanged.
-- Keep trial DB isolated.
-- Keep `HERMES_WORKSPACE_SLUG=freelancer` and `HERMES_PROJECT=freelancer` for trial-run.
-- Introduce real trial promotion fixture only through a governed human-reviewed proposal flow.
-
-Suggested trial continuation:
-- proceed with beta-prep clean trial run using the verified bootstrap baseline
-- keep model-dependent M10 smoke optional until a model endpoint is configured
-- keep M20.4 promotion governance skipped until an approved trial fixture exists
-
----
-
-## N-20260603-M50 Controlled Trial-run Governance
-
-Status: HISTORICAL / SUPERSEDED BY N-20260605-M79-M82 P0 Baseline Convergence
-
-Reference:
-- `wiki/k6-freelancer/verification-m49.md`
