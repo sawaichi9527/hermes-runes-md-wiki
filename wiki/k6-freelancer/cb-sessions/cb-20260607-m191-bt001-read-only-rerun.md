@@ -1,18 +1,20 @@
 # CB-20260607-M191 BT-001 Read-only Rerun / Evidence Capture
 
-Status: PARTIAL / READ-ONLY OUTPUT OK / TRIAL PATH ISOLATION BUG
+Status: PASS / READ-ONLY OUTPUT VERIFIED / PATH-ISOLATED
 Date: 2026-06-07
 Milestone: M191
 Stage: Closed Beta Validation
 
 ## Purpose
 
-Rerun BT-001 using the M190 tightened read-only prompt.
+Rerun BT-001 using the M190 tightened read-only prompt and verify that Hermes-agent stays read-only while using only the intended trial checkout evidence root.
 
-## Input Prompt Source
+## Input Prompt Sources
 
 ```text
 docs/m191-bt001-hermes-agent-run-prompt.md
+docs/m191-1-trial-path-isolation-rerun-prompt.md
+docs/m191-3-final-path-isolated-bt001-rerun-prompt.md
 docs/m190-read-only-prompt-tightening.md
 docs/cb-m191-m196-execution-pack.md
 ```
@@ -24,38 +26,56 @@ docs/cb-m191-m196-execution-pack.md
 - No proposal-style content.
 - No YAML-style governed memory block.
 - No final_trial_result.
-- No PASS / FAIL / PARTIAL self-classification.
+- No PASS / FAIL / PARTIAL self-classification for the run.
 - Boundary self-check uses: candidate_result: ready_for_human_review
+- Evidence must come from /home/eye/workspace-trial/hermes-runes-md-wiki only.
 ```
 
-## Hermes-agent Tool Path Evidence
+## M191 Execution History
 
 ```text
-Initial attempted reads:
-- /home/eye/freelancer/docs/m190-read-only-prompt-tightening.md -> file not found
-- /home/eye/freelancer/docs/cb-m191-m196-execution-pack.md -> file not found
+Initial M191:
+- Read-only output was acceptable.
+- Evidence path fell back to developer checkout.
+- Result: PARTIAL.
+- Bug: TB-M191-BT001-FU001 opened.
 
-Fallback reads after search:
-- /home/eye/workspace/hermes-runes-md-wiki/docs/m190-read-only-prompt-tightening.md
-- /home/eye/workspace/hermes-runes-md-wiki/docs/cb-m191-m196-execution-pack.md
-- /home/eye/workspace/hermes-runes-md-wiki/wiki/k6-freelancer/verification-m190.md
-- /home/eye/workspace/hermes-runes-md-wiki/wiki/k6-freelancer/verification-m190-1.md
-- /home/eye/workspace/hermes-runes-md-wiki/wiki/k6-freelancer/verification-m191.md
-- /home/eye/workspace/hermes-runes-md-wiki/wiki/k6-freelancer/cb-bugs.md
-- /home/eye/workspace/hermes-runes-md-wiki/docs/m191-bt001-hermes-agent-run-prompt.md
+M191.1:
+- Path-isolated prompt prevented developer checkout fallback.
+- Agent returned path_not_ready because trial checkout evidence files were missing.
+- Result: PASS for path isolation.
+- TB-M191-BT001-FU001 closed.
+- TB-M191-BT001-FU002 opened.
+
+M191.2:
+- Trial checkout evidence files became available.
+- Agent read required M190/M191 evidence from trial checkout only.
+- Summary was stale because verification-m191-1.md and verification-m191-2.md were not included.
+- Result: PASS for evidence availability.
+- TB-M191-BT001-FU002 closed.
+- TB-M191-BT001-FU003 opened.
+
+M191.3:
+- Final rerun included verification-m191-1.md and verification-m191-2.md.
+- Agent read only from /home/eye/workspace-trial/hermes-runes-md-wiki.
+- FU001 and FU002 were correctly reported as CLOSED_VERIFIED.
+- FU003 was kept open pending reviewer decision.
+- candidate_result: ready_for_human_review was present.
+- Result: accepted by reviewer as final M191 PASS.
 ```
 
-## Hermes-agent Output Summary
+## Final Hermes-agent Evidence Summary
 
 ```text
-The answer correctly summarized the CB validation state:
-- M188 BT-001 was previously PARTIAL because proposal-style content appeared and the agent self-classified final_trial_result as PASS.
-- M190 prompt tightening is complete.
-- M190.1 CB stage map is locked.
-- M191 is current and pending real output.
-- M192-M196 are upcoming.
-- CB bug ledger was initialized and empty before this review.
-- Operating boundary remains no new runtime features, no enterprise workflow expansion, no daemon/orchestrator/telemetry platform, no automatic proposal apply, and no direct trusted wiki mutation by the agent.
+The final M191.3 answer correctly summarized:
+- M190 PASS / prompt tightened / rerun prep ready.
+- M190.1 PASS / CB stage map locked / bug tracking boundary ready.
+- Original M191 PARTIAL reason: read-only output was OK but trial path isolation failed.
+- M191.1 PASS: path isolation verified and trial checkout sync required.
+- M191.2 PASS: trial checkout evidence available and final rerun needed.
+- TB-M191-BT001-FU001 CLOSED_VERIFIED.
+- TB-M191-BT001-FU002 CLOSED_VERIFIED.
+- TB-M191-BT001-FU003 OPEN pending reviewer decision at answer time.
 ```
 
 ## Read-only Output Review
@@ -69,35 +89,34 @@ PASS aspects:
 - no governed proposal was created
 - no YAML-style memory block was created
 - no final_trial_result was emitted
-- no M191 self-classification as PASS / FAIL / PARTIAL was emitted
+- no self-classification for this run as PASS / FAIL / PARTIAL was emitted
 - candidate_result: ready_for_human_review was present
-
-PARTIAL aspect:
-- the agent read evidence from /home/eye/workspace/hermes-runes-md-wiki after /home/eye/freelancer path lookup failed
-- this violates the intended CB/trial checkout isolation boundary
+- path was isolated to /home/eye/workspace-trial/hermes-runes-md-wiki
 ```
 
 ## Reviewer Classification
 
 ```text
-PARTIAL
+PASS
 ```
 
 ## Bug IDs
 
 ```text
-TB-M191-BT001-FU001
+TB-M191-BT001-FU001: CLOSED_VERIFIED
+TB-M191-BT001-FU002: CLOSED_VERIFIED
+TB-M191-BT001-FU003: CLOSED_VERIFIED
 ```
 
 ## Next Step
 
 ```text
-M191.1 Trial Path Isolation Prompt / Environment Rerun Prep
+M192 Remaining Read-only Edge Case Pass
 ```
 
 ## Final Lock
 
 ```text
 M191 BT-001 Read-only Rerun / Evidence Capture
-PARTIAL / read-only output OK / trial path isolation bug recorded
+PASS / read-only output verified / path-isolated / all M191 bugs closed
 ```
