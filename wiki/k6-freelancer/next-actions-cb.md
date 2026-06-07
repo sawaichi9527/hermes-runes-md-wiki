@@ -1,13 +1,13 @@
 # Closed Beta Next Actions
 
-Status: COMPLETE / M185 LOCKED
+Status: COMPLETE / M186 LOCKED
 Date: 2026-06-07
 
 ## Current Stage
 
 ```text
-M185 Beta Trial Runbook
-PASS / runbook locked / ready for M186 evidence template
+M186 Beta Evidence Template
+PASS / evidence template locked / ready for M187 case pack
 ```
 
 ## Locked CB Chain
@@ -34,13 +34,14 @@ M182 PASS
 M183 PASS
 M184 PASS
 M185 PASS
+M186 PASS
 ```
 
-## M185 Records
+## M186 Records
 
 ```text
-wiki/k6-freelancer/cb-sessions/cb-20260607-m185-beta-trial-runbook.md
-wiki/k6-freelancer/verification-m185.md
+wiki/k6-freelancer/cb-sessions/cb-20260607-m186-beta-evidence-template.md
+wiki/k6-freelancer/verification-m186.md
 ```
 
 ## Verification Commands
@@ -52,16 +53,16 @@ git pull
 git status
 git log --oneline -12
 
-grep -n "Status:\|Final Lock\|M184\|M185\|M186\|PASS /\|READY\|COMPLETE" \
-  wiki/k6-freelancer/verification-m184.md \
+grep -n "Status:\|Final Lock\|M185\|M186\|M187\|PASS /\|READY\|COMPLETE" \
   wiki/k6-freelancer/verification-m185.md \
-  wiki/k6-freelancer/cb-sessions/cb-20260607-m184-beta-candidate-operating-plan.md \
+  wiki/k6-freelancer/verification-m186.md \
   wiki/k6-freelancer/cb-sessions/cb-20260607-m185-beta-trial-runbook.md \
+  wiki/k6-freelancer/cb-sessions/cb-20260607-m186-beta-evidence-template.md \
   wiki/k6-freelancer/next-actions-cb.md
 ```
 
 ## Next Candidate Milestone
 
 ```text
-M186 Beta Evidence Template
+M187 Beta Trial Case Pack
 ```
