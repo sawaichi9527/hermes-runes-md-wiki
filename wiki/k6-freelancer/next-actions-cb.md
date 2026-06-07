@@ -1,13 +1,13 @@
 # Closed Beta Next Actions
 
-Status: ACTIVE / M188 READY / RUN EVIDENCE PENDING
+Status: PARTIAL / M188 BT-001 RECORDED
 Date: 2026-06-07
 
 ## Current Stage
 
 ```text
 M188 Beta Trial Execution Round 1
-READY / BT-001 prompt prepared / run evidence pending
+PARTIAL / BT-001 run evidence recorded / follow-up required
 ```
 
 ## Locked CB Chain
@@ -36,15 +36,22 @@ M184 PASS
 M185 PASS
 M186 PASS
 M187 PASS
-M188 READY
+M188 PARTIAL
 ```
 
-## M188 Prepared Records
+## M188 Records
 
 ```text
 docs/cb-m188-bt001-readonly-technical-input-run.md
 wiki/k6-freelancer/cb-sessions/cb-20260607-m188-beta-trial-execution-round-1.md
 wiki/k6-freelancer/verification-m188.md
+```
+
+## Follow-up
+
+```text
+TB-M188-BT001-FU001
+Tighten read-only execution prompt wording before rerun or next execution round.
 ```
 
 ## Verification Commands
@@ -56,7 +63,7 @@ git pull
 git status
 git log --oneline -12
 
-grep -n "Status:\|Final Lock\|M187\|M188\|BT-001\|PASS /\|READY\|PENDING" \
+grep -n "Status:\|Final Lock\|M187\|M188\|M189\|BT-001\|PASS /\|PARTIAL\|READY\|PENDING" \
   docs/cb-m188-bt001-readonly-technical-input-run.md \
   wiki/k6-freelancer/verification-m187.md \
   wiki/k6-freelancer/verification-m188.md \
@@ -65,20 +72,8 @@ grep -n "Status:\|Final Lock\|M187\|M188\|BT-001\|PASS /\|READY\|PENDING" \
   wiki/k6-freelancer/next-actions-cb.md
 ```
 
-## Trial Checkout Run Command
-
-```bash
-cd ~/workspace-trial/hermes-runes-md-wiki
-
-git pull
-git status --short
-
-# Then ask Hermes-agent to read and execute:
-# /home/eye/workspace-trial/hermes-runes-md-wiki/docs/cb-m188-bt001-readonly-technical-input-run.md
-```
-
 ## Next Candidate Milestone
 
 ```text
-M188 result recording after Hermes-agent run evidence is available
+M189 Beta Trial Result Lock / Follow-up Plan
 ```
