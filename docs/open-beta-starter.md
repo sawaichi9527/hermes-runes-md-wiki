@@ -1,13 +1,13 @@
 # Open Beta Starter Guide
 
-Status: STARTER / PUBLIC EVALUATION PATH
-Date: 2026-06-07
+Status: STARTER / PUBLIC EVALUATION PATH / HOST-DERIVED SLUG
+Date: 2026-06-08
 
 ## Purpose
 
 Provide a clean public Open Beta entry path for fresh testers.
 
-This guide intentionally avoids historical `wiki/k6-freelancer/` engineering evidence and uses the active Open Beta workspace slug.
+This guide intentionally avoids historical `wiki/k6-freelancer/` engineering evidence and uses the host-derived active workspace slug rule.
 
 ## Clone Path
 
@@ -31,10 +31,28 @@ cd hermes-runes-md-wiki
 
 ## Default Workspace
 
+Workspace slug is derived from the installation PC hostname, normalized to lowercase:
+
+```bash
+export HERMES_WORKSPACE_SLUG="$(hostname | tr '[:upper:]' '[:lower:]')"
+export HERMES_PROJECT="$HERMES_WORKSPACE_SLUG"
+```
+
+The active wiki namespace is:
+
 ```text
+wiki/<lowercase-hostname>/
+```
+
+Example for the current dogfood host:
+
+```text
+hostname: Freelancer
 workspace_slug: freelancer
 wiki_namespace: wiki/freelancer/
 ```
+
+`freelancer` is only the current dogfood host instance, not a universal default for every tester.
 
 The historical `wiki/k6-freelancer/` namespace is legacy engineering evidence. It is kept for provenance and should not be treated as the default public tester workspace.
 
@@ -44,13 +62,17 @@ The historical `wiki/k6-freelancer/` namespace is legacy engineering evidence. I
 cat VERSION
 ```
 
-Expected before the first tag:
+Expected Open Beta version:
 
 ```text
 0.1.0-beta.1
 ```
 
-The `v0.1.0-beta.1` tag is created only after public download remediation and release lock are complete.
+The first Open Beta tag is:
+
+```text
+v0.1.0-beta.1
+```
 
 ## Environment Example
 
@@ -59,7 +81,7 @@ cp tools/importer/.env.example tools/importer/.env
 vi tools/importer/.env
 ```
 
-Recommended defaults:
+Recommended dogfood defaults for this host:
 
 ```text
 HERMES_MEMORY_ROOT=~/workspace/hermes-runes-md-wiki
@@ -67,7 +89,9 @@ HERMES_WORKSPACE_SLUG=freelancer
 HERMES_PROJECT=freelancer
 ```
 
-For clean trial checkout testing, set:
+For a different tester host, replace `freelancer` with that host's lowercase hostname.
+
+For clean trial checkout testing on this host, set:
 
 ```text
 HERMES_MEMORY_ROOT=~/workspace/trial/hermes-runes-md-wiki
@@ -98,5 +122,5 @@ Use governed proposal/review paths for memory changes.
 
 ```text
 Open Beta Starter Guide
-STARTER / public evaluation path uses freelancer workspace slug
+STARTER / public evaluation path uses hostname-derived workspace slug
 ```
