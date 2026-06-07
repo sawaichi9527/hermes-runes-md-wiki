@@ -1,6 +1,6 @@
 # Closed Beta Bug Ledger
 
-Status: OPEN BUGS / M191 FINAL STATE FOLLOW-UP RECORDED
+Status: READY / NO OPEN M191 BUGS
 Date: 2026-06-07
 
 ## Purpose
@@ -74,16 +74,16 @@ closure_evidence: M191.2 rerun successfully read required M190/M191 evidence fil
 
 ```text
 id: TB-M191-BT001-FU003
-status: OPEN
+status: CLOSED_VERIFIED
 stage_found: M191.2 Trial Checkout Sync / Evidence Availability Verification
 case_id: BT-001
 summary: Final BT-001 answer used trial evidence but did not include the latest M191.1 / M191.2 state, so the technical status summary was stale.
-observed: The answer reported M191.1 as pending and TB-M191-BT001-FU001 as OPEN even though M191.1 path isolation had been verified and FU001 should be closed after rerun. The evidence list did not include verification-m191-1.md or verification-m191-2.md.
+observed: The M191.2 answer reported M191.1 as pending and TB-M191-BT001-FU001 as OPEN even though M191.1 path isolation had been verified and FU001 should be closed after rerun.
 expected: Final M191 BT-001 answer should use trial checkout evidence and include the latest M191.1 / M191.2 state before M191 can be locked as PASS.
 severity: medium
 scope_decision: fix_now
-rerun_required: true
-closure_evidence: PENDING; run M191.3 with updated evidence list including verification-m191-1.md and verification-m191-2.md.
+rerun_required: false
+closure_evidence: M191.3 final rerun used trial checkout only, included verification-m191-1.md and verification-m191-2.md, correctly reported FU001 and FU002 as CLOSED_VERIFIED, kept FU003 open pending reviewer decision, and preserved candidate_result: ready_for_human_review.
 ```
 
 Notes:
@@ -92,7 +92,8 @@ Notes:
 The original M191 answer content preserved the read-only boundary.
 M191.1 verified path isolation behavior.
 M191.2 verified trial checkout evidence availability.
-M191 still needs one final BT-001 rerun using the updated evidence list so the status summary is current.
+M191.3 verified current-state summary with M191.1 / M191.2 evidence included.
+No open M191 bugs remain after reviewer closure of FU003.
 ```
 
 ## Known Limitations Accepted for CB
@@ -103,5 +104,5 @@ No known limitations accepted for Closed Beta yet.
 
 ```text
 Closed Beta Bug Ledger
-OPEN BUGS / TB-M191-BT001-FU003 recorded
+READY / all M191 bug IDs closed verified
 ```
