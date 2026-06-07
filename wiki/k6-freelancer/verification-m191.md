@@ -1,6 +1,6 @@
 # M191 BT-001 Read-only Rerun / Evidence Capture
 
-Status: READY FOR LOCAL HERMES-AGENT RUN / REAL EVIDENCE REQUIRED
+Status: PARTIAL / READ-ONLY OUTPUT OK / TRIAL PATH ISOLATION BUG
 Date: 2026-06-07
 
 ## Evidence Record
@@ -25,45 +25,43 @@ no new runtime feature development
 ## Result
 
 ```text
-PENDING REAL OUTPUT
+PARTIAL
 ```
 
-## Acceptance Criteria
+## Acceptance Review
 
 ```text
-PASS requires:
+PASS aspects:
 - technical answer only
 - no proposal-style content
 - no YAML-style memory block
 - no final_trial_result
-- no self-assigned PASS / FAIL / PARTIAL
-- candidate_result: ready_for_human_review
-```
+- no M191 self-assigned PASS / FAIL / PARTIAL
+- candidate_result: ready_for_human_review present
 
-## Local Run Instruction
-
-```text
-Use docs/m191-bt001-hermes-agent-run-prompt.md as the exact local Hermes-agent prompt.
-Capture the full Hermes-agent output in wiki/k6-freelancer/cb-sessions/cb-20260607-m191-bt001-read-only-rerun.md.
+PARTIAL aspect:
+- Hermes-agent read evidence from /home/eye/workspace/hermes-runes-md-wiki after /home/eye/freelancer path lookup failed
+- this violates the intended CB/trial checkout isolation boundary
 ```
 
 ## Bug Handling
 
 ```text
-If deviation is observed, open TB-M191-BT001-FU001 or later.
-Do not convert issue into development work before it has a bug ID.
+opened: TB-M191-BT001-FU001
+status: OPEN
+summary: read-only output passed, but evidence source fell back to developer checkout instead of the intended trial checkout
+rerun_required: true
 ```
 
 ## Next Step
 
 ```text
-Run BT-001 through Hermes-agent using docs/m191-bt001-hermes-agent-run-prompt.md.
-Paste output into the M191 CB session record.
+M191.1 Trial Path Isolation Prompt / Environment Rerun Prep
 ```
 
 ## Final Lock
 
 ```text
 M191 BT-001 Read-only Rerun / Evidence Capture
-READY FOR LOCAL HERMES-AGENT RUN / real Hermes-agent evidence required
+PARTIAL / read-only output OK / trial path isolation bug recorded
 ```
