@@ -41,7 +41,7 @@ Open Beta does not mean:
 ```text
 README: present
 Open Beta starter guide: present
-.env example starter path: updated, dogfood example still uses freelancer
+.env example starter path: updated, hostname-derived slug comment corrected
 trial templates starter path: updated
 .gitignore: present and excludes local runtime artifacts
 Open Beta status note: visible in README
@@ -134,6 +134,16 @@ current_instance: Freelancer -> freelancer
 release_tag_change: none
 ```
 
+## M214.1 Env Example Host Slug Hotfix
+
+```text
+env_example_hotfix: PASS
+fixed_file: tools/importer/.env.example
+correct_rule: workspace/project defaults should be lowercase(hostname)
+current_instance: Freelancer -> freelancer
+release_tag_change: none
+```
+
 ## License Note
 
 ```text
@@ -153,5 +163,5 @@ M215 public tester notification draft
 
 ```text
 Open Beta Publication Checklist
-POST-TAG POLICY HOTFIX / hostname-derived slug corrected / public tester notification pending
+POST-TAG POLICY HOTFIX / hostname-derived slug and env example corrected / public tester notification pending
 ```
