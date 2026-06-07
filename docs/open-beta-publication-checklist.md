@@ -1,6 +1,6 @@
 # Open Beta Publication Checklist
 
-Status: READY / VERSIONING BASELINE PREPARED / PUBLIC DOWNLOAD AUDIT PENDING
+Status: READY / ACTIVE SLUG DEFAULT PREPARED / PUBLIC DOWNLOAD AUDIT PENDING
 Date: 2026-06-07
 
 ## Purpose
@@ -48,6 +48,18 @@ License: Apache-2.0 applied
 Version file: present
 Changelog: present
 Versioning policy: present
+Workspace slug policy: present
+Default active workspace slug: freelancer
+```
+
+## Workspace Slug Note
+
+```text
+canonical_active_slug: freelancer
+canonical_wiki_namespace: wiki/freelancer/
+legacy_engineering_namespace: wiki/k6-freelancer/
+clean_trial_checkout: ~/workspace/trial/hermes-runes-md-wiki
+deprecated_trial_checkout: ~/workspace-trial/hermes-runes-md-wiki
 ```
 
 ## Version Note
@@ -56,7 +68,7 @@ Versioning policy: present
 current_version: 0.1.0-beta.1
 planned_tag: v0.1.0-beta.1
 tag_status: not created yet
-reason: workspace slug realignment and public download audit must finish first
+reason: public download audit must finish first
 ```
 
 ## License Note
@@ -71,7 +83,6 @@ year: 2026
 ## Remaining Before Tester Notification
 
 ```text
-M208 workspace/wiki slug realignment
 M209 public download content audit
 M210 first Open Beta tag / release lock
 ```
@@ -80,5 +91,5 @@ M210 first Open Beta tag / release lock
 
 ```text
 Open Beta Publication Checklist
-READY / versioning baseline prepared / public download audit pending
+READY / active slug default prepared / public download audit pending
 ```
