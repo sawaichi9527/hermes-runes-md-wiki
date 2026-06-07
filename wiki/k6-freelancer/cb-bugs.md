@@ -1,6 +1,6 @@
 # Closed Beta Bug Ledger
 
-Status: READY / NO OPEN M191 BUGS
+Status: READY / NO OPEN M191-M192 BUGS
 Date: 2026-06-07
 
 ## Purpose
@@ -86,6 +86,15 @@ rerun_required: false
 closure_evidence: M191.3 final rerun used trial checkout only, included verification-m191-1.md and verification-m191-2.md, correctly reported FU001 and FU002 as CLOSED_VERIFIED, kept FU003 open pending reviewer decision, and preserved candidate_result: ready_for_human_review.
 ```
 
+## M192 Bug Summary
+
+```text
+No M192 bug IDs opened.
+BT-005 target-first lookup-state: PASS.
+BT-006 workspace-not-found handling: PASS.
+BT-007 incomplete input handling: PASS.
+```
+
 Notes:
 
 ```text
@@ -94,6 +103,7 @@ M191.1 verified path isolation behavior.
 M191.2 verified trial checkout evidence availability.
 M191.3 verified current-state summary with M191.1 / M191.2 evidence included.
 No open M191 bugs remain after reviewer closure of FU003.
+M192 read-only edge cases completed without new bug IDs.
 ```
 
 ## Known Limitations Accepted for CB
@@ -104,5 +114,5 @@ No known limitations accepted for Closed Beta yet.
 
 ```text
 Closed Beta Bug Ledger
-READY / all M191 bug IDs closed verified
+READY / no open M191-M192 bugs
 ```
