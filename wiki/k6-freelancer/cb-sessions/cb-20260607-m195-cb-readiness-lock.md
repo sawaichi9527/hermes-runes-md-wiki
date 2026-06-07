@@ -1,6 +1,6 @@
 # CB-20260607-M195 CB Readiness Lock
 
-Status: PENDING / WAITING FOR M191-M194
+Status: PASS / CLOSED BETA READY / READY FOR M196
 Date: 2026-06-07
 Milestone: M195
 Stage: Closed Beta Readiness
@@ -24,25 +24,31 @@ docs/cb-m191-m196-execution-pack.md
 ## Readiness Checklist
 
 ```text
-- M191 acceptable or documented as non-blocking known limitation.
-- M192 acceptable.
-- M193 acceptable.
-- M194 triage complete.
-- No blocker issue remains open.
-- High issues are closed verified or explicitly accepted by the human owner for CB.
-- Runbook and evidence paths are ready.
-- Known limitations are documented.
+M191 acceptable: yes / PASS
+M192 acceptable: yes / PASS
+M193 acceptable: yes / PASS
+M194 closure gate complete: yes / PASS
+M191-M193 unresolved records: none
+CB accepted limitations: none
+Runbook and evidence paths: ready
+Runtime feature work required before kickoff: none
 ```
 
 ## Reviewer Classification
 
 ```text
-PENDING
+PASS
+```
+
+## Next Step
+
+```text
+M196 First Closed Beta Kickoff
 ```
 
 ## Final Lock
 
 ```text
 M195 CB Readiness Lock
-PENDING / waiting for M191-M194
+PASS / Closed Beta ready / ready for M196
 ```
