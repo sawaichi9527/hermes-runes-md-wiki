@@ -1,13 +1,13 @@
 # Open Beta Publication Checklist
 
-Status: RUNTIME TOOL PATCHED / TAG PREP READY / RELEASE LOCK PENDING
+Status: FIRST OPEN BETA TAG CREATED / PUBLIC TESTER NOTIFICATION PENDING
 Date: 2026-06-07
 
 ## Purpose
 
 Prepare Hermes Runes MD Wiki for Open Beta publication as a public GitHub repository.
 
-This record tracks publication readiness but does not replace release tags or download-audit verification.
+This record tracks publication readiness, release tag status, and remaining public tester notification work.
 
 ## Current Repository State
 
@@ -15,7 +15,7 @@ This record tracks publication readiness but does not replace release tags or do
 repository: sawaichi9527/hermes-runes-md-wiki
 visibility: public
 open_beta_target: public GitHub repository
-current_phase: Open Beta public readiness
+current_phase: Open Beta release lock complete
 ```
 
 ## Open Beta Boundary
@@ -30,7 +30,7 @@ Open Beta means:
 Open Beta does not mean:
 - production stability guarantee
 - enterprise support commitment
-- public release / stable release
+- stable release
 - autonomous trusted memory writing
 - automatic proposal apply
 - storage of user secrets in the wiki
@@ -54,6 +54,7 @@ Workspace slug policy: present
 Default active workspace slug: freelancer
 Public download audit: complete
 Runtime/tool sweep: PASS / active blockers cleared
+First Open Beta tag: created
 ```
 
 ## Workspace Slug Note
@@ -71,8 +72,8 @@ deprecated_trial_checkout: ~/workspace-trial/hermes-runes-md-wiki
 ```text
 current_version: 0.1.0-beta.1
 planned_tag: v0.1.0-beta.1
-tag_status: ready for M213
-reason: active runtime/tool blockers cleared; release lock still required
+tag_status: created
+reason: v0.1.0-beta.1 release lock complete
 ```
 
 ## M209 Audit Result
@@ -81,7 +82,7 @@ reason: active runtime/tool blockers cleared; release lock still required
 result: PASS for audit completion
 release_tag_ready: no
 public_tester_notification_ready: no
-blocker: remaining public-facing and active-tool legacy references require remediation
+blocker: remaining public-facing and active-tool legacy references required remediation
 ```
 
 ## M210 Starter Cleanup Result
@@ -96,10 +97,29 @@ remaining_blocker: active runtime/tool legacy sweep
 ## M211 Runtime/Tool Sweep Result
 
 ```text
-runtime_tool_sweep: PASS
+runtime_tool_sweep: PARTIAL
+release_tag_ready: no
+public_tester_notification_ready: no
+remaining_blocker: local patch required for active runtime/tool legacy defaults
+```
+
+## M212 Runtime/Tool Local Patch Result
+
+```text
+runtime_tool_patch: PASS
 release_tag_ready: yes, pending M213 release lock
 public_tester_notification_ready: not yet
 remaining_blocker: release lock and tag creation
+```
+
+## M213 First Open Beta Tag Result
+
+```text
+release_lock: PASS
+release_tag_ready: yes
+public_tester_notification_ready: not yet
+tag_name: v0.1.0-beta.1
+tag_status: created
 ```
 
 ## License Note
@@ -114,7 +134,6 @@ year: 2026
 ## Remaining Before Tester Notification
 
 ```text
-M213 first Open Beta tag / release lock
 M214 public tester notification draft
 ```
 
@@ -122,5 +141,5 @@ M214 public tester notification draft
 
 ```text
 Open Beta Publication Checklist
-RUNTIME TOOL PATCHED / tag prep ready / release lock pending
+FIRST OPEN BETA TAG CREATED / public tester notification pending
 ```
