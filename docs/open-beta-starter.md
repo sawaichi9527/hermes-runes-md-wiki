@@ -2,6 +2,7 @@
 
 Status: STARTER / PUBLIC EVALUATION PATH / CLEAN RUNTIME SEED
 Date: 2026-06-08
+Recommended baseline: `v0.3.0`
 
 ## Purpose
 
@@ -53,14 +54,15 @@ wiki_namespace: wiki/freelancer/
 
 ## Developer History Boundary
 
-Historical engineering evidence, sample fixtures, milestone records, and beta observations are retained under:
+Historical engineering evidence, sample fixtures, milestone records, and developer-only beta evidence are retained under:
 
 ```text
-dev/wiki-history/
-dev/docs/
+dev/
 ```
 
 Public testers do not need to import or edit `dev/` for normal runtime use.
+
+Observation, support evidence, and Ragnarok-style diagnostic tooling remain user-facing support features even though generated logs and bundles should remain local and uncommitted.
 
 ## Version
 
@@ -71,8 +73,10 @@ cat VERSION
 Expected Open Beta version:
 
 ```text
-0.1.0-beta.1
+0.3.0
 ```
+
+`v0.1.0-beta.1` is superseded and should not be used for fresh tester onboarding.
 
 ## Environment Example
 
@@ -91,10 +95,27 @@ HERMES_PROJECT=freelancer
 
 For a different tester host, replace `freelancer` with that host's lowercase hostname.
 
+## Fresh Clone Bootstrap
+
+Default fresh clone bootstrap is lightweight:
+
+```bash
+bash ./bin/hermes-memory-bootstrap
+```
+
+The default bootstrap installs the core profile only and does not install torch, CUDA, sentence-transformers, transformers, or Triton.
+
+Optional hybrid/vector embedding support is explicit:
+
+```bash
+bash ./bin/hermes-memory-bootstrap --with-embedding
+```
+
 ## Read First
 
 ```text
 README.md
+QUICKSTART.md
 AGENTS.md
 wiki/README.md
 wiki/hermes_runes_index.md
@@ -115,5 +136,5 @@ Do not import dev/ as runtime memory by default.
 
 ```text
 Open Beta Starter Guide
-STARTER / public evaluation path uses clean runtime wiki seed and hostname-derived workspace slug
+STARTER / v0.3.0 public evaluation path uses clean runtime wiki seed and hostname-derived workspace slug
 ```
