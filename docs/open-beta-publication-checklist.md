@@ -1,13 +1,13 @@
 # Open Beta Publication Checklist
 
-Status: BETA RUN STATUS LOCK COMPLETE / OBSERVED / NO BLOCKER
+Status: BETA PUBLIC NOTES LOCKED / NO RUNTIME CHANGE
 Date: 2026-06-08
 
 ## Purpose
 
 Prepare Hermes Runes MD Wiki for Open Beta publication as a public GitHub repository and transition from publication prep into Beta Run evidence collection.
 
-This record tracks publication readiness, release tag status, public tester notification package readiness, deferred manual URL backfill status, Beta Run entry criteria readiness, beta smoke evidence, beta observation readiness, first and second real beta usage evidence, observation recap status, regression smoke replay evidence, final recap readiness, and Beta Run status lock.
+This record tracks publication readiness, release tag status, public tester notification package readiness, deferred manual URL backfill status, Beta Run entry criteria readiness, beta smoke evidence, beta observation readiness, first and second real beta usage evidence, observation recap status, regression smoke replay evidence, final recap readiness, Beta Run status lock, and public Beta known limitations notes.
 
 ## Current Repository State
 
@@ -15,7 +15,7 @@ This record tracks publication readiness, release tag status, public tester noti
 repository: sawaichi9527/hermes-runes-md-wiki
 visibility: public
 open_beta_target: public GitHub repository
-current_phase: Beta Run status lock complete / observed / no blocker
+current_phase: Beta public notes locked / no runtime change
 ```
 
 ## Open Beta Boundary
@@ -74,6 +74,7 @@ Beta regression smoke replay plan: locked
 Beta regression smoke replay evidence: PASS
 Beta observation / regression recap: PASS / status lock ready
 Beta Run status lock: PASS / observed / no blocker / no patch required
+Beta known limitations / public notes: PASS / no runtime change
 ```
 
 ## Workspace Slug Note
@@ -395,6 +396,16 @@ regression_smoke_replay: PASS
 next_step: M232 Beta Run Known Limitations / Public Notes
 ```
 
+## M232 Beta Run Known Limitations / Public Notes
+
+```text
+public_notes_locked: yes
+runtime_change_required: no
+documentation_patch_required_now: no
+beta_status_lock_changed: no
+next_step: M233 Beta Public Notes Review / Release Note Alignment
+```
+
 ## License Note
 
 ```text
@@ -415,12 +426,12 @@ GitHub Issue creation: optional manual feedback-channel task.
 ## Next Step
 
 ```text
-M232 Beta Run Known Limitations / Public Notes
+M233 Beta Public Notes Review / Release Note Alignment
 ```
 
 ## Final Lock
 
 ```text
 Open Beta Publication Checklist
-BETA RUN STATUS LOCK COMPLETE / observed / no blocker
+BETA PUBLIC NOTES LOCKED / no runtime change
 ```
