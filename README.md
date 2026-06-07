@@ -37,6 +37,14 @@ SECURITY.md
 
 ---
 
+## License
+
+Hermes Runes MD Wiki is licensed under the Apache License, Version 2.0.
+
+See `LICENSE` for the full license text.
+
+---
+
 ## Philosophy
 
 Runtime memory is temporary.
