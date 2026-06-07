@@ -1,28 +1,20 @@
 # Operations Index
 
-Status: P0 baseline
+Status: runtime-clean-seed
 
 ## Purpose
 
-Tracks flat-first operational and workflow memory files.
+Index for reviewed operational notes in the active workspace.
 
-## Naming
-
-```text
-wiki/operations-<topic>-<note_type>.md
-```
-
-## Planned Note Types
+## Active Workspace
 
 ```text
-runbook
-procedure
-incident
-verification
-maintenance
-workflow
+wiki/freelancer/services.md
+wiki/freelancer/local-environment.md
 ```
 
-## Current Entries
+For other installations, replace `freelancer` with the local hostname-derived workspace slug.
 
-No flat-first operations entries yet.
+## Safety
+
+Do not store credentials, private tokens, database passwords, or raw sensitive logs.
