@@ -1,6 +1,6 @@
 # M191.1 Trial Path Isolation Prompt / Environment Rerun Prep
 
-Status: READY / PATH-ISOLATED RERUN PREP
+Status: PASS / PATH ISOLATION VERIFIED / TRIAL CHECKOUT SYNC REQUIRED
 Date: 2026-06-07
 
 ## Evidence Record
@@ -24,34 +24,42 @@ no runtime feature development
 ## Result
 
 ```text
-READY
+PASS FOR PATH ISOLATION
 ```
 
-## Rerun Rule
+## Rerun Evidence
 
 ```text
-Use only the intended trial checkout evidence root.
-Do not fall back to the developer checkout.
-If trial evidence files are missing, report path_not_ready instead of searching another checkout.
+Hermes-agent attempted only the intended trial checkout path:
+- /home/eye/workspace-trial/hermes-runes-md-wiki/docs/m190-read-only-prompt-tightening.md
+- /home/eye/workspace-trial/hermes-runes-md-wiki/docs/cb-m191-m196-execution-pack.md
+- /home/eye/workspace-trial/hermes-runes-md-wiki/docs/m191-bt001-hermes-agent-run-prompt.md
+- /home/eye/workspace-trial/hermes-runes-md-wiki/docs/m191-1-trial-path-isolation-rerun-prompt.md
+
+The required evidence files were missing or unreadable in the trial checkout.
+Hermes-agent returned:
+path_not_ready: trial checkout evidence files missing
+candidate_result: ready_for_human_review
+
+No fallback to /home/eye/workspace/hermes-runes-md-wiki was observed.
 ```
 
 ## Bug State
 
 ```text
-id: TB-M191-BT001-FU001
-state_after_M191_1: FIX READY / RERUN REQUIRED
-closure_rule: close only after rerun evidence confirms path-isolated read-only behavior
+TB-M191-BT001-FU001: CLOSED_VERIFIED
+TB-M191-BT001-FU002: OPEN / trial checkout evidence files missing / sync required
 ```
 
 ## Next Step
 
 ```text
-Rerun BT-001 using docs/m191-1-trial-path-isolation-rerun-prompt.md.
+M191.2 Trial Checkout Sync / Evidence Availability Verification
 ```
 
 ## Final Lock
 
 ```text
 M191.1 Trial Path Isolation Prompt / Environment Rerun Prep
-READY / path-isolated rerun prep
+PASS / path isolation verified / trial checkout sync required
 ```
