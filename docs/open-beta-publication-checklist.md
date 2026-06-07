@@ -1,13 +1,13 @@
 # Open Beta Publication Checklist
 
-Status: POST-TAG POLICY HOTFIX / HOST-DERIVED SLUG CORRECTED / TESTER NOTICE PENDING
+Status: PUBLIC TESTER NOTIFICATION DRAFT PREPARED / REVIEW SEND DECISION PENDING
 Date: 2026-06-08
 
 ## Purpose
 
 Prepare Hermes Runes MD Wiki for Open Beta publication as a public GitHub repository.
 
-This record tracks publication readiness, release tag status, and remaining public tester notification work.
+This record tracks publication readiness, release tag status, public tester notification draft status, and remaining send/review decision work.
 
 ## Current Repository State
 
@@ -15,7 +15,7 @@ This record tracks publication readiness, release tag status, and remaining publ
 repository: sawaichi9527/hermes-runes-md-wiki
 visibility: public
 open_beta_target: public GitHub repository
-current_phase: Open Beta tag created with post-tag workspace slug policy correction
+current_phase: public tester notification draft prepared
 ```
 
 ## Open Beta Boundary
@@ -54,6 +54,7 @@ Workspace slug policy: corrected to hostname-derived slug
 Public download audit: complete
 Runtime/tool sweep: PASS / active blockers cleared
 First Open Beta tag: created
+Public tester notification draft: prepared
 ```
 
 ## Workspace Slug Note
@@ -75,7 +76,7 @@ deprecated_trial_checkout: ~/workspace-trial/hermes-runes-md-wiki
 current_version: 0.1.0-beta.1
 planned_tag: v0.1.0-beta.1
 tag_status: created
-post_tag_hotfix: workspace slug policy corrected after tag
+post_tag_hotfix: workspace slug policy and env example comment corrected after tag
 ```
 
 ## M209 Audit Result
@@ -144,6 +145,17 @@ current_instance: Freelancer -> freelancer
 release_tag_change: none
 ```
 
+## M215 Public Tester Notification Draft
+
+```text
+notification_draft: PASS
+notification_sent: no
+draft_file: docs/public-tester-notification-draft.md
+workspace_slug_rule_included: lowercase(hostname)
+secrets_boundary_included: yes
+feedback_scope_included: yes
+```
+
 ## License Note
 
 ```text
@@ -153,15 +165,15 @@ copyright_holder: Chehan Lin
 year: 2026
 ```
 
-## Remaining Before Tester Notification
+## Remaining Before Public Notification Send
 
 ```text
-M215 public tester notification draft
+M216 public tester notification review / send decision
 ```
 
 ## Final Lock
 
 ```text
 Open Beta Publication Checklist
-POST-TAG POLICY HOTFIX / hostname-derived slug and env example corrected / public tester notification pending
+PUBLIC TESTER NOTIFICATION DRAFT PREPARED / review send decision pending
 ```
