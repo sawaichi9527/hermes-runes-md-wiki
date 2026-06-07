@@ -14,7 +14,7 @@ except ImportError:  # pragma: no cover
     from tools.runes.recall_verify_m28_3 import build_recall_verification, find_repo_root
 
 SCHEMA_VERSION = "m28.4.p0.v1"
-DEFAULT_PROJECT = "k6-freelancer"
+DEFAULT_PROJECT = "freelancer"
 
 DEFAULT_CASES = [
     {

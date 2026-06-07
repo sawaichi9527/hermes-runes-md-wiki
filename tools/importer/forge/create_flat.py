@@ -10,7 +10,7 @@ from forge.manifest_writer import write_manifest
 from forge.operation_id import new_operation_id
 
 
-ALLOWED_PROJECTS = {"sample-project", "k6-freelancer"}
+ALLOWED_PROJECTS = {"sample-project", "freelancer", "k6-freelancer"}
 REAL_WRITE_PROJECTS = {"sample-project"}
 BLOCKED_REAL_WRITE_PROJECTS = ALLOWED_PROJECTS - REAL_WRITE_PROJECTS
 

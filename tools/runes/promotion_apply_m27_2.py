@@ -19,7 +19,7 @@ except ImportError:  # pragma: no cover
     from tools.runes.promotion_patch_m25_2 import candidate_lines
 
 SCHEMA_VERSION = "m27.2.p0.v1"
-DEFAULT_PROJECT = "k6-freelancer"
+DEFAULT_PROJECT = "freelancer"
 
 
 def utc_stamp() -> str:

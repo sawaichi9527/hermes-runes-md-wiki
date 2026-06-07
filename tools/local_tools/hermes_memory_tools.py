@@ -10,7 +10,7 @@ from pathlib import Path
 
 
 ROOT = Path.home() / "workspace/hermes-memory"
-OPERATIONS_MD = ROOT / "wiki/k6-freelancer/operations.md"
+OPERATIONS_MD = ROOT / "wiki/freelancer/operations.md"
 
 
 TOOLS = {

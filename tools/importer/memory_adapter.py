@@ -4,7 +4,7 @@ import subprocess
 from pathlib import Path
 
 
-ROOT = Path.home() / "workspace" / "hermes-memory"
+ROOT = Path.home() / "workspace" / "hermes-runes-md-wiki"
 RECALL = ROOT / "bin" / "hermes-recall"
 
 
@@ -45,7 +45,7 @@ def main() -> None:
         description="Hermes memory adapter JSON contract."
     )
     parser.add_argument("query")
-    parser.add_argument("--project", default="k6-freelancer")
+    parser.add_argument("--project", default="freelancer")
     parser.add_argument("--schema", default="public")
     parser.add_argument("--mode", default="hybrid", choices=["hybrid", "vector", "fts"])
     parser.add_argument("--path")

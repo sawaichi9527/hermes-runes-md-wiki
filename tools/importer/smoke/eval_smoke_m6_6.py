@@ -23,7 +23,7 @@ CASES = [
             "bash",
             "-lc",
             "python delete_source.py "
-            "--project k6-freelancer "
+            "--project freelancer "
             "--path __m6_2_delete_probe_not_exist__.md "
             "--json",
         ],
@@ -57,7 +57,7 @@ CASES = [
             "-lc",
             "hermes-recall 'Telegram integration' "
             "--mode hybrid "
-            "--project k6-freelancer "
+            "--project freelancer "
             "--path services.md "
             "--limit 3 "
             "--json",
@@ -72,7 +72,7 @@ CASES = [
             "-lc",
             "python answer_generator.py "
             "'Telegram integration 是什麼？' "
-            "--project k6-freelancer "
+            "--project freelancer "
             "--path services.md "
             "--heading Telegram "
             "--max-tokens 512 "

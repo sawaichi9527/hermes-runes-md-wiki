@@ -20,7 +20,7 @@ except ImportError:  # pragma: no cover
     from tools.runes.recall_verify_m28_3 import build_recall_verification
 
 SCHEMA_VERSION = "m29.1.p0.v2"
-DEFAULT_PROJECT = "k6-freelancer"
+DEFAULT_PROJECT = "freelancer"
 DEFAULT_TARGET_PATH = "wiki/k6-freelancer/p0-trial-scenarios.md"
 DEFAULT_HEADING = "Scenario Evidence"
 DEFAULT_PROPOSAL_ID = "m29-1-add-knowledge-scenario"

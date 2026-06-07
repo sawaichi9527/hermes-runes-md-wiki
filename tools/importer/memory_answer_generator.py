@@ -43,7 +43,7 @@ from typing import Any
 from observation_logger import build_record, new_trace_id, now_local, write_record
 
 
-DEFAULT_PROJECT = "k6-freelancer"
+DEFAULT_PROJECT = "freelancer"
 DEFAULT_BASE_URL = os.environ.get(
     "HERMES_LLM_BASE_URL",
     os.environ.get("OPENAI_BASE_URL", "http://127.0.0.1:1234/v1"),

@@ -23,9 +23,9 @@ def main() -> int:
         usage=(
             "forge.py {create-flat,approve,reject} [args...]\n\n"
             "Examples:\n"
-            "  forge.py create-flat --project k6-freelancer --title 'Note' --dry-run --json\n"
-            "  forge.py approve --path wiki/k6-freelancer/forge-inbox/example.md --json\n"
-            "  forge.py reject --path wiki/k6-freelancer/forge-inbox/example.md --reason 'not needed' --json"
+            "  forge.py create-flat --project freelancer --title 'Note' --dry-run --json\n"
+            "  forge.py approve --path wiki/freelancer/forge-inbox/example.md --json\n"
+            "  forge.py reject --path wiki/freelancer/forge-inbox/example.md --reason 'not needed' --json"
         ),
         formatter_class=argparse.RawTextHelpFormatter,
     )

@@ -35,7 +35,7 @@ from dataclasses import dataclass
 from typing import Any
 
 
-DEFAULT_PROJECT = "k6-freelancer"
+DEFAULT_PROJECT = "freelancer"
 DEFAULT_LIMIT = 12
 DEFAULT_MAX_CHUNKS = 6
 DEFAULT_MAX_CHARS_PER_CHUNK = 1200

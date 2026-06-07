@@ -18,7 +18,7 @@ except ImportError:  # pragma: no cover
     from tools.runes.recall_verify_m28_3 import build_recall_verification
 
 SCHEMA_VERSION = "m29.2.p0.v1"
-DEFAULT_PROJECT = "k6-freelancer"
+DEFAULT_PROJECT = "freelancer"
 DEFAULT_TARGET_PATH = "wiki/k6-freelancer/p0-trial-scenarios.md"
 DEFAULT_PROPOSAL_ID = "m29-2-reject-no-promotion-scenario"
 DEFAULT_REJECTED_MARKER = "M29.2_REJECTED_KNOWLEDGE_SHOULD_NOT_APPEAR_IN_TRUSTED_RECALL"

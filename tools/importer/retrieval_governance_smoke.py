@@ -11,12 +11,12 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 APPROVED_PATH = (
-    "wiki/k6-freelancer/forge-inbox/"
+    "wiki/freelancer/forge-inbox/"
     "m18-4-p0-trial-write-forge-20260601-213005-75d858f8.md"
 )
 
 REJECTED_PATH = (
-    "wiki/k6-freelancer/forge-inbox/"
+    "wiki/freelancer/forge-inbox/"
     "first-p0-governed-write-forge-20260601-212653-0e522ebc.md"
 )
 

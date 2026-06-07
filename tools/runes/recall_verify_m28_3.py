@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Any
 
 SCHEMA_VERSION = "m28.3.p0.v2"
-DEFAULT_PROJECT = "k6-freelancer"
+DEFAULT_PROJECT = "freelancer"
 
 
 def utc_stamp() -> str:

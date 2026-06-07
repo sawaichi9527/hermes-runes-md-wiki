@@ -6,7 +6,7 @@ import subprocess
 from pathlib import Path
 from typing import Iterable
 
-ALLOWED_PROJECTS = {"sample-project", "k6-freelancer"}
+ALLOWED_PROJECTS = {"sample-project", "freelancer", "k6-freelancer"}
 BLOCKED_NAMES = {"tmp", "logs", "observations"}
 
 

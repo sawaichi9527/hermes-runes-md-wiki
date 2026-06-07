@@ -32,7 +32,7 @@ cat >> "$RECORD_PATH" <<'MD'
 You are operating against Hermes Runes MD Wiki through the governed Runes Shield boundary.
 
 Repository root:
-~/workspace-trial/hermes-runes-md-wiki
+~/workspace/trial/hermes-runes-md-wiki
 
 Task:
 Read templates/trial-promotion-fixture-definition.md.
