@@ -23,4 +23,4 @@ Rules:
 - Restoration from this archive requires an explicit governed milestone.
 
 Verification:
-- `smoke/m31_4_archive_lock_smoke.sh`
+- `dev/smoke/m31_4_archive_lock_smoke.sh`

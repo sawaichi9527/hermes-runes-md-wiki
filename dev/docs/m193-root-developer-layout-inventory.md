@@ -69,12 +69,12 @@ db/migrations/001_m3_memory_schema.sql
 db/migrations/002_m3_metadata_columns.sql
 db/migrations/003_m3_assets_table.sql
 fixtures/m60/... through fixtures/m82/...
-smoke/m31_4_archive_lock_smoke.sh through smoke/m33_7_ragnarok_incantation_boundary_smoke.sh
+dev/smoke/m31_4_archive_lock_smoke.sh through dev/smoke/m33_7_ragnarok_incantation_boundary_smoke.sh
 smoke/smoke_m15_4b_lock_manifest.py through smoke/smoke_m17_5b_runner.py
-templates/external-agent-trial-evidence.md
-templates/hermes-agent-governed-trial-run-dry-run-record.md
-templates/trial-observation-record.md
-templates/trial-promotion-fixture-definition.md
+dev/templates/external-agent-trial-evidence.md
+dev/templates/hermes-agent-governed-trial-run-dry-run-record.md
+dev/templates/trial-observation-record.md
+dev/templates/trial-promotion-fixture-definition.md
 ```
 
 Target paths:
@@ -93,7 +93,7 @@ dev/templates/
 Observed checked-in reports:
 
 ```text
-reports/m29-runes-seal-local-inventory/*
+dev/reports/m29-runes-seal-local-inventory/*
 reports/m33-markdown-source-health/latest.json
 reports/m33-markdown-source-health/latest.md
 ```
@@ -102,7 +102,7 @@ References found:
 
 ```text
 wiki/_system/ragnarok_observation_evidence_inventory.md
-  reports/m29-runes-seal-local-inventory/
+  dev/reports/m29-runes-seal-local-inventory/
   reports/m33-markdown-source-health/latest.json
   reports/m33-markdown-source-health/latest.md
 
@@ -194,12 +194,12 @@ Before or during the move, update references in:
 
 ```text
 bin/hermes-m138-2-dry-run-record-init
-  templates/hermes-agent-governed-trial-run-dry-run-record.md
-  templates/trial-promotion-fixture-definition.md
+  dev/templates/hermes-agent-governed-trial-run-dry-run-record.md
+  dev/templates/trial-promotion-fixture-definition.md
 
 tools/runes/ragnarok_observation_bundle.py
-  smoke/m31_7_final_verification_lock.sh
-  smoke/m32_7_p0_trial_run_lock.sh
+  dev/smoke/m31_7_final_verification_lock.sh
+  dev/smoke/m32_7_p0_trial_run_lock.sh
   smoke/m33_*.sh
   reports/m33-markdown-source-health/latest.json
   reports/m33-markdown-source-health/latest.md
@@ -208,7 +208,7 @@ tools/runes/markdown_source_health_audit.py
   reports/m33-markdown-source-health
 
 wiki/_system/ragnarok_observation_evidence_inventory.md
-  reports/m29-runes-seal-local-inventory/
+  dev/reports/m29-runes-seal-local-inventory/
   reports/m33-markdown-source-health/latest.json
   reports/m33-markdown-source-health/latest.md
 ```
@@ -229,7 +229,7 @@ Update direct references after this phase.
 Phase B: reports split
 
 ```text
-reports/m29-runes-seal-local-inventory/ -> dev/reports/m29-runes-seal-local-inventory/
+dev/reports/m29-runes-seal-local-inventory/ -> dev/dev/reports/m29-runes-seal-local-inventory/
 ```
 
 Keep or redesign:

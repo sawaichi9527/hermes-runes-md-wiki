@@ -122,7 +122,7 @@ Purpose:
 
 Allowed examples:
 
-- `reports/m29-runes-seal-local-inventory/`
+- `dev/reports/m29-runes-seal-local-inventory/`
 - `reports/m33-markdown-source-health/latest.json`
 - `reports/m33-markdown-source-health/latest.md`
 - future curated reports

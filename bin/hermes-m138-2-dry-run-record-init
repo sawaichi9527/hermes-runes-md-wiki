@@ -3,7 +3,7 @@ set -euo pipefail
 
 ROOT="${HERMES_MEMORY_ROOT:-$PWD}"
 RECORD_PATH="${1:-wiki/k6-freelancer/trials/trial-20260606-m138-2-hermes-agent-dry-run.md}"
-TEMPLATE="templates/hermes-agent-governed-trial-run-dry-run-record.md"
+TEMPLATE="dev/templates/hermes-agent-governed-trial-run-dry-run-record.md"
 DOC="docs/hermes-agent-live-dry-run-evidence-capture.md"
 
 cd "$ROOT"
@@ -35,7 +35,7 @@ Repository root:
 ~/workspace/trial/hermes-runes-md-wiki
 
 Task:
-Read templates/trial-promotion-fixture-definition.md.
+Read dev/templates/trial-promotion-fixture-definition.md.
 Perform a dry-run only.
 Keep the repository unchanged.
 Keep proposal creation, apply, promotion, import, and index refresh out of scope for this dry-run.

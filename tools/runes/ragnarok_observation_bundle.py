@@ -91,14 +91,14 @@ def collect_smoke_inventory(bundle: Path) -> None:
     write_json(bundle / "smoke-verification" / "smoke-script-inventory.json", items)
 
     known_smokes = [
-        "smoke/m31_7_final_verification_lock.sh",
-        "smoke/m32_7_p0_trial_run_lock.sh",
-        "smoke/m33_0_runes_markdown_source_health_concept_smoke.sh",
-        "smoke/m33_1_ragnarok_observation_bundle_policy_smoke.sh",
-        "smoke/m33_2b_markdown_source_granularity_audit_smoke.sh",
-        "smoke/m33_3_forge_readiness_check_smoke.sh",
-        "smoke/m33_4_growth_aware_forge_proposal_trial_smoke.sh",
-        "smoke/m33_5_ragnarok_observation_evidence_inventory_smoke.sh",
+        "dev/smoke/m31_7_final_verification_lock.sh",
+        "dev/smoke/m32_7_p0_trial_run_lock.sh",
+        "dev/smoke/m33_0_runes_markdown_source_health_concept_smoke.sh",
+        "dev/smoke/m33_1_ragnarok_observation_bundle_policy_smoke.sh",
+        "dev/smoke/m33_2b_markdown_source_granularity_audit_smoke.sh",
+        "dev/smoke/m33_3_forge_readiness_check_smoke.sh",
+        "dev/smoke/m33_4_growth_aware_forge_proposal_trial_smoke.sh",
+        "dev/smoke/m33_5_ragnarok_observation_evidence_inventory_smoke.sh",
     ]
     write_json(
         bundle / "smoke-verification" / "known-lock-smokes.json",
