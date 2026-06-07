@@ -1,13 +1,13 @@
 # Open Beta Publication Checklist
 
-Status: PUBLIC TESTER NOTIFICATION REVIEWED / SEND-READY / NOT SENT
+Status: PUBLIC NOTIFICATION SEND RECORD SCAFFOLD PREPARED / CHANNEL SELECTION PENDING / NOT SENT
 Date: 2026-06-08
 
 ## Purpose
 
 Prepare Hermes Runes MD Wiki for Open Beta publication as a public GitHub repository.
 
-This record tracks publication readiness, release tag status, public tester notification draft/final review status, and remaining manual send record work.
+This record tracks publication readiness, release tag status, public tester notification draft/final review status, channel selection scaffold status, and remaining manual send work.
 
 ## Current Repository State
 
@@ -15,7 +15,7 @@ This record tracks publication readiness, release tag status, public tester noti
 repository: sawaichi9527/hermes-runes-md-wiki
 visibility: public
 open_beta_target: public GitHub repository
-current_phase: public tester notification reviewed and send-ready
+current_phase: public notification send record scaffold prepared
 ```
 
 ## Open Beta Boundary
@@ -56,6 +56,7 @@ Runtime/tool sweep: PASS / active blockers cleared
 First Open Beta tag: created
 Public tester notification draft: prepared
 Public tester notification final: reviewed / send-ready / not sent
+Public notification send record scaffold: prepared / channel pending / not sent
 ```
 
 ## Workspace Slug Note
@@ -167,6 +168,16 @@ manual_send_required: yes
 final_file: docs/public-tester-notification-final.md
 ```
 
+## M217 Public Notification Channel Selection / Manual Send Record
+
+```text
+send_record_scaffold: PASS
+selected_channel: pending
+notification_sent: no
+manual_send_required: yes
+send_record_file: docs/public-notification-send-record.md
+```
+
 ## License Note
 
 ```text
@@ -176,15 +187,15 @@ copyright_holder: Chehan Lin
 year: 2026
 ```
 
-## Remaining Before Public Notification Send Record
+## Remaining Before Public Notification Send
 
 ```text
-M217 public notification channel selection / manual send record
+M218 manual notification send / feedback channel lock
 ```
 
 ## Final Lock
 
 ```text
 Open Beta Publication Checklist
-PUBLIC TESTER NOTIFICATION REVIEWED / send-ready / not sent
+PUBLIC NOTIFICATION SEND RECORD SCAFFOLD PREPARED / channel selection pending / not sent
 ```
