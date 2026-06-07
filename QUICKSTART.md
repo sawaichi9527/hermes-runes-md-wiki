@@ -65,7 +65,26 @@ wiki/_system/
 
 # 4. Python Virtual Environment
 
-Create the virtual environment under `tools/importer`, then install the lightweight core dependencies:
+For a normal fresh clone, use the bootstrap wrapper. It creates `tools/importer/.venv` and installs only the lightweight core dependency profile.
+
+```bash
+cd "${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-runes-md-wiki}"
+
+bash ./bin/hermes-memory-bootstrap
+```
+
+Default bootstrap behavior:
+
+```text
+- creates tools/importer/.venv if missing
+- installs requirements-core.txt only
+- does not install torch / CUDA / sentence-transformers
+- does not touch Docker
+- does not create or edit .env secrets
+- does not run migrations
+```
+
+Manual equivalent:
 
 ```bash
 cd "${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-runes-md-wiki}"
@@ -78,11 +97,17 @@ python -m pip install --upgrade pip
 pip install -r ../../requirements.txt
 ```
 
-If local vector embedding is needed, install the optional embedding profile:
+`requirements.txt` is intentionally a lightweight alias to `requirements-core.txt`.
+
+If local vector embedding is needed, install the optional embedding profile through the bootstrap wrapper:
 
 ```bash
-pip install -r ../../requirements-embedding.txt
+cd "${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-runes-md-wiki}"
+
+bash ./bin/hermes-memory-bootstrap --with-embedding
 ```
+
+The embedding path installs CPU-only torch first, then installs `requirements-embedding.txt`, to avoid pulling large CUDA wheels during personal-local fresh clone setup.
 
 ---
 
