@@ -1,13 +1,13 @@
 # Open Beta Publication Checklist
 
-Status: FIRST REAL BETA USAGE EVIDENCE CAPTURED / READY FOR FRICTION TRIAGE
+Status: BETA FRICTION TRIAGE COMPLETE / NO PATCH REQUIRED
 Date: 2026-06-08
 
 ## Purpose
 
 Prepare Hermes Runes MD Wiki for Open Beta publication as a public GitHub repository and transition from publication prep into Beta Run evidence collection.
 
-This record tracks publication readiness, release tag status, public tester notification package readiness, deferred manual URL backfill status, Beta Run entry criteria readiness, first beta smoke evidence, beta observation readiness, evidence log template readiness, first real beta usage scenario, and first real beta usage evidence.
+This record tracks publication readiness, release tag status, public tester notification package readiness, deferred manual URL backfill status, Beta Run entry criteria readiness, first beta smoke evidence, beta observation readiness, evidence log template readiness, first real beta usage scenario, first real beta usage evidence, and beta friction triage.
 
 ## Current Repository State
 
@@ -15,7 +15,7 @@ This record tracks publication readiness, release tag status, public tester noti
 repository: sawaichi9527/hermes-runes-md-wiki
 visibility: public
 open_beta_target: public GitHub repository
-current_phase: First real beta usage evidence captured / ready for friction triage
+current_phase: Beta friction triage complete / no patch required
 ```
 
 ## Open Beta Boundary
@@ -66,6 +66,7 @@ Usage evidence plan: ready
 Beta Run evidence log template: locked
 First real beta usage scenario: locked
 First real beta usage evidence: PASS
+Beta friction triage: PASS / no patch required
 ```
 
 ## Workspace Slug Note
@@ -285,6 +286,18 @@ blocking: no
 next_step: M226 Beta Friction Triage
 ```
 
+## M226 Beta Friction Triage
+
+```text
+triage_result: PASS
+blocking_issue_found: no
+patch_required: no
+runtime_fix_required: no
+documentation_patch_required: no
+governance_review_required: no
+next_step: M227 Second Real Beta Usage Scenario / Starter Followthrough Variant
+```
+
 ## License Note
 
 ```text
@@ -305,12 +318,12 @@ GitHub Issue creation: optional manual feedback-channel task.
 ## Next Step
 
 ```text
-M226 Beta Friction Triage
+M227 Second Real Beta Usage Scenario / Starter Followthrough Variant
 ```
 
 ## Final Lock
 
 ```text
 Open Beta Publication Checklist
-FIRST REAL BETA USAGE EVIDENCE CAPTURED / ready for friction triage
+BETA FRICTION TRIAGE COMPLETE / no patch required
 ```
