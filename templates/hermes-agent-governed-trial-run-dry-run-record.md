@@ -1,17 +1,17 @@
 # Hermes-agent Governed Trial-run Dry-run Record
 
-Status: TEMPLATE / M138 DRY-RUN RECORD
-Date: 2026-06-06
+Status: TEMPLATE / LEGACY DRY-RUN RECORD UPDATED FOR OPEN BETA PATH
+Date: 2026-06-07
 
 ## Trial Metadata
 
 ```text
-Milestone: M138 Hermes-agent Governed Trial-run Dry-run
-Workspace: ~/workspace-trial/hermes-runes-md-wiki
-Fixture ID: TPF-20260606-M137
+Milestone: governed trial-run dry-run
+Workspace: ~/workspace/trial/hermes-runes-md-wiki
+Fixture ID: <fixture-id>
 Fixture template: templates/trial-promotion-fixture-definition.md
 Candidate target path: wiki/freelancer/trial-promotion-fixtures.md
-Recall marker: M137 beta-prep trial promotion fixture marker
+Recall marker: <recall-marker>
 Runtime: Hermes-agent
 Result: PENDING
 ```
@@ -70,6 +70,6 @@ Reason: PENDING
 ## Final Lock
 
 ```text
-M138 Hermes-agent Governed Trial-run Dry-run Record
-TEMPLATE / ready for dry-run evidence capture
+Hermes-agent Governed Trial-run Dry-run Record
+TEMPLATE / ready for dry-run evidence capture using Open Beta trial path
 ```
