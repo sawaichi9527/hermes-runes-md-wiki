@@ -1,13 +1,13 @@
 # Open Beta Publication Checklist
 
-Status: BETA OBSERVATION LOOP BASELINE LOCKED / USAGE EVIDENCE PLAN READY
+Status: BETA RUN EVIDENCE LOG TEMPLATE LOCKED / READY FOR BETA OBSERVATIONS
 Date: 2026-06-08
 
 ## Purpose
 
 Prepare Hermes Runes MD Wiki for Open Beta publication as a public GitHub repository and transition from publication prep into Beta Run evidence collection.
 
-This record tracks publication readiness, release tag status, public tester notification package readiness, deferred manual URL backfill status, Beta Run entry criteria readiness, first beta smoke evidence, and beta observation readiness.
+This record tracks publication readiness, release tag status, public tester notification package readiness, deferred manual URL backfill status, Beta Run entry criteria readiness, first beta smoke evidence, beta observation readiness, and evidence log template readiness.
 
 ## Current Repository State
 
@@ -15,7 +15,7 @@ This record tracks publication readiness, release tag status, public tester noti
 repository: sawaichi9527/hermes-runes-md-wiki
 visibility: public
 open_beta_target: public GitHub repository
-current_phase: Beta observation loop baseline locked / usage evidence plan ready
+current_phase: Beta Run evidence log template locked / ready for beta observations
 ```
 
 ## Open Beta Boundary
@@ -63,6 +63,7 @@ First beta smoke plan: ready
 First beta smoke evidence: PASS
 Beta observation loop baseline: locked
 Usage evidence plan: ready
+Beta Run evidence log template: locked
 ```
 
 ## Workspace Slug Note
@@ -246,6 +247,18 @@ new_runtime_functionality_added: no
 next_step: M224 Beta Run Evidence Log Template
 ```
 
+## M224 Beta Run Evidence Log Template
+
+```text
+evidence_log_template: PASS
+template_file: docs/beta-run-evidence-log-template.md
+required_fields: documented
+classification_fields: documented
+safety_review_fields: documented
+new_runtime_functionality_added: no
+next_step: M225 First Real Beta Usage Scenario
+```
+
 ## License Note
 
 ```text
@@ -266,12 +279,12 @@ GitHub Issue creation: optional manual feedback-channel task.
 ## Next Step
 
 ```text
-M224 Beta Run Evidence Log Template
+M225 First Real Beta Usage Scenario
 ```
 
 ## Final Lock
 
 ```text
 Open Beta Publication Checklist
-BETA OBSERVATION LOOP BASELINE LOCKED / usage evidence plan ready
+BETA RUN EVIDENCE LOG TEMPLATE LOCKED / ready for beta observations
 ```
