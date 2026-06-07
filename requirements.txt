@@ -1,11 +1,10 @@
-# Hermes Runes MD Wiki - core runtime dependencies
-# Keep this file minimal. Do not paste full pip freeze here.
+# Hermes Runes MD Wiki - default fresh-clone requirements
+#
+# Default install must stay lightweight for personal-local users.
+# Do not add torch, sentence-transformers, CUDA, Triton, or full pip freeze here.
+#
+# For optional hybrid/vector embedding support, use:
+#   bash ./bin/hermes-memory-bootstrap --with-embedding
+# or install requirements-embedding.txt after installing CPU-only torch.
 
-psycopg==3.3.4
-psycopg-binary==3.3.4
-python-dotenv==1.2.2
-python-frontmatter==1.3.0
-Markdown==3.10.2
-PyYAML==6.0.3
-numpy==2.4.6
-scikit-learn==1.8.0
+-r requirements-core.txt
