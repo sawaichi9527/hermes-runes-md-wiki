@@ -1,12 +1,13 @@
 # M191 BT-001 Read-only Rerun / Evidence Capture
 
-Status: PENDING / REAL HERMES-AGENT EVIDENCE REQUIRED
+Status: READY FOR LOCAL HERMES-AGENT RUN / REAL EVIDENCE REQUIRED
 Date: 2026-06-07
 
 ## Evidence Record
 
 ```text
 wiki/k6-freelancer/cb-sessions/cb-20260607-m191-bt001-read-only-rerun.md
+docs/m191-bt001-hermes-agent-run-prompt.md
 docs/m190-read-only-prompt-tightening.md
 docs/cb-m191-m196-execution-pack.md
 wiki/k6-freelancer/cb-bugs.md
@@ -24,7 +25,7 @@ no new runtime feature development
 ## Result
 
 ```text
-PENDING
+PENDING REAL OUTPUT
 ```
 
 ## Acceptance Criteria
@@ -39,6 +40,13 @@ PASS requires:
 - candidate_result: ready_for_human_review
 ```
 
+## Local Run Instruction
+
+```text
+Use docs/m191-bt001-hermes-agent-run-prompt.md as the exact local Hermes-agent prompt.
+Capture the full Hermes-agent output in wiki/k6-freelancer/cb-sessions/cb-20260607-m191-bt001-read-only-rerun.md.
+```
+
 ## Bug Handling
 
 ```text
@@ -49,7 +57,7 @@ Do not convert issue into development work before it has a bug ID.
 ## Next Step
 
 ```text
-Run BT-001 through Hermes-agent using the M190 tightened prompt.
+Run BT-001 through Hermes-agent using docs/m191-bt001-hermes-agent-run-prompt.md.
 Paste output into the M191 CB session record.
 ```
 
@@ -57,5 +65,5 @@ Paste output into the M191 CB session record.
 
 ```text
 M191 BT-001 Read-only Rerun / Evidence Capture
-PENDING / real Hermes-agent evidence required
+READY FOR LOCAL HERMES-AGENT RUN / real Hermes-agent evidence required
 ```
