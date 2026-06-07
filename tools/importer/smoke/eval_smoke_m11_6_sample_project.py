@@ -57,7 +57,7 @@ def active_cases():
     if workspace in ("", "sample-project", "k6-freelancer"):
         return "legacy-sample-project", LEGACY_CASES
 
-    # v0.3.1-dev runtime seed smoke.
+    # v0.5.0-dev runtime seed smoke.
     #
     # The historical sample-project / owner-runes seeds are retained only under
     # dev/wiki-history. Runtime smoke should validate current public seed anchors.

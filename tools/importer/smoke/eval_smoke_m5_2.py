@@ -77,7 +77,7 @@ def active_tests():
     if workspace in ("", "k6-freelancer"):
         return "legacy-k6-freelancer", LEGACY_TESTS
 
-    # v0.3.1-dev runtime seed smoke.
+    # v0.5.0-dev runtime seed smoke.
     #
     # Historical Trial-run Workspace Baseline and owner-runes fixtures were moved
     # under dev/wiki-history during the v0.3.0 runtime seed cleanup. They are no
