@@ -1,24 +1,362 @@
 #!/usr/bin/env python3
-import sys
-from hermes_memory_common import *
+"""
+Hermes Runes MD Wiki CPU embedding writer.
 
-def main():
-    parser = base_parser("hermes-memory-embed placeholder")
-    parser.add_argument("--dry-run", action="store_true", help="preview only")
-    parser.add_argument("--force", action="store_true", help="required for dangerous operations")
-    args = parser.parse_args()
-    if args.version:
-        print(VERSION)
-        return EXIT_OK
+Purpose:
+- Fill missing chunks.embedding values for PostgreSQL-backed memory.
+- Use optional CPU embedding stack installed by:
+    bash ./bin/hermes-memory-bootstrap --with-embedding
+- Keep this tool local, explicit, and bounded for personal-use scale.
+
+Safety:
+- Does not read or print secrets.
+- Does not modify Markdown wiki files.
+- Does not run migrations.
+- Supports --dry-run and --limit for bounded smoke runs.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import re
+import sys
+import time
+from pathlib import Path
+from typing import Iterable
+
+import psycopg
+from dotenv import load_dotenv
+
+
+MODEL_NAME = "BAAI/bge-base-en-v1.5"
+EXPECTED_DIM = 768
+DEFAULT_SCHEMA = "public"
+DEFAULT_LIMIT = 50
+DEFAULT_BATCH_SIZE = 16
+
+
+def emit(payload: dict, *, as_json: bool = True) -> None:
+    if as_json:
+        print(json.dumps(payload, ensure_ascii=False, indent=2))
+    else:
+        status = payload.get("status", "unknown")
+        message = payload.get("message", "")
+        print(f"{status}: {message}")
+
+
+def fail(status: str, message: str, **extra) -> int:
+    payload = {
+        "status": status,
+        "tool": "hermes-memory-embed",
+        "message": message,
+        **extra,
+    }
+    emit(payload)
+    return 1
+
+
+def validate_identifier(value: str, name: str) -> str:
+    if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", value or ""):
+        raise ValueError(f"invalid {name}: {value!r}")
+    return value
+
+
+def repo_root() -> Path:
+    root = os.environ.get("HERMES_MEMORY_ROOT")
+    if root:
+        return Path(root).expanduser().resolve()
+
+    # bin/hermes-memory-embed -> repo root
+    return Path(__file__).resolve().parent.parent
+
+
+def load_runtime_env(root: Path) -> None:
+    env_path = root / "tools" / "importer" / ".env"
+    if env_path.exists():
+        load_dotenv(env_path)
+
+
+def build_conninfo() -> str:
+    url = os.environ.get("HERMES_MEMORY_DATABASE_URL")
+    if not url:
+        raise RuntimeError("HERMES_MEMORY_DATABASE_URL is missing")
+    return url
+
+
+def vector_literal(values: Iterable[float]) -> str:
+    return "[" + ",".join(f"{float(v):.8f}" for v in values) + "]"
+
+
+def load_model():
     try:
-        pcfg = get_project_cfg(args)
-        project = pcfg["project"]
-    except Exception:
-        project = args.project or "unknown"
-    obj = result("hermes-memory-embed", project, "FAIL", EXIT_GENERAL_FAIL,
-                 warnings=[{"code": "NOT_IMPLEMENTED", "message": "hermes-memory-embed is reserved for later M3.x implementation."}])
-    emit(obj, args.json, args.quiet)
-    return EXIT_GENERAL_FAIL
+        from sentence_transformers import SentenceTransformer
+    except ModuleNotFoundError as exc:
+        payload = {
+            "status": "blocked_missing_embedding_dependency",
+            "tool": "hermes-memory-embed",
+            "message": (
+                "sentence-transformers is required for embedding writes. "
+                "Run: bash ./bin/hermes-memory-bootstrap --with-embedding"
+            ),
+            "missing_module": "sentence_transformers",
+        }
+        emit(payload)
+        raise SystemExit(1) from exc
+
+    return SentenceTransformer(MODEL_NAME)
+
+
+def fetch_missing_chunks(
+    conn: psycopg.Connection,
+    *,
+    schema: str,
+    project: str | None,
+    path_filter: str | None,
+    limit: int,
+) -> list[tuple[int, str, int, str | None, str]]:
+    project_filter = ""
+    params: list[object] = []
+
+    if project:
+        project_filter += " AND d.project = %s"
+        params.append(project)
+
+    if path_filter:
+        project_filter += " AND d.source_path LIKE '%%' || %s || '%%'"
+        params.append(path_filter)
+
+    params.append(limit)
+
+    with conn.cursor() as cur:
+        cur.execute(
+            f"""
+            SELECT
+              c.id,
+              d.source_path,
+              c.chunk_index,
+              c.section_heading,
+              c.content
+            FROM {schema}.chunks c
+            JOIN {schema}.documents d ON d.id = c.document_id
+            WHERE c.embedding IS NULL
+              {project_filter}
+            ORDER BY d.project, d.source_path, c.chunk_index, c.id
+            LIMIT %s
+            """,
+            params,
+        )
+        return cur.fetchall()
+
+
+def count_chunks(
+    conn: psycopg.Connection,
+    *,
+    schema: str,
+    project: str | None,
+    path_filter: str | None,
+) -> dict:
+    filters = ""
+    params: list[object] = []
+
+    if project:
+        filters += " AND d.project = %s"
+        params.append(project)
+
+    if path_filter:
+        filters += " AND d.source_path LIKE '%%' || %s || '%%'"
+        params.append(path_filter)
+
+    with conn.cursor() as cur:
+        cur.execute(
+            f"""
+            SELECT
+              count(*)::int AS total,
+              count(c.embedding)::int AS embedded
+            FROM {schema}.chunks c
+            JOIN {schema}.documents d ON d.id = c.document_id
+            WHERE 1=1
+              {filters}
+            """,
+            params,
+        )
+        total, embedded = cur.fetchone()
+
+    return {
+        "chunks_total": int(total),
+        "chunks_embedded": int(embedded),
+        "chunks_missing_embedding": int(total) - int(embedded),
+    }
+
+
+def batched(items: list, size: int):
+    for i in range(0, len(items), size):
+        yield items[i : i + size]
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(
+        description="Fill missing PostgreSQL chunk embeddings for Hermes Runes MD Wiki."
+    )
+    parser.add_argument("--schema", default=DEFAULT_SCHEMA)
+    parser.add_argument("--project", default=None, help="optional project filter")
+    parser.add_argument("--path", default=None, help="optional source_path contains filter")
+    parser.add_argument("--limit", type=int, default=DEFAULT_LIMIT)
+    parser.add_argument("--batch-size", type=int, default=DEFAULT_BATCH_SIZE)
+    parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--json", action="store_true", default=True)
+    parser.add_argument("--quiet", action="store_true")
+    parser.add_argument("--version", action="store_true")
+    args = parser.parse_args()
+
+    root = repo_root()
+    load_runtime_env(root)
+
+    if args.version:
+        version_path = root / "VERSION"
+        print(version_path.read_text(encoding="utf-8").strip() if version_path.exists() else "unknown")
+        return 0
+
+    try:
+        schema = validate_identifier(args.schema, "schema")
+    except ValueError as exc:
+        return fail("FAIL_INVALID_ARGUMENT", str(exc))
+
+    if args.limit <= 0:
+        return fail("FAIL_INVALID_ARGUMENT", "--limit must be > 0")
+
+    if args.batch_size <= 0:
+        return fail("FAIL_INVALID_ARGUMENT", "--batch-size must be > 0")
+
+    started = time.time()
+
+    try:
+        conninfo = build_conninfo()
+    except Exception as exc:
+        return fail("FAIL_CONFIG", str(exc))
+
+    with psycopg.connect(conninfo) as conn:
+        before = count_chunks(
+            conn,
+            schema=schema,
+            project=args.project,
+            path_filter=args.path,
+        )
+
+        rows = fetch_missing_chunks(
+            conn,
+            schema=schema,
+            project=args.project,
+            path_filter=args.path,
+            limit=args.limit,
+        )
+
+        if args.dry_run:
+            payload = {
+                "status": "PASS",
+                "tool": "hermes-memory-embed",
+                "mode": "dry-run",
+                "schema": schema,
+                "project": args.project,
+                "path": args.path,
+                "model": MODEL_NAME,
+                "expected_dim": EXPECTED_DIM,
+                "limit": args.limit,
+                "batch_size": args.batch_size,
+                "selected_missing_chunks": len(rows),
+                "before": before,
+                "preview": [
+                    {
+                        "chunk_id": row[0],
+                        "path": row[1],
+                        "chunk_index": row[2],
+                        "section_heading": row[3],
+                        "content_chars": len(row[4] or ""),
+                    }
+                    for row in rows[:10]
+                ],
+                "write": False,
+                "duration_sec": round(time.time() - started, 3),
+            }
+            emit(payload)
+            return 0
+
+        if not rows:
+            payload = {
+                "status": "PASS",
+                "tool": "hermes-memory-embed",
+                "mode": "apply",
+                "schema": schema,
+                "project": args.project,
+                "path": args.path,
+                "model": MODEL_NAME,
+                "expected_dim": EXPECTED_DIM,
+                "limit": args.limit,
+                "batch_size": args.batch_size,
+                "updated": 0,
+                "before": before,
+                "after": before,
+                "write": True,
+                "duration_sec": round(time.time() - started, 3),
+            }
+            emit(payload)
+            return 0
+
+        model = load_model()
+
+        updated = 0
+        for batch in batched(rows, args.batch_size):
+            ids = [row[0] for row in batch]
+            texts = [row[4] or "" for row in batch]
+            embeddings = model.encode(texts, normalize_embeddings=True).tolist()
+
+            updates: list[tuple[str, int]] = []
+            for chunk_id, emb in zip(ids, embeddings):
+                if len(emb) != EXPECTED_DIM:
+                    raise RuntimeError(
+                        f"embedding dim mismatch for chunk_id={chunk_id}: "
+                        f"got={len(emb)} expected={EXPECTED_DIM}"
+                    )
+                updates.append((vector_literal(emb), chunk_id))
+
+            with conn.cursor() as cur:
+                cur.executemany(
+                    f"UPDATE {schema}.chunks SET embedding = %s::vector WHERE id = %s",
+                    updates,
+                )
+
+            updated += len(updates)
+
+        conn.commit()
+
+        after = count_chunks(
+            conn,
+            schema=schema,
+            project=args.project,
+            path_filter=args.path,
+        )
+
+    payload = {
+        "status": "PASS",
+        "tool": "hermes-memory-embed",
+        "mode": "apply",
+        "schema": schema,
+        "project": args.project,
+        "path": args.path,
+        "model": MODEL_NAME,
+        "expected_dim": EXPECTED_DIM,
+        "limit": args.limit,
+        "batch_size": args.batch_size,
+        "updated": updated,
+        "before": before,
+        "after": after,
+        "write": True,
+        "duration_sec": round(time.time() - started, 3),
+    }
+    emit(payload)
+    return 0
+
 
 if __name__ == "__main__":
     sys.exit(main())
