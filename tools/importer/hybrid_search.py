@@ -3,7 +3,6 @@ from retrieval_profiles import select_retrieval_profile
 import json
 
 import psycopg
-from sentence_transformers import SentenceTransformer
 
 from db_config import build_conninfo
 
@@ -15,6 +14,31 @@ DEFAULT_SCHEMA = "public"
 
 def vector_literal(values: list[float]) -> str:
     return "[" + ",".join(f"{v:.8f}" for v in values) + "]"
+
+
+def encode_query_embedding(query: str) -> str:
+    try:
+        from sentence_transformers import SentenceTransformer
+    except ModuleNotFoundError as exc:
+        payload = {
+            "status": "blocked_missing_embedding_dependency",
+            "message": (
+                "sentence-transformers is required for --mode hybrid/vector. "
+                "Use --mode fts for lightweight core recall, or install embedding requirements."
+            ),
+            "missing_module": "sentence_transformers",
+        }
+        raise SystemExit(json.dumps(payload, ensure_ascii=False, indent=2)) from exc
+
+    model = SentenceTransformer(MODEL_NAME)
+    emb = model.encode(query, normalize_embeddings=True).tolist()
+
+    if len(emb) != EXPECTED_DIM:
+        raise RuntimeError(
+            f"embedding dim mismatch: got={len(emb)} expected={EXPECTED_DIM}"
+        )
+
+    return vector_literal(emb)
 
 
 def slugify_heading(value: str | None) -> str:
@@ -121,15 +145,9 @@ def main() -> None:
         )
     )
 
-    model = SentenceTransformer(MODEL_NAME)
-    emb = model.encode(args.query, normalize_embeddings=True).tolist()
-
-    if len(emb) != EXPECTED_DIM:
-        raise RuntimeError(
-            f"embedding dim mismatch: got={len(emb)} expected={EXPECTED_DIM}"
-        )
-
-    query_vec = vector_literal(emb)
+    query_vec = None
+    if args.mode in {"hybrid", "vector"}:
+        query_vec = encode_query_embedding(args.query)
 
     result = {
         "status": "started",
@@ -137,50 +155,46 @@ def main() -> None:
         "schema": args.schema,
         "project": args.project,
         "query": args.query,
-        "model": MODEL_NAME,
+        "model": MODEL_NAME if args.mode in {"hybrid", "vector"} else None,
         "limit": args.limit,
         "path": args.path,
         "heading": args.heading,
         "candidate_limit": args.candidate_limit,
         "max_content_length": args.max_content_length,
-        "fusion": "rrf",
+        "fusion": "rrf" if args.mode == "hybrid" else args.mode,
         "results": [],
     }
 
-    with psycopg.connect(build_conninfo()) as conn:
-        with conn.cursor() as cur:
-            cur.execute(
-                f"""
-                WITH
-                q AS (
-                  SELECT
-                    websearch_to_tsquery('simple', %s) AS tsq,
-                    %s::vector AS vec,
-                    %s::text AS raw_query
-                ),
-                vector_hits AS (
-                  SELECT
-                    c.id AS chunk_id,
-                    row_number() OVER (
-                      ORDER BY c.embedding <=> q.vec
-                    ) AS vector_rank,
-                    1 - (c.embedding <=> q.vec) AS vector_score
-                  FROM {args.schema}.chunks c
-                  JOIN {args.schema}.documents d ON d.id = c.document_id
-                  CROSS JOIN q
-                  WHERE
-                    d.project = %s
-                    AND (%s::text IS NULL OR d.source_path LIKE '%%' || %s::text || '%%')
-                    AND (%s::text IS NULL OR c.section_heading ILIKE '%%' || %s::text || '%%')
-                    AND c.embedding IS NOT NULL
-                  ORDER BY c.embedding <=> q.vec
-                  LIMIT %s
-                ),
-                fts_hits AS (
-                  SELECT
-                    c.id AS chunk_id,
-                    row_number() OVER (
-                      ORDER BY
+    if args.mode == "fts":
+        with psycopg.connect(build_conninfo()) as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    f"""
+                    WITH q AS (
+                      SELECT
+                        websearch_to_tsquery('simple', %s) AS tsq,
+                        %s::text AS raw_query
+                    ),
+                    fts_hits AS (
+                      SELECT
+                        c.id AS chunk_id,
+                        row_number() OVER (
+                          ORDER BY
+                            (
+                              ts_rank_cd(to_tsvector('simple', c.content), q.tsq)
+                              +
+                              (
+                                SELECT count(*)::float
+                                FROM regexp_split_to_table(q.raw_query, '\\s+') AS token
+                                WHERE length(token) >= 3
+                                  AND (
+                                    c.content ILIKE '%%' || token || '%%'
+                                    OR c.section_heading ILIKE '%%' || token || '%%'
+                                  )
+                              ) * 0.01
+                            ) DESC,
+                            c.id ASC
+                        ) AS fts_rank,
                         (
                           ts_rank_cd(to_tsvector('simple', c.content), q.tsq)
                           +
@@ -193,100 +207,203 @@ def main() -> None:
                                 OR c.section_heading ILIKE '%%' || token || '%%'
                               )
                           ) * 0.01
-                        ) DESC,
-                        c.id ASC
-                    ) AS fts_rank,
-                    (
-                      ts_rank_cd(to_tsvector('simple', c.content), q.tsq)
-                      +
-                      (
-                        SELECT count(*)::float
-                        FROM regexp_split_to_table(q.raw_query, '\\s+') AS token
-                        WHERE length(token) >= 3
-                          AND (
-                            c.content ILIKE '%%' || token || '%%'
-                            OR c.section_heading ILIKE '%%' || token || '%%'
+                        ) AS fts_score
+                      FROM {args.schema}.chunks c
+                      JOIN {args.schema}.documents d ON d.id = c.document_id
+                      CROSS JOIN q
+                      WHERE
+                        d.project = %s
+                        AND (%s::text IS NULL OR d.source_path LIKE '%%' || %s::text || '%%')
+                        AND (%s::text IS NULL OR c.section_heading ILIKE '%%' || %s::text || '%%')
+                        AND (
+                          q.tsq @@ to_tsvector('simple', c.content)
+                          OR EXISTS (
+                            SELECT 1
+                            FROM regexp_split_to_table(%s::text, '\\s+') AS token
+                            WHERE length(token) >= 3
+                              AND (
+                                c.content ILIKE '%%' || token || '%%'
+                                OR c.section_heading ILIKE '%%' || token || '%%'
+                              )
                           )
-                      ) * 0.01
-                    ) AS fts_score
-                  FROM {args.schema}.chunks c
-                  JOIN {args.schema}.documents d ON d.id = c.document_id
-                  CROSS JOIN q
-                  WHERE
-                    d.project = %s
-                    AND (%s::text IS NULL OR d.source_path LIKE '%%' || %s::text || '%%')
-                    AND (%s::text IS NULL OR c.section_heading ILIKE '%%' || %s::text || '%%')
-                    AND (
-                      q.tsq @@ to_tsvector('simple', c.content)
-                      OR EXISTS (
-                        SELECT 1
-                        FROM regexp_split_to_table(%s::text, '\\s+') AS token
-                        WHERE length(token) >= 3
-                          AND (
-                            c.content ILIKE '%%' || token || '%%'
-                            OR c.section_heading ILIKE '%%' || token || '%%'
-                          )
-                      )
+                        )
+                      ORDER BY fts_score DESC, c.id ASC
+                      LIMIT %s
                     )
-                  ORDER BY fts_score DESC, c.id ASC
-                  LIMIT %s
-                ),
-                fused AS (
-                  SELECT
-                    coalesce(v.chunk_id, f.chunk_id) AS chunk_id,
-                    v.vector_rank,
-                    v.vector_score,
-                    f.fts_rank,
-                    f.fts_score,
-                    coalesce(1.0 / (60 + v.vector_rank), 0) +
-                    coalesce(1.0 / (60 + f.fts_rank), 0) AS hybrid_score
-                  FROM vector_hits v
-                  FULL OUTER JOIN fts_hits f ON f.chunk_id = v.chunk_id
+                    SELECT
+                      c.id AS chunk_id,
+                      d.source_path AS path,
+                      c.chunk_index,
+                      c.section_heading,
+                      c.metadata AS chunk_metadata,
+                      fts_hits.fts_score AS hybrid_score,
+                      NULL::integer AS vector_rank,
+                      NULL::float AS vector_score,
+                      fts_hits.fts_rank,
+                      fts_hits.fts_score,
+                      c.content
+                    FROM fts_hits
+                    JOIN {args.schema}.chunks c ON c.id = fts_hits.chunk_id
+                    JOIN {args.schema}.documents d ON d.id = c.document_id
+                    ORDER BY fts_hits.fts_score DESC, c.id ASC
+                    LIMIT %s;
+                    """,
+                    (
+                        args.query,
+                        args.query,
+                        args.project,
+                        args.path,
+                        args.path,
+                        args.heading,
+                        args.heading,
+                        args.query,
+                        args.candidate_limit,
+                        args.limit,
+                    ),
                 )
-                SELECT
-                  c.id AS chunk_id,
-                  d.source_path AS path,
-                  c.chunk_index,
-                  c.section_heading,
-                  c.metadata AS chunk_metadata,
-                  fused.hybrid_score,
-                  fused.vector_rank,
-                  fused.vector_score,
-                  fused.fts_rank,
-                  fused.fts_score,
-                  c.content
-                FROM fused
-                JOIN {args.schema}.chunks c ON c.id = fused.chunk_id
-                JOIN {args.schema}.documents d ON d.id = c.document_id
-                ORDER BY
-                  fused.hybrid_score DESC,
-                  fused.vector_rank NULLS LAST,
-                  fused.fts_rank NULLS LAST,
-                  c.id ASC
-                LIMIT %s;
-                """,
-                (
-                    args.query,
-                    query_vec,
-                    args.query,
-                    args.project,
-                    args.path,
-                    args.path,
-                    args.heading,
-                    args.heading,
-                    args.candidate_limit,
-                    args.project,
-                    args.path,
-                    args.path,
-                    args.heading,
-                    args.heading,
-                    args.query,
-                    args.candidate_limit,
-                    args.limit,
-                ),
-            )
 
-            rows = cur.fetchall()
+                rows = cur.fetchall()
+    else:
+        with psycopg.connect(build_conninfo()) as conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    f"""
+                    WITH
+                    q AS (
+                      SELECT
+                        websearch_to_tsquery('simple', %s) AS tsq,
+                        %s::vector AS vec,
+                        %s::text AS raw_query
+                    ),
+                    vector_hits AS (
+                      SELECT
+                        c.id AS chunk_id,
+                        row_number() OVER (
+                          ORDER BY c.embedding <=> q.vec
+                        ) AS vector_rank,
+                        1 - (c.embedding <=> q.vec) AS vector_score
+                      FROM {args.schema}.chunks c
+                      JOIN {args.schema}.documents d ON d.id = c.document_id
+                      CROSS JOIN q
+                      WHERE
+                        d.project = %s
+                        AND (%s::text IS NULL OR d.source_path LIKE '%%' || %s::text || '%%')
+                        AND (%s::text IS NULL OR c.section_heading ILIKE '%%' || %s::text || '%%')
+                        AND c.embedding IS NOT NULL
+                      ORDER BY c.embedding <=> q.vec
+                      LIMIT %s
+                    ),
+                    fts_hits AS (
+                      SELECT
+                        c.id AS chunk_id,
+                        row_number() OVER (
+                          ORDER BY
+                            (
+                              ts_rank_cd(to_tsvector('simple', c.content), q.tsq)
+                              +
+                              (
+                                SELECT count(*)::float
+                                FROM regexp_split_to_table(q.raw_query, '\\s+') AS token
+                                WHERE length(token) >= 3
+                                  AND (
+                                    c.content ILIKE '%%' || token || '%%'
+                                    OR c.section_heading ILIKE '%%' || token || '%%'
+                                  )
+                              ) * 0.01
+                            ) DESC,
+                            c.id ASC
+                        ) AS fts_rank,
+                        (
+                          ts_rank_cd(to_tsvector('simple', c.content), q.tsq)
+                          +
+                          (
+                            SELECT count(*)::float
+                            FROM regexp_split_to_table(q.raw_query, '\\s+') AS token
+                            WHERE length(token) >= 3
+                              AND (
+                                c.content ILIKE '%%' || token || '%%'
+                                OR c.section_heading ILIKE '%%' || token || '%%'
+                              )
+                          ) * 0.01
+                        ) AS fts_score
+                      FROM {args.schema}.chunks c
+                      JOIN {args.schema}.documents d ON d.id = c.document_id
+                      CROSS JOIN q
+                      WHERE
+                        d.project = %s
+                        AND (%s::text IS NULL OR d.source_path LIKE '%%' || %s::text || '%%')
+                        AND (%s::text IS NULL OR c.section_heading ILIKE '%%' || %s::text || '%%')
+                        AND (
+                          q.tsq @@ to_tsvector('simple', c.content)
+                          OR EXISTS (
+                            SELECT 1
+                            FROM regexp_split_to_table(%s::text, '\\s+') AS token
+                            WHERE length(token) >= 3
+                              AND (
+                                c.content ILIKE '%%' || token || '%%'
+                                OR c.section_heading ILIKE '%%' || token || '%%'
+                              )
+                          )
+                        )
+                      ORDER BY fts_score DESC, c.id ASC
+                      LIMIT %s
+                    ),
+                    fused AS (
+                      SELECT
+                        coalesce(v.chunk_id, f.chunk_id) AS chunk_id,
+                        v.vector_rank,
+                        v.vector_score,
+                        f.fts_rank,
+                        f.fts_score,
+                        coalesce(1.0 / (60 + v.vector_rank), 0) +
+                        coalesce(1.0 / (60 + f.fts_rank), 0) AS hybrid_score
+                      FROM vector_hits v
+                      FULL OUTER JOIN fts_hits f ON f.chunk_id = v.chunk_id
+                    )
+                    SELECT
+                      c.id AS chunk_id,
+                      d.source_path AS path,
+                      c.chunk_index,
+                      c.section_heading,
+                      c.metadata AS chunk_metadata,
+                      fused.hybrid_score,
+                      fused.vector_rank,
+                      fused.vector_score,
+                      fused.fts_rank,
+                      fused.fts_score,
+                      c.content
+                    FROM fused
+                    JOIN {args.schema}.chunks c ON c.id = fused.chunk_id
+                    JOIN {args.schema}.documents d ON d.id = c.document_id
+                    ORDER BY
+                      fused.hybrid_score DESC,
+                      fused.vector_rank NULLS LAST,
+                      fused.fts_rank NULLS LAST,
+                      c.id ASC
+                    LIMIT %s;
+                    """,
+                    (
+                        args.query,
+                        query_vec,
+                        args.query,
+                        args.project,
+                        args.path,
+                        args.path,
+                        args.heading,
+                        args.heading,
+                        args.candidate_limit,
+                        args.project,
+                        args.path,
+                        args.path,
+                        args.heading,
+                        args.heading,
+                        args.query,
+                        args.candidate_limit,
+                        args.limit,
+                    ),
+                )
+
+                rows = cur.fetchall()
 
     for (
         chunk_id,
