@@ -4,7 +4,7 @@ set -euo pipefail
 PYTHON="${PYTHON:-python3}"
 ROOT="${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-runes-md-wiki}"
 IMPORTER_DIR="$ROOT/tools/importer"
-WORKSPACE_SLUG="${HERMES_WORKSPACE_SLUG:-${HERMES_PROJECT:-k6-freelancer}}"
+WORKSPACE_SLUG="${HERMES_WORKSPACE_SLUG:-${HERMES_PROJECT:-freelancer}}"
 WIKI_DIR="$ROOT/wiki/$WORKSPACE_SLUG"
 
 echo "== Hermes Memory Check =="
