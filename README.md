@@ -18,7 +18,7 @@ Fresh Open Beta testers should start here:
 docs/open-beta-starter.md
 ```
 
-The starter path uses the active workspace slug `freelancer` and avoids legacy engineering evidence as the default onboarding path.
+The starter path uses a host-derived workspace slug and avoids legacy engineering evidence as the default onboarding path.
 
 ---
 
@@ -51,17 +51,27 @@ SECURITY.md
 
 ## Default Workspace Slug
 
-For Open Beta, the default active workspace slug is:
+For Open Beta, the active workspace slug is derived from the installation PC hostname, normalized to lowercase:
 
-```text
-freelancer
+```bash
+hostname | tr '[:upper:]' '[:lower:]'
 ```
 
 The default user-facing wiki namespace is:
 
 ```text
-wiki/freelancer/
+wiki/<lowercase-hostname>/
 ```
+
+Example for this dogfood host:
+
+```text
+hostname: Freelancer
+workspace_slug: freelancer
+wiki_namespace: wiki/freelancer/
+```
+
+`freelancer` is the current dogfood host instance, not a universal default for every tester.
 
 Historical engineering records may still reference `wiki/k6-freelancer/`; that namespace is legacy project evidence and is not the default public user workspace.
 
