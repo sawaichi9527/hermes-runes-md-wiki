@@ -1,6 +1,6 @@
 # Closed Beta Bug Ledger
 
-Status: READY / BUG LEDGER INITIALIZED
+Status: OPEN BUGS / M191 FINDING RECORDED
 Date: 2026-06-07
 
 ## Purpose
@@ -38,22 +38,34 @@ low
 
 ## Bug Records
 
-No M191-M196 bugs recorded yet.
-
-Template:
+### TB-M191-BT001-FU001
 
 ```text
-id:
-status:
-stage_found:
-case_id:
-summary:
-observed:
-expected:
-severity:
-scope_decision: fix_now | defer | accept_for_cb
-rerun_required: true | false
-closure_evidence:
+id: TB-M191-BT001-FU001
+status: OPEN
+stage_found: M191 BT-001 Read-only Rerun / Evidence Capture
+case_id: BT-001
+summary: Hermes-agent satisfied read-only output rules but read evidence from developer checkout after trial-local path lookup failed.
+observed: The run first attempted /home/eye/freelancer/docs/*.md and received file-not-found, then searched and read /home/eye/workspace/hermes-runes-md-wiki/docs/*.md and wiki/k6-freelancer/*.md.
+expected: Closed Beta trial evidence should come from the intended trial checkout / workspace context, not from the developer checkout fallback.
+severity: high
+scope_decision: fix_now
+rerun_required: true
+closure_evidence: PENDING; rerun M191 after prompt or environment path is tightened to the CB/trial checkout.
+```
+
+Notes:
+
+```text
+The M191 answer content itself preserved the read-only boundary:
+- no trusted wiki mutation claimed
+- no proposal-style content created
+- no YAML-style memory block created
+- no final_trial_result emitted
+- no self-classification for M191 emitted
+- candidate_result: ready_for_human_review was present
+
+However, the execution evidence path violated the intended CB/trial isolation boundary, so M191 is PARTIAL rather than PASS.
 ```
 
 ## Known Limitations Accepted for CB
@@ -64,5 +76,5 @@ No known limitations accepted for Closed Beta yet.
 
 ```text
 Closed Beta Bug Ledger
-READY / awaiting M191-M196 validation findings
+OPEN BUGS / TB-M191-BT001-FU001 recorded
 ```
