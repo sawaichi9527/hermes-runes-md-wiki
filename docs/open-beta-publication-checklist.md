@@ -1,6 +1,6 @@
 # Open Beta Publication Checklist
 
-Status: READY / MANUAL PUBLIC VISIBILITY CHANGE REQUIRED
+Status: READY / LICENSE APPLIED / MANUAL PUBLIC VISIBILITY CHANGE REQUIRED
 Date: 2026-06-07
 
 ## Purpose
@@ -41,19 +41,19 @@ Open Beta does not mean:
 ```text
 README: present
 .gitignore: present and excludes .env, keys, local logs, local databases, backups, and runtime artifacts
-Open Beta status note: should be visible in README
-Security policy: should be present
+Open Beta status note: visible in README
+Security policy: present
 Secret scan quick check: no obvious keyword hits from repository code search
-License: not selected yet
+License: Apache-2.0 applied
 ```
 
 ## License Note
 
 ```text
-A public repository can be viewed and downloaded, but reuse rights are clearer only after a LICENSE file is selected.
-The owner should choose a license before advertising broad reuse.
-Suggested simple options to review: MIT or Apache-2.0.
-No license is added by this checklist.
+LICENSE file: present
+selected_license: Apache License, Version 2.0
+copyright_holder: Chehan Lin
+year: 2026
 ```
 
 ## Manual Visibility Change
@@ -67,5 +67,5 @@ Repository -> Settings -> General -> Danger Zone -> Change repository visibility
 
 ```text
 Open Beta Publication Checklist
-READY / manual public visibility change required
+READY / license applied / manual public visibility change required
 ```
