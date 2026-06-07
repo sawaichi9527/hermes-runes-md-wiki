@@ -18,7 +18,29 @@ Fresh Open Beta testers should start here:
 docs/open-beta-starter.md
 ```
 
-The starter path uses a host-derived workspace slug and avoids legacy engineering evidence as the default onboarding path.
+The starter path uses a clean runtime wiki seed and a host-derived workspace slug.
+
+---
+
+## Runtime Layout
+
+```text
+wiki/              Runtime Markdown memory seed.
+wiki/_system/      Governed memory rules and system-facing policy.
+wiki/freelancer/   Current dogfood active workspace seed.
+docs/              Public tester / runtime documentation.
+dev/               Developer-only history, specs, milestones, and evidence.
+```
+
+For other installations, the active workspace should be derived from the local hostname:
+
+```text
+wiki/<lowercase-hostname>/
+```
+
+`freelancer` is the current dogfood host instance, not a universal default for every tester.
+
+Developer history is retained under `dev/` and should not be imported as runtime user memory by default.
 
 ---
 
@@ -43,39 +65,10 @@ Open Beta does not mean:
 See also:
 
 ```text
-docs/open-beta-publication-checklist.md
+docs/open-beta-starter.md
+docs/workspace-slug-policy.md
 SECURITY.md
 ```
-
----
-
-## Default Workspace Slug
-
-For Open Beta, the active workspace slug is derived from the installation PC hostname, normalized to lowercase:
-
-```bash
-hostname | tr '[:upper:]' '[:lower:]'
-```
-
-The default user-facing wiki namespace is:
-
-```text
-wiki/<lowercase-hostname>/
-```
-
-Example for this dogfood host:
-
-```text
-hostname: Freelancer
-workspace_slug: freelancer
-wiki_namespace: wiki/freelancer/
-```
-
-`freelancer` is the current dogfood host instance, not a universal default for every tester.
-
-Historical engineering records may still reference `wiki/k6-freelancer/`; that namespace is legacy project evidence and is not the default public user workspace.
-
-See `docs/workspace-slug-policy.md` for the slug policy.
 
 ---
 
