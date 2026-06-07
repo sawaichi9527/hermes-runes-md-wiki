@@ -1,6 +1,6 @@
 # Open Beta Publication Checklist
 
-Status: READY / ACTIVE SLUG DEFAULT PREPARED / PUBLIC DOWNLOAD AUDIT PENDING
+Status: AUDIT COMPLETE / REMEDIATION REQUIRED / FIRST TAG BLOCKED
 Date: 2026-06-07
 
 ## Purpose
@@ -50,6 +50,7 @@ Changelog: present
 Versioning policy: present
 Workspace slug policy: present
 Default active workspace slug: freelancer
+Public download audit: complete
 ```
 
 ## Workspace Slug Note
@@ -67,8 +68,17 @@ deprecated_trial_checkout: ~/workspace-trial/hermes-runes-md-wiki
 ```text
 current_version: 0.1.0-beta.1
 planned_tag: v0.1.0-beta.1
-tag_status: not created yet
-reason: public download audit must finish first
+tag_status: blocked
+reason: public-facing legacy reference remediation is still required
+```
+
+## M209 Audit Result
+
+```text
+result: PASS for audit completion
+release_tag_ready: no
+public_tester_notification_ready: no
+blocker: remaining public-facing and active-tool legacy references require remediation
 ```
 
 ## License Note
@@ -83,13 +93,13 @@ year: 2026
 ## Remaining Before Tester Notification
 
 ```text
-M209 public download content audit
-M210 first Open Beta tag / release lock
+M210 public download remediation / starter path cleanup
+M211 first Open Beta tag / release lock
 ```
 
 ## Final Lock
 
 ```text
 Open Beta Publication Checklist
-READY / active slug default prepared / public download audit pending
+AUDIT COMPLETE / remediation required / first tag blocked
 ```
