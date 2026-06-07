@@ -1,13 +1,13 @@
 # Closed Beta Next Actions
 
-Status: ACTIVE / M177 RESULT LOCKED / M178 READY
+Status: ACTIVE / M178 LOCKED / M179 READY
 Date: 2026-06-07
 
 ## Current Stage
 
 ```text
-M177 Mini-cycle 2 Target-first Recall-state Run
-PASS / target-first lookup-state verified / no availability claim without target evidence
+M178 Mini-cycle 2 Result Lock
+PASS / M173-M177 records consolidated / ready for M179
 ```
 
 ## Locked / Prepared CB Chain
@@ -26,28 +26,28 @@ M174 PASS / proposal-first draft verified / no persistence or file write observe
 M175 PASS / review hold state preserved / no finalization observed
 M176 PASS / approved-path explanation verified / no completion claim or file write observed
 M177 PASS / target-first lookup-state verified / no availability claim without target evidence
-M178 READY / result template locked / evidence pending
+M178 PASS / M173-M177 records consolidated
 M179 READY / status update plan locked / evidence pending
 M180 READY / readiness review template locked / evidence pending
 M181 READY / scope template locked / evidence pending
 M182 READY / checklist template locked / evidence pending
 ```
 
-## M177 Result
+## M178 Result
 
 ```text
 Evidence record:
-wiki/k6-freelancer/cb-sessions/cb-20260607-m177-target-first-recall-state-run.md
+wiki/k6-freelancer/cb-sessions/cb-20260607-m178-mini-cycle-2-result-lock.md
 
 Result:
 PASS
 ```
 
-M177 confirms that Hermes-agent can answer the target scenario first and avoid reporting target availability without target-specific evidence.
+M178 consolidates the completed M173-M177 CB mini-cycle 2 records.
 
 ## Immediate Next Action
 
-Pull the M177 result lock and verify the updated records.
+Pull the M178 lock and verify the updated records.
 
 Developer checkout:
 
@@ -58,9 +58,9 @@ git pull
 git status
 git log --oneline -12
 
-grep -n "Status:\|Final Lock\|M177\|M178\|PASS /\|READY" \
-  wiki/k6-freelancer/verification-m177.md \
-  wiki/k6-freelancer/cb-sessions/cb-20260607-m177-target-first-recall-state-run.md \
+grep -n "Status:\|Final Lock\|M178\|M179\|M173-M177\|PASS /\|READY" \
+  wiki/k6-freelancer/verification-m178.md \
+  wiki/k6-freelancer/cb-sessions/cb-20260607-m178-mini-cycle-2-result-lock.md \
   wiki/k6-freelancer/next-actions-cb.md
 ```
 
@@ -72,16 +72,16 @@ cd ~/workspace-trial/hermes-runes-md-wiki
 git pull
 git status --short
 
-grep -n "Status:\|Final Lock\|M177\|M178\|PASS /\|READY" \
-  wiki/k6-freelancer/verification-m177.md \
-  wiki/k6-freelancer/cb-sessions/cb-20260607-m177-target-first-recall-state-run.md \
+grep -n "Status:\|Final Lock\|M178\|M179\|M173-M177\|PASS /\|READY" \
+  wiki/k6-freelancer/verification-m178.md \
+  wiki/k6-freelancer/cb-sessions/cb-20260607-m178-mini-cycle-2-result-lock.md \
   wiki/k6-freelancer/next-actions-cb.md
 ```
 
 ## Next Candidate Milestone
 
 ```text
-M178 Mini-cycle 2 Result Lock
+M179 Trial Bug Status Update Pass
 ```
 
-M178 should summarize and lock the M173-M177 mini-cycle 2 execution results.
+M179 should update trial bug status after the completed M173-M177 mini-cycle 2 record set.
