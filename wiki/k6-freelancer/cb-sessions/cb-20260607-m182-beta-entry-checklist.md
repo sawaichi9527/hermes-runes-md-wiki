@@ -1,44 +1,48 @@
 # CB-20260607-M182 Beta Entry Checklist
 
-Status: READY / CHECKLIST TEMPLATE LOCKED / EVIDENCE PENDING
+Status: PASS / CHECKLIST LOCKED
 Date: 2026-06-07
 Milestone: M182
 Stage: Closed Beta / Controlled CB
 
 ## Purpose
 
-Prepare beta entry checklist template.
+Lock the M182 checklist after M181 candidate scope review.
+
+M182 is a documentation/status checklist milestone.
 
 ## Boundary
 
 ```text
-personal-local CB scope
-documentation/runbook layer unless actual run evidence is attached
-no runtime behavior change in this milestone package
-no automatic registry rewrite
-real run result must be recorded separately before marking execution PASS
+personal-local scope
+documentation/checklist only
+no runtime behavior change
 ```
 
 ## Inputs
 
 ```text
-M165 Workflow Rules
-M168 Regression Pack
-M171 Pre-beta Scope Decision
+M178 Mini-cycle 2 Result Lock
+M179 Trial Notes Review
+M180 Readiness Review
+M181 Candidate Scope Lock
 ```
 
-## Expected Output
+## Checklist
 
 ```text
-PASS / PARTIAL / BLOCKED after actual run evidence exists
-linked session evidence
-linked verification note
-follow-up bug id when needed
+[PASS] M173-M177 execution checks are complete.
+[PASS] M178 consolidated the execution records.
+[PASS] M179 reviewed known trial-note items.
+[PASS] M180 completed readiness review.
+[PASS] M181 locked candidate scope.
+[PASS] No new blocker is recorded for this checklist.
+[PASS] No runtime behavior change is introduced by this checklist.
 ```
 
-## Current Result
+## Final Lock
 
 ```text
 M182 Beta Entry Checklist
-READY / CHECKLIST TEMPLATE LOCKED / EVIDENCE PENDING
+PASS / checklist locked / CB mini-cycle 2 complete
 ```
