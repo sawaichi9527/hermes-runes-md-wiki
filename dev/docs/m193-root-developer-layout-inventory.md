@@ -1,12 +1,12 @@
 # M193 Root Developer Layout Inventory
 
-Status: inventory locked / move plan ready
+Status: PASS / root developer layout consolidated
 Date: 2026-06-08
 Scope: v0.3.0 root layout cleanup
 
 ## Purpose
 
-M193 prepares root repository layout consolidation for `v0.3.0`.
+M193 prepares and verifies root repository layout consolidation for `v0.3.0`.
 
 Goal:
 
@@ -14,31 +14,34 @@ Goal:
 Keep normal fresh-clone root simple while preserving user-facing observation and support evidence workflows.
 ```
 
-This inventory is based on local verification output from the Freelancer checkout after M192.
+This inventory is based on local verification output from the Freelancer checkout after M192 and the follow-up M193 move commit.
 
-## Current Root Directories
+## Current Root Directories After Move
 
-Observed root directories:
+Current root directories after M193:
 
 ```text
 archive/
 bin/
 config/
-db/
 dev/
 docs/
-fixtures/
-.git/
 migrations/
 reports/
-smoke/
-templates/
 tools/
-.venv/
 wiki/
 ```
 
-Runtime-facing root should eventually focus on:
+Developer-only root directories removed from root:
+
+```text
+db/
+fixtures/
+smoke/
+templates/
+```
+
+Runtime-facing root now remains focused on:
 
 ```text
 bin/
@@ -47,58 +50,58 @@ docs/
 tools/
 wiki/
 dev/
+migrations/
+reports/
 ```
 
-`migrations/` requires special handling because it is currently the runtime migration default path.
+`migrations/` remains because it is currently the runtime migration default path.
 
-## Candidate Developer-only Directories
+`reports/` remains because `reports/m33-markdown-source-health/` is currently used by Ragnarok / markdown health support tooling.
 
-The following root directories are developer/milestone/test oriented and should be moved under `dev/` after reference updates:
+## Developer-only Directories Moved
+
+The following developer/milestone/test directories were moved under `dev/`:
 
 ```text
-db/
-fixtures/
-smoke/
-templates/
+db/        -> dev/db/
+fixtures/  -> dev/fixtures/
+smoke/     -> dev/smoke/
+templates/ -> dev/templates/
 ```
 
-Observed examples:
+Observed moved examples:
 
 ```text
-db/migrations/001_m3_memory_schema.sql
-db/migrations/002_m3_metadata_columns.sql
-db/migrations/003_m3_assets_table.sql
-fixtures/m60/... through fixtures/m82/...
+dev/db/migrations/001_m3_memory_schema.sql
+dev/db/migrations/002_m3_metadata_columns.sql
+dev/db/migrations/003_m3_assets_table.sql
+dev/fixtures/m60/... through dev/fixtures/m82/...
 dev/smoke/m31_4_archive_lock_smoke.sh through dev/smoke/m33_7_ragnarok_incantation_boundary_smoke.sh
-smoke/smoke_m15_4b_lock_manifest.py through smoke/smoke_m17_5b_runner.py
+dev/smoke/smoke_m15_4b_lock_manifest.py through dev/smoke/smoke_m17_5b_runner.py
 dev/templates/external-agent-trial-evidence.md
 dev/templates/hermes-agent-governed-trial-run-dry-run-record.md
 dev/templates/trial-observation-record.md
 dev/templates/trial-promotion-fixture-definition.md
 ```
 
-Target paths:
-
-```text
-dev/db/
-dev/fixtures/
-dev/smoke/
-dev/templates/
-```
-
 ## Reports Directory Classification
 
 `reports/` is mixed and must not be blindly deleted or hidden.
 
-Observed checked-in reports:
+Moved developer-only report evidence:
 
 ```text
-dev/reports/m29-runes-seal-local-inventory/*
+reports/m29-runes-seal-local-inventory/ -> dev/reports/m29-runes-seal-local-inventory/
+```
+
+Kept runtime/support output path:
+
+```text
 reports/m33-markdown-source-health/latest.json
 reports/m33-markdown-source-health/latest.md
 ```
 
-References found:
+References found and preserved:
 
 ```text
 wiki/_system/ragnarok_observation_evidence_inventory.md
@@ -117,15 +120,14 @@ tools/runes/markdown_source_health_audit.py
 Decision:
 
 ```text
-Do not move reports/ wholesale in one step.
+Do not move reports/ wholesale in M193.
 ```
 
-Recommended M193 handling:
+Reason:
 
-- Move old milestone inventory reports to `dev/reports/` if they are only developer evidence.
-- Keep user-support output path user-facing or configure a new local artifact path such as `runtime/reports/` or gitignored `reports/`.
-- Keep Ragnarok / health audit output available to normal users.
-- Ensure generated support evidence is gitignored unless intentionally committed as public-safe documentation evidence.
+- old milestone inventory reports are developer evidence and moved under `dev/reports/`
+- `reports/m33-markdown-source-health/` is currently user-support evidence output/read path
+- Ragnarok / health audit output must remain available to normal users
 
 ## Migrations Directory Classification
 
@@ -168,7 +170,7 @@ but that is not required for v0.3.0 root cleanup.
 
 The support evidence and observation surface is user-facing and must not be moved into a developer-only path.
 
-Observed user/support surface:
+Observed user/support surface after M193:
 
 ```text
 bin/hermes-observe
@@ -186,11 +188,11 @@ tools/runes_shield/observe_health.py
 tools/runes_shield/proposal_governance_observation_export.py
 ```
 
-Smoke/test files related to observation may be developer-only, but the runtime commands and support evidence generation must remain reachable.
+Smoke/test files related to observation may be developer-only, but runtime commands and support evidence generation remain reachable.
 
-## Reference Update Requirements
+## Reference Update Result
 
-Before or during the move, update references in:
+Updated references include:
 
 ```text
 bin/hermes-m138-2-dry-run-record-init
@@ -200,12 +202,12 @@ bin/hermes-m138-2-dry-run-record-init
 tools/runes/ragnarok_observation_bundle.py
   dev/smoke/m31_7_final_verification_lock.sh
   dev/smoke/m32_7_p0_trial_run_lock.sh
-  smoke/m33_*.sh
+  dev/smoke/m33_*.sh
   reports/m33-markdown-source-health/latest.json
   reports/m33-markdown-source-health/latest.md
 
-tools/runes/markdown_source_health_audit.py
-  reports/m33-markdown-source-health
+tools/archive/milestone-shell/README.md
+  dev/smoke/m31_4_archive_lock_smoke.sh
 
 wiki/_system/ragnarok_observation_evidence_inventory.md
   dev/reports/m29-runes-seal-local-inventory/
@@ -213,63 +215,46 @@ wiki/_system/ragnarok_observation_evidence_inventory.md
   reports/m33-markdown-source-health/latest.md
 ```
 
-## Proposed M193 Move Plan
+Remaining `dev/docs/` references to old `templates/...` paths are historical developer documentation references and do not affect runtime fresh-clone behavior. They may be normalized in a later documentation sweep.
 
-Phase A: safe developer-only moves
+## Verification Summary
 
-```text
-db/        -> dev/db/
-fixtures/  -> dev/fixtures/
-smoke/     -> dev/smoke/
-templates/ -> dev/templates/
-```
-
-Update direct references after this phase.
-
-Phase B: reports split
+Local sync verification after commit `210abd9 Move developer-only root assets under dev` showed:
 
 ```text
-dev/reports/m29-runes-seal-local-inventory/ -> dev/dev/reports/m29-runes-seal-local-inventory/
+PASS: root db removed
+PASS: root fixtures removed
+PASS: root smoke removed
+PASS: root templates removed
+PASS: migrations/postgres remains
+PASS: reports/m33-markdown-source-health remains
 ```
 
-Keep or redesign:
+Moved developer directories exist under:
 
 ```text
-reports/m33-markdown-source-health/
+dev/db/
+dev/fixtures/
+dev/reports/m29-runes-seal-local-inventory/
+dev/smoke/
+dev/templates/
 ```
 
-because it is currently produced/read by user-facing Ragnarok/health-audit tooling.
-
-Phase C: verify support evidence remains user-facing
-
-```bash
-find bin tools -maxdepth 4 -type f | sort | grep -Ei 'observe|observation|support|bundle|ragnarok|diagnostic|log' || true
-```
-
-Phase D: smoke / compile
-
-```bash
-python -m py_compile tools/importer/*.py tools/runes/*.py tools/runes_shield/*.py
-bash ./bin/hermes-memory-bootstrap-verify
-bash ./bin/hermes-memory-smoke
-```
+Support evidence surface remains visible under `bin/` and `tools/`.
 
 ## M193 Safety Decision
 
-Do not perform a blind root move.
+Do not move `migrations/postgres/` in M193.
 
-Because GitHub connector access does not provide a convenient recursive move operation here, the actual M193 file relocation should be done either:
+Do not move `reports/m33-markdown-source-health/` in M193.
 
-1. locally with a controlled `git mv` script and then pushed, or
-2. through a generated patch file if the move/update set becomes too large for chat code blocks.
-
-The layout decision itself is now locked for implementation.
+Do not move user-facing observation / Ragnarok / diagnostic / support evidence tools into `dev/`.
 
 ## Status
 
 ```text
 M191: PASS / boundary clarified
 M192: PASS / default install lightweight
-M193: INVENTORY LOCKED / move plan ready
+M193: PASS / root developer layout consolidated
 v0.3.0: not tagged
 ```
