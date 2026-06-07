@@ -1,28 +1,24 @@
 # Specs Index
 
-Status: P0 baseline
+Status: runtime-clean-seed
 
 ## Purpose
 
-Tracks flat-first specification-oriented memory files.
+Index for reviewed specs and technical notes in the active workspace.
 
-## Naming
-
-```text
-wiki/specs-<topic>-<note_type>.md
-```
-
-## Planned Note Types
+## Active Workspace
 
 ```text
-spec
-requirements
-compatibility
-protocol
-profile
-reference
+wiki/freelancer/
 ```
 
-## Current Entries
+For other installations, replace `freelancer` with the local hostname-derived workspace slug.
 
-No flat-first spec entries yet.
+## Developer Boundary
+
+Development-only specs, milestone design notes, regression plans, and trial evidence belong under:
+
+```text
+dev/docs/
+dev/wiki-history/
+```
