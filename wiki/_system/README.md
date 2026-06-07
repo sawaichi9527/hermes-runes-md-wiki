@@ -1,6 +1,6 @@
 # Hermes Runes System Policy Index
 
-Status: P0 Runes Keystone policy baseline  
+Status: runtime-clean-seed policy baseline  
 Scope: Hermes Runes MD Wiki system governance
 
 ## Purpose
@@ -29,13 +29,11 @@ It provides:
 - import / embedding lifecycle
 - diagnostics and consistency checks
 
-It does not replace Hermes Agent decision-making.
-
-Hermes Agent remains responsible for comparing Hermes Runes evidence with current user instructions, native memory, third-party RAG / notes, Obsidian, web search, and other sources.
+It does not replace agent decision-making.
 
 ## Required Policy Read Order
 
-Hermes Agent should decipher this policy bundle before performing Hermes Runes operations:
+Agents should decipher this policy bundle before performing Hermes Runes operations:
 
 1. `wiki/_system/README.md`
 2. `wiki/_system/memory-policy.md`
@@ -49,7 +47,7 @@ Hermes Agent should decipher this policy bundle before performing Hermes Runes o
 10. `wiki/_system/observation-policy.md`
 11. `wiki/_system/developer-policy.md`
 12. `wiki/README.md`
-13. `wiki/long-term-objectives-index.md`
+13. `wiki/hermes_runes_index.md`
 
 ## Command Vocabulary
 
@@ -64,13 +62,35 @@ Hermes Agent should decipher this policy bundle before performing Hermes Runes o
 
 Rune terms are interface names. Documentation and CLI help must include plain-language meaning.
 
-## Policy Freshness
+## Runtime Wiki Layout
 
-Hermes Agent may cache Hermes Runes usage as native-memory skill.
+- `default-wiki-seed-layout.md`
+  - Defines the canonical top-level wiki layers:
+    - `wiki/_system/`
+    - `wiki/<workspace>/`
+    - `wiki/*.md`
+  - Defines first-bootstrap workspace suggestion behavior.
+  - Keeps developer history outside runtime wiki memory under `dev/`.
 
-Before real Runes operations, Hermes Agent must check policy freshness or decipher the relevant policy bundle again.
+## Runes Shield Discovery
 
-`change-history.md` is part of freshness awareness because structural wiki changes may invalidate cached assumptions.
+- `runes_shield_contract.md`
+  - Defines the governed invocation boundary between agents and Hermes Runes MD Wiki.
+- `runes_invocation_policy.md`
+  - Defines how controlled Runes Shield operations should be invoked.
+- `runes_agent_guidance.md`
+  - Defines agent-facing operating guidance for proposal, review, approval, and trusted-memory boundaries.
+
+## Developer Boundary
+
+Developer history, old milestone records, beta observations, trial evidence, and sample fixtures belong outside runtime wiki memory:
+
+```text
+dev/wiki-history/
+dev/docs/
+```
+
+Do not import `dev/` as runtime user memory by default.
 
 ## Non-goals
 
@@ -79,60 +99,10 @@ Hermes Runes is not:
 - an enterprise multi-user CMS
 - a distributed cloud memory platform
 - a full autonomous self-modifying agent framework
-- a replacement for Hermes Agent judgment
+- a replacement for agent judgment
 
 ## Change Log
 
 - 2026-06-01: Initial P0 system policy index.
 - 2026-06-05: Registered default wiki seed layout policy in the required policy read order.
-
-## Agent Style Overlay
-
-- `agent-style-overlay.md`
-  - Optional presentation guidance for Hermes-agent when interacting with Hermes Runes MD Wiki through Runes Shield.
-  - Defines Runes-themed terms such as forge, attunement, relic, seal, resonance, and inscription.
-  - Style only; does not override `soul.md`, governance policy, security policy, or human approval requirements.
-
-## Default Wiki Seed Layout
-
-- `default-wiki-seed-layout.md`
-  - Defines the canonical top-level wiki layers:
-    - `wiki/_system/`
-    - `wiki/owner-runes/`
-    - `wiki/<workspace>/`
-    - `wiki/*.md`
-  - Defines first-bootstrap workspace suggestion behavior.
-  - Defines owner-runes boundaries for preferences, RSS lists, research sources, and local operating data.
-
-## Runes Shield Discovery
-
-- `runes_shield_contract.md`
-  - Defines the governed invocation boundary between Hermes-agent and Hermes Runes MD Wiki.
-- `runes_invocation_policy.md`
-  - Defines how controlled Runes Shield operations should be invoked.
-- `runes_agent_guidance.md`
-  - Defines agent-facing operating guidance for proposal, review, approval, and trusted-memory boundaries.
-
-## Runes Markdown Source Health
-
-- `runes_markdown_source_health.md`
-  - Defines Markdown source-of-truth health semantics.
-  - Defines Runes Shield Forge Readiness Check / Runes 符文鑄造前適性檢查.
-  - Defines refinement levels `+0` to `+9`.
-  - Clarifies that PostgreSQL is a replaceable recall/index backend, not the authoritative memory layer.
-
-## Ragnarok Observation Bundle Policy
-
-- `ragnarok_observation_bundle_policy.md`
-  - Defines Ragnarok Observation Bundle / 諸神的黃昏觀測封包.
-  - Defines Ragnarok Incantation Boundary / 諸神的黃昏詠唱邊界.
-  - Defines the canonical ritual confirmation phrase:
-    `少年啊，你確定要讓世界樹震動，開啟諸神的黃昏嗎？`
-  - Defines developer diagnostic bundle scope, secret exclusions, and local-only output expectations.
-
-## Ragnarok Observation Evidence Inventory
-
-- `ragnarok_observation_evidence_inventory.md`
-  - Defines the evidence categories that a future Ragnarok Observation Bundle may collect.
-  - Clarifies that Runes Markdown Source Health is one evidence branch, not the full bundle scope.
-  - Defines non-secret, summarized, local-only evidence collection boundaries.
+- 2026-06-08: Cleaned runtime seed boundary and moved developer history outside `wiki/`.
