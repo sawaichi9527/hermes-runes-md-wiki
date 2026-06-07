@@ -1,28 +1,19 @@
 # Products Index
 
-Status: P0 baseline
+Status: runtime-clean-seed
 
 ## Purpose
 
-Tracks flat-first product/platform profile memory files.
+Index for reviewed product, platform, and hardware notes in the active workspace.
 
-## Naming
-
-```text
-wiki/products-<topic>-<note_type>.md
-```
-
-## Planned Note Types
+## Active Workspace
 
 ```text
-profile
-baseline
-comparison
-hardware
-platform
-reference
+wiki/freelancer/
 ```
 
-## Current Entries
+For other installations, replace `freelancer` with the local hostname-derived workspace slug.
 
-No flat-first product entries yet.
+## Boundary
+
+Development-only product comparisons or historical benchmark evidence should live under `dev/` unless promoted into reviewed runtime memory.
