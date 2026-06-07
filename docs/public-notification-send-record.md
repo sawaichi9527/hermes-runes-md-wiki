@@ -1,53 +1,56 @@
 # Public Notification Manual Send Record
 
-Status: SCAFFOLD / CHANNEL SELECTION PENDING / NOT SENT
+Status: CHANNEL LOCKED / MANUAL SEND PACKAGE READY / NOT SENT
 Date: 2026-06-08
-Milestone: M217
+Milestone: M218
 
 ## Purpose
 
 Record the selected public notification channel and manual send status for Hermes Runes MD Wiki Open Beta.
 
-This file is a send-record scaffold. It does not mean the notification has been sent.
+This file records the selected channels and the manual-send package. It does not mean the notification has been sent.
 
 ## Send Source
 
 ```text
 final_notification_file: docs/public-tester-notification-final.md
+release_note_draft: docs/github-release-note-v0.1.0-beta.1.md
+feedback_issue_draft: docs/open-beta-feedback-issue-draft.md
 release_tag: v0.1.0-beta.1
 version: 0.1.0-beta.1
 ```
 
-## Candidate Channels
+## Selected Channels
 
 ```text
-GitHub Release note: recommended primary public channel
-GitHub Discussion: optional, if Discussions are enabled
-GitHub Issue: optional, if using a public feedback issue
-README link/update: optional follow-up
-private/internal channel: optional, if inviting known testers first
+primary_public_channel: GitHub Release note for v0.1.0-beta.1
+feedback_channel: GitHub Issue for Open Beta feedback
+optional_channel: private/internal tester message linking to release and feedback issue
+```
+
+## Manual Send URLs
+
+```text
+release_url: pending_manual_creation
+feedback_issue_url: pending_manual_creation
+internal_notification_url: optional_pending
 ```
 
 ## Recommended Send Order
 
 ```text
-1. GitHub Release note or repository-visible announcement
-2. Optional GitHub Issue/Discussion for feedback collection
-3. Optional private/internal tester notification pointing to the public repo and feedback channel
-```
-
-## Selected Channel
-
-```text
-selected_channel: pending
-selected_channel_url: pending
-feedback_channel: pending
+1. Create GitHub Release for v0.1.0-beta.1 using docs/github-release-note-v0.1.0-beta.1.md.
+2. Create GitHub Issue using docs/open-beta-feedback-issue-draft.md.
+3. Optionally send a private/internal tester message linking to the release and feedback issue.
+4. Return here and update this record with release_url, feedback_issue_url, sent_at, and sent_by.
 ```
 
 ## Send Status
 
 ```text
 send_decision: ready_for_manual_send
+selected_channel: GitHub Release note
+feedback_channel: GitHub Issue
 notification_sent: no
 manual_send_required: yes
 sent_at: pending
@@ -71,5 +74,5 @@ feedback should include commands/logs/host OS/Python version/workspace slug
 
 ```text
 Public Notification Manual Send Record
-SCAFFOLD / channel selection pending / notification not sent
+CHANNEL LOCKED / manual send package ready / notification not sent
 ```
