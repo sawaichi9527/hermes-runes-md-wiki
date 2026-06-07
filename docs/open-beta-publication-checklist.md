@@ -1,6 +1,6 @@
 # Open Beta Publication Checklist
 
-Status: STARTER CLEANUP COMPLETE / RUNTIME LEGACY SWEEP PENDING / FIRST TAG BLOCKED
+Status: RUNTIME TOOL SWEEP PARTIAL / LOCAL PATCH REQUIRED / FIRST TAG BLOCKED
 Date: 2026-06-07
 
 ## Purpose
@@ -53,6 +53,7 @@ Versioning policy: present
 Workspace slug policy: present
 Default active workspace slug: freelancer
 Public download audit: complete
+Runtime/tool sweep: partial / local patch required
 ```
 
 ## Workspace Slug Note
@@ -71,7 +72,7 @@ deprecated_trial_checkout: ~/workspace-trial/hermes-runes-md-wiki
 current_version: 0.1.0-beta.1
 planned_tag: v0.1.0-beta.1
 tag_status: blocked
-reason: runtime/tool legacy sweep still required
+reason: runtime/tool local patch is still required
 ```
 
 ## M209 Audit Result
@@ -92,6 +93,15 @@ public_tester_notification_ready: no
 remaining_blocker: active runtime/tool legacy sweep
 ```
 
+## M211 Runtime/Tool Sweep Result
+
+```text
+runtime_tool_sweep: PARTIAL
+release_tag_ready: no
+public_tester_notification_ready: no
+remaining_blocker: local patch required for active runtime/tool legacy defaults
+```
+
 ## License Note
 
 ```text
@@ -104,13 +114,13 @@ year: 2026
 ## Remaining Before Tester Notification
 
 ```text
-M211 runtime/tool legacy sweep
-M212 first Open Beta tag / release lock
+M212 runtime tool local patch / verification
+M213 first Open Beta tag / release lock
 ```
 
 ## Final Lock
 
 ```text
 Open Beta Publication Checklist
-STARTER CLEANUP COMPLETE / runtime legacy sweep pending / first tag blocked
+RUNTIME TOOL SWEEP PARTIAL / local patch required / first tag blocked
 ```
