@@ -1,13 +1,13 @@
 # Open Beta Publication Checklist
 
-Status: PUBLIC TESTER NOTIFICATION DRAFT PREPARED / REVIEW SEND DECISION PENDING
+Status: PUBLIC TESTER NOTIFICATION REVIEWED / SEND-READY / NOT SENT
 Date: 2026-06-08
 
 ## Purpose
 
 Prepare Hermes Runes MD Wiki for Open Beta publication as a public GitHub repository.
 
-This record tracks publication readiness, release tag status, public tester notification draft status, and remaining send/review decision work.
+This record tracks publication readiness, release tag status, public tester notification draft/final review status, and remaining manual send record work.
 
 ## Current Repository State
 
@@ -15,7 +15,7 @@ This record tracks publication readiness, release tag status, public tester noti
 repository: sawaichi9527/hermes-runes-md-wiki
 visibility: public
 open_beta_target: public GitHub repository
-current_phase: public tester notification draft prepared
+current_phase: public tester notification reviewed and send-ready
 ```
 
 ## Open Beta Boundary
@@ -55,6 +55,7 @@ Public download audit: complete
 Runtime/tool sweep: PASS / active blockers cleared
 First Open Beta tag: created
 Public tester notification draft: prepared
+Public tester notification final: reviewed / send-ready / not sent
 ```
 
 ## Workspace Slug Note
@@ -156,6 +157,16 @@ secrets_boundary_included: yes
 feedback_scope_included: yes
 ```
 
+## M216 Public Tester Notification Review / Send Decision
+
+```text
+notification_final_review: PASS
+send_decision: ready_for_manual_send
+notification_sent: no
+manual_send_required: yes
+final_file: docs/public-tester-notification-final.md
+```
+
 ## License Note
 
 ```text
@@ -165,15 +176,15 @@ copyright_holder: Chehan Lin
 year: 2026
 ```
 
-## Remaining Before Public Notification Send
+## Remaining Before Public Notification Send Record
 
 ```text
-M216 public tester notification review / send decision
+M217 public notification channel selection / manual send record
 ```
 
 ## Final Lock
 
 ```text
 Open Beta Publication Checklist
-PUBLIC TESTER NOTIFICATION DRAFT PREPARED / review send decision pending
+PUBLIC TESTER NOTIFICATION REVIEWED / send-ready / not sent
 ```
