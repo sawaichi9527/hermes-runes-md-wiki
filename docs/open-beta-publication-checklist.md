@@ -1,6 +1,6 @@
 # Open Beta Publication Checklist
 
-Status: AUDIT COMPLETE / REMEDIATION REQUIRED / FIRST TAG BLOCKED
+Status: STARTER CLEANUP COMPLETE / RUNTIME LEGACY SWEEP PENDING / FIRST TAG BLOCKED
 Date: 2026-06-07
 
 ## Purpose
@@ -40,10 +40,12 @@ Open Beta does not mean:
 
 ```text
 README: present
-.gitignore: present and excludes .env, keys, local logs, local databases, backups, and runtime artifacts
+Open Beta starter guide: present
+.env example starter path: updated
+trial templates starter path: updated
+.gitignore: present and excludes local runtime artifacts
 Open Beta status note: visible in README
 Security policy: present
-Secret scan quick check: no obvious keyword hits from repository code search
 License: Apache-2.0 applied
 Version file: present
 Changelog: present
@@ -69,7 +71,7 @@ deprecated_trial_checkout: ~/workspace-trial/hermes-runes-md-wiki
 current_version: 0.1.0-beta.1
 planned_tag: v0.1.0-beta.1
 tag_status: blocked
-reason: public-facing legacy reference remediation is still required
+reason: runtime/tool legacy sweep still required
 ```
 
 ## M209 Audit Result
@@ -79,6 +81,15 @@ result: PASS for audit completion
 release_tag_ready: no
 public_tester_notification_ready: no
 blocker: remaining public-facing and active-tool legacy references require remediation
+```
+
+## M210 Starter Cleanup Result
+
+```text
+starter_cleanup: PASS
+release_tag_ready: no
+public_tester_notification_ready: no
+remaining_blocker: active runtime/tool legacy sweep
 ```
 
 ## License Note
@@ -93,13 +104,13 @@ year: 2026
 ## Remaining Before Tester Notification
 
 ```text
-M210 public download remediation / starter path cleanup
-M211 first Open Beta tag / release lock
+M211 runtime/tool legacy sweep
+M212 first Open Beta tag / release lock
 ```
 
 ## Final Lock
 
 ```text
 Open Beta Publication Checklist
-AUDIT COMPLETE / remediation required / first tag blocked
+STARTER CLEANUP COMPLETE / runtime legacy sweep pending / first tag blocked
 ```
