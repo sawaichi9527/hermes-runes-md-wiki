@@ -1,13 +1,13 @@
 # Open Beta Publication Checklist
 
-Status: BETA OBSERVATION RECAP COMPLETE / READY FOR REGRESSION SMOKE REPLAY
+Status: BETA REGRESSION SMOKE REPLAY PLAN LOCKED / EXECUTION PENDING
 Date: 2026-06-08
 
 ## Purpose
 
 Prepare Hermes Runes MD Wiki for Open Beta publication as a public GitHub repository and transition from publication prep into Beta Run evidence collection.
 
-This record tracks publication readiness, release tag status, public tester notification package readiness, deferred manual URL backfill status, Beta Run entry criteria readiness, beta smoke evidence, beta observation readiness, first and second real beta usage evidence, friction triage, and observation recap status.
+This record tracks publication readiness, release tag status, public tester notification package readiness, deferred manual URL backfill status, Beta Run entry criteria readiness, beta smoke evidence, beta observation readiness, first and second real beta usage evidence, observation recap status, and regression smoke replay readiness.
 
 ## Current Repository State
 
@@ -15,7 +15,7 @@ This record tracks publication readiness, release tag status, public tester noti
 repository: sawaichi9527/hermes-runes-md-wiki
 visibility: public
 open_beta_target: public GitHub repository
-current_phase: Beta observation recap complete / ready for regression smoke replay
+current_phase: Beta regression smoke replay plan locked / execution pending
 ```
 
 ## Open Beta Boundary
@@ -70,6 +70,7 @@ Beta friction triage: PASS / no patch required
 Second real beta usage scenario: locked
 Second real beta usage evidence: PASS
 Beta observation recap: PASS / no patch required
+Beta regression smoke replay plan: locked / execution pending
 ```
 
 ## Workspace Slug Note
@@ -339,6 +340,16 @@ governance_review_required_now: no
 next_step: M229 Beta Regression / Smoke Replay
 ```
 
+## M229 Beta Regression / Smoke Replay
+
+```text
+replay_plan: PASS
+replay_plan_locked: yes
+execution_done: no
+evidence_captured: no
+next_step: M229.1 Beta Regression / Smoke Replay Evidence Capture
+```
+
 ## License Note
 
 ```text
@@ -359,12 +370,12 @@ GitHub Issue creation: optional manual feedback-channel task.
 ## Next Step
 
 ```text
-M229 Beta Regression / Smoke Replay
+M229.1 Beta Regression / Smoke Replay Evidence Capture
 ```
 
 ## Final Lock
 
 ```text
 Open Beta Publication Checklist
-BETA OBSERVATION RECAP COMPLETE / ready for regression smoke replay
+BETA REGRESSION SMOKE REPLAY PLAN LOCKED / execution pending
 ```
