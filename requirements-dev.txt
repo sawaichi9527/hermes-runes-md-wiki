@@ -1,6 +1,12 @@
-# Hermes Runes MD Wiki - development dependencies
--r requirements.txt
--r requirements-embedding.txt
+# Hermes Runes MD Wiki - developer-only lightweight requirements
+#
+# Keep this profile lightweight by default.
+# Do not automatically include requirements-embedding.txt here, because that may
+# pull torch / sentence-transformers and make routine developer setup heavy.
+#
+# Developers who need hybrid/vector/full-smoke behavior should run:
+#   bash ./bin/hermes-memory-bootstrap --with-embedding
 
-# Currently no extra dev-only dependencies are required.
-# Add pytest/ruff/mypy later only when used by the repo.
+-r requirements-core.txt
+
+# Add pytest/ruff/mypy later only when they are actually used by the repo.
