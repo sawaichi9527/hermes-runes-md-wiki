@@ -52,6 +52,32 @@ wiki_namespace: wiki/freelancer/
 
 `freelancer` is only the current dogfood host instance, not a universal default for every tester.
 
+## Forge Inbox Boundary
+
+Each workspace may contain:
+
+```text
+wiki/<workspace-slug>/forge-inbox/
+```
+
+`forge-inbox/` is a local governed draft inbox.
+
+Plain meaning:
+
+```text
+This is where proposed memory changes wait before human review.
+```
+
+Use it for:
+
+- draft proposals created by an agent or helper tool
+- unreviewed notes that should not yet become trusted memory
+- human review, approval, rejection, or promotion through governed tooling
+
+Do not treat files in `forge-inbox/` as trusted memory.
+
+For public repository content, `forge-inbox/` should normally contain only README / placeholder metadata. Real local draft proposals are working artifacts and should normally remain uncommitted.
+
 ## Developer History Boundary
 
 Historical engineering evidence, sample fixtures, milestone records, and developer-only beta evidence are retained under:
@@ -121,6 +147,7 @@ wiki/README.md
 wiki/hermes_runes_index.md
 wiki/_system/README.md
 docs/workspace-slug-policy.md
+docs/v0.3.0-tester-checklist.md
 ```
 
 ## Safety Boundary
