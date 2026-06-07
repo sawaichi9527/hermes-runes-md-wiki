@@ -4,7 +4,7 @@ All notable Hermes Runes MD Wiki Open Beta changes are recorded here.
 
 This project uses SemVer-style versioning during Open Beta.
 
-## [0.5.0-dev] - 2026-06-08
+## [0.5.0-rc1] - 2026-06-08
 
 ### Added
 
@@ -29,8 +29,8 @@ This project uses SemVer-style versioning during Open Beta.
 
 ### Release status
 
-- This is still the development line for v0.5.0.
-- Do not tag final `v0.5.0` until VERSION is changed from `0.5.0-dev` and the final smoke gate passes.
+- This is the first release-candidate line for v0.5.0.
+- Do not tag final `v0.5.0` until `0.5.0-rc1` passes the final smoke gate.
 
 
 ## [0.3.0] - 2026-06-08
