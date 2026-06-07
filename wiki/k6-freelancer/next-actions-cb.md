@@ -1,19 +1,16 @@
 # Closed Beta Next Actions
 
-Status: ACTIVE / M181 LOCKED / M182 VERIFY LOCKED / SESSION PATCH REQUIRED
+Status: COMPLETE / M182 LOCKED / CB MINI-CYCLE 2 COMPLETE
 Date: 2026-06-07
 
 ## Current Stage
 
 ```text
-M181 Beta Candidate Scope Lock
-PASS / candidate scope locked / ready for M182 checklist
-
 M182 Beta Entry Checklist
-verification PASS / session file update requires local patch
+PASS / checklist locked / CB mini-cycle 2 complete
 ```
 
-## Locked / Prepared CB Chain
+## Locked CB Chain
 
 ```text
 M165 PASS / rules locked / no runtime change
@@ -33,36 +30,28 @@ M178 PASS / M173-M177 records consolidated
 M179 PASS / trial notes reviewed
 M180 PASS / readiness reviewed
 M181 PASS / candidate scope locked
-M182 verification PASS / session patch pending
+M182 PASS / checklist locked
 ```
 
-## M181 Result
+## Final Evidence Records
 
 ```text
-Evidence record:
 wiki/k6-freelancer/cb-sessions/cb-20260607-m181-beta-candidate-scope-lock.md
-
-Result:
-PASS
+wiki/k6-freelancer/cb-sessions/cb-20260607-m182-beta-entry-checklist.md
+wiki/k6-freelancer/verification-m181.md
+wiki/k6-freelancer/verification-m182.md
 ```
 
-## M182 Status
+## Final Result
 
 ```text
-Verification record:
-wiki/k6-freelancer/verification-m182.md
-
-Result:
-PASS
-
-Note:
-GitHub direct update for the M182 session file was blocked by the tool safety layer.
-Apply the local patch to align the session record.
+CB mini-cycle 2 complete.
+M181 candidate scope is locked.
+M182 checklist is locked.
+No session patch remains pending.
 ```
 
-## Immediate Next Action
-
-Apply the local M182 session patch, commit it, and verify the records.
+## Verification Commands
 
 Developer checkout:
 
@@ -73,7 +62,7 @@ git pull
 git status
 git log --oneline -12
 
-grep -n "Status:\|Final Lock\|M181\|M182\|PASS /\|READY\|PATCH" \
+grep -n "Status:\|Final Lock\|M181\|M182\|PASS /\|READY\|PATCH\|COMPLETE" \
   wiki/k6-freelancer/verification-m181.md \
   wiki/k6-freelancer/verification-m182.md \
   wiki/k6-freelancer/cb-sessions/cb-20260607-m181-beta-candidate-scope-lock.md \
@@ -88,10 +77,17 @@ cd ~/workspace-trial/hermes-runes-md-wiki
 
 git pull
 git status --short
+
+grep -n "Status:\|Final Lock\|M181\|M182\|PASS /\|READY\|PATCH\|COMPLETE" \
+  wiki/k6-freelancer/verification-m181.md \
+  wiki/k6-freelancer/verification-m182.md \
+  wiki/k6-freelancer/cb-sessions/cb-20260607-m181-beta-candidate-scope-lock.md \
+  wiki/k6-freelancer/cb-sessions/cb-20260607-m182-beta-entry-checklist.md \
+  wiki/k6-freelancer/next-actions-cb.md
 ```
 
 ## Next Candidate Milestone
 
 ```text
-M182 session patch alignment
+Post-M182 beta-candidate baseline recap
 ```
