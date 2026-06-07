@@ -1,6 +1,6 @@
 # Closed Beta Bug Ledger
 
-Status: OPEN BUGS / M193 FINDING RECORDED
+Status: READY / NO OPEN M191-M193 BUGS
 Date: 2026-06-07
 
 ## Purpose
@@ -90,16 +90,16 @@ closure_evidence: M191.3 final rerun used trial checkout only, included verifica
 
 ```text
 id: TB-M193-BT002-FU001
-status: OPEN
+status: CLOSED_VERIFIED
 stage_found: M193 Governed Proposal-path Case Pass
 case_id: BT-002 / BT-003 / BT-004 cross-case governance wording
 summary: Hermes-agent generated Finding ID labels and claimed bug-ledger linkage before reviewer classification.
-observed: The M193 output labeled BT-002, BT-003, and BT-004 sections with Finding ID values such as TB-M193-BT002-FU001, then stated that the BT-002 draft was tracked in cb-bugs.md even though no reviewer had opened that bug yet.
+observed: The first M193 output labeled BT-002, BT-003, and BT-004 sections with Finding ID values, then stated that the BT-002 draft was tracked in cb-bugs.md before reviewer classification.
 expected: Hermes-agent may produce a non-final governed proposal-style draft when explicitly requested, but it must not assign validation bug IDs, claim bug ledger linkage, or imply bug status changes before reviewer classification.
 severity: medium
 scope_decision: fix_now
-rerun_required: true
-closure_evidence: PENDING; rerun M193 with stricter instruction that bug IDs are reviewer-assigned only.
+rerun_required: false
+closure_evidence: M193.1 rerun produced a non-final draft without new Finding ID labels, did not claim draft bug-ledger linkage, distinguished validation bug closure from draft approval, and preserved candidate_result: ready_for_human_review.
 ```
 
 ## M192 Bug Summary
@@ -116,7 +116,8 @@ Notes:
 ```text
 M191 bug IDs are closed verified.
 M192 read-only edge cases completed without new bug IDs.
-M193 draft behavior was mostly usable, but bug-ID discipline failed and requires rerun.
+M193 bug-ID discipline issue was closed by M193.1 rerun.
+No open M191-M193 bugs remain.
 ```
 
 ## Known Limitations Accepted for CB
@@ -127,5 +128,5 @@ No known limitations accepted for Closed Beta yet.
 
 ```text
 Closed Beta Bug Ledger
-OPEN BUGS / TB-M193-BT002-FU001 recorded
+READY / no open M191-M193 bugs
 ```
