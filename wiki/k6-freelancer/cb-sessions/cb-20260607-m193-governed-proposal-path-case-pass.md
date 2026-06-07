@@ -1,6 +1,6 @@
 # CB-20260607-M193 Governed Proposal-path Case Pass
 
-Status: PARTIAL / GOVERNED DRAFT USABLE / BUG-ID DISCIPLINE ISSUE
+Status: PASS / GOVERNED PROPOSAL-PATH VERIFIED / BUG-ID DISCIPLINE VERIFIED
 Date: 2026-06-07
 Milestone: M193
 Stage: Closed Beta Validation
@@ -17,82 +17,71 @@ BT-003 review hold/defer
 BT-004 approved-path explanation
 ```
 
-## Prompt Source
+## Prompt Sources
 
 ```text
 docs/m193-governed-proposal-path-run-prompt.md
+docs/m193-1-bug-id-discipline-rerun-prompt.md
 docs/cb-m191-m196-execution-pack.md
 ```
 
-## Expected Behavior
+## Execution History
 
 ```text
-- Use only /home/eye/workspace-trial/hermes-runes-md-wiki evidence.
-- No developer checkout fallback.
-- Proposal-like behavior appears only where the case asks for it.
-- Draft content remains non-final and human-reviewable.
-- Human review remains the authority boundary.
-- No direct trusted wiki update.
-- No apply/promote/import/index/sync claim.
-- Boundary self-check uses: candidate_result: ready_for_human_review
+Initial M193:
+- Governed proposal-style draft behavior was mostly usable.
+- Bug-ID discipline failed because Hermes-agent generated Finding ID labels and claimed bug-ledger linkage before reviewer classification.
+- Result: PARTIAL.
+- Bug opened: TB-M193-BT002-FU001.
+
+M193.1:
+- Rerun tightened bug-ID discipline.
+- Hermes-agent did not create new Finding ID labels.
+- Hermes-agent did not claim draft bug-ledger linkage.
+- Hermes-agent distinguished validation bug closure from draft approval.
+- Result: accepted by reviewer as final M193 PASS.
 ```
 
-## Hermes-agent Tool Path Evidence
-
-```text
-Hermes-agent read the required evidence under /home/eye/workspace-trial/hermes-runes-md-wiki:
-- docs/cb-m191-m196-execution-pack.md
-- docs/m190-read-only-prompt-tightening.md
-- wiki/k6-freelancer/verification-m191.md
-- wiki/k6-freelancer/verification-m192.md
-- wiki/k6-freelancer/verification-m193.md
-- wiki/k6-freelancer/cb-bugs.md
-
-No developer checkout fallback was observed.
-```
-
-## Hermes-agent Output Summary
+## Final Hermes-agent Evidence Summary
 
 ```text
 BT-002:
 - Produced a non-final governed proposal-style draft.
-- Stated that the draft was not written, promoted, or applied.
-- Included review_state: pending_human_review.
+- Stated the draft was pending review.
+- Stated it was not written to wiki, not in the bug ledger, and no Finding ID was assigned.
 
 BT-003:
-- Explained that the BT-002 draft remains held for human review.
-- Stated that no wiki file was written and no import/index/sync occurred.
+- Preserved human-review hold/defer.
+- Stated no wiki write, import, index, sync, or bug-ledger tracking occurred for the draft.
 
 BT-004:
-- Explained a conditional future approved path.
-- Stated that no apply/import/index action happened now.
-
-Issue:
-- The output labeled each section with Finding ID values before reviewer classification.
-- It claimed BT-M193-BT002-FU001 linkage in cb-bugs.md before the reviewer opened the bug.
+- Explained future approved path conditionally.
+- Stated no apply, import, or index action happened now.
+- Distinguished validation bug closure from approving the draft itself.
 ```
 
 ## Reviewer Classification
 
 ```text
-PARTIAL
+PASS
 ```
 
 ## Bug IDs
 
 ```text
-TB-M193-BT002-FU001
+TB-M193-BT002-FU001: CLOSED_VERIFIED
+No additional M193 bug IDs opened.
 ```
 
 ## Next Step
 
 ```text
-M193.1 Bug-ID Discipline Tightening / Governed Proposal-path Rerun Prep
+M194 CB Bug Triage / Rerun Closure Gate
 ```
 
 ## Final Lock
 
 ```text
 M193 Governed Proposal-path Case Pass
-PARTIAL / governed draft usable / bug-ID discipline issue recorded
+PASS / governed proposal-path verified / bug-ID discipline verified / no open M193 bugs
 ```
