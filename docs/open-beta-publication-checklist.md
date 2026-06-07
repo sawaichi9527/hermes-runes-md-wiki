@@ -1,13 +1,13 @@
 # Open Beta Publication Checklist
 
-Status: BETA FRICTION TRIAGE COMPLETE / NO PATCH REQUIRED
+Status: SECOND REAL BETA USAGE SCENARIO LOCKED / EXECUTION PENDING
 Date: 2026-06-08
 
 ## Purpose
 
 Prepare Hermes Runes MD Wiki for Open Beta publication as a public GitHub repository and transition from publication prep into Beta Run evidence collection.
 
-This record tracks publication readiness, release tag status, public tester notification package readiness, deferred manual URL backfill status, Beta Run entry criteria readiness, first beta smoke evidence, beta observation readiness, evidence log template readiness, first real beta usage scenario, first real beta usage evidence, and beta friction triage.
+This record tracks publication readiness, release tag status, public tester notification package readiness, deferred manual URL backfill status, Beta Run entry criteria readiness, beta smoke evidence, beta observation readiness, first real beta usage evidence, friction triage, and the second real beta usage scenario.
 
 ## Current Repository State
 
@@ -15,7 +15,7 @@ This record tracks publication readiness, release tag status, public tester noti
 repository: sawaichi9527/hermes-runes-md-wiki
 visibility: public
 open_beta_target: public GitHub repository
-current_phase: Beta friction triage complete / no patch required
+current_phase: Second real beta usage scenario locked / execution pending
 ```
 
 ## Open Beta Boundary
@@ -67,6 +67,7 @@ Beta Run evidence log template: locked
 First real beta usage scenario: locked
 First real beta usage evidence: PASS
 Beta friction triage: PASS / no patch required
+Second real beta usage scenario: locked / execution pending
 ```
 
 ## Workspace Slug Note
@@ -298,6 +299,20 @@ governance_review_required: no
 next_step: M227 Second Real Beta Usage Scenario / Starter Followthrough Variant
 ```
 
+## M227 Second Real Beta Usage Scenario / Starter Followthrough Variant
+
+```text
+scenario_lock: PASS
+observation_id: beta-obs-20260608-002
+scenario: clean_checkout_starter_variant
+host: Freelancer
+workspace_slug: freelancer
+trial_checkout: ~/workspace/trial/hermes-runes-md-wiki
+execution_done: no
+evidence_captured: no
+next_step: M227.1 Second Real Beta Usage Evidence Capture
+```
+
 ## License Note
 
 ```text
@@ -318,12 +333,12 @@ GitHub Issue creation: optional manual feedback-channel task.
 ## Next Step
 
 ```text
-M227 Second Real Beta Usage Scenario / Starter Followthrough Variant
+M227.1 Second Real Beta Usage Evidence Capture
 ```
 
 ## Final Lock
 
 ```text
 Open Beta Publication Checklist
-BETA FRICTION TRIAGE COMPLETE / no patch required
+SECOND REAL BETA USAGE SCENARIO LOCKED / execution pending
 ```
