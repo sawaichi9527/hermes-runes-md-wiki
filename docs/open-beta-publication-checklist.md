@@ -1,13 +1,13 @@
 # Open Beta Publication Checklist
 
-Status: SECOND REAL BETA USAGE EVIDENCE CAPTURED / READY FOR RECAP
+Status: BETA OBSERVATION RECAP COMPLETE / READY FOR REGRESSION SMOKE REPLAY
 Date: 2026-06-08
 
 ## Purpose
 
 Prepare Hermes Runes MD Wiki for Open Beta publication as a public GitHub repository and transition from publication prep into Beta Run evidence collection.
 
-This record tracks publication readiness, release tag status, public tester notification package readiness, deferred manual URL backfill status, Beta Run entry criteria readiness, beta smoke evidence, beta observation readiness, first and second real beta usage evidence, and friction triage.
+This record tracks publication readiness, release tag status, public tester notification package readiness, deferred manual URL backfill status, Beta Run entry criteria readiness, beta smoke evidence, beta observation readiness, first and second real beta usage evidence, friction triage, and observation recap status.
 
 ## Current Repository State
 
@@ -15,7 +15,7 @@ This record tracks publication readiness, release tag status, public tester noti
 repository: sawaichi9527/hermes-runes-md-wiki
 visibility: public
 open_beta_target: public GitHub repository
-current_phase: Second real beta usage evidence captured / ready for recap
+current_phase: Beta observation recap complete / ready for regression smoke replay
 ```
 
 ## Open Beta Boundary
@@ -69,6 +69,7 @@ First real beta usage evidence: PASS
 Beta friction triage: PASS / no patch required
 Second real beta usage scenario: locked
 Second real beta usage evidence: PASS
+Beta observation recap: PASS / no patch required
 ```
 
 ## Workspace Slug Note
@@ -325,6 +326,19 @@ blocking: no
 next_step: M228 Beta Observation Recap / Second Triage Decision
 ```
 
+## M228 Beta Observation Recap / Second Triage Decision
+
+```text
+recap_result: PASS
+observations_reviewed: 2
+blocking_issue_found: no
+patch_round_required_now: no
+documentation_patch_required_now: no
+runtime_fix_required_now: no
+governance_review_required_now: no
+next_step: M229 Beta Regression / Smoke Replay
+```
+
 ## License Note
 
 ```text
@@ -345,12 +359,12 @@ GitHub Issue creation: optional manual feedback-channel task.
 ## Next Step
 
 ```text
-M228 Beta Observation Recap / Second Triage Decision
+M229 Beta Regression / Smoke Replay
 ```
 
 ## Final Lock
 
 ```text
 Open Beta Publication Checklist
-SECOND REAL BETA USAGE EVIDENCE CAPTURED / ready for recap
+BETA OBSERVATION RECAP COMPLETE / ready for regression smoke replay
 ```
