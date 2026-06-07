@@ -1,13 +1,13 @@
 # Open Beta Publication Checklist
 
-Status: FIRST REAL BETA USAGE SCENARIO LOCKED / EXECUTION PENDING
+Status: FIRST REAL BETA USAGE EVIDENCE CAPTURED / READY FOR FRICTION TRIAGE
 Date: 2026-06-08
 
 ## Purpose
 
 Prepare Hermes Runes MD Wiki for Open Beta publication as a public GitHub repository and transition from publication prep into Beta Run evidence collection.
 
-This record tracks publication readiness, release tag status, public tester notification package readiness, deferred manual URL backfill status, Beta Run entry criteria readiness, first beta smoke evidence, beta observation readiness, evidence log template readiness, and the first real beta usage scenario.
+This record tracks publication readiness, release tag status, public tester notification package readiness, deferred manual URL backfill status, Beta Run entry criteria readiness, first beta smoke evidence, beta observation readiness, evidence log template readiness, first real beta usage scenario, and first real beta usage evidence.
 
 ## Current Repository State
 
@@ -15,7 +15,7 @@ This record tracks publication readiness, release tag status, public tester noti
 repository: sawaichi9527/hermes-runes-md-wiki
 visibility: public
 open_beta_target: public GitHub repository
-current_phase: First real beta usage scenario locked / execution pending
+current_phase: First real beta usage evidence captured / ready for friction triage
 ```
 
 ## Open Beta Boundary
@@ -64,7 +64,8 @@ First beta smoke evidence: PASS
 Beta observation loop baseline: locked
 Usage evidence plan: ready
 Beta Run evidence log template: locked
-First real beta usage scenario: locked / execution pending
+First real beta usage scenario: locked
+First real beta usage evidence: PASS
 ```
 
 ## Workspace Slug Note
@@ -268,9 +269,20 @@ observation_id: beta-obs-20260608-001
 scenario: starter_followthrough
 host: Freelancer
 workspace_slug: freelancer
-execution_done: no
-evidence_captured: no
-next_step: M225.1 First Real Beta Usage Evidence Capture
+execution_done: yes
+evidence_captured: yes
+```
+
+## M225.1 First Real Beta Usage Evidence Capture
+
+```text
+usage_evidence: PASS
+observation_id: beta-obs-20260608-001
+scenario: starter_followthrough
+classification: non_blocking_note
+severity: low
+blocking: no
+next_step: M226 Beta Friction Triage
 ```
 
 ## License Note
@@ -293,12 +305,12 @@ GitHub Issue creation: optional manual feedback-channel task.
 ## Next Step
 
 ```text
-M225.1 First Real Beta Usage Evidence Capture
+M226 Beta Friction Triage
 ```
 
 ## Final Lock
 
 ```text
 Open Beta Publication Checklist
-FIRST REAL BETA USAGE SCENARIO LOCKED / execution pending
+FIRST REAL BETA USAGE EVIDENCE CAPTURED / ready for friction triage
 ```
