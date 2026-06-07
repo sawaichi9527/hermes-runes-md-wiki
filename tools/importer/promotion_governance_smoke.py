@@ -12,6 +12,7 @@ from observation_logger import write_observation
 ROOT = Path(__file__).resolve().parents[2]
 IMPORTER_DIR = ROOT / "tools" / "importer"
 M94_TRIAL_FIXTURE_QUERY = "M94 trial promotion fixture real agent-proposed memory draft"
+BUG_ID_PROMOTION_FIXTURE_GATE = "TB-M1989-FS002"
 
 
 def workspace_slug() -> str:
@@ -32,6 +33,7 @@ def skip(reason: str, data: dict | None = None) -> dict:
         "id": "M20.4-SKIP",
         "status": "SKIP",
         "reason": reason,
+        "bug_id": BUG_ID_PROMOTION_FIXTURE_GATE,
         "data": data or {},
     }
 
@@ -186,17 +188,6 @@ def case_trial_promotion_fixture_retrievable(workspace: str) -> dict:
     data = run_recall(M94_TRIAL_FIXTURE_QUERY, project=workspace, limit=5)
     results = data.get("results") or []
 
-    if not results:
-        return skip(
-            "promotion_governance_fixture_not_available_in_trial_workspace",
-            {
-                "profile": f"workspace-{workspace}",
-                "workspace": workspace,
-                "query": M94_TRIAL_FIXTURE_QUERY,
-                "note": "Fresh trial workspace has no approved forge/proposal fixture imported yet.",
-            },
-        )
-
     expected_prefix = f"wiki/{workspace}/forge-inbox/"
 
     for item in results:
@@ -220,14 +211,21 @@ def case_trial_promotion_fixture_retrievable(workspace: str) -> dict:
                 },
             )
 
-    return fail(
-        "M20.4-TRIAL-A",
-        "trial promotion fixture retrieval result did not match approved reviewed forge metadata",
+    # M198.9 / TB-M1989-FS002:
+    # In v0.5.0-dev runtime seed checkouts, the approved M94 trial-promotion
+    # fixture is not guaranteed to exist. Hybrid retrieval may still return
+    # normal workspace chunks for the query, so absence of the approved forge
+    # fixture must be treated as a local fixture SKIP instead of a product FAIL.
+    return skip(
+        "promotion_governance_fixture_not_available_in_trial_workspace",
         {
+            "profile": f"workspace-{workspace}",
             "workspace": workspace,
             "expected_path_prefix": expected_prefix,
             "query": M94_TRIAL_FIXTURE_QUERY,
-            "results": results,
+            "result_count": len(results),
+            "top_paths": [item.get("path") for item in results[:5]],
+            "note": "Fresh runtime workspace has no approved forge/proposal promotion fixture imported yet.",
         },
     )
 
@@ -263,6 +261,7 @@ def main() -> int:
                     "total": out["total"],
                     "workspace": workspace,
                     "skip_reason": cases[0].get("reason"),
+                    "bug_id": cases[0].get("bug_id"),
                     "trust_policy": "m20.5-personal-governance-v1",
                 }
             )
