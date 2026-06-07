@@ -1,13 +1,13 @@
 # Open Beta Publication Checklist
 
-Status: BETA RUN ENTRY CRITERIA LOCKED / FIRST BETA SMOKE PLAN READY
+Status: BETA OBSERVATION LOOP BASELINE LOCKED / USAGE EVIDENCE PLAN READY
 Date: 2026-06-08
 
 ## Purpose
 
-Prepare Hermes Runes MD Wiki for Open Beta publication as a public GitHub repository and transition from publication prep into Beta Run entry.
+Prepare Hermes Runes MD Wiki for Open Beta publication as a public GitHub repository and transition from publication prep into Beta Run evidence collection.
 
-This record tracks publication readiness, release tag status, public tester notification package readiness, deferred manual URL backfill status, and Beta Run entry criteria readiness.
+This record tracks publication readiness, release tag status, public tester notification package readiness, deferred manual URL backfill status, Beta Run entry criteria readiness, first beta smoke evidence, and beta observation readiness.
 
 ## Current Repository State
 
@@ -15,7 +15,7 @@ This record tracks publication readiness, release tag status, public tester noti
 repository: sawaichi9527/hermes-runes-md-wiki
 visibility: public
 open_beta_target: public GitHub repository
-current_phase: Beta Run entry criteria locked / first smoke plan ready
+current_phase: Beta observation loop baseline locked / usage evidence plan ready
 ```
 
 ## Open Beta Boundary
@@ -60,6 +60,9 @@ Public notification channel lock: GitHub Release + GitHub Issue
 Manual send URL backfill: deferred / URLs pending / not required for Beta Run entry
 Beta Run entry criteria: locked
 First beta smoke plan: ready
+First beta smoke evidence: PASS
+Beta observation loop baseline: locked
+Usage evidence plan: ready
 ```
 
 ## Workspace Slug Note
@@ -219,7 +222,28 @@ entry_tag: v0.1.0-beta.1
 first_beta_smoke_plan: ready
 new_runtime_functionality_added: no
 release_automation_added: no
-next_step: M222 First Beta Smoke Execution / Evidence Capture
+```
+
+## M222 First Beta Smoke Execution / Evidence Capture
+
+```text
+first_beta_smoke: PASS
+working_tree: clean
+version: 0.1.0-beta.1
+tag: v0.1.0-beta.1
+py_compile: PASS
+next_step: M223 Beta Observation Loop Baseline / Usage Evidence Plan
+```
+
+## M223 Beta Observation Loop Baseline / Usage Evidence Plan
+
+```text
+observation_loop_baseline: PASS
+usage_evidence_plan: ready
+classification_rules: documented
+safety_boundary: documented
+new_runtime_functionality_added: no
+next_step: M224 Beta Run Evidence Log Template
 ```
 
 ## License Note
@@ -242,12 +266,12 @@ GitHub Issue creation: optional manual feedback-channel task.
 ## Next Step
 
 ```text
-M222 First Beta Smoke Execution / Evidence Capture
+M224 Beta Run Evidence Log Template
 ```
 
 ## Final Lock
 
 ```text
 Open Beta Publication Checklist
-BETA RUN ENTRY CRITERIA LOCKED / first beta smoke plan ready
+BETA OBSERVATION LOOP BASELINE LOCKED / usage evidence plan ready
 ```
