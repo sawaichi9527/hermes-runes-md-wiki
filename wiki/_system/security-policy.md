@@ -1,6 +1,6 @@
 # Security Policy
 
-Status: P0 baseline
+Status: runtime-clean-seed policy
 
 ## Purpose
 
@@ -81,20 +81,22 @@ P0 currently focuses on preventing obvious secret leakage.
 
 Third-party notes and web sources may contain unsafe content.
 
-Hermes Agent should not automatically solidify external content into canonical memory without approval.
+Agents should not automatically solidify external content into canonical memory without approval.
 
 ## Repository Portability
 
-Public-safe fixture content should remain separate from private operational memory.
+Developer-only fixtures, milestone records, beta evidence, and historical retrieval samples should remain outside runtime wiki memory.
 
-`wiki/sample-project/` exists for:
+They belong under:
 
-- retrieval testing
-- smoke validation
-- public examples
+```text
+dev/wiki-history/
+dev/docs/
+```
 
-not as real personal memory.
+Runtime import should not ingest `dev/` by default.
 
 ## Change Log
 
 - 2026-06-01: Initial security policy.
+- 2026-06-08: Cleaned runtime seed boundary and moved developer fixtures/history outside `wiki/`.
