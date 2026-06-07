@@ -31,7 +31,6 @@ current_development_host: Freelancer
 current_dogfood_workspace_slug: freelancer
 current_dogfood_wiki_namespace: wiki/freelancer/
 main_checkout: ~/workspace/hermes-runes-md-wiki
-clean_trial_checkout: ~/workspace/trial/hermes-runes-md-wiki
 ```
 
 `freelancer` is the current dogfood host slug. It is not a universal default for every tester.
@@ -44,35 +43,31 @@ For example, a host named Chronos should use chronos.
 A host named LabBox should use labbox.
 ```
 
-## Deprecated Paths
+## Runtime Wiki Boundary
+
+Runtime memory belongs under:
 
 ```text
-old_trial_checkout: ~/workspace-trial/hermes-runes-md-wiki
-legacy_engineering_namespace: wiki/k6-freelancer/
+wiki/_system/
+wiki/<workspace-slug>/
 ```
+
+Developer history belongs under:
+
+```text
+dev/wiki-history/
+dev/docs/
+```
+
+Public testers should not need to inspect or import `dev/` for normal runtime use.
 
 ## Policy
 
 ```text
 Use lowercase(hostname) as the active workspace slug.
 Use wiki/<lowercase-hostname>/ for that installation's active memory namespace.
-Keep wiki/k6-freelancer/ as legacy engineering history unless a specific migration task requires moving curated content.
+Do not treat developer history under dev/ as runtime user memory.
 Do not bulk-edit historical verification evidence only to rename old paths.
-```
-
-## Active Default Rule
-
-```text
-Active runtime defaults and public examples should describe the hostname-derived slug rule.
-The repository's dogfood example may show freelancer only as an example for the Freelancer host.
-Legacy k6-freelancer references in historical verification records are allowed but must not be presented as the default user path.
-```
-
-## Trial Checkout Rule
-
-```text
-Clean external-user simulation should use ~/workspace/trial/hermes-runes-md-wiki.
-The old ~/workspace-trial/hermes-runes-md-wiki path is deprecated.
 ```
 
 ## Public Tester Boundary
@@ -80,12 +75,12 @@ The old ~/workspace-trial/hermes-runes-md-wiki path is deprecated.
 ```text
 Public testers should not be told that freelancer is the universal default workspace.
 Public testers should derive their workspace slug from their own installation PC hostname.
-Public testers should not need to know the old k6-freelancer engineering namespace unless reading historical project logs.
+Public testers should work from wiki/ and docs/ only for normal installation and runtime use.
 ```
 
 ## Final Lock
 
 ```text
 Workspace Slug Policy
-ACTIVE / workspace slug is lowercase hostname / freelancer is current dogfood host instance only
+ACTIVE / workspace slug is lowercase hostname / runtime memory stays under wiki/ / developer history stays under dev/
 ```
