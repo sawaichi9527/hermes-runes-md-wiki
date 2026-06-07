@@ -77,16 +77,21 @@ def active_tests():
     if workspace in ("", "k6-freelancer"):
         return "legacy-k6-freelancer", LEGACY_TESTS
 
+    # v0.3.1-dev runtime seed smoke.
+    #
+    # Historical Trial-run Workspace Baseline and owner-runes fixtures were moved
+    # under dev/wiki-history during the v0.3.0 runtime seed cleanup. They are no
+    # longer public runtime seed targets, so the default full smoke suite must
+    # validate current runtime anchors instead of legacy archived fixtures.
     return f"workspace-{workspace}", [
         {
-            "name": f"{workspace}_baseline_context_recall",
-            "query": "Trial-run Workspace Baseline",
+            "name": f"{workspace}_forge_inbox_boundary",
+            "query": "forge inbox boundary",
             "project": workspace,
             "min_rerank_score": "1",
             "must_contain": [
-                "Trial-run Workspace Baseline",
-                "ACTIVE / TRIAL-RUN",
-                "fresh-user trial-run memory namespace",
+                "Draft or unreviewed memory should enter through `forge-inbox/` first",
+                "Do not store real secrets",
             ],
             "must_not_contain": [
                 "OPENAI_API_KEY=sk-",
@@ -94,15 +99,13 @@ def active_tests():
             ],
         },
         {
-            "name": "owner_runes_context_recall",
-            "query": "owner preferences personal operating data",
-            "project": "owner-runes",
+            "name": "system_agent_boundary",
+            "query": "Hermes Agent should not directly perform structural Markdown writes",
+            "project": "_system",
             "min_rerank_score": "1",
             "must_contain": [
-                "Owner Runes",
-                "durable owner preferences",
-                "agent-agnostic",
-                "must not contain secrets",
+                "Hermes Agent should not directly perform structural Markdown writes",
+                "governed `forge` operations",
             ],
             "must_not_contain": [
                 "OPENAI_API_KEY=sk-",
@@ -124,7 +127,6 @@ def active_tests():
             ],
         },
     ]
-
 
 def run_context_builder(test):
     cmd = [

@@ -57,32 +57,32 @@ def active_cases():
     if workspace in ("", "sample-project", "k6-freelancer"):
         return "legacy-sample-project", LEGACY_CASES
 
+    # v0.3.1-dev runtime seed smoke.
+    #
+    # The historical sample-project / owner-runes seeds are retained only under
+    # dev/wiki-history. Runtime smoke should validate current public seed anchors.
     return f"workspace-{workspace}", [
         {
-            "name": f"{workspace}_workspace_seed",
-            "query": "Trial-run Workspace Baseline",
+            "name": f"{workspace}_workspace_boundary",
+            "query": "forge inbox boundary",
             "project": workspace,
             "path": f"wiki/{workspace}",
             "must_contain": [
-                "Trial-run Workspace Baseline",
-                "ACTIVE / TRIAL-RUN",
-                "fresh-user trial-run memory namespace",
+                "Draft or unreviewed memory should enter through `forge-inbox/` first",
+                "Do not store real secrets",
             ],
         },
         {
-            "name": "owner_runes_seed",
-            "query": "owner preferences personal operating data",
-            "project": "owner-runes",
-            "path": "wiki/owner-runes",
+            "name": "system_agent_boundary",
+            "query": "Hermes Agent should not directly perform structural Markdown writes",
+            "project": "_system",
+            "path": "wiki/_system",
             "must_contain": [
-                "Owner Runes",
-                "durable owner preferences",
-                "agent-agnostic",
-                "must not contain secrets",
+                "Hermes Agent should not directly perform structural Markdown writes",
+                "governed `forge` operations",
             ],
         },
     ]
-
 
 def run_case(case):
     cmd = [
