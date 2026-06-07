@@ -1,13 +1,13 @@
 # Open Beta Publication Checklist
 
-Status: SECOND REAL BETA USAGE SCENARIO LOCKED / EXECUTION PENDING
+Status: SECOND REAL BETA USAGE EVIDENCE CAPTURED / READY FOR RECAP
 Date: 2026-06-08
 
 ## Purpose
 
 Prepare Hermes Runes MD Wiki for Open Beta publication as a public GitHub repository and transition from publication prep into Beta Run evidence collection.
 
-This record tracks publication readiness, release tag status, public tester notification package readiness, deferred manual URL backfill status, Beta Run entry criteria readiness, beta smoke evidence, beta observation readiness, first real beta usage evidence, friction triage, and the second real beta usage scenario.
+This record tracks publication readiness, release tag status, public tester notification package readiness, deferred manual URL backfill status, Beta Run entry criteria readiness, beta smoke evidence, beta observation readiness, first and second real beta usage evidence, and friction triage.
 
 ## Current Repository State
 
@@ -15,7 +15,7 @@ This record tracks publication readiness, release tag status, public tester noti
 repository: sawaichi9527/hermes-runes-md-wiki
 visibility: public
 open_beta_target: public GitHub repository
-current_phase: Second real beta usage scenario locked / execution pending
+current_phase: Second real beta usage evidence captured / ready for recap
 ```
 
 ## Open Beta Boundary
@@ -67,7 +67,8 @@ Beta Run evidence log template: locked
 First real beta usage scenario: locked
 First real beta usage evidence: PASS
 Beta friction triage: PASS / no patch required
-Second real beta usage scenario: locked / execution pending
+Second real beta usage scenario: locked
+Second real beta usage evidence: PASS
 ```
 
 ## Workspace Slug Note
@@ -308,9 +309,20 @@ scenario: clean_checkout_starter_variant
 host: Freelancer
 workspace_slug: freelancer
 trial_checkout: ~/workspace/trial/hermes-runes-md-wiki
-execution_done: no
-evidence_captured: no
-next_step: M227.1 Second Real Beta Usage Evidence Capture
+execution_done: yes
+evidence_captured: yes
+```
+
+## M227.1 Second Real Beta Usage Evidence Capture
+
+```text
+usage_evidence: PASS
+observation_id: beta-obs-20260608-002
+scenario: clean_checkout_starter_variant
+classification: non_blocking_note
+severity: low
+blocking: no
+next_step: M228 Beta Observation Recap / Second Triage Decision
 ```
 
 ## License Note
@@ -333,12 +345,12 @@ GitHub Issue creation: optional manual feedback-channel task.
 ## Next Step
 
 ```text
-M227.1 Second Real Beta Usage Evidence Capture
+M228 Beta Observation Recap / Second Triage Decision
 ```
 
 ## Final Lock
 
 ```text
 Open Beta Publication Checklist
-SECOND REAL BETA USAGE SCENARIO LOCKED / execution pending
+SECOND REAL BETA USAGE EVIDENCE CAPTURED / ready for recap
 ```
