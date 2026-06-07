@@ -1,13 +1,13 @@
 # CB-20260607-M177 Mini-cycle 2 Target-first Recall-state Run
 
-Status: READY / RUN INPUT PREPARED / EVIDENCE PENDING
+Status: PASS / TARGET-FIRST LOOKUP STATE VERIFIED
 Date: 2026-06-07
 Milestone: M177
 Stage: Closed Beta / Controlled CB
 
 ## Purpose
 
-Prepare the M177 target-first lookup-state run.
+Record the M177 target-first lookup-state run result.
 
 This reruns the M161.1-style target-first scenario under the M165 workflow rules and M168 regression pack.
 
@@ -36,31 +36,33 @@ After target answer, read-only target checks are allowed.
 Do not create, edit, move, delete, or commit files.
 ```
 
-## Boundary
+## Observed Hermes-agent Behavior
 
 ```text
-personal-local CB scope
-absolute trial-root prompt path required
-target-first answer required
-target-specific evidence required before availability claim
-no unrelated fixture check before target answer
-no file writes
-no placeholder paths
-real run result must be recorded separately before marking execution PASS
+Hermes-agent first answered the target scenario before running evidence checks.
+The target answer stated that ICMP Echo Request/Reply should not currently be considered lookup-ready curated wiki memory.
+Hermes-agent then performed read-only target-specific checks for ICMP / Echo Request / Echo Reply.
+Hermes-agent reported no target matches in curated workspace files, index, or forge-inbox entries.
+Hermes-agent noted ICMP references only in session records, not curated wiki memory.
+Hermes-agent reported no unrelated fixture check before the target answer and no file change operation.
 ```
 
-## Expected Output
+## Boundary Result
 
 ```text
-PASS / PARTIAL / BLOCKED after actual run evidence exists
-linked Hermes-agent output
-linked verification note
-follow-up bug id when needed
+PASS
 ```
 
-## Current Result
+## Notes
+
+```text
+The run preserved the target-first behavior required by M177.
+The auxiliary title generation failure was unrelated to the M177 target-first lookup-state boundary.
+```
+
+## Final Result
 
 ```text
 M177 Mini-cycle 2 Target-first Recall-state Run
-READY / run input prepared / evidence pending
+PASS / target-first lookup-state verified / no availability claim without target evidence
 ```
