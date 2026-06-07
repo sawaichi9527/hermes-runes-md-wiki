@@ -1,13 +1,13 @@
 # Open Beta Publication Checklist
 
-Status: BETA OBSERVATION / REGRESSION RECAP COMPLETE / STATUS LOCK READY
+Status: BETA RUN STATUS LOCK COMPLETE / OBSERVED / NO BLOCKER
 Date: 2026-06-08
 
 ## Purpose
 
 Prepare Hermes Runes MD Wiki for Open Beta publication as a public GitHub repository and transition from publication prep into Beta Run evidence collection.
 
-This record tracks publication readiness, release tag status, public tester notification package readiness, deferred manual URL backfill status, Beta Run entry criteria readiness, beta smoke evidence, beta observation readiness, first and second real beta usage evidence, observation recap status, regression smoke replay evidence, and final recap readiness for a Beta Run status lock.
+This record tracks publication readiness, release tag status, public tester notification package readiness, deferred manual URL backfill status, Beta Run entry criteria readiness, beta smoke evidence, beta observation readiness, first and second real beta usage evidence, observation recap status, regression smoke replay evidence, final recap readiness, and Beta Run status lock.
 
 ## Current Repository State
 
@@ -15,7 +15,7 @@ This record tracks publication readiness, release tag status, public tester noti
 repository: sawaichi9527/hermes-runes-md-wiki
 visibility: public
 open_beta_target: public GitHub repository
-current_phase: Beta observation / regression recap complete / status lock ready
+current_phase: Beta Run status lock complete / observed / no blocker
 ```
 
 ## Open Beta Boundary
@@ -73,6 +73,7 @@ Beta observation recap: PASS / no patch required
 Beta regression smoke replay plan: locked
 Beta regression smoke replay evidence: PASS
 Beta observation / regression recap: PASS / status lock ready
+Beta Run status lock: PASS / observed / no blocker / no patch required
 ```
 
 ## Workspace Slug Note
@@ -379,6 +380,21 @@ beta_run_status_lock_ready: yes
 next_step: M231 Beta Run Status Lock
 ```
 
+## M231 Beta Run Status Lock
+
+```text
+beta_run_status_lock: PASS
+beta_run_baseline: PASS
+observed: yes
+blocking_issue_found: no
+patch_round_required_now: no
+documentation_patch_required_now: no
+runtime_fix_required_now: no
+governance_review_required_now: no
+regression_smoke_replay: PASS
+next_step: M232 Beta Run Known Limitations / Public Notes
+```
+
 ## License Note
 
 ```text
@@ -399,12 +415,12 @@ GitHub Issue creation: optional manual feedback-channel task.
 ## Next Step
 
 ```text
-M231 Beta Run Status Lock
+M232 Beta Run Known Limitations / Public Notes
 ```
 
 ## Final Lock
 
 ```text
 Open Beta Publication Checklist
-BETA OBSERVATION / REGRESSION RECAP COMPLETE / status lock ready
+BETA RUN STATUS LOCK COMPLETE / observed / no blocker
 ```
