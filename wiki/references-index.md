@@ -1,27 +1,20 @@
 # References Index
 
-Status: P0 baseline
+Status: runtime-clean-seed
 
 ## Purpose
 
-Tracks flat-first reference-oriented memory files.
+Index for reviewed reference sources and reusable research notes in the active workspace.
 
-## Naming
-
-```text
-wiki/references-<topic>-<note_type>.md
-```
-
-## Planned Note Types
+## Active Workspace
 
 ```text
-reference
-links
-cheatsheet
-mapping
-bibliography
+wiki/freelancer/research-sources.md
+wiki/freelancer/rss-subscriptions.md
 ```
 
-## Current Entries
+For other installations, replace `freelancer` with the local hostname-derived workspace slug.
 
-No flat-first reference entries yet.
+## Safety
+
+Store public source metadata only. Do not store login credentials or private subscription secrets.
