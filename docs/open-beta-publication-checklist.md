@@ -1,7 +1,7 @@
 # Open Beta Publication Checklist
 
-Status: FIRST OPEN BETA TAG CREATED / PUBLIC TESTER NOTIFICATION PENDING
-Date: 2026-06-07
+Status: POST-TAG POLICY HOTFIX / HOST-DERIVED SLUG CORRECTED / TESTER NOTICE PENDING
+Date: 2026-06-08
 
 ## Purpose
 
@@ -15,7 +15,7 @@ This record tracks publication readiness, release tag status, and remaining publ
 repository: sawaichi9527/hermes-runes-md-wiki
 visibility: public
 open_beta_target: public GitHub repository
-current_phase: Open Beta release lock complete
+current_phase: Open Beta tag created with post-tag workspace slug policy correction
 ```
 
 ## Open Beta Boundary
@@ -41,7 +41,7 @@ Open Beta does not mean:
 ```text
 README: present
 Open Beta starter guide: present
-.env example starter path: updated
+.env example starter path: updated, dogfood example still uses freelancer
 trial templates starter path: updated
 .gitignore: present and excludes local runtime artifacts
 Open Beta status note: visible in README
@@ -50,8 +50,7 @@ License: Apache-2.0 applied
 Version file: present
 Changelog: present
 Versioning policy: present
-Workspace slug policy: present
-Default active workspace slug: freelancer
+Workspace slug policy: corrected to hostname-derived slug
 Public download audit: complete
 Runtime/tool sweep: PASS / active blockers cleared
 First Open Beta tag: created
@@ -60,8 +59,11 @@ First Open Beta tag: created
 ## Workspace Slug Note
 
 ```text
-canonical_active_slug: freelancer
-canonical_wiki_namespace: wiki/freelancer/
+canonical_active_slug_rule: lowercase(hostname)
+canonical_wiki_namespace_rule: wiki/<lowercase-hostname>/
+current_dogfood_host: Freelancer
+current_dogfood_workspace_slug: freelancer
+current_dogfood_wiki_namespace: wiki/freelancer/
 legacy_engineering_namespace: wiki/k6-freelancer/
 clean_trial_checkout: ~/workspace/trial/hermes-runes-md-wiki
 deprecated_trial_checkout: ~/workspace-trial/hermes-runes-md-wiki
@@ -73,7 +75,7 @@ deprecated_trial_checkout: ~/workspace-trial/hermes-runes-md-wiki
 current_version: 0.1.0-beta.1
 planned_tag: v0.1.0-beta.1
 tag_status: created
-reason: v0.1.0-beta.1 release lock complete
+post_tag_hotfix: workspace slug policy corrected after tag
 ```
 
 ## M209 Audit Result
@@ -122,6 +124,16 @@ tag_name: v0.1.0-beta.1
 tag_status: created
 ```
 
+## M214 Host-Derived Slug Policy Correction
+
+```text
+policy_hotfix: PASS
+fixed_statement: freelancer is not universal default
+correct_rule: workspace slug is lowercase(hostname)
+current_instance: Freelancer -> freelancer
+release_tag_change: none
+```
+
 ## License Note
 
 ```text
@@ -134,12 +146,12 @@ year: 2026
 ## Remaining Before Tester Notification
 
 ```text
-M214 public tester notification draft
+M215 public tester notification draft
 ```
 
 ## Final Lock
 
 ```text
 Open Beta Publication Checklist
-FIRST OPEN BETA TAG CREATED / public tester notification pending
+POST-TAG POLICY HOTFIX / hostname-derived slug corrected / public tester notification pending
 ```
