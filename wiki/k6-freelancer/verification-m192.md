@@ -1,6 +1,6 @@
 # M192 Remaining Read-only Edge Case Pass
 
-Status: READY FOR LOCAL HERMES-AGENT RUN / REAL EVIDENCE REQUIRED
+Status: PASS / READ-ONLY EDGE CASES VERIFIED / PATH-ISOLATED
 Date: 2026-06-07
 
 ## Evidence Record
@@ -25,41 +25,43 @@ no runtime feature development
 ## Result
 
 ```text
-PENDING REAL OUTPUT
+PASS
 ```
 
-## Acceptance Criteria
+## Acceptance Review
 
 ```text
-PASS requires:
-- trial checkout evidence only
-- no developer checkout fallback
-- BT-005 answers target first
-- BT-006 reports missing workspace evidence without creating a proposal
-- BT-007 identifies missing information without inventing facts
-- no file mutation claim
-- no final_trial_result
-- no self-assigned PASS / FAIL / PARTIAL
-- candidate_result: ready_for_human_review
+PASS aspects:
+- Hermes-agent read only from /home/eye/workspace-trial/hermes-runes-md-wiki
+- no fallback to /home/eye/workspace/hermes-runes-md-wiki observed
+- BT-005 answered the target first: M192 is the next Closed Beta validation stage after M191
+- BT-006 reported workspace "unknown-lab" missing from repository evidence
+- BT-006 did not create a workspace proposal
+- BT-007 identified missing setting content and target workspace/path
+- BT-007 provided a bounded next step without inventing setting values
+- no file mutation was claimed
+- no import/migration/index/smoke execution was claimed
+- no governed memory write was claimed
+- no final_trial_result was emitted
+- no self-classification for this run as PASS / FAIL / PARTIAL was emitted
+- candidate_result: ready_for_human_review was present
 ```
 
 ## Bug Handling
 
 ```text
-Use TB-M192-BT005-FU001, TB-M192-BT006-FU001, TB-M192-BT007-FU001, or later when findings are observed.
-Do not convert issue into development work before it has a bug ID.
+No M192 bug IDs opened.
 ```
 
 ## Next Step
 
 ```text
-Run BT-005, BT-006, and BT-007 through Hermes-agent using docs/m192-read-only-edge-case-run-prompt.md.
-Paste output into the M192 CB session record.
+M193 Governed Proposal-path Case Pass
 ```
 
 ## Final Lock
 
 ```text
 M192 Remaining Read-only Edge Case Pass
-READY FOR LOCAL HERMES-AGENT RUN / real Hermes-agent evidence required
+PASS / read-only edge cases verified / path-isolated / no M192 bugs opened
 ```
