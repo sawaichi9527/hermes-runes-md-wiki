@@ -1,13 +1,13 @@
 # Open Beta Publication Checklist
 
-Status: PUBLIC NOTIFICATION SEND RECORD SCAFFOLD PREPARED / CHANNEL SELECTION PENDING / NOT SENT
+Status: MANUAL SEND URL BACKFILL BLOCKED / RELEASE AND FEEDBACK URLS PENDING / NOT SENT
 Date: 2026-06-08
 
 ## Purpose
 
 Prepare Hermes Runes MD Wiki for Open Beta publication as a public GitHub repository.
 
-This record tracks publication readiness, release tag status, public tester notification draft/final review status, channel selection scaffold status, and remaining manual send work.
+This record tracks publication readiness, release tag status, public tester notification draft/final review status, channel selection status, and remaining manual URL backfill work.
 
 ## Current Repository State
 
@@ -15,7 +15,7 @@ This record tracks publication readiness, release tag status, public tester noti
 repository: sawaichi9527/hermes-runes-md-wiki
 visibility: public
 open_beta_target: public GitHub repository
-current_phase: public notification send record scaffold prepared
+current_phase: waiting for manual GitHub Release and feedback issue URLs
 ```
 
 ## Open Beta Boundary
@@ -56,7 +56,8 @@ Runtime/tool sweep: PASS / active blockers cleared
 First Open Beta tag: created
 Public tester notification draft: prepared
 Public tester notification final: reviewed / send-ready / not sent
-Public notification send record scaffold: prepared / channel pending / not sent
+Public notification channel lock: GitHub Release + GitHub Issue
+Manual send URL backfill: blocked / URLs pending
 ```
 
 ## Workspace Slug Note
@@ -178,6 +179,26 @@ manual_send_required: yes
 send_record_file: docs/public-notification-send-record.md
 ```
 
+## M218 Manual Notification Send / Feedback Channel Lock
+
+```text
+channel_lock: PASS
+primary_public_channel: GitHub Release note for v0.1.0-beta.1
+feedback_channel: GitHub Issue for Open Beta feedback
+notification_sent: no
+manual_send_required: yes
+```
+
+## M219 Manual Send Result Record / URL Backfill Template
+
+```text
+url_backfill_template: BLOCKED
+release_url: missing
+feedback_issue_url: missing
+notification_sent: no
+next_step: M219.1 manual send result backfill after URLs are available
+```
+
 ## License Note
 
 ```text
@@ -187,15 +208,17 @@ copyright_holder: Chehan Lin
 year: 2026
 ```
 
-## Remaining Before Public Notification Send
+## Remaining Before Public Notification Send Record Completion
 
 ```text
-M218 manual notification send / feedback channel lock
+Create GitHub Release using docs/github-release-note-v0.1.0-beta.1.md.
+Create GitHub Issue using docs/open-beta-feedback-issue-draft.md.
+Backfill release_url and feedback_issue_url in M219.1.
 ```
 
 ## Final Lock
 
 ```text
 Open Beta Publication Checklist
-PUBLIC NOTIFICATION SEND RECORD SCAFFOLD PREPARED / channel selection pending / not sent
+MANUAL SEND URL BACKFILL BLOCKED / release and feedback URLs pending / notification not recorded as sent
 ```
