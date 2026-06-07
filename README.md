@@ -37,6 +37,26 @@ SECURITY.md
 
 ---
 
+## Default Workspace Slug
+
+For Open Beta, the default active workspace slug is:
+
+```text
+freelancer
+```
+
+The default user-facing wiki namespace is:
+
+```text
+wiki/freelancer/
+```
+
+Historical engineering records may still reference `wiki/k6-freelancer/`; that namespace is legacy project evidence and is not the default public user workspace.
+
+See `docs/workspace-slug-policy.md` for the slug policy.
+
+---
+
 ## License
 
 Hermes Runes MD Wiki is licensed under the Apache License, Version 2.0.
