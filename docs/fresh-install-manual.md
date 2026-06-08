@@ -701,6 +701,56 @@ Do not store secrets, credentials, tokens, passwords, private keys, or raw sensi
 If the active workspace for this host is missing, ask whether to prepare a governed workspace proposal under wiki/<workspace-slug>/.
 ```
 
+
+## Hermes-agent onboarding prompt
+
+After a fresh install, you may ask Hermes-agent to read the local guide files before using Hermes Runes MD Wiki.
+
+Use this prompt:
+
+```text
+請讀取 ~/workspace/hermes-runes-md-wiki 的導讀文件，理解 Hermes Runes MD Wiki 如何作為 governed Markdown memory 使用。
+
+請先看：
+
+README.md
+AGENTS.md
+wiki/README.md
+wiki/hermes_runes_index.md
+wiki/_system/README.md
+wiki/_system/runes_shield_contract.md
+wiki/_system/runes_invocation_policy.md
+wiki/_system/memory-policy.md
+wiki/_system/security-policy.md
+docs/fresh-install-manual.md
+
+讀完後請用簡短條列回報：
+1. 專案用途
+2. Hermes-agent 如何接入
+3. recall 怎麼用
+4. memory proposal 怎麼建立
+5. 哪些操作禁止
+
+請不要修改任何檔案。不要直接寫入 trusted wiki。不要保存 secrets。
+```
+
+Expected behavior:
+
+- Hermes-agent reads the guide files first.
+- Hermes-agent summarizes the project purpose and governance boundary.
+- Hermes-agent does not directly modify trusted Markdown memory.
+- Hermes-agent does not modify `_system/` policy files.
+- Hermes-agent does not save secrets, tokens, passwords, API keys, private keys, or raw sensitive logs.
+- Any memory write must go through proposal / review / promotion governance.
+
+For repository-local checks, prefer:
+
+```bash
+./bin/hermes-backend-check
+./bin/hermes-recall "forge inbox boundary" --project freelancer --mode fts --limit 5 --json
+./bin/hermes-memory-smoke
+```
+
 ## Troubleshooting data to collect
 
 When reporting a fresh-install failure, collect the smallest useful evidence:
