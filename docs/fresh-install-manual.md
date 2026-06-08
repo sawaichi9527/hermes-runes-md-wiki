@@ -68,65 +68,113 @@ Expected result:
 
 If `~/workspace/hermes-runes-md-wiki` already exists, this is not a clean clone. Move or remove the existing directory before repeating a strict fresh-install simulation.
 
-### 2. Confirm Docker runtime
+### 2. Initialize Docker PostgreSQL / pgvector stack
 
-Command summary:
+This step creates the local PostgreSQL / pgvector backend used by Hermes Runes MD Wiki.
 
-- docker --version
-- docker compose version
-- systemctl is-active docker
-- id
-- docker run --rm hello-world
+The stack remains intentionally simple for personal/local use:
+
+- one PostgreSQL container
+- one Docker named volume
+- local-only port binding on `127.0.0.1:5433`
+- one init SQL file for pgvector
+- no enterprise orchestration layer
+
+If an old `hermes-memory-postgres` container or Docker volume already exists, this is not a strict clean database initialization. Remove the old stack and volume before repeating a strict fresh-install simulation.
+
+Command:
+
+```bash
+mkdir -p ~/docker-stacks/hermes-memory-postgres/{config,init,scripts,backup,baselines,migrations}
+
+cd ~/docker-stacks/hermes-memory-postgres
+
+cat > .env <<'ENV'
+POSTGRES_DB=hermes_memory
+POSTGRES_USER=hermes
+POSTGRES_PASSWORD=hermes-rw
+ENV
+
+chmod 600 .env
+
+cat > compose.yaml <<'YAML'
+services:
+  postgres:
+    image: pgvector/pgvector:0.8.2-pg17
+    container_name: hermes-memory-postgres
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - hermes-memory-postgres-data:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hermes -d hermes_memory"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  hermes-memory-postgres-data:
+YAML
+
+cat > init/001-init.sql <<'SQL'
+CREATE EXTENSION IF NOT EXISTS vector;
+SQL
+
+# Important:
+# The Postgres container must be able to traverse the stack directory
+# and read ./init plus init SQL files through the bind mount.
+# Keep .env private, but make init readable.
+chmod 755 ~/docker-stacks
+chmod 755 ~/docker-stacks/hermes-memory-postgres
+chmod 755 init
+chmod 644 init/001-init.sql
+chmod 600 .env
+
+echo "== permissions =="
+ls -ld ~/docker-stacks ~/docker-stacks/hermes-memory-postgres init
+ls -l .env init/001-init.sql
+
+docker compose up -d
+
+echo "== wait for health =="
+for i in $(seq 1 40); do
+  state="$(docker inspect -f '{{.State.Status}}' hermes-memory-postgres 2>/dev/null || true)"
+  status="$(docker inspect -f '{{.State.Health.Status}}' hermes-memory-postgres 2>/dev/null || true)"
+  echo "state=$state health=$status"
+  [ "$status" = "healthy" ] && break
+  sleep 2
+done
+
+echo "== status =="
+docker ps --filter name=hermes-memory-postgres
+
+echo "== logs tail =="
+docker logs --tail=80 hermes-memory-postgres
+
+echo "== postgres check =="
+docker exec hermes-memory-postgres psql -U hermes -d hermes_memory -c "SELECT version();"
+docker exec hermes-memory-postgres psql -U hermes -d hermes_memory -c "SELECT extname, extversion FROM pg_extension WHERE extname='vector';"
+```
 
 Expected result:
 
-- Docker installed
-- Docker service active
-- current user can run Docker
-- hello-world PASS
+- stack directory exists at `~/docker-stacks/hermes-memory-postgres/`
+- `.env` is private with mode `600`
+- `init/` is traversable/readable by the container
+- container `hermes-memory-postgres` becomes healthy
+- PostgreSQL reports version 17.x
+- pgvector extension reports version 0.8.2
+- port binding is local-only: `127.0.0.1:5433 -> 5432`
 
-### 3. Create PostgreSQL / pgvector stack
+In this compose form, `POSTGRES_PORT` is not required in the Docker stack `.env` because `compose.yaml` hardcodes the local-only host port mapping as `127.0.0.1:5433:5432`.
 
-Required stack path:
+### 3. Bootstrap Python core profile
 
-- ~/docker-stacks/hermes-memory-postgres/
-
-Required .env values:
-
-- POSTGRES_DB=hermes_memory
-- POSTGRES_USER=hermes
-- POSTGRES_PASSWORD=hermes-rw
-- POSTGRES_PORT=5433
-
-Required image:
-
-- pgvector/pgvector:0.8.2-pg17
-
-Required published port:
-
-- 127.0.0.1:5433 -> container 5432
-
-Required init SQL:
-
-- CREATE EXTENSION IF NOT EXISTS vector;
-
-Required permissions:
-
-- chmod 755 ~/docker-stacks
-- chmod 755 ~/docker-stacks/hermes-memory-postgres
-- chmod 755 init
-- chmod 644 init/001-init.sql
-- chmod 600 .env
-
-Expected result:
-
-- container hermes-memory-postgres is healthy
-- PostgreSQL 17.x
-- pgvector extension 0.8.2
-
-### 4. Bootstrap Python core profile
-
-After git clone, run the core bootstrap before using importer, recall, migration, or smoke tools.
+After git clone and PostgreSQL stack initialization, run the core bootstrap before using importer, recall, migration, or smoke tools.
 
 Command:
 
@@ -154,7 +202,7 @@ The default core profile does not install:
 
 This is expected.
 
-### 5. Configure tools/importer/.env
+### 4. Configure tools/importer/.env
 
 Create runtime env file:
 
@@ -182,7 +230,7 @@ Expected DB identity:
 - current_user = hermes
 - current_database = hermes_memory
 
-### 6. Backend check and migration
+### 5. Backend check and migration
 
 Command summary:
 
@@ -194,7 +242,7 @@ Expected result:
 - backend check PASS
 - migration PASS
 
-### 7. Import Markdown memory
+### 6. Import Markdown memory
 
 Command:
 
@@ -205,7 +253,7 @@ Expected result:
 - PASS: Markdown incremental import completed
 - forge-inbox README skipped by forge policy
 
-### 8. Core FTS recall smoke
+### 7. Core FTS recall smoke
 
 Command:
 
@@ -217,7 +265,7 @@ Expected result:
 - fusion = fts
 - model = null
 
-### 9. Core smoke
+### 8. Core smoke
 
 Command:
 
@@ -261,15 +309,17 @@ Fix:
 - chmod 644 init/001-init.sql
 - chmod 600 .env
 
-### TB-M204-DOC002: backend stack .env requires POSTGRES_PORT
+### TB-M204-DOC002: backend stack .env POSTGRES_PORT mismatch
 
 Symptom:
 
-- POSTGRES_PORT missing from backend .env
+- earlier draft documentation implied `POSTGRES_PORT=5433` was required in the Docker stack `.env`
 
-Fix:
+Current status:
 
-- add POSTGRES_PORT=5433
+- Clarified in M204.3.
+- In the current simple compose form, `POSTGRES_PORT` is not required because `compose.yaml` hardcodes `127.0.0.1:5433:5432`.
+- If a future compose template changes to `${POSTGRES_PORT}:5432`, then `POSTGRES_PORT=5433` must be added back to the Docker stack `.env`.
 
 ### TB-M204-DOC003: bootstrap must be explicit
 
@@ -290,6 +340,17 @@ Status:
 - Documented in M204.3.
 - `git tag --list --sort=-creatordate | sed -n '1,10p'` is allowed as informational context only.
 - Current-main fresh install validation should rely on `git status`, recent log, `cat VERSION`, and public docs linkage.
+
+### TB-M204-DOC005: existing PostgreSQL volume can hide clean-init problems
+
+Symptom:
+
+- `docker compose up -d` can reuse an existing named volume, making the database appear initialized even when init SQL or permissions are wrong for a true fresh install
+
+Status:
+
+- Documented in M204.3.
+- Strict fresh-install simulation requires removing the old stack and Docker volume before running the PostgreSQL initialization flow.
 
 ### TB-M204-FI002: hermes-memory-check still expects removed eval_all.py
 
