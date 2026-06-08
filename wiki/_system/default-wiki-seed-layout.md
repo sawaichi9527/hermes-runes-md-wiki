@@ -103,3 +103,19 @@ Agents must not directly create, rename, or delete folders without the governed 
 This policy does not grant direct mutation authority.
 
 Workspace creation, rename, promotion, archive, and migration remain governed operations through Runes Shield / forge workflow.
+
+## Verification milestone files
+
+Default workspace seeds must not include milestone verification files such as:
+
+```text
+wiki/<workspace slug>/verification-m*.md
+```
+
+Those files are development / release history and should live under:
+
+```text
+dev/wiki-history/<workspace slug>/verification/
+```
+
+The runtime workspace should stay focused on curated, durable workspace memory and proposal intake.

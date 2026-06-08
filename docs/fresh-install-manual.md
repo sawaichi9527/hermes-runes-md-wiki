@@ -937,3 +937,15 @@ Expected result:
 ```
 
 This smoke complements the manual Hermes-agent onboarding trial. It confirms that a fresh clone contains the files and prompt needed for a read-only onboarding run.
+
+## Workspace seed cleanup note
+
+A fresh workspace seed should use the generic form:
+
+```text
+wiki/<workspace slug>/
+```
+
+The `freelancer` workspace is only the demonstration PC workspace slug.
+
+Default workspace Markdown files should not include milestone verification files such as `verification-m*.md`. Historical milestone notes belong under `dev/wiki-history/<workspace slug>/verification/`, not under the runtime workspace seed.

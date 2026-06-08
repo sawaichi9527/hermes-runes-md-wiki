@@ -23,3 +23,19 @@ This workspace stores user-approved, durable Markdown memory for the current hos
 - `services.md` — reviewed local service notes.
 - `decisions.md` — reviewed decisions.
 - `forge-inbox/` — governed draft proposal inbox.
+
+## Default workspace seed boundary
+
+This directory is the current local workspace instance.
+
+For documentation and fresh-install defaults, treat it as:
+
+```text
+wiki/<workspace slug>/
+```
+
+`freelancer` is only the workspace slug used by this demonstration PC.
+
+Default workspace memory should include curated workspace files such as preferences, operating style, local environment, services, decisions, research sources, and long-term objectives.
+
+Milestone files such as `verification-m*.md` are development / release evidence and should not be part of the default runtime workspace Markdown seed. Keep them under `dev/wiki-history/<workspace slug>/verification/` instead.
