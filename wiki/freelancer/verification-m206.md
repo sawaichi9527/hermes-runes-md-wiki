@@ -1,6 +1,6 @@
 # M206 Promote Open Beta Target to v0.7.0
 
-Status: IN PROGRESS / M206.2 final release gate
+Status: PASS / v0.7.0 tagged / GitHub Release published / latest
 Version line: 0.7.0
 Date: 2026-06-08
 
@@ -58,13 +58,31 @@ Expected final gate:
 
 ## M206.3 Tag / release
 
-Pending.
+Status: PASS / tagged / pushed / GitHub Release published / latest
 
-Expected:
+Confirmed:
 
-- annotated tag `v0.7.0`
-- GitHub Release published
-- v0.7.0 marked as current Open Beta baseline
+- annotated tag `v0.7.0` created
+- tag pushed to `origin`
+- tag target: `08d9f06 Promote v0.7.0 final version line`
+- GitHub Release published as latest
+- release URL: `https://github.com/sawaichi9527/hermes-runes-md-wiki/releases/tag/v0.7.0`
+
+Verification:
+
+- pre-tag working tree clean
+- `VERSION`: `0.7.0`
+- backend check PASS
+- migration PASS
+- import PASS
+- core smoke PASS
+- embedding profile skip accepted for core profile
+
+## Final lock
+
+M206 is locked as:
+
+PASS / v0.7.0 tagged / GitHub Release published / latest / working tree clean expected after lock commit
 
 
 ## M206.2 Prepared changes
