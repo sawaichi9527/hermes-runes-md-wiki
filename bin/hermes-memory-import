@@ -2,7 +2,8 @@
 set -euo pipefail
 
 PYTHON="${PYTHON:-python3}"
-ROOT="${HERMES_MEMORY_ROOT:-$HOME/workspace/hermes-memory}"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+ROOT="${HERMES_MEMORY_ROOT:-$(cd "$SCRIPT_DIR/.." && pwd)}"
 IMPORTER_DIR="$ROOT/tools/importer"
 
 cd "$IMPORTER_DIR"

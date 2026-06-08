@@ -6,6 +6,15 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 ROOT="${HERMES_MEMORY_ROOT:-$(cd "$SCRIPT_DIR/.." && pwd)}"
 IMPORTER_DIR="$ROOT/tools/importer"
 
+# Load local runtime defaults when present so fresh-install smoke follows
+# tools/importer/.env instead of falling back to sample-project fixtures.
+if [ -f "$IMPORTER_DIR/.env" ]; then
+  set -a
+  # shellcheck disable=SC1091
+  . "$IMPORTER_DIR/.env"
+  set +a
+fi
+
 cd "$IMPORTER_DIR"
 
 if [ -d ".venv" ]; then

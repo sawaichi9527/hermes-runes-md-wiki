@@ -14,16 +14,11 @@ def workspace_config() -> tuple[str, str, str, str]:
         os.environ.get("HERMES_SMOKE_PROJECT")
         or os.environ.get("HERMES_PROJECT")
         or os.environ.get("HERMES_WORKSPACE_SLUG")
-        or "sample-project"
+        or "freelancer"
     )
     path = os.environ.get("HERMES_SMOKE_PATH") or f"wiki/{project}"
-
-    if project == "sample-project":
-        query = os.environ.get("HERMES_SMOKE_QUERY") or "sample project"
-        expected_prefix = os.environ.get("HERMES_SMOKE_EXPECTED_PREFIX") or "wiki/sample-project/"
-    else:
-        query = os.environ.get("HERMES_SMOKE_QUERY") or "Trial-run Workspace Baseline"
-        expected_prefix = os.environ.get("HERMES_SMOKE_EXPECTED_PREFIX") or f"wiki/{project}/"
+    query = os.environ.get("HERMES_SMOKE_QUERY") or "forge inbox boundary"
+    expected_prefix = os.environ.get("HERMES_SMOKE_EXPECTED_PREFIX") or f"wiki/{project}/"
 
     return project, path, query, expected_prefix
 
