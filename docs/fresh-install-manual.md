@@ -45,15 +45,25 @@ POSTGRES_PASSWORD=hermes-rw
 
 Adding a user to the `docker` group allows that user to control the local Docker daemon. Use this only for trusted local user accounts.
 
-## Optional full removal / strict clean reinstall reset
+## Optional removal / strict clean reinstall reset
 
-Use this section only for strict fresh-install simulation or intentional local reset. It deletes local workspace files and PostgreSQL data.
+Use this section only for strict fresh-install simulation or intentional local reset.
+
+PostgreSQL data removal and repository checkout removal are intentionally split. Do not combine them unless you really want a full clean reinstall.
 
 ### Inspect existing state first
 
 ```bash
 echo "== repo workspace =="
 ls -ld ~/workspace/hermes-runes-md-wiki 2>/dev/null || true
+
+echo "== repo-local virtual environments =="
+ls -ld ~/workspace/hermes-runes-md-wiki/.venv 2>/dev/null || true
+ls -ld ~/workspace/hermes-runes-md-wiki/tools/importer/.venv 2>/dev/null || true
+
+echo "== sibling virtual environments =="
+ls -ld ~/workspace/.venv 2>/dev/null || true
+ls -ld ~/workspace/hermes-runes-md-wiki-venv 2>/dev/null || true
 
 echo "== postgres stack =="
 ls -ld ~/docker-stacks/hermes-memory-postgres 2>/dev/null || true
@@ -68,22 +78,24 @@ echo "== local hermes symlinks =="
 ls -l ~/.local/bin/hermes-* 2>/dev/null || true
 ```
 
-### Destructive reset
+### Remove PostgreSQL stack and data only
+
+This removes the local PostgreSQL container, compose stack directory, and matching PostgreSQL Docker volumes.
+
+It does not remove the `hermes-runes-md-wiki` repository checkout.
 
 ```bash
-echo "WARNING: this removes local Hermes Runes workspace and PostgreSQL data."
+echo "WARNING: this removes local Hermes PostgreSQL container and data volume."
+echo "It does NOT remove ~/workspace/hermes-runes-md-wiki."
 echo "Press Ctrl+C now if this is not intended."
 sleep 8
 
 echo
-echo "== leave possible repo cwd =="
+echo "== leave possible stack cwd =="
 cd ~
 
 echo
-echo "== inspect before reset =="
-echo "-- repo workspace --"
-ls -ld ~/workspace/hermes-runes-md-wiki 2>/dev/null || true
-
+echo "== inspect postgres before removal =="
 echo "-- postgres stack --"
 ls -ld ~/docker-stacks/hermes-memory-postgres 2>/dev/null || true
 
@@ -92,9 +104,6 @@ docker ps -a --filter name=hermes-memory-postgres 2>/dev/null || true
 
 echo "-- docker volumes --"
 docker volume ls 2>/dev/null | grep hermes-memory-postgres || true
-
-echo "-- local hermes symlinks --"
-ls -l ~/.local/bin/hermes-* 2>/dev/null || true
 
 echo
 echo "== compose down with volume =="
@@ -119,11 +128,112 @@ docker volume ls -q 2>/dev/null | grep 'hermes-memory-postgres' | while read -r 
 done
 
 echo
-echo "== remove local stack and repo =="
+echo "== remove postgres stack directory =="
 rm -rf ~/docker-stacks/hermes-memory-postgres
+
+echo
+echo "== postgres removal verification =="
+test ! -e ~/docker-stacks/hermes-memory-postgres && echo "PASS postgres stack removed" || echo "FAIL postgres stack still exists"
+
+echo "-- container check --"
+docker ps -a --filter name=hermes-memory-postgres 2>/dev/null || true
+
+echo "-- volume check --"
+docker volume ls 2>/dev/null | grep hermes-memory-postgres || echo "PASS no matching postgres volume"
+
+echo "-- repo check, should still exist if it existed before --"
+ls -ld ~/workspace/hermes-runes-md-wiki 2>/dev/null || echo "INFO repo checkout not present"
+
+echo
+echo "== cwd check =="
+pwd
+```
+
+Expected PostgreSQL removal result:
+
+- PostgreSQL stack path removed
+- no `hermes-memory-postgres` container remains
+- no matching `hermes-memory-postgres` Docker volume remains
+- repository checkout is not removed by this step
+- final working directory is the user's home directory
+
+### Remove repository checkout and local venv only
+
+This removes the local repository checkout and any virtual environment stored inside that checkout.
+
+It does not remove the PostgreSQL container, stack directory, or Docker volume.
+
+The normal fresh install venv is under:
+
+```text
+~/workspace/hermes-runes-md-wiki/tools/importer/.venv
+```
+
+Some local experiments may also create:
+
+```text
+~/workspace/hermes-runes-md-wiki/.venv
+```
+
+Both are covered by removing the repository checkout.
+
+If a separate sibling venv was manually created beside the repository, this runbook also checks common sibling names, but only removes the explicit Hermes-related sibling path shown below.
+
+```bash
+echo "WARNING: this removes ~/workspace/hermes-runes-md-wiki and its local venvs."
+echo "It does NOT remove PostgreSQL container, stack, or Docker volume."
+echo "Press Ctrl+C now if this is not intended."
+sleep 8
+
+echo
+echo "== leave possible repo cwd =="
+cd ~
+
+echo
+echo "== inspect repo and venv before removal =="
+ls -ld ~/workspace/hermes-runes-md-wiki 2>/dev/null || true
+ls -ld ~/workspace/hermes-runes-md-wiki/.venv 2>/dev/null || true
+ls -ld ~/workspace/hermes-runes-md-wiki/tools/importer/.venv 2>/dev/null || true
+ls -ld ~/workspace/hermes-runes-md-wiki-venv 2>/dev/null || true
+
+echo
+echo "== remove explicit Hermes sibling venv if present =="
+rm -rf ~/workspace/hermes-runes-md-wiki-venv
+
+echo
+echo "== remove repo checkout, including repo-local venvs =="
 rm -rf ~/workspace/hermes-runes-md-wiki
 
 echo
+echo "== repo and venv removal verification =="
+test ! -e ~/workspace/hermes-runes-md-wiki && echo "PASS repo removed" || echo "FAIL repo still exists"
+test ! -e ~/workspace/hermes-runes-md-wiki/.venv && echo "PASS repo .venv removed" || echo "FAIL repo .venv still exists"
+test ! -e ~/workspace/hermes-runes-md-wiki/tools/importer/.venv && echo "PASS importer .venv removed" || echo "FAIL importer .venv still exists"
+test ! -e ~/workspace/hermes-runes-md-wiki-venv && echo "PASS sibling hermes-runes-md-wiki-venv removed" || echo "FAIL sibling hermes-runes-md-wiki-venv still exists"
+
+echo "-- postgres check, should still exist if it existed before --"
+ls -ld ~/docker-stacks/hermes-memory-postgres 2>/dev/null || echo "INFO postgres stack not present"
+docker ps -a --filter name=hermes-memory-postgres 2>/dev/null || true
+docker volume ls 2>/dev/null | grep hermes-memory-postgres || true
+
+echo
+echo "== cwd check =="
+pwd
+```
+
+Expected repository removal result:
+
+- repo path removed
+- repo-local venvs are removed together with the repo
+- explicit sibling Hermes venv path is removed if present
+- PostgreSQL stack/data is not removed by this step
+- final working directory is the user's home directory
+
+### Optional cleanup: local symlinks and stale shell environment
+
+Use this after either PostgreSQL removal or repository removal when preparing a strict fresh-install simulation.
+
+```bash
 echo "== remove local hermes symlinks =="
 rm -f ~/.local/bin/hermes-backend-check \
       ~/.local/bin/hermes-memory-check \
@@ -134,6 +244,7 @@ rm -f ~/.local/bin/hermes-backend-check \
       ~/.local/bin/hermes-recall 2>/dev/null || true
 
 echo
+
 echo "== clear stale shell env =="
 unset HERMES_MEMORY_DATABASE_URL
 unset HERMES_MEMORY_ROOT HERMES_WORKSPACE_SLUG HERMES_PROJECT
@@ -143,32 +254,22 @@ unset PGHOST PGPORT PGDATABASE PGUSER PGPASSWORD
 unset DATABASE_URL
 
 echo
-echo "== reset verification =="
-test ! -e ~/workspace/hermes-runes-md-wiki && echo "PASS repo removed" || echo "FAIL repo still exists"
-test ! -e ~/docker-stacks/hermes-memory-postgres && echo "PASS postgres stack removed" || echo "FAIL postgres stack still exists"
 
-echo "-- container check --"
-docker ps -a --filter name=hermes-memory-postgres 2>/dev/null || true
-
-echo "-- volume check --"
-docker volume ls 2>/dev/null | grep hermes-memory-postgres || echo "PASS no matching postgres volume"
-
-echo "-- symlink check --"
+echo "== cleanup verification =="
 ls -l ~/.local/bin/hermes-* 2>/dev/null || echo "PASS no local hermes symlinks"
-
-echo
-echo "== cwd check =="
 pwd
 ```
 
-Expected reset result:
+Expected cleanup result:
 
-- repo path removed
-- PostgreSQL stack path removed
-- no `hermes-memory-postgres` container remains
-- no matching `hermes-memory-postgres` Docker volume remains
 - no local Hermes symlinks remain
-- final working directory is the user's home directory
+- stale shell DB overrides are cleared for the current shell
+
+For a full strict clean reinstall, run these sections in order:
+
+1. Remove PostgreSQL stack and data only
+2. Remove repository checkout and local venv only
+3. Optional cleanup: local symlinks and stale shell environment
 
 ## 1. Preflight packages and OS check
 
@@ -705,7 +806,7 @@ Status:
 Status:
 
 - Documented and dry-run verified.
-- Reset now runs `cd ~` before removing `~/workspace/hermes-runes-md-wiki`.
+- Repository removal now runs `cd ~` before removing `~/workspace/hermes-runes-md-wiki`.
 - Final reset verification includes `pwd` and expects the user's home directory.
 
 ### TB-M204-DOC011: reset script should remove leftover matching Docker volumes
@@ -713,7 +814,22 @@ Status:
 Status:
 
 - Documented and dry-run verified.
-- Reset now runs `docker compose down -v` when compose metadata exists, then removes any leftover Docker volume matching `hermes-memory-postgres`.
+- PostgreSQL removal runs `docker compose down -v` when compose metadata exists, then removes any leftover Docker volume matching `hermes-memory-postgres`.
+
+### TB-M204-DOC012: PostgreSQL removal and repository removal must be separate
+
+Status:
+
+- Documented.
+- PostgreSQL stack/data removal and `hermes-runes-md-wiki` repository checkout removal are separate runbook sections to avoid confusing fresh-install validation state.
+
+### TB-M204-DOC013: repository removal must account for repo-local and sibling venvs
+
+Status:
+
+- Documented.
+- Repository removal explicitly inspects repo-local venv paths and removes the repo checkout that contains the default importer venv.
+- A common explicit sibling venv path, `~/workspace/hermes-runes-md-wiki-venv`, is also inspected and removed if present.
 
 ### TB-M204-AG001: Hermes-agent onboarding must define required entry files and no-direct-write boundary
 
