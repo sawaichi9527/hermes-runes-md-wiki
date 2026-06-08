@@ -75,15 +75,56 @@ echo "WARNING: this removes local Hermes Runes workspace and PostgreSQL data."
 echo "Press Ctrl+C now if this is not intended."
 sleep 8
 
-if [ -d ~/docker-stacks/hermes-memory-postgres ]; then
+echo
+echo "== leave possible repo cwd =="
+cd ~
+
+echo
+echo "== inspect before reset =="
+echo "-- repo workspace --"
+ls -ld ~/workspace/hermes-runes-md-wiki 2>/dev/null || true
+
+echo "-- postgres stack --"
+ls -ld ~/docker-stacks/hermes-memory-postgres 2>/dev/null || true
+
+echo "-- docker container --"
+docker ps -a --filter name=hermes-memory-postgres 2>/dev/null || true
+
+echo "-- docker volumes --"
+docker volume ls 2>/dev/null | grep hermes-memory-postgres || true
+
+echo "-- local hermes symlinks --"
+ls -l ~/.local/bin/hermes-* 2>/dev/null || true
+
+echo
+echo "== compose down with volume =="
+if [ -f ~/docker-stacks/hermes-memory-postgres/compose.yaml ]; then
   cd ~/docker-stacks/hermes-memory-postgres
   docker compose down -v || true
+else
+  echo "SKIP: compose.yaml not found"
 fi
 
+cd ~
+
+echo
+echo "== remove leftover container =="
 docker rm -f hermes-memory-postgres 2>/dev/null || true
+
+echo
+echo "== remove leftover matching docker volumes =="
+docker volume ls -q 2>/dev/null | grep 'hermes-memory-postgres' | while read -r vol; do
+  echo "removing volume: $vol"
+  docker volume rm "$vol" || true
+done
+
+echo
+echo "== remove local stack and repo =="
 rm -rf ~/docker-stacks/hermes-memory-postgres
 rm -rf ~/workspace/hermes-runes-md-wiki
 
+echo
+echo "== remove local hermes symlinks =="
 rm -f ~/.local/bin/hermes-backend-check \
       ~/.local/bin/hermes-memory-check \
       ~/.local/bin/hermes-memory-import \
@@ -92,6 +133,8 @@ rm -f ~/.local/bin/hermes-backend-check \
       ~/.local/bin/hermes-memory-sync \
       ~/.local/bin/hermes-recall 2>/dev/null || true
 
+echo
+echo "== clear stale shell env =="
 unset HERMES_MEMORY_DATABASE_URL
 unset HERMES_MEMORY_ROOT HERMES_WORKSPACE_SLUG HERMES_PROJECT
 unset HERMES_RW_USER HERMES_RW_PASSWORD
@@ -99,13 +142,33 @@ unset POSTGRES_USER POSTGRES_PASSWORD POSTGRES_DB POSTGRES_PORT POSTGRES_HOST
 unset PGHOST PGPORT PGDATABASE PGUSER PGPASSWORD
 unset DATABASE_URL
 
+echo
 echo "== reset verification =="
-test ! -e ~/workspace/hermes-runes-md-wiki && echo "PASS repo removed"
-test ! -e ~/docker-stacks/hermes-memory-postgres && echo "PASS postgres stack removed"
+test ! -e ~/workspace/hermes-runes-md-wiki && echo "PASS repo removed" || echo "FAIL repo still exists"
+test ! -e ~/docker-stacks/hermes-memory-postgres && echo "PASS postgres stack removed" || echo "FAIL postgres stack still exists"
+
+echo "-- container check --"
 docker ps -a --filter name=hermes-memory-postgres 2>/dev/null || true
+
+echo "-- volume check --"
 docker volume ls 2>/dev/null | grep hermes-memory-postgres || echo "PASS no matching postgres volume"
+
+echo "-- symlink check --"
 ls -l ~/.local/bin/hermes-* 2>/dev/null || echo "PASS no local hermes symlinks"
+
+echo
+echo "== cwd check =="
+pwd
 ```
+
+Expected reset result:
+
+- repo path removed
+- PostgreSQL stack path removed
+- no `hermes-memory-postgres` container remains
+- no matching `hermes-memory-postgres` Docker volume remains
+- no local Hermes symlinks remain
+- final working directory is the user's home directory
 
 ## 1. Preflight packages and OS check
 
@@ -636,6 +699,21 @@ Status:
 
 - Documented.
 - Fresh install uses `freelancer` as the verified dogfood/default workspace. Other hosts should use governed workspace creation rather than silently treating a missing workspace as trusted memory.
+
+### TB-M204-DOC010: reset script must leave possible repo working directory before deletion
+
+Status:
+
+- Documented and dry-run verified.
+- Reset now runs `cd ~` before removing `~/workspace/hermes-runes-md-wiki`.
+- Final reset verification includes `pwd` and expects the user's home directory.
+
+### TB-M204-DOC011: reset script should remove leftover matching Docker volumes
+
+Status:
+
+- Documented and dry-run verified.
+- Reset now runs `docker compose down -v` when compose metadata exists, then removes any leftover Docker volume matching `hermes-memory-postgres`.
 
 ### TB-M204-AG001: Hermes-agent onboarding must define required entry files and no-direct-write boundary
 
