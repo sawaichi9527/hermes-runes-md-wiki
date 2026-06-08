@@ -1,7 +1,7 @@
 # Fresh Install Manual
 
 Status: M204.3 standalone runbook / procedure confirmation
-Target: v0.7.0-dev
+Target: v0.7.0
 Open Beta target: v0.7.0
 Date: 2026-06-08
 
@@ -393,7 +393,7 @@ git tag --list --sort=-creatordate | sed -n '1,10p'
 
 echo
 echo "== public docs check =="
-grep -n "fresh-install-manual.md\|Released baseline\|Current development\|v0.7.0-dev\|v0.5.0\|0.5.0" \
+grep -n "fresh-install-manual.md\|Released baseline\|Current released\|v0.7.0\|v0.5.0\|0.5.0" \
   README.md docs/open-beta-starter.md docs/v0.7.0-tester-checklist.md \
   | sed -n '1,180p'
 ```

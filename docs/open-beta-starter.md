@@ -4,7 +4,7 @@ Status: STARTER / PUBLIC EVALUATION PATH / CLEAN RUNTIME SEED
 Date: 2026-06-08
 Current Open Beta target: `v0.7.0`
 Previous released baseline: `v0.5.0`
-Current development target: `v0.7.0-dev`
+Current released target: `v0.7.0`
 
 ## Purpose
 
@@ -160,7 +160,7 @@ For a different tester host, replace `freelancer` with that host's lowercase hos
 
 ## Fresh Clone Bootstrap
 
-For current `main` / `v0.7.0-dev` fresh install validation, follow the full manual path:
+For current `main` / `v0.7.0` fresh install validation, follow the full manual path:
 
 ```text
 docs/fresh-install-manual.md
@@ -207,5 +207,5 @@ Do not import dev/ as runtime memory by default.
 
 ```text
 Open Beta Starter Guide
-STARTER / v0.7.0 Open Beta target / v0.7.0-dev fresh install manual linked for current main
+STARTER / v0.7.0 released Open Beta baseline / fresh install manual linked
 ```

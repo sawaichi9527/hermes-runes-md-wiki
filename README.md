@@ -14,7 +14,7 @@ Hermes Runes was originally developed for Hermes Agent, but it is intentionally 
 
 Fresh Open Beta testers should start here:
 
-Current development-line fresh install path: `v0.7.0-dev`
+Current released fresh install path: `v0.7.0`
 
 ```text
 docs/fresh-install-manual.md
