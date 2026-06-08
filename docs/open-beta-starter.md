@@ -2,7 +2,8 @@
 
 Status: STARTER / PUBLIC EVALUATION PATH / CLEAN RUNTIME SEED
 Date: 2026-06-08
-Recommended baseline: `v0.5.0`
+Released baseline: `v0.5.0`
+Current development target: `v0.7.0-dev`
 
 ## Purpose
 
@@ -10,15 +11,44 @@ Provide a clean public Open Beta entry path for fresh testers.
 
 This guide uses the runtime wiki seed under `wiki/` and keeps developer history under `dev/`.
 
+For a fresh install from the current `main` branch, use the manual install path first:
+
+```text
+docs/fresh-install-manual.md
+```
+
+Use this starter guide and `docs/v0.5.0-tester-checklist.md` when validating the released `v0.5.0` baseline.
+
 ## Clone Path
 
-Recommended checkout:
+Recommended checkout for current development-line testing:
 
 ```bash
 mkdir -p ~/workspace
 cd ~/workspace
 git clone https://github.com/sawaichi9527/hermes-runes-md-wiki.git
 cd hermes-runes-md-wiki
+cat VERSION
+```
+
+Expected current development version:
+
+```text
+0.7.0-dev
+```
+
+Recommended checkout for the released Open Beta baseline:
+
+```bash
+git fetch --tags
+git checkout v0.5.0
+cat VERSION
+```
+
+Expected released baseline version:
+
+```text
+0.5.0
 ```
 
 ## Runtime Wiki Layout
@@ -96,7 +126,13 @@ Observation, support evidence, and Ragnarok-style diagnostic tooling remain user
 cat VERSION
 ```
 
-Expected Open Beta version:
+Expected current `main` development version:
+
+```text
+0.7.0-dev
+```
+
+Expected released Open Beta baseline after `git checkout v0.5.0`:
 
 ```text
 0.5.0
@@ -123,6 +159,12 @@ For a different tester host, replace `freelancer` with that host's lowercase hos
 
 ## Fresh Clone Bootstrap
 
+For current `main` / `v0.7.0-dev` fresh install validation, follow the full manual path:
+
+```text
+docs/fresh-install-manual.md
+```
+
 Default fresh clone bootstrap is lightweight:
 
 ```bash
@@ -143,11 +185,12 @@ bash ./bin/hermes-memory-bootstrap --with-embedding
 README.md
 QUICKSTART.md
 AGENTS.md
+docs/fresh-install-manual.md
+docs/v0.5.0-tester-checklist.md
+docs/workspace-slug-policy.md
 wiki/README.md
 wiki/hermes_runes_index.md
 wiki/_system/README.md
-docs/workspace-slug-policy.md
-docs/v0.5.0-tester-checklist.md
 ```
 
 ## Safety Boundary
@@ -163,5 +206,5 @@ Do not import dev/ as runtime memory by default.
 
 ```text
 Open Beta Starter Guide
-STARTER / v0.5.0 public evaluation path uses clean runtime wiki seed, restored hybrid recall, and cleaned runtime surface
+STARTER / v0.5.0 released baseline preserved / v0.7.0-dev fresh install manual linked for current main
 ```
