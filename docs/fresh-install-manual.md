@@ -1,6 +1,6 @@
 # Fresh Install Manual
 
-Status: M204 draft / fresh user manual path
+Status: M204.3 draft / fresh install procedure confirmation
 Target: v0.7.0-dev
 Baseline release: v0.5.0
 Date: 2026-06-08
@@ -27,23 +27,46 @@ Do not create or move a v0.7.0 tag until a future release gate passes.
 
 ## Manual install flow
 
-### 1. Clone repository
+### 1. Clone repository and confirm current main state
 
-Command summary:
+This step confirms the fresh clone is on the current development line and that the public documentation points testers to the right install path.
 
-- mkdir -p ~/workspace
-- cd ~/workspace
-- git clone https://github.com/sawaichi9527/hermes-runes-md-wiki.git
-- cd hermes-runes-md-wiki
-- git status
-- cat VERSION
+Do not make this check depend on a hard-coded tag grep. Tags may change over time, and fresh install validation should remain branch-oriented.
+
+Command:
+
+```bash
+mkdir -p ~/workspace
+cd ~/workspace
+
+git clone https://github.com/sawaichi9527/hermes-runes-md-wiki.git
+cd hermes-runes-md-wiki
+
+echo "== cloned main state =="
+git status
+git log --oneline -8
+cat VERSION
+git tag --list --sort=-creatordate | sed -n '1,10p'
+
+echo
+echo "== public docs check =="
+grep -n "fresh-install-manual.md\|Released baseline\|Current development\|v0.7.0-dev\|v0.5.0\|0.5.0" \
+  README.md docs/open-beta-starter.md docs/v0.5.0-tester-checklist.md \
+  | sed -n '1,180p'
+```
 
 Expected result:
 
 - repository cloned
 - working tree clean
-- current main is the active development line
-- VERSION is v0.7.0-dev after M204 target reset
+- current `main` is the active development line
+- `cat VERSION` shows `0.7.0-dev`
+- recent git log shows the latest main commits
+- tag list is informational only, not a pass/fail gate
+- public docs point current-main fresh installs to `docs/fresh-install-manual.md`
+- public docs preserve `v0.5.0` as the released Open Beta baseline
+
+If `~/workspace/hermes-runes-md-wiki` already exists, this is not a clean clone. Move or remove the existing directory before repeating a strict fresh-install simulation.
 
 ### 2. Confirm Docker runtime
 
@@ -255,6 +278,18 @@ Fresh clone users must run:
 - bash ./bin/hermes-memory-bootstrap
 
 before importer, recall, migration, or smoke tools.
+
+### TB-M204-DOC004: clone sanity check should be branch-oriented, not tag-grep oriented
+
+Symptom:
+
+- fresh install verification can become misleading if it treats a specific tag grep as a required pass/fail gate
+
+Status:
+
+- Documented in M204.3.
+- `git tag --list --sort=-creatordate | sed -n '1,10p'` is allowed as informational context only.
+- Current-main fresh install validation should rely on `git status`, recent log, `cat VERSION`, and public docs linkage.
 
 ### TB-M204-FI002: hermes-memory-check still expects removed eval_all.py
 
