@@ -1,43 +1,222 @@
 # Fresh Install Manual
 
-Status: M204.3 draft / fresh install procedure confirmation
+Status: M204.3 standalone runbook / procedure confirmation
 Target: v0.7.0-dev
 Baseline release: v0.5.0
 Date: 2026-06-08
 
-## Purpose
+## Scope
 
-This document records the manual fresh install path for Hermes Runes MD Wiki after the v0.5.0 release.
+This is the standalone fresh install runbook for Hermes Runes MD Wiki on the current `main` development line.
 
-Validated clean-user simulation:
+Validated target:
 
-- removed existing workspace
-- removed local venv
-- removed PostgreSQL Docker stack and volume
-- removed stale local hermes symlinks
-- cloned repository again from GitHub
+- Ubuntu 24.04.x LTS Desktop or Server
+- normal trusted local user
+- bash shell
+- Docker CE with Docker Compose plugin
+- PostgreSQL / pgvector via local Docker stack
+- current `main` version: `0.7.0-dev`
 
-## Release target note
+Released Open Beta baseline remains `v0.5.0`. Do not create or move a `v0.7.0` tag until a future release gate passes.
 
-v0.5.0 is the released baseline.
+The default install path is intentionally personal/local:
 
-The next development target is v0.7.0-dev.
+- one local repository checkout
+- one PostgreSQL container
+- one Docker named volume
+- local-only database port binding on `127.0.0.1:5433`
+- core profile first: PostgreSQL / migration / Markdown import / FTS recall / core smoke
+- embedding, hybrid/vector recall, answer generation, and agent onboarding are later optional gates
 
-Do not create or move a v0.7.0 tag until a future release gate passes.
+## Safety boundary
 
-## Manual install flow
+Do not put real secrets, tokens, passwords, private keys, or raw sensitive logs into Markdown wiki memory.
 
-### 1. Clone repository and confirm current main state
+Do not commit `tools/importer/.env`.
 
-This step confirms the fresh clone is on the current development line and that the public documentation points testers to the right install path.
+The demo database credentials below are for local fresh install only:
 
-Do not make this check depend on a hard-coded tag grep. Tags may change over time, and fresh install validation should remain branch-oriented.
+```env
+POSTGRES_DB=hermes_memory
+POSTGRES_USER=hermes
+POSTGRES_PASSWORD=hermes-rw
+```
 
-Command:
+Adding a user to the `docker` group allows that user to control the local Docker daemon. Use this only for trusted local user accounts.
+
+## Optional full removal / strict clean reinstall reset
+
+Use this section only for strict fresh-install simulation or intentional local reset. It deletes local workspace files and PostgreSQL data.
+
+### Inspect existing state first
+
+```bash
+echo "== repo workspace =="
+ls -ld ~/workspace/hermes-runes-md-wiki 2>/dev/null || true
+
+echo "== postgres stack =="
+ls -ld ~/docker-stacks/hermes-memory-postgres 2>/dev/null || true
+
+echo "== docker container =="
+docker ps -a --filter name=hermes-memory-postgres 2>/dev/null || true
+
+echo "== docker volumes =="
+docker volume ls 2>/dev/null | grep hermes-memory-postgres || true
+
+echo "== local hermes symlinks =="
+ls -l ~/.local/bin/hermes-* 2>/dev/null || true
+```
+
+### Destructive reset
+
+```bash
+echo "WARNING: this removes local Hermes Runes workspace and PostgreSQL data."
+echo "Press Ctrl+C now if this is not intended."
+sleep 8
+
+if [ -d ~/docker-stacks/hermes-memory-postgres ]; then
+  cd ~/docker-stacks/hermes-memory-postgres
+  docker compose down -v || true
+fi
+
+docker rm -f hermes-memory-postgres 2>/dev/null || true
+rm -rf ~/docker-stacks/hermes-memory-postgres
+rm -rf ~/workspace/hermes-runes-md-wiki
+
+rm -f ~/.local/bin/hermes-backend-check \
+      ~/.local/bin/hermes-memory-check \
+      ~/.local/bin/hermes-memory-import \
+      ~/.local/bin/hermes-memory-migrate \
+      ~/.local/bin/hermes-memory-smoke \
+      ~/.local/bin/hermes-memory-sync \
+      ~/.local/bin/hermes-recall 2>/dev/null || true
+
+unset HERMES_MEMORY_DATABASE_URL
+unset HERMES_MEMORY_ROOT HERMES_WORKSPACE_SLUG HERMES_PROJECT
+unset HERMES_RW_USER HERMES_RW_PASSWORD
+unset POSTGRES_USER POSTGRES_PASSWORD POSTGRES_DB POSTGRES_PORT POSTGRES_HOST
+unset PGHOST PGPORT PGDATABASE PGUSER PGPASSWORD
+unset DATABASE_URL
+
+echo "== reset verification =="
+test ! -e ~/workspace/hermes-runes-md-wiki && echo "PASS repo removed"
+test ! -e ~/docker-stacks/hermes-memory-postgres && echo "PASS postgres stack removed"
+docker ps -a --filter name=hermes-memory-postgres 2>/dev/null || true
+docker volume ls 2>/dev/null | grep hermes-memory-postgres || echo "PASS no matching postgres volume"
+ls -l ~/.local/bin/hermes-* 2>/dev/null || echo "PASS no local hermes symlinks"
+```
+
+## 1. Preflight packages and OS check
+
+```bash
+echo "== OS =="
+. /etc/os-release
+echo "$PRETTY_NAME"
+
+echo "== required command checks =="
+command -v git || true
+command -v curl || true
+command -v python3 || true
+python3 --version || true
+python3 -m venv --help >/dev/null && echo "PASS python3 venv available" || echo "MISSING python3-venv"
+
+sudo apt-get update
+sudo apt-get install -y git curl ca-certificates python3 python3-venv python3-pip
+
+python3 --version
+python3 -m venv --help >/dev/null && echo "PASS python3 venv available"
+```
+
+Expected result:
+
+- Ubuntu 24.04.x host is confirmed
+- `git`, `curl`, `python3`, `python3-venv`, and `python3-pip` are installed
+
+## 2. Install Docker CE and enable normal-user Docker access
+
+Check whether Docker is already available:
+
+```bash
+echo "== docker availability check =="
+docker --version || true
+docker compose version || true
+systemctl is-active docker || true
+id
+docker run --rm hello-world || true
+```
+
+If `docker run --rm hello-world` succeeds without `sudo`, continue to step 3.
+
+If Docker CE is missing, install it from Docker's official apt repository:
+
+```bash
+echo "== install Docker CE prerequisites =="
+sudo apt-get update
+sudo apt-get install -y ca-certificates curl gnupg
+
+echo "== install Docker official apt key =="
+sudo install -m 0755 -d /etc/apt/keyrings
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+echo "== add Docker apt repository =="
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+  $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+echo "== install Docker CE packages =="
+sudo apt-get update
+sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+echo "== enable Docker service =="
+sudo systemctl enable --now docker
+systemctl is-active docker
+docker --version
+docker compose version
+```
+
+Add the current user to the `docker` group:
+
+```bash
+echo "== add current user to docker group =="
+sudo usermod -aG docker "$USER"
+
+echo
+echo "Docker group permission was updated."
+echo "Stop here and refresh group membership before continuing."
+echo "Use one of: log out/in, reboot, or open a new shell with: newgrp docker"
+```
+
+After refreshing group membership, verify:
+
+```bash
+echo "== verify Docker as normal user =="
+id
+docker run --rm hello-world
+docker compose version
+```
+
+Expected result:
+
+- `id` includes `docker`
+- `docker run --rm hello-world` succeeds without `sudo`
+- `docker compose version` works
+
+## 3. Clone repository and confirm current main state
+
+This check is branch-oriented. Tags are listed for context only and are not a fresh-install pass/fail gate.
 
 ```bash
 mkdir -p ~/workspace
 cd ~/workspace
+
+test ! -e ~/workspace/hermes-runes-md-wiki || {
+  echo "ERROR: ~/workspace/hermes-runes-md-wiki already exists."
+  echo "Use git pull for normal update, or run the reset section for strict clean install."
+  exit 1
+}
 
 git clone https://github.com/sawaichi9527/hermes-runes-md-wiki.git
 cd hermes-runes-md-wiki
@@ -59,30 +238,20 @@ Expected result:
 
 - repository cloned
 - working tree clean
-- current `main` is the active development line
 - `cat VERSION` shows `0.7.0-dev`
-- recent git log shows the latest main commits
-- tag list is informational only, not a pass/fail gate
 - public docs point current-main fresh installs to `docs/fresh-install-manual.md`
-- public docs preserve `v0.5.0` as the released Open Beta baseline
+- public docs preserve `v0.5.0` as the released baseline
 
-If `~/workspace/hermes-runes-md-wiki` already exists, this is not a clean clone. Move or remove the existing directory before repeating a strict fresh-install simulation.
+## 4. Initialize PostgreSQL / pgvector Docker stack
 
-### 2. Initialize Docker PostgreSQL / pgvector stack
+Check for local port conflict first:
 
-This step creates the local PostgreSQL / pgvector backend used by Hermes Runes MD Wiki.
+```bash
+echo "== port 5433 check =="
+ss -ltnp | grep ':5433' || echo "PASS no listener on 5433"
+```
 
-The stack remains intentionally simple for personal/local use:
-
-- one PostgreSQL container
-- one Docker named volume
-- local-only port binding on `127.0.0.1:5433`
-- one init SQL file for pgvector
-- no enterprise orchestration layer
-
-If an old `hermes-memory-postgres` container or Docker volume already exists, this is not a strict clean database initialization. Remove the old stack and volume before repeating a strict fresh-install simulation.
-
-Command:
+Create the local PostgreSQL / pgvector stack:
 
 ```bash
 mkdir -p ~/docker-stacks/hermes-memory-postgres/{config,init,scripts,backup,baselines,migrations}
@@ -124,10 +293,6 @@ cat > init/001-init.sql <<'SQL'
 CREATE EXTENSION IF NOT EXISTS vector;
 SQL
 
-# Important:
-# The Postgres container must be able to traverse the stack directory
-# and read ./init plus init SQL files through the bind mount.
-# Keep .env private, but make init readable.
 chmod 755 ~/docker-stacks
 chmod 755 ~/docker-stacks/hermes-memory-postgres
 chmod 755 init
@@ -162,131 +327,239 @@ docker exec hermes-memory-postgres psql -U hermes -d hermes_memory -c "SELECT ex
 
 Expected result:
 
-- stack directory exists at `~/docker-stacks/hermes-memory-postgres/`
-- `.env` is private with mode `600`
-- `init/` is traversable/readable by the container
 - container `hermes-memory-postgres` becomes healthy
 - PostgreSQL reports version 17.x
 - pgvector extension reports version 0.8.2
 - port binding is local-only: `127.0.0.1:5433 -> 5432`
 
-In this compose form, `POSTGRES_PORT` is not required in the Docker stack `.env` because `compose.yaml` hardcodes the local-only host port mapping as `127.0.0.1:5433:5432`.
+In this compose form, `POSTGRES_PORT` is not required in the Docker stack `.env` because `compose.yaml` hardcodes `127.0.0.1:5433:5432`.
 
-### 3. Bootstrap Python core profile
+If an old Docker volume already exists, PostgreSQL may reuse old data and skip init SQL. That is not a strict clean database initialization.
 
-After git clone and PostgreSQL stack initialization, run the core bootstrap before using importer, recall, migration, or smoke tools.
+## 5. Configure `tools/importer/.env`
 
-Command:
+Configure the Hermes importer/runtime environment before bootstrap, migration, import, or smoke tools.
 
-- bash ./bin/hermes-memory-bootstrap
+```bash
+cd ~/workspace/hermes-runes-md-wiki
+
+test -f tools/importer/.env.example
+cp tools/importer/.env.example tools/importer/.env
+chmod 600 tools/importer/.env
+
+cat > tools/importer/.env <<'ENV'
+# Hermes Runes MD Wiki - local fresh install runtime environment
+# Keep this file out of git.
+
+HERMES_MEMORY_ROOT=~/workspace/hermes-runes-md-wiki
+HERMES_MEMORY_DATABASE_URL=postgresql://hermes:hermes-rw@127.0.0.1:5433/hermes_memory
+
+# Dogfood/default workspace. Public testers may replace freelancer with lowercase(hostname)
+# after a governed workspace exists for that host.
+HERMES_DEFAULT_PROJECT=freelancer
+HERMES_DEFAULT_SCHEMA=public
+HERMES_WORKSPACE_SLUG=freelancer
+HERMES_PROJECT=freelancer
+
+# Optional local OpenAI-compatible endpoint placeholders.
+OPENAI_BASE_URL=http://127.0.0.1:1234/v1
+OPENAI_MODEL=your-local-model-name
+OPENAI_API_KEY=not-needed
+
+HERMES_OBSERVATION_LOGGING=1
+ENV
+
+chmod 600 tools/importer/.env
+
+unset HERMES_MEMORY_DATABASE_URL
+unset HERMES_RW_USER HERMES_RW_PASSWORD
+unset POSTGRES_USER POSTGRES_PASSWORD POSTGRES_DB POSTGRES_PORT POSTGRES_HOST
+unset PGHOST PGPORT PGDATABASE PGUSER PGPASSWORD
+unset DATABASE_URL
+
+echo "== importer env check =="
+grep -n "HERMES_MEMORY_ROOT\|HERMES_WORKSPACE_SLUG\|HERMES_PROJECT\|HERMES_MEMORY_DATABASE_URL" tools/importer/.env
+```
 
 Expected result:
 
-- tools/importer/.venv exists
-- core_requirements installed
-- embedding_requirements skipped
+- `tools/importer/.env` exists with mode `600`
+- DB URL points to `postgresql://hermes:hermes-rw@127.0.0.1:5433/hermes_memory`
+- stale shell DB overrides are cleared
 
-The core profile supports:
+## 6. Bootstrap Python core profile
 
-- PostgreSQL connection
-- Markdown import
-- migration
-- FTS recall
-- core smoke checks
+```bash
+cd ~/workspace/hermes-runes-md-wiki
+bash ./bin/hermes-memory-bootstrap
+```
 
-The default core profile does not install:
+Expected result:
 
-- sentence-transformers
-- torch
-- transformers
+- `tools/importer/.venv` exists
+- core requirements installed
+- embedding requirements skipped
 
-This is expected.
+The core profile supports PostgreSQL connection, migration, Markdown import, FTS recall, and core smoke checks.
 
-### 4. Configure tools/importer/.env
+The core profile does not install `sentence-transformers`, `torch`, or `transformers`. This is expected.
 
-Create runtime env file:
+## 7. Backend check
 
-- cp tools/importer/.env.example tools/importer/.env
-- chmod 600 tools/importer/.env
-- vi tools/importer/.env
-
-Required values:
-
-- HERMES_MEMORY_ROOT=/home/eye/workspace/hermes-runes-md-wiki
-- HERMES_WORKSPACE_SLUG=freelancer
-- HERMES_PROJECT=freelancer
-- HERMES_MEMORY_DATABASE_URL=postgresql://hermes:hermes-rw@127.0.0.1:5433/hermes_memory
-
-Before running tools in a reused shell, clear old overrides:
-
-- unset HERMES_MEMORY_DATABASE_URL
-- unset HERMES_RW_USER HERMES_RW_PASSWORD
-- unset POSTGRES_USER POSTGRES_PASSWORD POSTGRES_DB POSTGRES_PORT POSTGRES_HOST
-- unset PGHOST PGPORT PGDATABASE PGUSER PGPASSWORD
-- unset DATABASE_URL
-
-Expected DB identity:
-
-- current_user = hermes
-- current_database = hermes_memory
-
-### 5. Backend check and migration
-
-Command summary:
-
-- ./bin/hermes-backend-check
-- ./bin/hermes-memory-migrate
+```bash
+cd ~/workspace/hermes-runes-md-wiki
+./bin/hermes-backend-check
+```
 
 Expected result:
 
 - backend check PASS
+- application tools connect to user `hermes`
+- database is `hermes_memory`
+- host/port is `127.0.0.1:5433`
+
+## 8. Database migration
+
+Do not run import before migration PASS.
+
+```bash
+cd ~/workspace/hermes-runes-md-wiki
+./bin/hermes-memory-migrate
+```
+
+Expected result:
+
 - migration PASS
+- rerunning migration should be safe and should not recreate fresh data unexpectedly
 
-### 6. Import Markdown memory
+## 9. Import `wiki/`
 
-Command:
-
-- ./bin/hermes-memory-import
-
-Expected result:
-
-- PASS: Markdown incremental import completed
-- forge-inbox README skipped by forge policy
-
-### 7. Core FTS recall smoke
-
-Command:
-
-- ./bin/hermes-recall "forge inbox boundary" --project freelancer --mode fts --limit 5 --json
+```bash
+cd ~/workspace/hermes-runes-md-wiki
+./bin/hermes-memory-import
+```
 
 Expected result:
 
-- status = pass
-- fusion = fts
-- model = null
+- `PASS: Markdown incremental import completed`
+- reruns may show `skipped` or `updated`; that is normal for incremental import
+- forge-inbox placeholder content should remain governed and not become trusted memory by accident
 
-### 8. Core smoke
+## 10. Core FTS recall smoke
 
-Command:
+```bash
+cd ~/workspace/hermes-runes-md-wiki
+./bin/hermes-recall "forge inbox boundary" --project freelancer --mode fts --limit 5 --json
+```
 
-- ./bin/hermes-memory-smoke
+Expected result:
+
+- status is pass
+- fusion is `fts`
+- model is `null`
+- result cites imported wiki content
+
+This is the minimum retrieval gate for core fresh install.
+
+## 11. Core smoke
+
+```bash
+cd ~/workspace/hermes-runes-md-wiki
+./bin/hermes-memory-smoke
+```
 
 Expected result:
 
 - Core FTS Smoke Test PASS
-- Embedding profile not installed: skipping hybrid and answer-generation smoke suites
+- embedding, hybrid/vector, and answer-generation suites may be skipped if embedding profile is not installed
 
-This is a core-profile PASS.
+Core fresh install PASS means:
 
-## Optional embedding profile
+- Docker PostgreSQL / pgvector healthy
+- importer `.env` configured
+- backend check PASS
+- migration PASS
+- wiki import PASS
+- FTS recall PASS
+- core smoke PASS
 
-Only install embedding profile when hybrid/vector recall is needed.
+Core fresh install does not require:
 
-Command:
+- embeddings
+- vector search
+- hybrid search
+- answer generation
+- local LLM endpoint
+- Hermes-agent integration
 
-- bash ./bin/hermes-memory-bootstrap --with-embedding
+## 12. Optional embedding profile
 
-Then run embedding writer and hybrid/vector smoke.
+Only install this when hybrid/vector recall is needed.
+
+```bash
+cd ~/workspace/hermes-runes-md-wiki
+bash ./bin/hermes-memory-bootstrap --with-embedding
+```
+
+Then run embedding writer and hybrid/vector validation according to the current project docs.
+
+## 13. Hermes-agent onboarding
+
+Connect Hermes-agent only after the core fresh install gate is PASS.
+
+Minimum gate before onboarding:
+
+- backend check PASS
+- migration PASS
+- import PASS
+- FTS recall PASS
+- core smoke PASS
+
+Suggested onboarding prompt:
+
+```text
+You are Hermes-agent connecting to Hermes Runes MD Wiki.
+
+Before answering or proposing memory changes, read and follow these files first:
+
+1. AGENTS.md
+2. wiki/hermes_runes_index.md
+3. wiki/_system/README.md
+4. wiki/_system/memory-boundary.md
+5. wiki/_system/forge-policy.md
+6. wiki/_system/runes-shield.md
+
+Treat Markdown wiki files as the human-readable source of truth.
+Treat PostgreSQL as an index and retrieval backend, not the source of truth.
+Do not write directly to trusted wiki memory.
+Use governed proposal / forge-inbox / Runes Shield workflows for memory changes.
+Do not store secrets, credentials, tokens, passwords, private keys, or raw sensitive logs in Markdown memory.
+If the active workspace for this host is missing, ask whether to prepare a governed workspace proposal under wiki/<workspace-slug>/.
+```
+
+## Troubleshooting data to collect
+
+When reporting a fresh-install failure, collect the smallest useful evidence:
+
+```bash
+cd ~/workspace/hermes-runes-md-wiki 2>/dev/null || true
+
+echo "== repo =="
+git status 2>/dev/null || true
+git log --oneline -5 2>/dev/null || true
+cat VERSION 2>/dev/null || true
+
+echo "== docker =="
+docker ps -a --filter name=hermes-memory-postgres 2>/dev/null || true
+docker logs --tail=120 hermes-memory-postgres 2>/dev/null || true
+
+echo "== env file =="
+ls -l tools/importer/.env 2>/dev/null || true
+grep -n "HERMES_MEMORY_ROOT\|HERMES_WORKSPACE_SLUG\|HERMES_PROJECT\|HERMES_MEMORY_DATABASE_URL" tools/importer/.env 2>/dev/null || true
+
+echo "== backend =="
+./bin/hermes-backend-check 2>/dev/null || true
+```
 
 ## Known fresh-install findings
 
@@ -294,106 +567,109 @@ Then run embedding writer and hybrid/vector smoke.
 
 Symptom:
 
-- ls: cannot open directory /docker-entrypoint-initdb.d/: Permission denied
 - container restart loop
+- logs mention unreadable `/docker-entrypoint-initdb.d/`
 
-Cause:
+Status:
 
-- host init directory mounted read-only but not readable/traversable by container user
+- Documented.
+- Keep stack parent traversable and init SQL readable:
+  - `chmod 755 ~/docker-stacks`
+  - `chmod 755 ~/docker-stacks/hermes-memory-postgres`
+  - `chmod 755 init`
+  - `chmod 644 init/001-init.sql`
+  - `chmod 600 .env`
 
-Fix:
+### TB-M204-DOC002: backend stack `.env` POSTGRES_PORT mismatch
 
-- chmod 755 ~/docker-stacks
-- chmod 755 ~/docker-stacks/hermes-memory-postgres
-- chmod 755 init
-- chmod 644 init/001-init.sql
-- chmod 600 .env
+Status:
 
-### TB-M204-DOC002: backend stack .env POSTGRES_PORT mismatch
-
-Symptom:
-
-- earlier draft documentation implied `POSTGRES_PORT=5433` was required in the Docker stack `.env`
-
-Current status:
-
-- Clarified in M204.3.
-- In the current simple compose form, `POSTGRES_PORT` is not required because `compose.yaml` hardcodes `127.0.0.1:5433:5432`.
-- If a future compose template changes to `${POSTGRES_PORT}:5432`, then `POSTGRES_PORT=5433` must be added back to the Docker stack `.env`.
+- Clarified.
+- Current compose hardcodes `127.0.0.1:5433:5432`, so Docker stack `.env` does not need `POSTGRES_PORT`.
+- If a future compose template uses `${POSTGRES_PORT}:5432`, add `POSTGRES_PORT=5433` back.
 
 ### TB-M204-DOC003: bootstrap must be explicit
 
-Fresh clone users must run:
+Status:
 
-- bash ./bin/hermes-memory-bootstrap
-
-before importer, recall, migration, or smoke tools.
+- Documented.
+- Fresh clone users must run `bash ./bin/hermes-memory-bootstrap` before importer, recall, migration, or smoke tools.
 
 ### TB-M204-DOC004: clone sanity check should be branch-oriented, not tag-grep oriented
 
-Symptom:
-
-- fresh install verification can become misleading if it treats a specific tag grep as a required pass/fail gate
-
 Status:
 
-- Documented in M204.3.
-- `git tag --list --sort=-creatordate | sed -n '1,10p'` is allowed as informational context only.
-- Current-main fresh install validation should rely on `git status`, recent log, `cat VERSION`, and public docs linkage.
+- Documented.
+- Tag list is informational only. Current-main fresh install validation relies on `git status`, recent log, `cat VERSION`, and public docs linkage.
 
 ### TB-M204-DOC005: existing PostgreSQL volume can hide clean-init problems
 
-Symptom:
+Status:
 
-- `docker compose up -d` can reuse an existing named volume, making the database appear initialized even when init SQL or permissions are wrong for a true fresh install
+- Documented.
+- Strict fresh-install simulation requires removing the old stack and Docker volume before PostgreSQL initialization.
+
+### TB-M204-DOC006: full removal/reset path required
 
 Status:
 
-- Documented in M204.3.
-- Strict fresh-install simulation requires removing the old stack and Docker volume before running the PostgreSQL initialization flow.
+- Documented.
+- Reset path is destructive and intentionally separated from the normal install path.
+
+### TB-M204-DOC007: Docker CE and normal-user Docker permission required
+
+Status:
+
+- Documented.
+- Fresh users must install Docker CE and verify `docker run --rm hello-world` works without `sudo`.
+
+### TB-M204-DOC008: local port 5433 conflict check required
+
+Status:
+
+- Documented.
+- Check `ss -ltnp | grep ':5433'` before starting the PostgreSQL stack.
+
+### TB-M204-DOC009: freelancer dogfood workspace versus generic hostname workspace
+
+Status:
+
+- Documented.
+- Fresh install uses `freelancer` as the verified dogfood/default workspace. Other hosts should use governed workspace creation rather than silently treating a missing workspace as trusted memory.
+
+### TB-M204-AG001: Hermes-agent onboarding must define required entry files and no-direct-write boundary
+
+Status:
+
+- Documented.
+- Agent onboarding is post-install only and must read the required policy entry files first.
 
 ### TB-M204-FI002: hermes-memory-check still expects removed eval_all.py
-
-Symptom:
-
-- MISSING tools/importer/smoke/eval_all.py
 
 Status:
 
 - Known non-blocker for core fresh install.
-- Should be fixed to check current smoke entrypoints.
+- Future tooling alignment should check current smoke entrypoints.
 
-### TB-M204-FI003: shell env can override tools/importer/.env
+### TB-M204-FI003: shell env can override `tools/importer/.env`
 
-Symptom:
+Status:
 
-- password authentication failed for user hermes_rw
-
-Cause:
-
-- old shell HERMES_MEMORY_DATABASE_URL overrides tools/importer/.env
-
-Fix:
-
-- unset HERMES_MEMORY_DATABASE_URL
-- unset HERMES_RW_USER HERMES_RW_PASSWORD
-- unset POSTGRES_USER POSTGRES_PASSWORD POSTGRES_DB POSTGRES_PORT POSTGRES_HOST
-- unset PGHOST PGPORT PGDATABASE PGUSER PGPASSWORD
-- unset DATABASE_URL
+- Documented.
+- Clear stale DB-related shell variables before backend check, migration, import, and smoke.
 
 ### TB-M204-FI004: retrieval governance smoke is not core-profile aware
 
-Symptom:
+Status:
 
-- blocked_missing_embedding_dependency
-
-Current status:
-
+- Known non-blocker for core fresh install.
 - Core profile is valid without embedding dependencies.
-- hermes-retrieval-governance-smoke should SKIP in core-only profile instead of FAIL.
+- Future tooling alignment should SKIP in core-only profile instead of FAIL.
 
 ## Current M204 result
 
 Fresh install core profile is verified as:
 
-- PASS / Docker / PostgreSQL / bootstrap core / migration / import / FTS recall / core smoke
+```text
+PASS / Docker CE / PostgreSQL pgvector / importer env / bootstrap core / backend check / migration / import / FTS recall / core smoke
+```
