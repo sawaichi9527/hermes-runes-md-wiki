@@ -89,3 +89,10 @@ It is not a production service, hosted platform, enterprise orchestration system
 - `docs/fresh-install-manual.md`
 - `docs/v0.7.0-tester-checklist.md`
 - `docs/v0.7.0-release-readiness.md`
+
+
+## Release verification
+
+The v0.7.0 release line was promoted from `0.7.0-dev` to `0.7.0` after the fresh-install core path was verified without runtime overrides.
+
+Final tag publication must happen only after the M206.2 final gate passes.

@@ -4,6 +4,41 @@ All notable Hermes Runes MD Wiki Open Beta changes are recorded here.
 
 This project uses SemVer-style versioning during Open Beta.
 
+## [0.7.0] - 2026-06-08
+
+### Added
+
+- v0.7.0 fresh-install release-readiness documentation.
+- v0.7.0 public tester checklist.
+- v0.7.0 GitHub release note draft.
+- Standalone fresh-install manual path for current Open Beta onboarding.
+
+### Changed
+
+- Open Beta target advanced from the historical v0.5.0 baseline to the v0.7.0 fresh-install hardened line.
+- Fresh-install public tester path now centers on `docs/fresh-install-manual.md` and `docs/v0.7.0-tester-checklist.md`.
+- PostgreSQL stack/data removal and repository/venv removal are documented as separate reset paths.
+- Core smoke defaults align with the fresh-install `freelancer` workspace instead of the historical `sample-project` fixture.
+- `bin/hermes-memory-import` resolves the repository root from the wrapper location instead of the old `~/workspace/hermes-memory` path.
+
+### Fixed
+
+- Fresh-install backend check no longer fails when backend stack `.env` omits `POSTGRES_PORT`; it defaults to local port `5433`.
+- Fresh-install import and core smoke no longer require manual `HERMES_MEMORY_ROOT` or `HERMES_SMOKE_*` runtime overrides.
+- Public Open Beta starter and tester notification now point to the v0.7.0 target while preserving v0.5.0 as historical baseline.
+
+### Verification
+
+- M204 Fresh Install Runbook Dry-run Review: core path verified.
+- M205 Fresh Install Tooling Alignment: PASS / pushed / clean-run verified.
+- M206.1 v0.7.0 release-prep docs: PASS / pushed.
+- M206.2 final release gate: pending at section creation.
+
+### Release status
+
+- This is the final-ready v0.7.0 release line.
+- Final `v0.7.0` tag may be created only after the M206.2 final gate passes.
+
 ## [0.5.0] - 2026-06-08
 
 ### Added

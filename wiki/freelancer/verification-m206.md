@@ -1,7 +1,7 @@
 # M206 Promote Open Beta Target to v0.7.0
 
-Status: IN PROGRESS / M206.1 release-prep docs  
-Version line: 0.7.0-dev  
+Status: IN PROGRESS / M206.2 final release gate
+Version line: 0.7.0
 Date: 2026-06-08
 
 ## Scope
@@ -26,7 +26,7 @@ Confirmed before M206.1:
 
 ## M206.1 Release-prep docs
 
-Status: IN PROGRESS
+Status: PASS / pushed
 
 Planned additions:
 
@@ -44,7 +44,7 @@ Planned updates:
 
 ## M206.2 Final release gate
 
-Pending.
+Status: IN PROGRESS / final-ready version line prepared.
 
 Expected final gate:
 
@@ -65,3 +65,31 @@ Expected:
 - annotated tag `v0.7.0`
 - GitHub Release published
 - v0.7.0 marked as current Open Beta baseline
+
+
+## M206.2 Prepared changes
+
+Status: PRE-GATE / local validation required
+
+Prepared files:
+
+- `VERSION`
+- `CHANGELOG.md`
+- `docs/v0.7.0-release-readiness.md`
+- `docs/v0.7.0-tester-checklist.md`
+- `docs/github-release-note-v0.7.0.md`
+- `wiki/freelancer/verification-m206.md`
+
+Required validation before commit:
+
+```bash
+cat VERSION
+git diff --check
+./bin/hermes-backend-check
+./bin/hermes-memory-migrate
+./bin/hermes-memory-import
+./bin/hermes-recall "forge inbox boundary" --project freelancer --mode fts --limit 5 --json
+./bin/hermes-memory-smoke
+```
+
+M206.3 tag / release remains pending until the final gate is committed and pushed.
