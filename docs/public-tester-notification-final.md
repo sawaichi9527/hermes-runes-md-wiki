@@ -23,7 +23,7 @@ manual_send_required: yes
 ```markdown
 # Hermes Runes MD Wiki Open Beta
 
-Hermes Runes MD Wiki v0.5.0 is available for Open Beta evaluation.
+Hermes Runes MD Wiki v0.7.0 is the current Open Beta target for fresh-install evaluation.
 
 Repository:
 https://github.com/sawaichi9527/hermes-runes-md-wiki
@@ -32,7 +32,7 @@ Version:
 `0.1.0-beta.1`
 
 Tag:
-`v0.5.0`
+`v0.7.0`
 
 Hermes Runes MD Wiki is a local-first, agent-agnostic Markdown wiki memory layer for governed local RAG workflows. It treats curated Markdown files as the human-readable source of truth and uses local indexing/retrieval tooling to support recall and context assembly.
 
@@ -54,7 +54,7 @@ Recommended first checks:
 git clone https://github.com/sawaichi9527/hermes-runes-md-wiki.git
 cd hermes-runes-md-wiki
 cat VERSION
-git tag -n --list "v0.5.0"
+git tag -n --list "v0.7.0"
 ```
 
 ## Workspace slug rule

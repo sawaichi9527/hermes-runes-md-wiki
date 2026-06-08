@@ -7,13 +7,13 @@ Milestone: M218
 ## Issue Title
 
 ```text
-Open Beta Feedback - v0.5.0
+Open Beta Feedback - v0.7.0
 ```
 
 ## Issue Body
 
 ```markdown
-# Open Beta Feedback - v0.5.0
+# Open Beta Feedback - v0.7.0
 
 Please use this issue to report feedback for Hermes Runes MD Wiki Open Beta.
 
@@ -21,7 +21,7 @@ Version:
 `0.1.0-beta.1`
 
 Tag:
-`v0.5.0`
+`v0.7.0`
 
 Starter guide:
 `docs/open-beta-starter.md`

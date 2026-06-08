@@ -2,7 +2,8 @@
 
 Status: STARTER / PUBLIC EVALUATION PATH / CLEAN RUNTIME SEED
 Date: 2026-06-08
-Released baseline: `v0.5.0`
+Current Open Beta target: `v0.7.0`
+Previous released baseline: `v0.5.0`
 Current development target: `v0.7.0-dev`
 
 ## Purpose
@@ -17,7 +18,7 @@ For a fresh install from the current `main` branch, use the manual install path 
 docs/fresh-install-manual.md
 ```
 
-Use this starter guide and `docs/v0.5.0-tester-checklist.md` when validating the released `v0.5.0` baseline.
+Use this starter guide and `docs/v0.7.0-tester-checklist.md` when validating the v0.7.0 Open Beta target. Historical v0.5.0 release documents remain preserved.
 
 ## Clone Path
 
@@ -41,14 +42,14 @@ Recommended checkout for the released Open Beta baseline:
 
 ```bash
 git fetch --tags
-git checkout v0.5.0
+git checkout v0.7.0
 cat VERSION
 ```
 
 Expected released baseline version:
 
 ```text
-0.5.0
+0.7.0
 ```
 
 ## Runtime Wiki Layout
@@ -132,10 +133,10 @@ Expected current `main` development version:
 0.7.0-dev
 ```
 
-Expected released Open Beta baseline after `git checkout v0.5.0`:
+Expected released Open Beta baseline after `git checkout v0.7.0`:
 
 ```text
-0.5.0
+0.7.0
 ```
 
 `v0.1.0-beta.1` is superseded and should not be used for fresh tester onboarding.
@@ -186,7 +187,7 @@ README.md
 QUICKSTART.md
 AGENTS.md
 docs/fresh-install-manual.md
-docs/v0.5.0-tester-checklist.md
+docs/v0.7.0-tester-checklist.md
 docs/workspace-slug-policy.md
 wiki/README.md
 wiki/hermes_runes_index.md
@@ -206,5 +207,5 @@ Do not import dev/ as runtime memory by default.
 
 ```text
 Open Beta Starter Guide
-STARTER / v0.5.0 released baseline preserved / v0.7.0-dev fresh install manual linked for current main
+STARTER / v0.7.0 Open Beta target / v0.7.0-dev fresh install manual linked for current main
 ```

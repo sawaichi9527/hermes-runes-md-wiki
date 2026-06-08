@@ -2,7 +2,7 @@
 
 Status: M204.3 standalone runbook / procedure confirmation
 Target: v0.7.0-dev
-Baseline release: v0.5.0
+Open Beta target: v0.7.0
 Date: 2026-06-08
 
 ## Scope
@@ -18,7 +18,7 @@ Validated target:
 - PostgreSQL / pgvector via local Docker stack
 - current `main` version: `0.7.0-dev`
 
-Released Open Beta baseline remains `v0.5.0`. Do not create or move a `v0.7.0` tag until a future release gate passes.
+Open Beta target is now `v0.7.0`. Do not create or move the `v0.7.0` tag until the final M206 release gate passes.
 
 The default install path is intentionally personal/local:
 
@@ -394,7 +394,7 @@ git tag --list --sort=-creatordate | sed -n '1,10p'
 echo
 echo "== public docs check =="
 grep -n "fresh-install-manual.md\|Released baseline\|Current development\|v0.7.0-dev\|v0.5.0\|0.5.0" \
-  README.md docs/open-beta-starter.md docs/v0.5.0-tester-checklist.md \
+  README.md docs/open-beta-starter.md docs/v0.7.0-tester-checklist.md \
   | sed -n '1,180p'
 ```
 
