@@ -917,3 +917,23 @@ Fresh install core profile is verified as:
 ```text
 PASS / Docker CE / PostgreSQL pgvector / importer env / bootstrap core / backend check / migration / import / FTS recall / core smoke
 ```
+
+## Hermes-agent onboarding read-only smoke
+
+M209 adds a repository-local smoke test for the Hermes-agent onboarding prompt.
+
+This smoke does not start Hermes-agent, does not mutate trusted Markdown memory, and does not touch PostgreSQL. It only validates that the local guide files and onboarding prompt markers are present.
+
+Run:
+
+```bash
+./bin/hermes-agent-onboarding-smoke
+```
+
+Expected result:
+
+```text
+"status": "PASS"
+```
+
+This smoke complements the manual Hermes-agent onboarding trial. It confirms that a fresh clone contains the files and prompt needed for a read-only onboarding run.
