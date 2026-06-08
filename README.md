@@ -14,6 +14,8 @@ Hermes Runes was originally developed for Hermes Agent, but it is intentionally 
 
 Fresh Open Beta testers should start here:
 
+Recommended baseline: `v0.5.0`
+
 ```text
 docs/open-beta-starter.md
 ```

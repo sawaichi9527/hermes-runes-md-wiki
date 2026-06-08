@@ -2,7 +2,7 @@
 
 Status: STARTER / PUBLIC EVALUATION PATH / CLEAN RUNTIME SEED
 Date: 2026-06-08
-Recommended baseline: `v0.3.0`
+Recommended baseline: `v0.5.0`
 
 ## Purpose
 
@@ -99,7 +99,7 @@ cat VERSION
 Expected Open Beta version:
 
 ```text
-0.3.0
+0.5.0
 ```
 
 `v0.1.0-beta.1` is superseded and should not be used for fresh tester onboarding.
@@ -147,7 +147,7 @@ wiki/README.md
 wiki/hermes_runes_index.md
 wiki/_system/README.md
 docs/workspace-slug-policy.md
-docs/v0.3.0-tester-checklist.md
+docs/v0.5.0-tester-checklist.md
 ```
 
 ## Safety Boundary
@@ -163,5 +163,5 @@ Do not import dev/ as runtime memory by default.
 
 ```text
 Open Beta Starter Guide
-STARTER / v0.3.0 public evaluation path uses clean runtime wiki seed and hostname-derived workspace slug
+STARTER / v0.5.0 public evaluation path uses clean runtime wiki seed, restored hybrid recall, and cleaned runtime surface
 ```
