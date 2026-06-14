@@ -14,19 +14,19 @@ Hermes Runes was originally developed for Hermes Agent, but it is intentionally 
 
 Fresh Open Beta testers should start here:
 
-Current released fresh install path: `v0.7.1`
+Current released fresh install path: `v0.7.2`
 
 ```text
 docs/fresh-install-manual.md
 ```
 
-Current Open Beta target: `v0.7.1`
-Previous released baseline: `v0.7.0`
+Current Open Beta target: `v0.7.2`
+Previous released baseline: `v0.7.1`
 
 ```text
 docs/open-beta-starter.md
 docs/v0.7.0-tester-checklist.md
-docs/releases/v0.7.1.md
+docs/releases/v0.7.2.md
 ```
 
 The starter path uses a clean runtime wiki seed and a host-derived workspace slug. The fresh install manual records the current Docker / PostgreSQL / pgvector / bootstrap / migration / import / FTS smoke path for new checkouts on `main`.
@@ -119,32 +119,6 @@ See also:
 ```text
 docs/fresh-install-manual.md
 docs/open-beta-starter.md
-docs/v0.7.0-tester-checklist.md
-docs/releases/v0.7.1.md
-docs/workspace-slug-policy.md
-SECURITY.md
+docs/runes-wiki-migration-guard.md
+docs/releases/v0.7.2.md
 ```
-
----
-
-## License
-
-Hermes Runes MD Wiki is licensed under the Apache License, Version 2.0.
-
-See `LICENSE` for the full license text.
-
----
-
-## Philosophy
-
-Runtime memory is temporary.
-
-Curated Markdown memory is durable.
-
-Hermes Runes treats Markdown as intentional knowledge carved into durable runes rather than transient conversation state.
-
-The database is an index and retrieval backend.
-
-The Markdown wiki remains the human-readable source-of-truth.
-
-Hermes Runes does not decide truth for the agent.
