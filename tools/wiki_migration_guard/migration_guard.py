@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Minimal Runes Wiki migration guard.
 
-This is a small, local-first safety helper for existing installations.
-It protects the wiki/ Markdown source-of-truth before repository updates.
+Small local-first safety helper for existing installations. It protects the
+wiki/ Markdown source-of-truth before repository updates.
 
-It intentionally does not integrate with Runes Shield and does not perform
+This tool intentionally does not integrate with Runes Shield and does not do
 schema migrations, merges, automatic restore, or user-owned Markdown edits.
 """
 
@@ -18,7 +18,6 @@ import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Any
-
 
 SYSTEM_NAMES = {"README.md", "hermes_runes_index.md"}
 
@@ -36,11 +35,7 @@ def run(cmd: list[str], cwd: Path, check: bool = True) -> subprocess.CompletedPr
 
 
 def repo_root() -> Path:
-    proc = subprocess.run(
-        ["git", "rev-parse", "--show-toplevel"],
-        text=True,
-        capture_output=True,
-    )
+    proc = subprocess.run(["git", "rev-parse", "--show-toplevel"], text=True, capture_output=True)
     if proc.returncode != 0:
         raise GuardError("not inside a Git repository")
     return Path(proc.stdout.strip()).resolve()
@@ -307,17 +302,20 @@ def command_repair(args: argparse.Namespace) -> int:
     return 0
 
 
-def parser() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(
-        prog="runes-wiki-migration-guard",
-        description="Small local safety guard for wiki/ before Hermes Runes repository updates.",
-    )
+def add_common_options(p: argparse.ArgumentParser) -> None:
     p.add_argument("--wiki-root", default="wiki", help="Wiki root path relative to repo root. Default: wiki")
     p.add_argument("--remote", default="origin", help="Git remote to fetch. Default: origin")
     p.add_argument("--branch", default=None, help="Remote branch fallback. Default: current branch")
     p.add_argument("--no-fetch", action="store_true", help="Do not run git fetch before planning")
     p.add_argument("--json", action="store_true", help="Print JSON report")
 
+
+def parser() -> argparse.ArgumentParser:
+    p = argparse.ArgumentParser(
+        prog="runes-wiki-migration-guard",
+        description="Small local safety guard for wiki/ before Hermes Runes repository updates.",
+    )
+    add_common_options(p)
     sub = p.add_subparsers(dest="command")
 
     for name, help_text in [
@@ -328,11 +326,11 @@ def parser() -> argparse.ArgumentParser:
         ("repair", "Print repair guidance only; no automatic restore"),
     ]:
         sp = sub.add_parser(name, help=help_text)
+        add_common_options(sp)
         if name == "update":
             sp.add_argument("--dry-run", action="store_true", help="Plan and backup, but do not pull")
         if name == "repair":
             sp.add_argument("--dry-run", action="store_true", help="Accepted for habit; repair is always dry-run in MVP")
-
     return p
 
 
