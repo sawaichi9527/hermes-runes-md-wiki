@@ -1,24 +1,15 @@
-## N-20260614-M214 v0.7.2 Release Prep Decision
+## N-20260614-M216 v0.7.2 Annotated Tag Lock
 
-Status: READY
+Status: READY FOR LOCAL RELEASE CHECK
 
-Current baseline:
-- VERSION remains `0.7.2-dev`.
-- M208-M210 Migration Guard Minimal MVP is PASS / locally verified / hotfix verified.
-- M211 README Update Flow Alignment is PASS / documentation aligned / minimal scope preserved.
-- M212 Real Safe Update Dogfood is PASS / real safe update dogfood verified / minimal scope preserved.
-- M213 v0.7.2 Release Candidate Decision is PASS / release candidate ready / no release tag created.
+Current state:
+- M214 release prep decision: PASS.
+- M215 release notes / VERSION alignment: ready for local release check.
+- VERSION is expected to be `0.7.2` after guarded update.
 
-M214 purpose:
-- Decide whether to prepare v0.7.2 release notes.
-- Decide whether to bump `VERSION` from `0.7.2-dev` to `0.7.2`.
-- Keep v0.7.2 focused on the minimal migration guard, documentation alignment, and verification locks.
-
-Suggested M214 local check:
+Run locally before tag:
 
 ```bash
-cd ~/workspace/hermes-runes-md-wiki
-
 ./bin/runes-wiki-migration-guard update
 cat VERSION
 python3 -m py_compile tools/wiki_migration_guard/migration_guard.py
@@ -30,24 +21,13 @@ git status
 git log --oneline -12
 ```
 
-M214 allowed scope:
-- Draft `docs/releases/v0.7.2.md`.
-- Optionally bump `VERSION` to `0.7.2` after explicit release-prep decision.
-- Update README release references only if needed.
-- Record release-prep verification.
+If clean and PASS, create the annotated tag:
 
-M214 non-goals:
-- No release tag by default.
-- No migration guard feature expansion.
-- No user-owned `wiki/` changes.
+```bash
+git tag -a v0.7.2 -m "Release v0.7.2"
+git push origin v0.7.2
+```
 
-Possible next milestone:
-- M215 v0.7.2 Release Finalization / Tag Decision
-
-References:
-- `VERSION`
-- `README.md`
-- `docs/runes-wiki-migration-guard.md`
-- `dev/wiki-history/k6-freelancer/verification/verification-m213.md`
+Do not start M217 until the tag is confirmed.
 
 ---
