@@ -1,7 +1,7 @@
 # Verification M215 - v0.7.2 Release Notes / Version Alignment
 
-Status: READY FOR LOCAL RELEASE CHECK  
-Scope: release notes and VERSION alignment only; tag pending
+Status: PASS / local release check verified / tag handoff complete  
+Scope: release notes and VERSION alignment only; annotated tag handled by M216
 
 ## Purpose
 
@@ -36,49 +36,40 @@ M215 does not add:
 - Shield integration
 - user-owned `wiki/` edits
 
-## Local release check required
+## Local release check evidence
 
-Before creating tag `v0.7.2`, run:
+The local release check was completed after guarded update to the v0.7.2 release baseline.
 
-```bash
-cd ~/workspace/hermes-runes-md-wiki
+Observed results:
 
-./bin/runes-wiki-migration-guard update
-cat VERSION
-python3 -m py_compile tools/wiki_migration_guard/migration_guard.py
-./bin/runes-wiki-migration-guard plan --no-fetch
-./bin/runes-wiki-migration-guard update --dry-run --no-fetch
-./bin/hermes-memory-smoke
+- `./bin/runes-wiki-migration-guard update`: SAFE
+- Incoming changed files: README / VERSION / dev verification / release notes only
+- Guard applied `git pull --ff-only`
+- `cat VERSION`: `0.7.2`
+- `python3 -m py_compile tools/wiki_migration_guard/migration_guard.py`: PASS
+- `./bin/runes-wiki-migration-guard plan --no-fetch`: PASS / no incoming changes
+- `./bin/runes-wiki-migration-guard update --dry-run --no-fetch`: PASS / dry run only
+- `./bin/hermes-memory-smoke`: PASS for Core FTS smoke
+- embedding profile not installed; hybrid and answer-generation smoke skipped as expected
+- `git status`: working tree clean
 
-git status
-git log --oneline -12
+## Tag handoff
+
+M215 handed off to M216 for annotated tag lock.
+
+M216 confirmed:
+
+```text
+v0.7.2 -> 6f68494
 ```
 
-Expected:
+The tag points at the release baseline that contains `VERSION = 0.7.2`.
 
-- `VERSION` is `0.7.2`
-- guard update is SAFE
-- Python compile passes
-- plan / dry-run remain stable
-- Core FTS smoke passes
-- working tree is clean
-
-## Tag checkpoint
-
-After local release check passes, M216 should create the annotated tag:
-
-```bash
-git tag -a v0.7.2 -m "Release v0.7.2"
-git push origin v0.7.2
-```
-
-The tag should point at the release commit that contains `VERSION = 0.7.2`.
-
-## Current lock state
+## Final lock
 
 ```text
 M215 v0.7.2 Release Notes / Version Alignment
-READY FOR LOCAL RELEASE CHECK / tag pending
+PASS / local release check verified / tag handoff complete
 ```
 
 ---
