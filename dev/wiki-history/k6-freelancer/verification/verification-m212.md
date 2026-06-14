@@ -1,8 +1,8 @@
 # M212 Migration Guard Real Update Dogfood Decision
 
-Status: READY FOR LOCAL DOGFOOD / safe upstream prepared  
+Status: PASS / real safe update dogfood verified / minimal scope preserved  
 Date: 2026-06-14  
-Scope: documentation/status-only upstream change for real `runes-wiki-migration-guard update` dogfood
+Scope: real `runes-wiki-migration-guard update` dogfood for a safe upstream change
 
 ---
 
@@ -28,20 +28,20 @@ This command should:
 
 ## Dogfood setup
 
-This M212 setup intentionally creates a safe upstream update that does not touch `wiki/`.
+The M212 setup intentionally created a safe upstream update that did not touch `wiki/`.
 
-Changed files in the prepared upstream update are expected to be limited to development/history documentation such as:
+Prepared upstream changed files:
 
 - `dev/wiki-history/k6-freelancer/verification/verification-m212.md`
 - `dev/wiki-history/k6-freelancer/next-actions.md`
 
-Because no `wiki/` Markdown is changed by this setup, the guard should classify the update as safe and allow the pull.
+Because no `wiki/` Markdown was changed by this setup, the guard was expected to classify the update as safe and allow the pull.
 
 ---
 
-## Required local verification
+## Local verification command
 
-Run from an existing local checkout that is behind this M212 setup commit:
+The local dogfood was executed from an existing checkout at commit `bb73aaa`:
 
 ```bash
 cd ~/workspace/hermes-runes-md-wiki
@@ -52,29 +52,90 @@ git status
 git log --oneline -10
 ```
 
-Expected result:
+---
+
+## Observed result
+
+The guard reported:
 
 ```text
+Runes Wiki Migration Guard
+Version: 0.7.2-dev
+Repo head: bb73aaa
+Wiki root: wiki
+Backup: backups/wiki-migration-guard/20260614-215044
+
+Detected workspaces:
+- freelancer
+
 Status: SAFE
-Reason: no incoming wiki changes detected
-Update applied.
-working tree clean
+Reason: incoming update does not touch wiki Markdown
+
+Incoming changed files:
+- dev/wiki-history/k6-freelancer/next-actions.md
+- dev/wiki-history/k6-freelancer/verification/verification-m212.md
+
+Policy:
+- Unknown wiki/**/*.md is treated as possible user-owned Markdown.
+- This tool never overwrites user-owned Markdown.
+- This tool is not part of Runes Shield.
+Applying safe repository update with: git pull --ff-only
 ```
 
-The exact wording may differ slightly, but the required behavior is:
+After the safe update, the guard postflight scan reported the new head:
 
-- backup directory is created under `backups/wiki-migration-guard/`
-- incoming update is allowed because no possible user-owned `wiki/**/*.md` files are touched
-- local branch advances to the M212 setup commit
-- working tree remains clean
+```text
+Repo head: 53ac087
+Status: SCAN
+```
+
+`git status` confirmed:
+
+```text
+On branch main
+Your branch is up to date with 'origin/main'.
+
+nothing to commit, working tree clean
+```
+
+`git log --oneline -10` confirmed the local checkout advanced through the prepared M212 setup commits:
+
+```text
+53ac087 Update next actions for M212 dogfood
+ea5c6d6 Prepare M212 real update dogfood
+bb73aaa Update next actions after M211 lock
+0650768 Record M211 migration guard dogfood lock
+84093c6 Align migration guard docs with dogfood lock
+c3ebbbf Document migration guard update flow
+a0c7f7f Update next actions after M208-M210 lock
+19898bd Lock M208-M210 migration guard verification
+b62b6b4 Fix migration guard backup collision
+5376fe3 Mark migration guard launcher executable
+```
 
 ---
 
-## Non-goals
+## Result assessment
 
-M212 must not expand the tool scope.
+PASS.
 
-Non-goals:
+Verified behavior:
+
+- Backup directory was created under `backups/wiki-migration-guard/`.
+- Incoming update was classified as SAFE because no `wiki/` Markdown files were touched.
+- Guard applied the update with `git pull --ff-only`.
+- Local checkout advanced from `bb73aaa` to `53ac087`.
+- Working tree remained clean.
+- User-owned Markdown was not touched.
+- Tool scope remained minimal.
+
+---
+
+## Non-goals preserved
+
+M212 did not expand the tool scope.
+
+Non-goals preserved:
 
 - no automatic restore
 - no automatic merge
@@ -87,11 +148,7 @@ Non-goals:
 
 ---
 
-## Result lock
-
-Pending local dogfood.
-
-After the local `./bin/runes-wiki-migration-guard update` verification passes, this file should be updated to:
+## Final lock
 
 ```text
 M212 Migration Guard Real Update Dogfood Decision
