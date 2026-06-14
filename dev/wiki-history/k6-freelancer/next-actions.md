@@ -1,16 +1,26 @@
-## N-20260614-M218 Post-v0.7.2 Baseline Sync
+## N-20260614-M219 Post-release Documentation Baseline Check
 
 Status: READY
 
 Current state:
-- M214 release prep decision: PASS.
-- M215 release notes / VERSION alignment: PASS.
-- M216 annotated tag lock: PASS.
-- M217 start v0.7.3 development: PASS.
-- `v0.7.2` is expected to point at `6f68494`.
-- `VERSION` is expected to be `0.7.3-dev` after guarded update.
+- v0.7.2 release line is closed.
+- `v0.7.2` annotated tag is fixed at `6f68494`.
+- `VERSION` is now `0.7.3-dev`.
+- M218 Post-v0.7.2 Baseline Sync is PASS.
 
-Next local sync:
+Next suggested milestone:
+
+```text
+M219 Post-release Documentation Baseline Check
+```
+
+M219 purpose:
+- check README / docs / release notes after v0.7.2
+- keep the post-release baseline easy to understand
+- preserve the minimal migration guard scope
+- decide the next small development item for v0.7.3-dev
+
+Suggested local sync check:
 
 ```bash
 cd ~/workspace/hermes-runes-md-wiki
@@ -19,29 +29,15 @@ cd ~/workspace/hermes-runes-md-wiki
 cat VERSION
 git status
 git log --oneline -12
-git tag --list "v0.7.2"
-git show --no-patch --oneline v0.7.2
 
-grep -n "Status:\|Final lock\|PASS / annotated tag\|PASS / development version\|M218" \
-  dev/wiki-history/k6-freelancer/verification/verification-m216.md \
-  dev/wiki-history/k6-freelancer/verification/verification-m217.md \
+grep -n "Status:\|Final lock\|PASS / post-release baseline\|M219" \
+  dev/wiki-history/k6-freelancer/verification/verification-m218.md \
   dev/wiki-history/k6-freelancer/next-actions.md
 ```
 
-Expected:
-- guarded update is SAFE
-- `VERSION` is `0.7.3-dev`
-- working tree is clean
-- tag `v0.7.2` still resolves to the v0.7.2 release baseline
-
-M218 purpose:
-- verify post-release sync locally
-- keep release tag stable
-- decide the next small development target after v0.7.2
-
-M218 non-goals:
-- no new release tag
-- no migration guard expansion
+M219 non-goals:
+- no release tag
+- no migration guard feature expansion
 - no `wiki/` mutation
 - no Shield integration
 
