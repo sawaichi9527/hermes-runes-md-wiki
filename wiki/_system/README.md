@@ -41,13 +41,14 @@ Agents should decipher this policy bundle before performing Hermes Runes operati
 4. `wiki/_system/access-boundary.md`
 5. `wiki/_system/wiki-operation-policy.md`
 6. `wiki/_system/default-wiki-seed-layout.md`
-7. `wiki/_system/agent-operation-guide.md`
-8. `wiki/_system/ingestion-policy.md`
-9. `wiki/_system/security-policy.md`
-10. `wiki/_system/observation-policy.md`
-11. `wiki/_system/developer-policy.md`
-12. `wiki/README.md`
-13. `wiki/hermes_runes_index.md`
+7. `wiki/_system/opc-workspace-overlay-policy.md`
+8. `wiki/_system/agent-operation-guide.md`
+9. `wiki/_system/ingestion-policy.md`
+10. `wiki/_system/security-policy.md`
+11. `wiki/_system/observation-policy.md`
+12. `wiki/_system/developer-policy.md`
+13. `wiki/README.md`
+14. `wiki/hermes_runes_index.md`
 
 ## Command Vocabulary
 
@@ -71,6 +72,10 @@ Rune terms are interface names. Documentation and CLI help must include plain-la
     - `wiki/*.md`
   - Defines first-bootstrap workspace suggestion behavior.
   - Keeps developer history outside runtime wiki memory under `dev/`.
+- `opc-workspace-overlay-policy.md`
+  - Defines optional OPC profile memory organization under `wiki/<workspace>/opc/`.
+  - Preserves the default single-agent workspace seed.
+  - Keeps OPC support as an optional workspace overlay, not a runtime requirement.
 
 ## Runes Shield Discovery
 
@@ -106,6 +111,7 @@ Hermes Runes is not:
 - 2026-06-01: Initial P0 system policy index.
 - 2026-06-05: Registered default wiki seed layout policy in the required policy read order.
 - 2026-06-08: Cleaned runtime seed boundary and moved developer history outside `wiki/`.
+- 2026-06-14: Registered optional OPC workspace overlay policy in the required policy read order.
 
 ## Runtime Seed Boundary
 
@@ -120,4 +126,3 @@ dev/wiki-history/_system/
 Normal users and fresh Open Beta testers should not need to read or import `dev/wiki-history/_system/` for routine operation.
 
 The runtime `_system` directory should remain focused on active policies, source priorities, invocation boundaries, memory rules, observation policy, and wiki operation guidance.
-

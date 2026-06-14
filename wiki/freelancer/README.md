@@ -23,6 +23,20 @@ This workspace stores user-approved, durable Markdown memory for the current hos
 - `services.md` — reviewed local service notes.
 - `decisions.md` — reviewed decisions.
 - `forge-inbox/` — governed draft proposal inbox.
+- `opc/` — optional OPC profile memory overlay for installations using Hermes Agent OPC profiles.
+
+## Optional OPC overlay
+
+The `opc/` directory is optional. It is used only when this workspace is operated with Hermes Agent OPC profile agents.
+
+Single-agent users can ignore this directory.
+
+See:
+
+```text
+docs/opc-workspace-overlay.md
+wiki/freelancer/opc/README.md
+```
 
 ## Default workspace seed boundary
 

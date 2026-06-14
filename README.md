@@ -54,6 +54,27 @@ Developer history is retained under `dev/` and should not be imported as runtime
 
 ---
 
+## Optional OPC Workspace Overlay
+
+Hermes Runes MD Wiki keeps the same governed access model for both single-agent and OPC usage.
+
+When Hermes Agent OPC profile agents are used, profile memory may be organized under:
+
+```text
+wiki/<workspace-slug>/opc/
+```
+
+This overlay is optional. Forkers and users who run a single agent do not need it.
+
+See:
+
+```text
+docs/opc-workspace-overlay.md
+wiki/freelancer/opc/README.md
+```
+
+---
+
 ## Open Beta Boundary
 
 ```text
