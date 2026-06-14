@@ -1,32 +1,42 @@
-## N-20260614-M205-M207 Optional OPC Workspace Overlay
+## N-20260614-M208-M210 Runes Wiki Migration Guard
 
 Status: IMPLEMENTED ON GITHUB / LOCAL PULL VERIFICATION REQUIRED
 
 Current baseline:
-- M204 fresh-install hardening and documentation alignment established the v0.7.0-dev clean install baseline.
-- Hermes Agent OPC profile usage introduced an optional multi-profile caller pattern.
-- Hermes Runes MD Wiki remains agent-agnostic and Shield-governed.
+- M205-M207 Optional OPC Workspace Overlay is released as v0.7.1.
+- Development has reopened as VERSION `0.7.2-dev`.
+- Existing installations may already contain user-owned Markdown knowledge under `wiki/`.
+- Future updates should protect that local Markdown before repository version/layout updates.
 
-M205-M207 result:
-- Added optional OPC workspace overlay documentation.
-- Added `wiki/freelancer/opc/` profile memory seed files.
-- Preserved the default single-agent workspace layout.
-- Did not modify Runes Shield schemas.
-- Did not introduce OPC runtime logic.
-- Did not introduce enterprise memory management.
+M208-M210 result:
+- Added minimal local CLI: `bin/runes-wiki-migration-guard`.
+- Added implementation: `tools/wiki_migration_guard/migration_guard.py`.
+- Added documentation: `docs/runes-wiki-migration-guard.md`.
+- Added verification plan: `dev/wiki-history/k6-freelancer/verification/verification-m208-m210.md`.
+- Tool remains independent from Runes Shield.
+- Tool scans the whole `wiki/` tree by default.
+- Unknown `wiki/**/*.md` is treated as possible user-owned Markdown.
+- Tool creates local backups under `backups/wiki-migration-guard/`.
+- Tool performs conservative incoming-update risk reporting.
 
 Current position:
 - GitHub implementation is present.
-- Local pull verification is still required on the active workstation.
+- Local pull verification is required on the active workstation.
+- GitHub API may not preserve executable bit for the new `bin/` launcher; local `chmod +x` may be needed and should be committed if required.
 
-Recommended next milestone:
-- M208 Local Pull Smoke / OPC Overlay Import Recall Check
+Recommended local verification:
+- Pull latest main.
+- Run the M208-M210 commands in the verification file.
+- Confirm backup directory is ignored by Git.
+- Confirm core smoke remains PASS.
+
+Recommended next milestone after verification:
+- M211 Migration Guard Dogfood Result Lock / v0.7.2-dev Next Actions
 
 References:
-- `docs/opc-workspace-overlay.md`
-- `wiki/_system/opc-workspace-overlay-policy.md`
-- `wiki/freelancer/opc/README.md`
-- `wiki/freelancer/opc/profile-memory-map.md`
-- `dev/wiki-history/k6-freelancer/verification/verification-m205-m207.md`
+- `bin/runes-wiki-migration-guard`
+- `tools/wiki_migration_guard/migration_guard.py`
+- `docs/runes-wiki-migration-guard.md`
+- `dev/wiki-history/k6-freelancer/verification/verification-m208-m210.md`
 
 ---
