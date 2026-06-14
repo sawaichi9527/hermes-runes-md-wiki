@@ -1,27 +1,32 @@
-## N-20260607-M203 First Real CB Usage Evidence Capture
+## N-20260614-M205-M207 Optional OPC Workspace Overlay
 
-Status: PASS / FIRST REAL USAGE EVIDENCE CAPTURED
+Status: IMPLEMENTED ON GITHUB / LOCAL PULL VERIFICATION REQUIRED
 
 Current baseline:
-- M191-M196 completed the Closed Beta validation and kickoff path.
-- M197-M202 prepared the first Closed Beta feedback loop baseline.
-- M203 captured `CB-USE-20260607-001` as the first real post-kickoff usage evidence record.
-- Classification: evidence_only.
-- Linked bug ID: none.
-- Runtime feature work required: none.
-- Trusted memory update required: none.
+- M204 fresh-install hardening and documentation alignment established the v0.7.0-dev clean install baseline.
+- Hermes Agent OPC profile usage introduced an optional multi-profile caller pattern.
+- Hermes Runes MD Wiki remains agent-agnostic and Shield-governed.
+
+M205-M207 result:
+- Added optional OPC workspace overlay documentation.
+- Added `wiki/freelancer/opc/` profile memory seed files.
+- Preserved the default single-agent workspace layout.
+- Did not modify Runes Shield schemas.
+- Did not introduce OPC runtime logic.
+- Did not introduce enterprise memory management.
 
 Current position:
-- Closed Beta kickoff is active.
-- First real usage evidence has been captured.
-- No defect or actionable change was found in `CB-USE-20260607-001`.
+- GitHub implementation is present.
+- Local pull verification is still required on the active workstation.
 
 Recommended next milestone:
-- M204 Next CB Evidence Record / First Candidate Finding Gate
+- M208 Local Pull Smoke / OPC Overlay Import Recall Check
 
 References:
-- `wiki/k6-freelancer/verification-m203.md`
-- `wiki/k6-freelancer/cb-sessions/cb-20260607-m203-first-real-cb-usage-evidence.md`
-- `docs/cb-usage-evidence-template.md`
+- `docs/opc-workspace-overlay.md`
+- `wiki/_system/opc-workspace-overlay-policy.md`
+- `wiki/freelancer/opc/README.md`
+- `wiki/freelancer/opc/profile-memory-map.md`
+- `dev/wiki-history/k6-freelancer/verification/verification-m205-m207.md`
 
 ---
