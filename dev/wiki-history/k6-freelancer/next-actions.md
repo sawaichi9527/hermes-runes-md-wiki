@@ -1,23 +1,21 @@
-## N-20260614-M220 Open Beta Docs Link Check
+## N-20260614-M220 Post-v0.7.2 Stop Point
 
-Status: READY
+Status: FROZEN / no immediate required action
 
 Current state:
-- M219 Post-release Documentation Baseline Check is PASS.
+- M220 Post-v0.7.2 Stop Point is PASS.
 - `v0.7.2` remains the frozen release tag.
 - `VERSION` remains `0.7.3-dev` on main.
 - README, release notes, and migration guard docs are aligned.
+- Runes Wiki Migration Guard remains the safe existing-installation update path.
 
-Next suggested milestone:
+Decision:
 
 ```text
-M220 Open Beta Docs Link Check
+Post-v0.7.2 baseline frozen.
+No immediate required action.
+Next work starts only when a concrete 0.7.3-dev feature or documentation task is selected.
 ```
-
-M220 purpose:
-- check public-facing docs links after v0.7.2
-- keep Open Beta starter / fresh install / README links consistent
-- avoid adding runtime or migration-guard features
 
 Suggested local sync check:
 
@@ -29,16 +27,17 @@ cat VERSION
 git status
 git log --oneline -12
 
-grep -n "Status:\|Final lock\|PASS / documentation baseline\|M220" \
-  dev/wiki-history/k6-freelancer/verification/verification-m219.md \
+grep -n "Status:\|Final lock\|PASS / baseline frozen\|no immediate required action" \
+  dev/wiki-history/k6-freelancer/verification/verification-m220.md \
   dev/wiki-history/k6-freelancer/next-actions.md
 ```
 
-M220 non-goals:
+Non-goals:
 - no release tag
 - no VERSION change
 - no `wiki/` mutation
 - no migration guard feature expansion
 - no Shield integration
+- no artificial M221/M222 continuation
 
 ---
