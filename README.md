@@ -33,6 +33,26 @@ The starter path uses a clean runtime wiki seed and a host-derived workspace slu
 
 ---
 
+## Existing Installation Updates
+
+If this repository has already been used locally and `wiki/` may contain personal or project knowledge, prefer the migration guard instead of a naked `git pull`:
+
+```bash
+./bin/runes-wiki-migration-guard update
+```
+
+The guard is a small local safety helper. It backs up `wiki/`, checks incoming repository changes, applies only safe or system/index-only updates, and stops before pull if an incoming update may touch possible user-owned Markdown.
+
+It does not automatically merge, restore, delete, or overwrite user-owned Markdown.
+
+See:
+
+```text
+docs/runes-wiki-migration-guard.md
+```
+
+---
+
 ## Runtime Layout
 
 ```text
