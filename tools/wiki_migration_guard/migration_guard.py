@@ -141,9 +141,22 @@ def make_plan(changed: list[str], wiki_root: str) -> dict[str, Any]:
     }
 
 
-def create_backup(root: Path, wiki_root: str, payload: dict[str, Any]) -> Path:
+def unique_backup_root(root: Path) -> Path:
+    base = root / "backups" / "wiki-migration-guard"
     stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-    backup_root = root / "backups" / "wiki-migration-guard" / stamp
+    candidate = base / stamp
+    if not candidate.exists():
+        return candidate
+
+    for index in range(2, 1000):
+        candidate = base / f"{stamp}-{index:02d}"
+        if not candidate.exists():
+            return candidate
+    raise GuardError("unable to allocate unique backup directory")
+
+
+def create_backup(root: Path, wiki_root: str, payload: dict[str, Any]) -> Path:
+    backup_root = unique_backup_root(root)
     backup_root.mkdir(parents=True, exist_ok=False)
 
     wiki_path = root / wiki_root
