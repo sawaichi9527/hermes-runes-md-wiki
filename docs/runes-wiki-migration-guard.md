@@ -1,6 +1,6 @@
 # Runes Wiki Migration Guard
 
-Status: MVP design and CLI baseline  
+Status: MVP / dogfood verified / minimal scope locked  
 Scope: local personal installation update safety
 
 ## Purpose
@@ -26,6 +26,8 @@ Existing users should update with:
 ```bash
 ./bin/runes-wiki-migration-guard update
 ```
+
+Use this instead of a naked `git pull` when the local checkout may already contain user or project knowledge under `wiki/`.
 
 This command:
 
@@ -107,6 +109,8 @@ backups/wiki-migration-guard/YYYYMMDD-HHMMSS/
   wiki/
 ```
 
+If multiple backups are created in the same second, the guard appends a numeric suffix such as `-02` or `-03`.
+
 ## Boundary
 
 This tool is not the main Runes operation path.
@@ -114,3 +118,17 @@ This tool is not the main Runes operation path.
 It is only a low-frequency safety helper for version or layout updates.
 
 For normal memory operations, continue to use the existing Runes Shield / proposal / recall flows.
+
+## Dogfood lock
+
+M208-M210 local dogfood verified the minimal behavior:
+
+- CLI help works.
+- `plan --no-fetch` works.
+- `preflight --no-fetch` creates a local `wiki/` backup.
+- repeated same-second backups do not collide.
+- `update --dry-run --no-fetch` creates a backup and does not apply updates.
+- `postflight` scans current `wiki/` state.
+- core FTS smoke remains PASS.
+
+M211 only aligns documentation and user-facing update flow. It does not expand the tool into a migration framework.
