@@ -1,24 +1,23 @@
-## N-20260614-M219 Post-release Documentation Baseline Check
+## N-20260614-M220 Open Beta Docs Link Check
 
 Status: READY
 
 Current state:
-- v0.7.2 release line is closed.
-- `v0.7.2` annotated tag is fixed at `6f68494`.
-- `VERSION` is now `0.7.3-dev`.
-- M218 Post-v0.7.2 Baseline Sync is PASS.
+- M219 Post-release Documentation Baseline Check is PASS.
+- `v0.7.2` remains the frozen release tag.
+- `VERSION` remains `0.7.3-dev` on main.
+- README, release notes, and migration guard docs are aligned.
 
 Next suggested milestone:
 
 ```text
-M219 Post-release Documentation Baseline Check
+M220 Open Beta Docs Link Check
 ```
 
-M219 purpose:
-- check README / docs / release notes after v0.7.2
-- keep the post-release baseline easy to understand
-- preserve the minimal migration guard scope
-- decide the next small development item for v0.7.3-dev
+M220 purpose:
+- check public-facing docs links after v0.7.2
+- keep Open Beta starter / fresh install / README links consistent
+- avoid adding runtime or migration-guard features
 
 Suggested local sync check:
 
@@ -30,15 +29,16 @@ cat VERSION
 git status
 git log --oneline -12
 
-grep -n "Status:\|Final lock\|PASS / post-release baseline\|M219" \
-  dev/wiki-history/k6-freelancer/verification/verification-m218.md \
+grep -n "Status:\|Final lock\|PASS / documentation baseline\|M220" \
+  dev/wiki-history/k6-freelancer/verification/verification-m219.md \
   dev/wiki-history/k6-freelancer/next-actions.md
 ```
 
-M219 non-goals:
+M220 non-goals:
 - no release tag
-- no migration guard feature expansion
+- no VERSION change
 - no `wiki/` mutation
+- no migration guard feature expansion
 - no Shield integration
 
 ---
