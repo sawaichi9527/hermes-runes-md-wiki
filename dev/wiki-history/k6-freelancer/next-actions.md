@@ -1,49 +1,56 @@
-## N-20260614-M212 Migration Guard Real Update Dogfood Decision
+## N-20260614-M213 v0.7.2 Release Candidate Decision
 
-Status: READY FOR LOCAL DOGFOOD
+Status: READY
 
 Current baseline:
 - M205-M207 Optional OPC Workspace Overlay is released as v0.7.1.
 - Development has reopened as VERSION `0.7.2-dev`.
 - M208-M210 Runes Wiki Migration Guard Minimal MVP is PASS / locally verified / hotfix verified.
 - M211 Migration Guard Dogfood Result Lock / README Update Flow Alignment is PASS / documentation aligned / minimal scope preserved.
+- M212 Migration Guard Real Update Dogfood Decision is PASS / real safe update dogfood verified / minimal scope preserved.
 
-M208-M211 locked result:
+M208-M212 locked result:
 - `bin/runes-wiki-migration-guard` exists and is executable.
 - `tools/wiki_migration_guard/migration_guard.py` passed py_compile.
 - `docs/runes-wiki-migration-guard.md` documents the minimal guard.
-- README now recommends `./bin/runes-wiki-migration-guard update` for existing installations.
+- README recommends `./bin/runes-wiki-migration-guard update` for existing installations.
 - Same-second backup collision is fixed and locally verified.
+- Real safe update dogfood passed through the guard itself.
 - Tool remains independent from Runes Shield.
 - Tool scans the whole `wiki/` tree by default.
 - Unknown `wiki/**/*.md` is treated as possible user-owned Markdown.
 - Tool creates local backups under `backups/wiki-migration-guard/`.
 - Tool does not automatically repair, restore, merge, delete, or overwrite user-owned Markdown.
 
-M212 setup:
-- A safe upstream update has been prepared for real dogfood.
-- The prepared update intentionally changes only development/history documentation.
-- The prepared update does not modify `wiki/`.
-- Existing local checkout should pull this prepared update through the guard, not through bare `git pull`.
+M213 purpose:
+- Decide whether the current `0.7.2-dev` state should be promoted toward a small v0.7.2 release candidate.
+- Keep the release decision narrow: migration guard + documentation alignment only.
+- Avoid expanding migration guard into repair, schema migration, hooks, daemon behavior, or enterprise migration management.
 
-Required local dogfood command:
+Suggested M213 checks:
 
 ```bash
 cd ~/workspace/hermes-runes-md-wiki
 
 ./bin/runes-wiki-migration-guard update
+python3 -m py_compile tools/wiki_migration_guard/migration_guard.py
+./bin/runes-wiki-migration-guard plan --no-fetch
+./bin/runes-wiki-migration-guard update --dry-run --no-fetch
+./bin/hermes-memory-smoke
 
 git status
-git log --oneline -10
+git log --oneline -12
 ```
 
 Expected result:
-- Guard creates a `backups/wiki-migration-guard/<timestamp>/` backup.
-- Incoming update is classified as SAFE because no `wiki/` files are touched.
-- Update is applied.
+- Guard sees no unsafe incoming `wiki/` changes.
+- Python CLI compiles.
+- Plan and dry-run remain stable.
+- Core FTS smoke remains PASS.
 - Working tree remains clean.
 
-M212 non-goals:
+M213 non-goals:
+- No new migration guard feature.
 - No automatic restore.
 - No automatic merge.
 - No schema migration engine.
@@ -51,10 +58,7 @@ M212 non-goals:
 - No Git hook.
 - No daemon.
 - No expansion into enterprise migration management.
-
-After local dogfood passes:
-- Update `dev/wiki-history/k6-freelancer/verification/verification-m212.md` to PASS.
-- Update this file to the next small milestone.
+- No release tagging unless explicitly decided after M213.
 
 References:
 - `README.md`
