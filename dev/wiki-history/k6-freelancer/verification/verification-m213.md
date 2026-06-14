@@ -1,17 +1,17 @@
 # Verification M213 - v0.7.2 Release Candidate Decision
 
-Status: READY FOR LOCAL RC CHECK  
+Status: PASS / release candidate ready / no release tag created  
 Scope: release-candidate decision only; no release tag; no VERSION bump
 
 ## Purpose
 
-M213 decides whether the current `0.7.2-dev` baseline is ready to move toward a small v0.7.2 release candidate.
+M213 decides whether the current `0.7.2-dev` baseline is ready to move toward a small v0.7.2 release preparation milestone.
 
-This milestone is intentionally narrow. It does not add new migration guard features and does not create a release tag.
+This milestone is intentionally narrow. It does not add new migration guard features, does not bump `VERSION`, and does not create a release tag.
 
-## Current candidate baseline
+## Candidate baseline
 
-Current expected baseline before local verification:
+Verified baseline:
 
 - VERSION: `0.7.2-dev`
 - M205-M207 Optional OPC Workspace Overlay: released as v0.7.1
@@ -21,7 +21,7 @@ Current expected baseline before local verification:
 
 ## Candidate scope
 
-The v0.7.2 candidate scope should remain limited to:
+The v0.7.2 candidate scope remains limited to:
 
 - minimal `runes-wiki-migration-guard` update safety helper
 - README update flow alignment for existing installations
@@ -34,9 +34,9 @@ The v0.7.2 candidate scope should remain limited to:
 - no schema migration framework
 - no enterprise migration management
 
-## Local RC check procedure
+## Local RC check evidence
 
-Run from repo root:
+Local RC check was run from repo root with:
 
 ```bash
 cd ~/workspace/hermes-runes-md-wiki
@@ -49,31 +49,49 @@ python3 -m py_compile tools/wiki_migration_guard/migration_guard.py
 
 git status
 git log --oneline -12
+
+grep -n "Status:\|READY FOR LOCAL RC CHECK\|VERSION:\|M213" \
+  dev/wiki-history/k6-freelancer/verification/verification-m213.md \
+  dev/wiki-history/k6-freelancer/next-actions.md
 ```
 
-Expected result:
+Observed result:
 
-- guard update path is SAFE or reports no incoming changes
-- Python CLI compiles
-- plan and dry-run remain stable
-- core FTS smoke remains PASS
-- embedding profile may be skipped if optional dependencies are not installed
-- working tree remains clean
-- VERSION remains `0.7.2-dev`
+- guard update started from repo head `07f06f3`.
+- backup was created at `backups/wiki-migration-guard/20260614-220358`.
+- incoming changed files were limited to:
+  - `dev/wiki-history/k6-freelancer/next-actions.md`
+  - `dev/wiki-history/k6-freelancer/verification/verification-m213.md`
+- guard status was `SAFE` because incoming update did not touch wiki Markdown.
+- guard applied `git pull --ff-only`.
+- repo head advanced to `6cbdf20`.
+- post-update scan completed with `Status: SCAN`.
+- `python3 -m py_compile tools/wiki_migration_guard/migration_guard.py` passed.
+- `./bin/runes-wiki-migration-guard plan --no-fetch` passed with `Status: SAFE` and no incoming changes.
+- `./bin/runes-wiki-migration-guard update --dry-run --no-fetch` passed with `Status: SAFE`, backup `backups/wiki-migration-guard/20260614-220359`, and did not apply an update.
+- `./bin/hermes-memory-smoke` returned Core FTS Smoke Test `PASS`.
+- optional embedding / hybrid / answer-generation smoke was skipped because embedding requirements are not installed.
+- `git status` showed `main == origin/main` and a clean working tree.
+- `VERSION` remains `0.7.2-dev`.
 
-## Release candidate decision rule
+## Release candidate decision result
 
-M213 may be locked as PASS only if:
+M213 PASS criteria:
 
-- all local RC checks pass
-- no new migration guard functionality is added during M213
-- no `wiki/` user-owned content is modified
-- no release tag is created
-- no VERSION bump is performed
+- local RC checks pass: PASS
+- no user-owned `wiki/` content is modified: PASS
+- no migration guard feature expansion is introduced: PASS
+- no VERSION bump is performed: PASS
+- no release tag is created: PASS
 
-If PASS, the next milestone may decide whether to prepare v0.7.2 release notes and version bump.
+Decision:
 
-## Non-goals
+```text
+M213 v0.7.2 Release Candidate Decision
+PASS / release candidate ready / no release tag created
+```
+
+## Non-goals preserved
 
 - No v0.7.2 tag in M213
 - No VERSION change in M213
@@ -85,6 +103,17 @@ If PASS, the next milestone may decide whether to prepare v0.7.2 release notes a
 - No daemon
 - No Shield integration
 
+## Next milestone
+
+M214 may decide whether to prepare v0.7.2 release notes and version bump.
+
+Suggested M214 boundary:
+
+- release prep only
+- draft release notes
+- decide whether to change `VERSION` from `0.7.2-dev` to `0.7.2`
+- no release tag unless explicitly decided after release prep verification
+
 ## References
 
 - `VERSION`
@@ -95,5 +124,12 @@ If PASS, the next milestone may decide whether to prepare v0.7.2 release notes a
 - `dev/wiki-history/k6-freelancer/verification/verification-m208-m210.md`
 - `dev/wiki-history/k6-freelancer/verification/verification-m211.md`
 - `dev/wiki-history/k6-freelancer/verification/verification-m212.md`
+
+## Final lock
+
+```text
+M213 v0.7.2 Release Candidate Decision
+PASS / release candidate ready / no release tag created
+```
 
 ---
