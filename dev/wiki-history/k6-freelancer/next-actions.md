@@ -1,6 +1,6 @@
 ## N-20260614-M213 v0.7.2 Release Candidate Decision
 
-Status: READY
+Status: READY FOR LOCAL RC CHECK
 
 Current baseline:
 - M205-M207 Optional OPC Workspace Overlay is released as v0.7.1.
@@ -9,25 +9,14 @@ Current baseline:
 - M211 Migration Guard Dogfood Result Lock / README Update Flow Alignment is PASS / documentation aligned / minimal scope preserved.
 - M212 Migration Guard Real Update Dogfood Decision is PASS / real safe update dogfood verified / minimal scope preserved.
 
-M208-M212 locked result:
-- `bin/runes-wiki-migration-guard` exists and is executable.
-- `tools/wiki_migration_guard/migration_guard.py` passed py_compile.
-- `docs/runes-wiki-migration-guard.md` documents the minimal guard.
-- README recommends `./bin/runes-wiki-migration-guard update` for existing installations.
-- Same-second backup collision is fixed and locally verified.
-- Real safe update dogfood passed through the guard itself.
-- Tool remains independent from Runes Shield.
-- Tool scans the whole `wiki/` tree by default.
-- Unknown `wiki/**/*.md` is treated as possible user-owned Markdown.
-- Tool creates local backups under `backups/wiki-migration-guard/`.
-- Tool does not automatically repair, restore, merge, delete, or overwrite user-owned Markdown.
+M213 setup result:
+- `dev/wiki-history/k6-freelancer/verification/verification-m213.md` records the RC decision plan.
+- M213 is not a release tag milestone.
+- M213 must not bump VERSION.
+- M213 must not add migration guard features.
+- M213 should only determine whether the current `0.7.2-dev` baseline is ready to move toward v0.7.2 release prep.
 
-M213 purpose:
-- Decide whether the current `0.7.2-dev` state should be promoted toward a small v0.7.2 release candidate.
-- Keep the release decision narrow: migration guard + documentation alignment only.
-- Avoid expanding migration guard into repair, schema migration, hooks, daemon behavior, or enterprise migration management.
-
-Suggested M213 checks:
+Suggested local RC checks:
 
 ```bash
 cd ~/workspace/hermes-runes-md-wiki
@@ -40,33 +29,51 @@ python3 -m py_compile tools/wiki_migration_guard/migration_guard.py
 
 git status
 git log --oneline -12
+
+grep -n "Status:\|READY FOR LOCAL RC CHECK\|VERSION:\|M213" \
+  dev/wiki-history/k6-freelancer/verification/verification-m213.md \
+  dev/wiki-history/k6-freelancer/next-actions.md
 ```
 
 Expected result:
-- Guard sees no unsafe incoming `wiki/` changes.
+- Guard update is SAFE or reports no incoming changes.
 - Python CLI compiles.
 - Plan and dry-run remain stable.
 - Core FTS smoke remains PASS.
+- Optional embedding smoke may be skipped if dependencies are not installed.
 - Working tree remains clean.
+- VERSION remains `0.7.2-dev`.
+
+M213 PASS criteria:
+- Local RC checks pass.
+- No user-owned `wiki/` content is modified.
+- No migration guard feature expansion is introduced.
+- No VERSION bump is performed.
+- No release tag is created.
 
 M213 non-goals:
-- No new migration guard feature.
+- No release tagging.
+- No release note finalization.
+- No VERSION bump.
+- No migration guard feature expansion.
 - No automatic restore.
 - No automatic merge.
 - No schema migration engine.
 - No Shield integration.
 - No Git hook.
 - No daemon.
-- No expansion into enterprise migration management.
-- No release tagging unless explicitly decided after M213.
+- No enterprise migration management.
+
+Possible next milestone after local PASS:
+- M214 v0.7.2 Release Prep Decision / Release Notes Draft
 
 References:
+- `VERSION`
 - `README.md`
-- `bin/runes-wiki-migration-guard`
-- `tools/wiki_migration_guard/migration_guard.py`
 - `docs/runes-wiki-migration-guard.md`
 - `dev/wiki-history/k6-freelancer/verification/verification-m208-m210.md`
 - `dev/wiki-history/k6-freelancer/verification/verification-m211.md`
 - `dev/wiki-history/k6-freelancer/verification/verification-m212.md`
+- `dev/wiki-history/k6-freelancer/verification/verification-m213.md`
 
 ---
