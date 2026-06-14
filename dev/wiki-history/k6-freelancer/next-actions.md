@@ -1,4 +1,4 @@
-## N-20260614-M211 Migration Guard Dogfood Result Lock
+## N-20260614-M212 Migration Guard Real Update Dogfood Decision
 
 Status: READY
 
@@ -6,6 +6,7 @@ Current baseline:
 - M205-M207 Optional OPC Workspace Overlay is released as v0.7.1.
 - Development has reopened as VERSION `0.7.2-dev`.
 - M208-M210 Runes Wiki Migration Guard Minimal MVP is PASS / locally verified / hotfix verified.
+- M211 Migration Guard Dogfood Result Lock / README Update Flow Alignment is PASS / documentation aligned / minimal scope preserved.
 
 M208-M210 locked result:
 - Added minimal local CLI: `bin/runes-wiki-migration-guard`.
@@ -21,6 +22,13 @@ M208-M210 locked result:
 - Tool performs conservative incoming-update risk reporting.
 - Tool does not automatically repair, restore, merge, delete, or overwrite user-owned Markdown.
 
+M211 locked result:
+- Added README `Existing Installation Updates` section.
+- README now recommends `./bin/runes-wiki-migration-guard update` for existing installations where `wiki/` may contain local knowledge.
+- `docs/runes-wiki-migration-guard.md` is aligned with dogfood verified / minimal scope locked status.
+- Added `dev/wiki-history/k6-freelancer/verification/verification-m211.md`.
+- M211 keeps the guard small and avoids enterprise migration scope expansion.
+
 Verified local behavior:
 - `python3 -m py_compile tools/wiki_migration_guard/migration_guard.py`: PASS.
 - `./bin/runes-wiki-migration-guard --help`: PASS.
@@ -33,27 +41,28 @@ Verified local behavior:
 - local working tree clean after verification.
 
 Recommended next milestone:
-- M211 Migration Guard Dogfood Result Lock / README Update Flow Alignment
+- M212 Migration Guard Real Update Dogfood Decision
 
-M211 purpose:
-- Keep the tool small.
-- Avoid expanding into an enterprise migration framework.
-- Make the intended user update flow explicit in README / docs.
-- Clarify that ordinary users should prefer `./bin/runes-wiki-migration-guard update` instead of a naked `git pull` when updating an existing installation.
-- Confirm the tool is a low-frequency local safety helper, not a daily workflow.
+M212 purpose:
+- Decide whether to run one real `./bin/runes-wiki-migration-guard update` dogfood against a safe upstream change.
+- If no safe upstream change exists, record that dry-run and no-fetch dogfood are sufficient for the minimal MVP.
+- Keep the tool low-frequency, local, and conservative.
 
-M211 non-goals:
+M212 non-goals:
 - No automatic restore.
 - No automatic merge.
 - No schema migration engine.
 - No Shield integration.
 - No Git hook.
 - No daemon.
+- No expansion into enterprise migration management.
 
 References:
+- `README.md`
 - `bin/runes-wiki-migration-guard`
 - `tools/wiki_migration_guard/migration_guard.py`
 - `docs/runes-wiki-migration-guard.md`
 - `dev/wiki-history/k6-freelancer/verification/verification-m208-m210.md`
+- `dev/wiki-history/k6-freelancer/verification/verification-m211.md`
 
 ---
