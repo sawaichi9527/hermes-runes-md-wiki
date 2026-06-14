@@ -14,18 +14,19 @@ Hermes Runes was originally developed for Hermes Agent, but it is intentionally 
 
 Fresh Open Beta testers should start here:
 
-Current released fresh install path: `v0.7.0`
+Current released fresh install path: `v0.7.1`
 
 ```text
 docs/fresh-install-manual.md
 ```
 
-Current Open Beta target: `v0.7.0`
-Previous released baseline: `v0.5.0`
+Current Open Beta target: `v0.7.1`
+Previous released baseline: `v0.7.0`
 
 ```text
 docs/open-beta-starter.md
 docs/v0.7.0-tester-checklist.md
+docs/releases/v0.7.1.md
 ```
 
 The starter path uses a clean runtime wiki seed and a host-derived workspace slug. The fresh install manual records the current Docker / PostgreSQL / pgvector / bootstrap / migration / import / FTS smoke path for new checkouts on `main`.
@@ -99,6 +100,7 @@ See also:
 docs/fresh-install-manual.md
 docs/open-beta-starter.md
 docs/v0.7.0-tester-checklist.md
+docs/releases/v0.7.1.md
 docs/workspace-slug-policy.md
 SECURITY.md
 ```
