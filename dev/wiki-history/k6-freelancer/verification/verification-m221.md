@@ -1,7 +1,7 @@
 # Verification M221 - De-OPC Mainline Rebaseline
 
-Status: READY FOR LOCAL DE-OPC CHECK  
-Date: 2026-06-14  
+Status: PASS / single-agent mainline restored / RSS local commit preserved  
+Date: 2026-06-17  
 Scope: return `main` to single-agent / agent-agnostic active baseline after archiving the v0.7.2 OPC-capable release state
 
 ## Decision
@@ -15,7 +15,7 @@ v0.7.2 tag
 archive/v0.7.2-opc branch
 ```
 
-`main` should now proceed as a single-agent / agent-agnostic baseline.
+`main` now proceeds as a single-agent / agent-agnostic baseline.
 
 ## Implementation changes
 
@@ -41,7 +41,7 @@ Expected mainline behavior after M221:
 
 ## Preserved items
 
-M221 must preserve:
+M221 preserves:
 
 - `v0.7.2` tag
 - `archive/v0.7.2-opc` branch
@@ -50,73 +50,87 @@ M221 must preserve:
 - v0.7.2 release notes
 - developer history under `dev/wiki-history/`
 - regular workspace memory under `wiki/freelancer/`
+- local RSS active feeds commit reapplied on top of the de-OPC baseline
 
-## Guard expectation
+## Local validation evidence
 
-Unlike normal docs-only updates, M221 intentionally touches `wiki/` seed files to remove the active OPC overlay from main.
+User local validation confirmed:
 
-Therefore `./bin/runes-wiki-migration-guard update` may return STOP before pull. This is expected if the incoming changed files are limited to the M221 de-OPC cleanup set.
-
-For this controlled developer sync only, after confirming the incoming files match M221, it is acceptable to apply:
-
-```bash
-git pull --ff-only
+```text
+main == origin/main
+working tree clean
+latest commit: 0d13a97 chore: update RSS subscriptions with active feeds (2026-06-14)
+VERSION: 0.7.3-dev
 ```
 
-This does not change the general rule: existing users should still use the migration guard for normal updates.
+Validation details:
+
+```text
+OPC active files absent:
+- docs/opc-workspace-overlay.md
+- wiki/_system/opc-workspace-overlay-policy.md
+- wiki/freelancer/opc/README.md
+
+operations.md:
+- no diff after restore
+- abandoned PLUR/OPC operations log was not merged into main
+
+migration guard:
+- ./bin/runes-wiki-migration-guard plan --no-fetch
+- Status: SAFE
+- Reason: no incoming changes detected
+
+smoke:
+- Core FTS Smoke Test PASS
+```
+
+Local RSS preservation:
+
+```text
+0d13a97 chore: update RSS subscriptions with active feeds (2026-06-14)
+```
+
+This local commit was cherry-picked after resetting to the M221 de-OPC origin/main baseline, then pushed to origin/main.
+
+## Guard behavior note
+
+M221 intentionally touched `wiki/` seed files and therefore correctly triggered migration guard STOP before the controlled developer sync. This was expected and aligned with migration guard policy.
+
+The user preserved local state before reset:
+
+```text
+backups/manual-m221-*/local-operations-opc-plur.patch
+backups/manual-m221-*/local-rss-commit.patch
+backup/local-before-m221-*
+```
+
+The abandoned OPC/PLUR operations patch was intentionally not merged into active main.
 
 ## Non-goals
 
-M221 does not:
+M221 did not:
 
-- reset `main`
+- reset `main` history
 - remove the `v0.7.2` tag
 - remove the `archive/v0.7.2-opc` branch
 - remove migration guard
 - change Runes Shield schemas
 - change VERSION
-- mutate ordinary user-owned memory files
+- remove ordinary workspace memory
 
-## Local validation plan
+## Final lock
 
-Run from a local checkout:
-
-```bash
-cd ~/workspace/hermes-runes-md-wiki
-
-./bin/runes-wiki-migration-guard update
-# If the guard stops because of the intentional M221 wiki seed cleanup,
-# inspect the incoming file list, then run:
-# git pull --ff-only
-
-cat VERSION
-
-test ! -e docs/opc-workspace-overlay.md
-test ! -e wiki/_system/opc-workspace-overlay-policy.md
-test ! -e wiki/freelancer/opc/README.md
-
-python3 -m py_compile tools/wiki_migration_guard/migration_guard.py
-./bin/runes-wiki-migration-guard plan --no-fetch
-./bin/hermes-memory-smoke
-
-git status
-git log --oneline -12
-
-grep -n "Status:\|READY FOR LOCAL DE-OPC CHECK\|M221" \
-  dev/wiki-history/k6-freelancer/verification/verification-m221.md \
-  dev/wiki-history/k6-freelancer/next-actions.md
-```
-
-Expected result:
+M221 De-OPC Mainline Rebaseline is locked as:
 
 ```text
-VERSION = 0.7.3-dev
-OPC active files are absent from main
-migration guard still works
-Core FTS smoke PASS
-working tree clean
+PASS / single-agent mainline restored / RSS local commit preserved
 ```
 
-## Lock rule
+Post-M221 baseline:
 
-M221 may be locked as PASS only after local validation confirms the de-OPC mainline baseline.
+```text
+main: single-agent / agent-agnostic active baseline
+archive/v0.7.2-opc: archived OPC-capable release baseline
+VERSION: 0.7.3-dev
+no immediate required action
+```
