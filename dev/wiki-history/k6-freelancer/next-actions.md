@@ -1,6 +1,6 @@
-## N-20260617-v0.7.3-dev Target Queue
+## N-20260617-v0.7.3-dev RC Prep
 
-Status: READY / M222-M225 resolved / M226 selected
+Status: READY FOR LOCAL RC CHECK
 
 Current baseline:
 
@@ -11,7 +11,7 @@ v0.7.2: archived release tag
 archive/v0.7.2-opc: archived OPC-capable branch
 ```
 
-Completed:
+Resolved for v0.7.3-dev:
 
 ```text
 M222 Single-Agent Baseline Sanity Check
@@ -27,49 +27,44 @@ M225 Optional Embedding Profile Boundary
 PASS / optional embedding boundary locally verified
 ```
 
-M223 active guidance:
+M226 prepared artifacts:
 
 ```text
-docs/agent-subagent-kanban-role-model.md
+docs/releases/v0.7.3.md
+dev/wiki-history/k6-freelancer/verification/verification-m226.md
 ```
 
-M223 final model:
+M226 status:
 
 ```text
-main agent = single user-facing governed runtime
-Hermes native subagents = bounded delegated execution helpers
-Kanban = compact task-state / checkpoint layer under local context limits
+READY FOR LOCAL RC CHECK
 ```
 
-Repository location decision:
+Required local RC check:
 
-```text
-Keep current path for now: ~/workspace/hermes-runes-md-wiki
+```bash
+cat VERSION
+python3 -m py_compile tools/importer/root_resolver.py
+bash -n bin/hermes-memory-sync
+./bin/runes-wiki-migration-guard plan --no-fetch
+./bin/hermes-memory-smoke
+git status
+git log --oneline -12
 ```
 
-Out of active mainline scope:
+Expected baseline:
 
 ```text
-profile-agent OPC overlay
-profile-based secretary / runes-holder / coordinator / researcher / builder / writer architecture
-PLUR as active mainline dependency
-Lark-to-profile A2A handoff
-direct Lark-to-wiki write path
+VERSION = 0.7.3-dev
+Core FTS smoke PASS
+Embedding profile may be skipped when not installed
+working tree clean
 ```
 
 Next selected work:
 
 ```text
-M226 v0.7.3 Release Candidate Prep
+M226 Local RC Check / Result Lock
 ```
 
-M226 entry criteria:
-
-```text
-- VERSION remains 0.7.3-dev until release prep finishes.
-- M222-M225 are resolved.
-- M223 is active guidance, not runtime orchestration.
-- Core FTS smoke remains the required baseline.
-- Embedding/hybrid/answer-generation remains optional unless the release explicitly targets that profile.
-- No active OPC overlay returns to main.
-```
+Do not create the final release tag until the local RC check is confirmed.
