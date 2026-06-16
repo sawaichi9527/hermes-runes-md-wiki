@@ -1,6 +1,6 @@
 # M226 v0.7.3 Release Candidate Prep
 
-Status: READY FOR LOCAL RC CHECK  
+Status: PASS / RC locally verified / ready for final release tag  
 Date: 2026-06-17
 
 ## Purpose
@@ -74,8 +74,26 @@ embedding profile may be skipped when not installed
 working tree clean
 ```
 
-## Current decision
+## Local RC evidence
 
-M226 is ready for local RC check.
+User local validation on 2026-06-17:
 
-Final release/tag lock is deferred until local validation confirms the RC baseline.
+```text
+Runes Wiki Migration Guard update: SAFE
+VERSION: 0.7.3-dev
+runes-wiki-migration-guard plan --no-fetch: SAFE / no incoming changes detected
+Core FTS smoke: PASS
+Embedding profile not installed: skipped by design
+Working tree: clean
+main == origin/main at b114041 before lock
+```
+
+## Final lock
+
+M226 is complete.
+
+```text
+PASS / RC locally verified / ready for final release tag
+```
+
+Final release/tag creation remains a separate M227 action.
