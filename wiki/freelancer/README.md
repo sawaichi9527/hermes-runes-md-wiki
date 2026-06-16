@@ -11,6 +11,7 @@ This workspace stores user-approved, durable Markdown memory for the current hos
 - Store curated project notes, preferences, operating style, decisions, services, and long-term objectives.
 - Do not store real secrets, tokens, passwords, API keys, private keys, or raw sensitive logs.
 - Draft or unreviewed memory should enter through `forge-inbox/` first.
+- Operate from the single-agent / agent-agnostic mainline baseline unless a future approved policy says otherwise.
 
 ## Files
 
@@ -23,20 +24,6 @@ This workspace stores user-approved, durable Markdown memory for the current hos
 - `services.md` — reviewed local service notes.
 - `decisions.md` — reviewed decisions.
 - `forge-inbox/` — governed draft proposal inbox.
-- `opc/` — optional OPC profile memory overlay for installations using Hermes Agent OPC profiles.
-
-## Optional OPC overlay
-
-The `opc/` directory is optional. It is used only when this workspace is operated with Hermes Agent OPC profile agents.
-
-Single-agent users can ignore this directory.
-
-See:
-
-```text
-docs/opc-workspace-overlay.md
-wiki/freelancer/opc/README.md
-```
 
 ## Default workspace seed boundary
 
@@ -53,3 +40,7 @@ wiki/<workspace slug>/
 Default workspace memory should include curated workspace files such as preferences, operating style, local environment, services, decisions, research sources, and long-term objectives.
 
 Milestone files such as `verification-m*.md` are development / release evidence and should not be part of the default runtime workspace Markdown seed. Keep them under `dev/wiki-history/<workspace slug>/verification/` instead.
+
+## Change Log
+
+- 2026-06-17: Removed active OPC workspace overlay references from the runtime workspace README after the mainline returned to the single-agent / agent-agnostic baseline.
