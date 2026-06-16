@@ -75,24 +75,11 @@ Developer history is retained under `dev/` and should not be imported as runtime
 
 ---
 
-## Optional OPC Workspace Overlay
+## Mainline Baseline
 
-Hermes Runes MD Wiki keeps the same governed access model for both single-agent and OPC usage.
+`main` is the single-agent / agent-agnostic baseline for normal local use.
 
-When Hermes Agent OPC profile agents are used, profile memory may be organized under:
-
-```text
-wiki/<workspace-slug>/opc/
-```
-
-This overlay is optional. Forkers and users who run a single agent do not need it.
-
-See:
-
-```text
-docs/opc-workspace-overlay.md
-wiki/freelancer/opc/README.md
-```
+The experimental Hermes Agent OPC overlay from `v0.7.2` is archived on the `archive/v0.7.2-opc` branch and is not active on `main`.
 
 ---
 
