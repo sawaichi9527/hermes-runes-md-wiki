@@ -51,6 +51,20 @@ M221 must preserve:
 - developer history under `dev/wiki-history/`
 - regular workspace memory under `wiki/freelancer/`
 
+## Guard expectation
+
+Unlike normal docs-only updates, M221 intentionally touches `wiki/` seed files to remove the active OPC overlay from main.
+
+Therefore `./bin/runes-wiki-migration-guard update` may return STOP before pull. This is expected if the incoming changed files are limited to the M221 de-OPC cleanup set.
+
+For this controlled developer sync only, after confirming the incoming files match M221, it is acceptable to apply:
+
+```bash
+git pull --ff-only
+```
+
+This does not change the general rule: existing users should still use the migration guard for normal updates.
+
 ## Non-goals
 
 M221 does not:
@@ -71,6 +85,10 @@ Run from a local checkout:
 cd ~/workspace/hermes-runes-md-wiki
 
 ./bin/runes-wiki-migration-guard update
+# If the guard stops because of the intentional M221 wiki seed cleanup,
+# inspect the incoming file list, then run:
+# git pull --ff-only
+
 cat VERSION
 
 test ! -e docs/opc-workspace-overlay.md
@@ -84,7 +102,7 @@ python3 -m py_compile tools/wiki_migration_guard/migration_guard.py
 git status
 git log --oneline -12
 
-grep -n "Status:\|READY FOR LOCAL DE-OPC CHECK\|M222" \
+grep -n "Status:\|READY FOR LOCAL DE-OPC CHECK\|M221" \
   dev/wiki-history/k6-freelancer/verification/verification-m221.md \
   dev/wiki-history/k6-freelancer/next-actions.md
 ```
