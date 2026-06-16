@@ -1,6 +1,6 @@
 ## N-20260617-v0.7.3-dev Target Queue
 
-Status: READY / M222-M225 partially resolved
+Status: READY / M222-M225 resolved / M226 selected
 
 Current baseline:
 
@@ -11,11 +11,14 @@ v0.7.2: archived release tag
 archive/v0.7.2-opc: archived OPC-capable branch
 ```
 
-Completed in this pass:
+Completed:
 
 ```text
 M222 Single-Agent Baseline Sanity Check
 PASS / single-agent sanity locally verified
+
+M223 Agent / Subagent / Kanban Role Model
+PASS / active guidance approved and documented
 
 M224 hermes-memory-sync Path Fix
 PASS / sync path locally verified
@@ -24,35 +27,18 @@ M225 Optional Embedding Profile Boundary
 PASS / optional embedding boundary locally verified
 ```
 
-Pending decision:
+M223 active guidance:
 
 ```text
-M223 Agent / Subagent / Kanban Role Model
-Status: PROPOSAL READY / pending user approval before implementation
-Proposal: docs/agent-subagent-kanban-role-model-proposal.md
+docs/agent-subagent-kanban-role-model.md
 ```
 
-M223 proposal summary:
+M223 final model:
 
 ```text
 main agent = single user-facing governed runtime
 Hermes native subagents = bounded delegated execution helpers
 Kanban = compact task-state / checkpoint layer under local context limits
-```
-
-M223 assumptions:
-
-```text
-local maximum context: 128K tokens
-compression pressure begins around 50% context usage
-Kanban should store compact task state, blockers, next action, and evidence links
-Kanban should not become an A2A orchestration layer
-```
-
-Deferred until M223 decision:
-
-```text
-M226 v0.7.3 Release Candidate Prep
 ```
 
 Repository location decision:
@@ -74,5 +60,16 @@ direct Lark-to-wiki write path
 Next selected work:
 
 ```text
-Review and decide M223 proposal.
+M226 v0.7.3 Release Candidate Prep
+```
+
+M226 entry criteria:
+
+```text
+- VERSION remains 0.7.3-dev until release prep finishes.
+- M222-M225 are resolved.
+- M223 is active guidance, not runtime orchestration.
+- Core FTS smoke remains the required baseline.
+- Embedding/hybrid/answer-generation remains optional unless the release explicitly targets that profile.
+- No active OPC overlay returns to main.
 ```
