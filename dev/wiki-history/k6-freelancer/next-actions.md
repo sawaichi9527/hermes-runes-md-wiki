@@ -16,12 +16,20 @@ M221 implementation result:
 - active `wiki/freelancer/opc/` seed removed from main
 - v0.7.2 release notes updated with archive branch note
 
+Guard expectation:
+- M221 intentionally touches `wiki/` seed files.
+- The migration guard may STOP before pull.
+- If STOP lists only the intentional M221 de-OPC cleanup files, manually apply `git pull --ff-only` for this controlled developer sync.
+
 Suggested local validation:
 
 ```bash
 cd ~/workspace/hermes-runes-md-wiki
 
 ./bin/runes-wiki-migration-guard update
+# If STOP only lists M221 de-OPC cleanup files:
+# git pull --ff-only
+
 cat VERSION
 
 test ! -e docs/opc-workspace-overlay.md
