@@ -74,6 +74,15 @@ O-M229-001: temporary Lark reply footer observation
 - This improves response visibility but is not proof that a Shield gate, guard, approval path, or git evidence check ran.
 ```
 
+M229 clarification:
+
+```text
+The response footer is a short-to-mid-term observation aid only.
+It may help validate whether the agent is moving toward the intended behavior.
+After the real evidence path is confirmed, the footer requirement should be disabled or removed.
+It must not become the formal governance mechanism.
+```
+
 M229 direction:
 
 ```text
@@ -97,4 +106,5 @@ Post-release guidance:
 - Keep optional embedding dependencies out of the required core baseline.
 - Continue using `./bin/runes-wiki-migration-guard update` for existing installs.
 - Treat `Runes Shield: yes/no` as insufficient unless backed by evidence.
+- Treat visible footer output as temporary observability, not a permanent feature.
 - Do not add heavy runtime enforcement, daemons, queues, telemetry, or enterprise workflow for M229.
