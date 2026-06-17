@@ -24,6 +24,36 @@ Answer footer != procedural proof
 Memory rule != durable governance gate
 ```
 
+## Observation evidence
+
+### O-M229-001 response footer memory rule
+
+A temporary Lark/Hermes Agent observation showed that the bot can record and repeat a reply-format rule:
+
+```text
+For future replies involving wiki knowledge sedimentation or retrieval, append:
+[Runes Shield: 有/無]
+```
+
+The bot then replied with:
+
+```text
+[Runes Shield: 無]
+```
+
+This is useful as a visibility marker, but it is not procedural evidence by itself.
+
+Interpretation:
+
+```text
+- The bot can remember and apply a footer convention.
+- The footer can honestly mark that no Shield gate was used.
+- The footer does not prove that a guard, approval path, Shield policy check, or git evidence check ran.
+- Therefore response-level acknowledgement is necessary but insufficient.
+```
+
+This observation reinforces the M229 requirement: every sensitive action needs a compact state plus evidence basis, not only a yes/no footer.
+
 ## Why this matters
 
 The active mainline relies on a single main agent, bounded native subagents, lightweight Kanban checkpointing, governed Markdown memory, and Git history.
