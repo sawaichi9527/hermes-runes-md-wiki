@@ -71,6 +71,12 @@ Do not keep the visible footer as the governance mechanism.
 Do not treat footer compliance as proof of Shield execution.
 ```
 
+Additional note:
+
+```text
+docs/runes-shield-response-footer-observation-boundary.md records this temporary-observation boundary.
+```
+
 ## Recorded direction
 
 Add v0.7.4-dev work to define a lightweight acknowledgement protocol that distinguishes:
@@ -90,6 +96,7 @@ Add v0.7.4-dev work to define a lightweight acknowledgement protocol that distin
 
 ```text
 docs/runes-shield-runtime-acknowledgement-gap.md
+docs/runes-shield-response-footer-observation-boundary.md
 ```
 
 ## Constraints
