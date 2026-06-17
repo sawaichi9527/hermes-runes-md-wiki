@@ -57,6 +57,20 @@ Conclusion:
 Response footer acknowledgement is useful observation, not sufficient governance evidence.
 ```
 
+### Clarification after user review
+
+The response footer approach is a short-to-mid-term observation method, not a formal feature.
+
+It is useful while checking whether the agent is moving toward the intended behavior. After the real governance/evidence path is confirmed, the footer requirement should be closed, disabled, or removed.
+
+Long-term expectation:
+
+```text
+Keep the evidence-backed protocol.
+Do not keep the visible footer as the governance mechanism.
+Do not treat footer compliance as proof of Shield execution.
+```
+
 ## Recorded direction
 
 Add v0.7.4-dev work to define a lightweight acknowledgement protocol that distinguishes:
@@ -90,6 +104,7 @@ Do not add:
 - enterprise approval workflow
 - telemetry platform
 - queue/broker orchestration
+- permanent response-footer feature
 ```
 
 ## Acceptance direction
@@ -103,6 +118,8 @@ Basis: user approval | policy recall | guard output | security scan | commit has
 Action: read-only | proposal | patch | commit | wiki write
 Evidence: <path / command / commit / none>
 ```
+
+The footer may be used during observation, but the desired stable outcome is a reliable evidence path. The footer itself should be removable.
 
 ## Current result
 
