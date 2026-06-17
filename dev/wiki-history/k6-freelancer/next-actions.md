@@ -65,6 +65,15 @@ but later actions may still rely on prompt memory and direct tool edits rather t
 Runes Shield gate or evidence-backed approval state.
 ```
 
+M229 observation sample:
+
+```text
+O-M229-001: temporary Lark reply footer observation
+- User asked the bot to append whether Runes Shield was used.
+- Bot saved a footer rule and replied with `[Runes Shield: 無]`.
+- This improves response visibility but is not proof that a Shield gate, guard, approval path, or git evidence check ran.
+```
+
 M229 direction:
 
 ```text
