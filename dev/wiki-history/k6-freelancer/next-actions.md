@@ -1,6 +1,6 @@
 ## N-20260617-v0.7.4-dev-opened
 
-Status: READY / v0.7.4-dev opened / planning pending
+Status: READY / v0.7.4-dev opened / M229 direction recorded
 
 Current baseline:
 
@@ -27,6 +27,7 @@ Opened after v0.7.3:
 
 ```text
 M228 PASS / v0.7.4-dev opened / planning pending
+M229 RECORDED / Runes Shield runtime acknowledgement gap / not implemented
 ```
 
 Release artifacts:
@@ -35,6 +36,13 @@ Release artifacts:
 docs/releases/v0.7.3.md
 dev/wiki-history/k6-freelancer/verification/verification-m227.md
 dev/wiki-history/k6-freelancer/verification/verification-m228.md
+```
+
+v0.7.4-dev planning artifacts:
+
+```text
+docs/runes-shield-runtime-acknowledgement-gap.md
+dev/wiki-history/k6-freelancer/verification/verification-m229.md
 ```
 
 Released tag:
@@ -46,7 +54,30 @@ v0.7.3 -> b60ed3c
 Next selected work:
 
 ```text
-N-20260617-v0.7.4-dev planning pending
+M229 Runes Shield runtime acknowledgement protocol design
+```
+
+M229 problem:
+
+```text
+Fresh Hermes Agent / Lark bot onboarding can make the bot verbally accept the Runes Wiki boundary,
+but later actions may still rely on prompt memory and direct tool edits rather than a verifiable
+Runes Shield gate or evidence-backed approval state.
+```
+
+M229 direction:
+
+```text
+Define a lightweight acknowledgement protocol that distinguishes:
+- policy recalled from memory
+- read-only action
+- proposal-only action
+- direct patch
+- wiki write
+- commit/push
+- explicit user approval
+- migration guard / security scan / commit evidence
+- no shield used
 ```
 
 Post-release guidance:
@@ -56,4 +87,5 @@ Post-release guidance:
 - Keep Kanban as a lightweight checkpoint layer only.
 - Keep optional embedding dependencies out of the required core baseline.
 - Continue using `./bin/runes-wiki-migration-guard update` for existing installs.
-- Do not add v0.7.4-dev work until a concrete user goal is selected.
+- Treat `Runes Shield: yes/no` as insufficient unless backed by evidence.
+- Do not add heavy runtime enforcement, daemons, queues, telemetry, or enterprise workflow for M229.
