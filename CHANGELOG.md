@@ -4,65 +4,41 @@ All notable Hermes Runes MD Wiki Open Beta changes are recorded here.
 
 This project uses SemVer-style versioning during Open Beta.
 
-## [0.7.4-dev] - Unreleased
+## [0.7.4] - 2026-06-27
 
-### Planned
+### Added
 
-- Reintroduce PLUR as an optional runtime persistent memory bridge for the current single-agent / agent-agnostic mainline.
-- Keep PLUR detachable: Hermes Runes MD Wiki must remain usable when PLUR is absent, disabled, unavailable, or replaced by a future provider.
-- Keep Hermes Agent native customization minimal: do not patch Hermes Agent core or depend on private memory, compression, Kanban, or subagent internals.
-- Define PLUR memory roles for engram, episode, checkpoint, and forge candidate use.
-- Preserve Runes Wiki as the governed canonical long-term memory source.
-- Preserve Runes Shield as the protected forge gate / operation protection layer, not the memory judge.
-- Require human-in-the-loop approval before any PLUR candidate is forged into Runes Wiki.
-- Add minimal PLUR memory hygiene suitable for personal/local use: required scope, no default episode injection, governance hint pointers, no auto-promotion, superseded checkpoints, and cautious handling of already-deployed PLUR memory.
-- Keep S7-S9 as design-only until a future implementation is explicitly approved.
-- Pause S10 until PLUR read-only context summary value becomes clear.
-- Keep S11-S12 as design-only candidate dry-run and verification/docs sync guidance.
+- Added `docs/plur-runtime-memory-bridge.md` as the primary v0.7.4 PLUR bridge planning artifact.
+- Added `docs/releases/v0.7.4.md` release notes.
+- Added final v0.7.4 verification notes under `dev/wiki-history/k6-freelancer/verification/`.
 
-### S7-S9 design-only scope
+### Changed
 
-- S7 read-only PLUR discovery / status check design:
-  - future status checks may inspect only safe local availability signals
-  - no PLUR module import, command execution, memory read/write, or environment value printing
-- S8 runtime memory provider abstraction design:
-  - future Noop provider remains required for detachable behavior
-  - no new runtime helper is required in the current scope
-- S9 PLUR memory schema mapping design:
-  - engram, episode, checkpoint, and candidate roles are documented
-  - episode injection remains disabled by default
-  - candidate auto-promotion remains disabled
+- Reframed v0.7.4 around optional PLUR runtime persistent memory bridge reintegration for the current single-agent / agent-agnostic mainline.
+- Preserved Runes Wiki as the governed canonical long-term memory source.
+- Preserved Runes Shield as the protected forge gate / operation protection layer, not the memory judge.
+- Recorded S1-S6 as the PLUR bridge scope / policy / hygiene boundary.
+- Recorded S7-S9 as design-only until a future implementation is explicitly approved.
+- Paused S10 because PLUR read-only context summary value is unclear.
+- Recorded S11 candidate dry-run flow as proposal-only.
+- Recorded S12 smoke / verification / docs sync as manual consistency checking.
 
-### S10-S12 design-only scope
-
-- S10 read-only PLUR context summary is paused because the value is not clear enough.
-- S11 candidate dry-run flow is documented as proposal-only:
-  - no wiki write
-  - no PLUR write
-  - no PLUR read requirement
-  - no automatic promotion
-  - explicit user approval is required before any future forge path
-- S12 verification/docs sync is documented as manual consistency checking:
-  - normal smoke remains unchanged
-  - no PLUR helper or PLUR smoke is added
-  - documentation must not claim runtime behavior that does not exist
-
-### Non-goals
+### Boundaries
 
 - No OPC profile-agent restoration.
 - No Hermes Agent core patch.
+- No Hermes Agent native configuration change.
 - No daemon, queue, telemetry platform, enterprise approval workflow, heavy LLM judge, or every-turn full-memory scan.
 - No automatic PLUR-to-Runes Wiki promotion.
 - No bulk migration or deletion of existing deployed PLUR memory.
-- No new PLUR runtime helper or smoke test until explicitly approved.
+- No new PLUR runtime helper or smoke test.
 
-### Documentation
+### Verification
 
-- Added `docs/plur-runtime-memory-bridge.md` as the primary v0.7.4-dev planning artifact.
-- Updated `dev/wiki-history/k6-freelancer/next-actions.md` with S1-S6 PLUR bridge scope.
-- Updated `docs/plur-runtime-memory-bridge.md` with S7-S9 design-only notes.
-- Updated `docs/plur-runtime-memory-bridge.md` with S10 pause and S11-S12 design-only notes.
-- Added `dev/wiki-history/k6-freelancer/verification/verification-s10-s12-v0.7.4-dev-design-only.md`.
+- Local working tree clean at final design-only verification.
+- Migration guard plan SAFE.
+- Core FTS smoke PASS.
+- Embedding profile skip accepted when embedding profile is not installed.
 
 ## [0.7.0] - 2026-06-08
 
@@ -192,7 +168,7 @@ Use `v0.3.0` or later for public tester onboarding.
 
 - Repository: `sawaichi9527/hermes-runes-md-wiki`
 - Visibility: public
-- License: Apache-2.0
+- License: Apache-2.0 applied.
 - Current version file: `VERSION`
 
 ### Notable Boundaries
