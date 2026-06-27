@@ -4,6 +4,32 @@ All notable Hermes Runes MD Wiki Open Beta changes are recorded here.
 
 This project uses SemVer-style versioning during Open Beta.
 
+## [0.7.4-dev] - Unreleased
+
+### Planned
+
+- Reintroduce PLUR as an optional runtime persistent memory bridge for the current single-agent / agent-agnostic mainline.
+- Keep PLUR detachable: Hermes Runes MD Wiki must remain usable when PLUR is absent, disabled, unavailable, or replaced by a future provider.
+- Keep Hermes Agent native customization minimal: do not patch Hermes Agent core or depend on private memory, compression, Kanban, or subagent internals.
+- Define PLUR memory roles for engram, episode, checkpoint, and forge candidate use.
+- Preserve Runes Wiki as the governed canonical long-term memory source.
+- Preserve Runes Shield as the protected forge gate / operation protection layer, not the memory judge.
+- Require human-in-the-loop approval before any PLUR candidate is forged into Runes Wiki.
+- Add minimal PLUR memory hygiene suitable for personal/local use: required scope, no default episode injection, governance hint pointers, no auto-promotion, superseded checkpoints, and cautious handling of already-deployed PLUR memory.
+
+### Non-goals
+
+- No OPC profile-agent restoration.
+- No Hermes Agent core patch.
+- No daemon, queue, telemetry platform, enterprise approval workflow, heavy LLM judge, or every-turn full-memory scan.
+- No automatic PLUR-to-Runes Wiki promotion.
+- No bulk migration or deletion of existing deployed PLUR memory.
+
+### Documentation
+
+- Added `docs/plur-runtime-memory-bridge.md` as the primary v0.7.4-dev planning artifact.
+- Updated `dev/wiki-history/k6-freelancer/next-actions.md` with S1-S6 PLUR bridge scope.
+
 ## [0.7.0] - 2026-06-08
 
 ### Added
