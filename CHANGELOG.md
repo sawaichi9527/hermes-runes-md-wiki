@@ -4,6 +4,15 @@ All notable Hermes Runes MD Wiki Open Beta changes are recorded here.
 
 This project uses SemVer-style versioning during Open Beta.
 
+## [0.7.5-dev] - Unreleased
+
+### Planned
+
+- Continue from the v0.7.4 conservative PLUR bridge documentation/governance-boundary release.
+- Keep PLUR runtime implementation paused unless a concrete need appears.
+- Keep the active mainline single-agent / agent-agnostic.
+- Preserve Core FTS smoke as the lightweight required baseline.
+
 ## [0.7.4] - 2026-06-27
 
 ### Added
