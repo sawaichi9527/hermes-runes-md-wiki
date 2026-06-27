@@ -1,3 +1,54 @@
+## N-20260627-v0.7.4-dev-plur-s7-s9-runtime-bridge
+
+Status: IMPLEMENTED / pending local pull verification
+
+Implemented scope:
+
+```text
+S7  PLUR read-only discovery / status check
+S8  Runtime memory provider abstraction / Noop provider
+S9  PLUR memory schema mapping
+```
+
+Implementation artifacts:
+
+```text
+tools/importer/plur_runtime_bridge.py
+tools/importer/smoke/eval_smoke_plur_bridge.py
+bin/hermes-memory-smoke
+docs/plur-runtime-memory-bridge.md
+CHANGELOG.md
+```
+
+Behavior:
+
+- `status --provider auto` intentionally selects `noop` in S7-S9.
+- PLUR availability detection checks only safe local signals.
+- PLUR modules are not imported.
+- PLUR commands are not executed.
+- PLUR memory is not read or written.
+- Environment variable values are not printed.
+- Existing deployed PLUR memory is not bulk migrated, bulk deleted, or assumed canonical.
+
+Local verification requested:
+
+```bash
+cd ~/workspace/hermes-runes-md-wiki
+git pull
+git status
+python3 tools/importer/plur_runtime_bridge.py status --json
+python3 tools/importer/plur_runtime_bridge.py schema --json
+./bin/hermes-memory-smoke
+```
+
+Next selected work after S7-S9 verification:
+
+```text
+S10 Read-only PLUR context summary design, still no injection and no writes by default.
+```
+
+---
+
 ## N-20260627-v0.7.4-dev-plur-runtime-memory-bridge
 
 Status: READY / v0.7.4-dev scope recalibrated to PLUR reintegration
@@ -50,7 +101,7 @@ docs/plur-runtime-memory-bridge.md
 Next selected work:
 
 ```text
-S1-S6 verification alignment for v0.7.4-dev PLUR runtime memory bridge.
+S7-S9 PLUR read-only discovery, Noop provider, and schema mapping.
 ```
 
 ---
