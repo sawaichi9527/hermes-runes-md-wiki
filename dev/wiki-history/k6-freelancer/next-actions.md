@@ -1,3 +1,60 @@
+## N-20260627-v0.7.4-dev-plur-runtime-memory-bridge
+
+Status: READY / v0.7.4-dev scope recalibrated to PLUR reintegration
+
+Current decision:
+
+```text
+v0.7.4-dev focuses on optional PLUR runtime memory bridge reintegration.
+This is a deployed correction line for the current single-agent / agent-agnostic mainline.
+It is not a long-range roadmap expansion and does not restore OPC profile-agent architecture.
+```
+
+Scope:
+
+```text
+S1  Detachable PLUR integration
+S2  Minimal Hermes Agent native customization
+S3  PLUR runtime memory role and source priority
+S4  Engram / episode / checkpoint / candidate policy
+S5  Human-in-the-loop forge candidate flow
+S6  Minimal PLUR memory hygiene and deployed-memory caution
+```
+
+Implementation boundary:
+
+```text
+PLUR = optional runtime persistent working memory
+Runes Wiki = governed canonical long-term memory source
+Runes Shield = protected forge gate / operation protection layer
+Hermes Agent / Lark bot = candidate proposer and task reasoner
+User = human-in-the-loop approval authority
+```
+
+Key rules:
+
+- PLUR must be detachable and non-required.
+- Hermes Agent core must not be patched for this integration.
+- Hermes Agent native settings should remain minimally customized.
+- Existing deployed PLUR memory must be treated carefully as non-authoritative runtime state.
+- Existing PLUR records must not be bulk migrated, bulk deleted, or promoted into Runes Wiki automatically.
+- Candidate forge requires explicit user approval and Runes Shield protected operation.
+- Do not add daemon, queue, telemetry, enterprise approval workflow, heavy LLM judge, or multi-profile mesh.
+
+Primary planning artifact:
+
+```text
+docs/plur-runtime-memory-bridge.md
+```
+
+Next selected work:
+
+```text
+S1-S6 verification alignment for v0.7.4-dev PLUR runtime memory bridge.
+```
+
+---
+
 ## N-20260617-v0.7.4-dev-opened
 
 Status: READY / v0.7.4-dev opened / M229 direction recorded
@@ -43,6 +100,7 @@ v0.7.4-dev planning artifacts:
 ```text
 docs/runes-shield-runtime-acknowledgement-gap.md
 dev/wiki-history/k6-freelancer/verification/verification-m229.md
+docs/plur-runtime-memory-bridge.md
 ```
 
 Released tag:
@@ -54,7 +112,7 @@ v0.7.3 -> b60ed3c
 Next selected work:
 
 ```text
-M229 Runes Shield runtime acknowledgement protocol design
+S1-S6 PLUR runtime memory bridge reintegration
 ```
 
 M229 problem:
