@@ -1,3 +1,69 @@
+## N-20260627-v0.7.4-final-release
+
+Status: FINAL RELEASE RECORDED / tag pending
+
+Current decision:
+
+```text
+v0.7.4 is the formal release for the conservative PLUR runtime memory bridge documentation/governance-boundary line.
+After v0.7.4 release marking, main advances to v0.7.5-dev.
+```
+
+Final v0.7.4 state:
+
+```text
+S1-S6  PLUR bridge scope / policy / hygiene recorded
+S7-S9  design-only
+S10    paused
+S11    candidate dry-run design-only
+S12    verification/docs sync design-only
+```
+
+Release artifacts:
+
+```text
+docs/releases/v0.7.4.md
+dev/wiki-history/k6-freelancer/verification/verification-v0.7.4-final.md
+docs/plur-runtime-memory-bridge.md
+CHANGELOG.md
+```
+
+Final local verification evidence before release marking:
+
+```text
+Repo head: e84972c
+git status: clean
+migration guard: SAFE
+Core FTS smoke: PASS
+PLUR helper: not added
+PLUR smoke: not added
+embedding profile: SKIP as expected
+```
+
+Release boundary:
+
+- No new PLUR runtime helper.
+- No new PLUR smoke.
+- No Hermes Agent core patch.
+- No Hermes Agent native configuration change.
+- No PLUR memory read/write/migration/deletion.
+- No automatic PLUR-to-Runes Wiki promotion.
+
+Tagging note:
+
+```text
+Create git tag v0.7.4 on the release commit where VERSION is 0.7.4.
+```
+
+Next selected work:
+
+```text
+Advance main to v0.7.5-dev after v0.7.4 release marking.
+Keep PLUR runtime implementation paused unless a concrete need appears.
+```
+
+---
+
 ## N-20260627-v0.7.4-dev-plur-s10-s12-design-only
 
 Status: DESIGN-ONLY / no runtime implementation
@@ -197,117 +263,3 @@ Next selected work:
 ```text
 S7-S9 PLUR read-only discovery, Noop provider, and schema mapping design only.
 ```
-
----
-
-## N-20260617-v0.7.4-dev-opened
-
-Status: READY / v0.7.4-dev opened / M229 direction recorded
-
-Current baseline:
-
-```text
-main: single-agent / agent-agnostic active development baseline
-VERSION: 0.7.4-dev
-v0.7.3: released tag
-v0.7.2: archived release point
-archive/v0.7.2-opc: archived branch
-```
-
-Resolved in v0.7.3:
-
-```text
-M222 PASS / single-agent sanity locally verified
-M223 PASS / active guidance approved and documented
-M224 PASS / sync path locally verified
-M225 PASS / optional embedding boundary locally verified
-M226 PASS / RC locally verified / ready for final release
-M227 PASS / v0.7.3 released and tagged
-```
-
-Opened after v0.7.3:
-
-```text
-M228 PASS / v0.7.4-dev opened / planning pending
-M229 RECORDED / Runes Shield runtime acknowledgement gap / not implemented
-```
-
-Release artifacts:
-
-```text
-docs/releases/v0.7.3.md
-dev/wiki-history/k6-freelancer/verification/verification-m227.md
-dev/wiki-history/k6-freelancer/verification/verification-m228.md
-```
-
-v0.7.4-dev planning artifacts:
-
-```text
-docs/runes-shield-runtime-acknowledgement-gap.md
-dev/wiki-history/k6-freelancer/verification/verification-m229.md
-docs/plur-runtime-memory-bridge.md
-```
-
-Released tag:
-
-```text
-v0.7.3 -> b60ed3c
-```
-
-Next selected work:
-
-```text
-S1-S6 PLUR runtime memory bridge reintegration
-```
-
-M229 problem:
-
-```text
-Fresh Hermes Agent / Lark bot onboarding can make the bot verbally accept the Runes Wiki boundary,
-but later actions may still rely on prompt memory and direct tool edits rather than a verifiable
-Runes Shield gate or evidence-backed approval state.
-```
-
-M229 observation sample:
-
-```text
-O-M229-001: temporary Lark reply footer observation
-- User asked the bot to append whether Runes Shield was used.
-- Bot saved a footer rule and replied with `[Runes Shield: 無]`.
-- This improves response visibility but is not proof that a Shield gate, guard, approval path, or git evidence check ran.
-```
-
-M229 clarification:
-
-```text
-The response footer is a short-to-mid-term observation aid only.
-It may help validate whether the agent is moving toward the intended behavior.
-After the real evidence path is confirmed, the footer requirement should be disabled or removed.
-It must not become the formal governance mechanism.
-```
-
-M229 direction:
-
-```text
-Define a lightweight acknowledgement protocol that distinguishes:
-- policy recalled from memory
-- read-only action
-- proposal-only action
-- direct patch
-- wiki write
-- commit/push
-- explicit user approval
-- migration guard / security scan / commit evidence
-- no shield used
-```
-
-Post-release guidance:
-
-- Keep `main` single-agent / agent-agnostic.
-- Keep OPC profile-agent architecture out of active mainline.
-- Keep Kanban as a lightweight checkpoint layer only.
-- Keep optional embedding dependencies out of the required core baseline.
-- Continue using `./bin/runes-wiki-migration-guard update` for existing installs.
-- Treat `Runes Shield: yes/no` as insufficient unless backed by evidence.
-- Treat visible footer output as temporary observability, not a permanent feature.
-- Do not add heavy runtime enforcement, daemons, queues, telemetry, or enterprise workflow for M229.
