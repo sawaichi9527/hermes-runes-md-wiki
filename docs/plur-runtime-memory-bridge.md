@@ -143,6 +143,78 @@ Non-goals:
 - Automatic policy mutation.
 - Automatic Runes Wiki writes.
 
+## S7 — Read-only PLUR discovery / status check
+
+S7 adds a local helper:
+
+```bash
+python3 tools/importer/plur_runtime_bridge.py status --json
+```
+
+The status helper is read-only. It checks only safe local availability signals:
+
+- Python module names are discoverable through `importlib.util.find_spec`.
+- CLI command names are discoverable on `PATH`.
+- PLUR-related environment variable prefixes exist, without printing values.
+
+It does not:
+
+- import PLUR modules
+- execute PLUR commands
+- read PLUR memory
+- write PLUR memory
+- print environment variable values
+- mutate Hermes Agent settings
+
+In `--provider auto` mode, the helper intentionally selects `noop` in v0.7.4-dev S7-S9. This keeps existing deployed PLUR memory untouched until a later explicit read-only summary step is approved.
+
+## S8 — Runtime memory provider abstraction / Noop provider
+
+S8 adds the minimal provider boundary in:
+
+```text
+tools/importer/plur_runtime_bridge.py
+```
+
+Provider contract for v0.7.4-dev S7-S9:
+
+```text
+RuntimeMemoryProvider.status() -> ProviderStatus
+```
+
+Current providers:
+
+- `noop`: always available safe fallback; performs no memory read/write.
+- `plur`: read-only availability detector; performs no memory read/write.
+
+The Noop provider is part of the implementation, not only a test fixture. It preserves detachable behavior when PLUR is absent, disabled, unavailable, or intentionally not selected.
+
+## S9 — PLUR memory schema mapping
+
+S9 exposes the schema contract without reading PLUR memory:
+
+```bash
+python3 tools/importer/plur_runtime_bridge.py schema --json
+```
+
+The schema maps the runtime roles:
+
+```text
+engram     = compact behavioral/runtime memory
+episode    = timestamped history, not injected by default
+checkpoint = current working state for recovery/handoff
+candidate  = proposed memory requiring user approval before forge
+```
+
+Global rules:
+
+- scope is required
+- episode injection is disabled by default
+- governance hints require source pointer and `last_verified_at` when available
+- candidates do not auto-promote
+- stale checkpoints are marked `superseded` or `inactive` instead of heavy purge
+- existing deployed PLUR memory is not bulk migrated, bulk deleted, or assumed canonical
+
 ## Existing deployed PLUR memory caution
 
 v0.7.4-dev is being developed after Hermes Agent + Hermes Runes MD Wiki + PLUR were already deployed together.
@@ -165,3 +237,6 @@ A v0.7.4-dev verification pass should confirm:
 - Candidate forge requires explicit user approval.
 - Existing PLUR memory is not bulk migrated or deleted.
 - Core Runes workflows remain usable when PLUR is unavailable.
+- S7 status check is read-only and selects Noop by default.
+- S8 Noop provider is available without PLUR.
+- S9 schema mapping exposes engram, episode, checkpoint, and candidate roles.
