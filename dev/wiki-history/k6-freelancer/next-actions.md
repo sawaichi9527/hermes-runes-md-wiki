@@ -1,3 +1,84 @@
+## N-20260627-v0.7.4-dev-plur-s10-s12-design-only
+
+Status: DESIGN-ONLY / no runtime implementation
+
+Decision:
+
+```text
+S10 is paused because PLUR read-only context summary value is unclear.
+S11-S12 are design-only and add no runtime helper, smoke, PLUR read/write, or Hermes Agent tool surface.
+```
+
+Design scope:
+
+```text
+S10  Read-only PLUR context summary pause
+S11  Candidate dry-run flow design
+S12  Smoke / verification / docs sync design
+```
+
+S10 pause:
+
+- Do not implement a PLUR context summary helper.
+- Do not inject PLUR context by default.
+- Do not add every-turn PLUR scanning.
+- Revisit only if a concrete user-visible failure shows native Hermes Agent runtime memory is insufficient.
+
+S11 candidate dry-run:
+
+- Proposal-only.
+- No wiki write.
+- No PLUR write.
+- No PLUR read requirement.
+- No automatic promotion.
+- User approval is required before any future forge path.
+- User approval is not the same as forge completion.
+
+Candidate card fields:
+
+```text
+Candidate:
+- Type: decision | preference | project-state | warning | procedure | open-question
+- Scope: <project/workspace/user scope>
+- Source: current-conversation | user-instruction | PLUR-checkpoint | Runes-Wiki-reference | other
+- Proposed target: wiki/<workspace>/... or undecided
+- Proposal: <short memory statement>
+- Why preserve: <why this should survive the current session>
+- Risk: low | medium | high
+- Approval state: pending
+- Writes performed: none
+```
+
+S12 verification/docs sync:
+
+```bash
+cd ~/workspace/hermes-runes-md-wiki
+git pull
+git status
+./bin/runes-wiki-migration-guard plan --no-fetch
+./bin/hermes-memory-smoke
+```
+
+Expected result:
+
+```text
+git status clean
+migration guard SAFE
+Core FTS smoke PASS
+no PLUR helper required
+no PLUR smoke required
+embedding profile skip remains acceptable when embedding profile is not installed
+```
+
+Next selected work:
+
+```text
+Local pull verification for S10-S12 design-only docs.
+After that, pause PLUR runtime implementation unless a concrete need appears.
+```
+
+---
+
 ## N-20260627-v0.7.4-dev-plur-s7-s9-design-only
 
 Status: DESIGN-ONLY / no runtime tool added
