@@ -6,6 +6,11 @@ This project uses SemVer-style versioning during Open Beta.
 
 ## [0.7.4-dev] - Unreleased
 
+### Added
+
+- Added `tools/importer/plur_runtime_bridge.py` for S7-S9 read-only PLUR bridge status and schema mapping.
+- Added `tools/importer/smoke/eval_smoke_plur_bridge.py` and included it in the core `./bin/hermes-memory-smoke` profile.
+
 ### Planned
 
 - Reintroduce PLUR as an optional runtime persistent memory bridge for the current single-agent / agent-agnostic mainline.
@@ -16,6 +21,18 @@ This project uses SemVer-style versioning during Open Beta.
 - Preserve Runes Shield as the protected forge gate / operation protection layer, not the memory judge.
 - Require human-in-the-loop approval before any PLUR candidate is forged into Runes Wiki.
 - Add minimal PLUR memory hygiene suitable for personal/local use: required scope, no default episode injection, governance hint pointers, no auto-promotion, superseded checkpoints, and cautious handling of already-deployed PLUR memory.
+
+### Implemented in S7-S9
+
+- S7 read-only PLUR discovery / status check:
+  - checks Python module names, CLI command names, and PLUR-related environment variable prefixes
+  - does not import PLUR modules, execute PLUR commands, read PLUR memory, write PLUR memory, or print environment variable values
+- S8 runtime memory provider abstraction:
+  - `noop` provider is always available and selected by default in `--provider auto`
+  - `plur` provider currently acts only as a read-only availability detector
+- S9 PLUR memory schema mapping:
+  - exposes engram, episode, checkpoint, and candidate role contracts
+  - keeps episode injection disabled by default and candidate auto-promotion disabled
 
 ### Non-goals
 
@@ -29,6 +46,7 @@ This project uses SemVer-style versioning during Open Beta.
 
 - Added `docs/plur-runtime-memory-bridge.md` as the primary v0.7.4-dev planning artifact.
 - Updated `dev/wiki-history/k6-freelancer/next-actions.md` with S1-S6 PLUR bridge scope.
+- Updated `docs/plur-runtime-memory-bridge.md` with S7-S9 implementation notes.
 
 ## [0.7.0] - 2026-06-08
 
