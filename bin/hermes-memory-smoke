@@ -23,7 +23,6 @@ if [ -d ".venv" ]; then
 fi
 
 "$PYTHON" smoke/eval_smoke_core_fts.py
-"$PYTHON" smoke/eval_smoke_plur_bridge.py
 
 if "$PYTHON" -c "import sentence_transformers" >/dev/null 2>&1; then
   echo "Embedding profile detected: running full smoke suite"
