@@ -1,3 +1,36 @@
+## N-20260627-v0.7.5-dev-opened
+
+Status: READY / v0.7.5-dev opened
+
+Current baseline:
+
+```text
+main: single-agent / agent-agnostic active development baseline
+VERSION: 0.7.5-dev
+v0.7.4: final release commit pending tag
+v0.7.3: released tag
+v0.7.2: archived release point
+archive/v0.7.2-opc: archived branch
+```
+
+Carry-forward guidance:
+
+- Keep PLUR runtime implementation paused unless a concrete need appears.
+- Keep S10 paused until PLUR read-only context summary value is clear.
+- Keep S11 candidate dry-run proposal-only unless explicitly approved for implementation.
+- Keep S12 as manual verification/docs sync; do not add a new PLUR smoke by default.
+- Preserve Core FTS smoke as the lightweight required baseline.
+- Do not restore OPC profile-agent architecture.
+- Do not add Hermes Agent core patches or heavy native customization.
+
+Next selected work:
+
+```text
+Post-release local verification for v0.7.5-dev baseline.
+```
+
+---
+
 ## N-20260627-v0.7.4-final-release
 
 Status: FINAL RELEASE RECORDED / tag pending
@@ -52,7 +85,7 @@ Release boundary:
 Tagging note:
 
 ```text
-Create git tag v0.7.4 on the release commit where VERSION is 0.7.4.
+Create git tag v0.7.4 on release commit 7c4660ad950d8e1886f78ace7fabb8f9ef1ed97e.
 ```
 
 Next selected work:
@@ -136,13 +169,6 @@ no PLUR smoke required
 embedding profile skip remains acceptable when embedding profile is not installed
 ```
 
-Next selected work:
-
-```text
-Local pull verification for S10-S12 design-only docs.
-After that, pause PLUR runtime implementation unless a concrete need appears.
-```
-
 ---
 
 ## N-20260627-v0.7.4-dev-plur-s7-s9-design-only
@@ -180,33 +206,6 @@ S7-S9 implemented verification note
 PLUR bridge invocation from ./bin/hermes-memory-smoke
 ```
 
-Local verification requested:
-
-```bash
-cd ~/workspace/hermes-runes-md-wiki
-git pull
-git status
-./bin/runes-wiki-migration-guard plan --no-fetch
-./bin/hermes-memory-smoke
-```
-
-Expected result:
-
-```text
-git status clean
-migration guard SAFE
-Core FTS smoke PASS
-no PLUR bridge smoke runs
-embedding profile skip remains acceptable when embedding profile is not installed
-```
-
-Next selected work:
-
-```text
-S10 design discussion only: when and whether a read-only PLUR context summary is worth implementing.
-No runtime implementation until explicitly approved.
-```
-
 ---
 
 ## N-20260627-v0.7.4-dev-plur-runtime-memory-bridge
@@ -230,36 +229,4 @@ S3  PLUR runtime memory role and source priority
 S4  Engram / episode / checkpoint / candidate policy
 S5  Human-in-the-loop forge candidate flow
 S6  Minimal PLUR memory hygiene and deployed-memory caution
-```
-
-Implementation boundary:
-
-```text
-PLUR = optional runtime persistent working memory
-Runes Wiki = governed canonical long-term memory source
-Runes Shield = protected forge gate / operation protection layer
-Hermes Agent / Lark bot = candidate proposer and task reasoner
-User = human-in-the-loop approval authority
-```
-
-Key rules:
-
-- PLUR must be detachable and non-required.
-- Hermes Agent core must not be patched for this integration.
-- Hermes Agent native settings should remain minimally customized.
-- Existing deployed PLUR memory must be treated carefully as non-authoritative runtime state.
-- Existing PLUR records must not be bulk migrated, bulk deleted, or promoted into Runes Wiki automatically.
-- Candidate forge requires explicit user approval and Runes Shield protected operation.
-- Do not add daemon, queue, telemetry, enterprise approval workflow, heavy LLM judge, or multi-profile mesh.
-
-Primary planning artifact:
-
-```text
-docs/plur-runtime-memory-bridge.md
-```
-
-Next selected work:
-
-```text
-S7-S9 PLUR read-only discovery, Noop provider, and schema mapping design only.
 ```
