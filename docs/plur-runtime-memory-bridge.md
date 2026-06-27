@@ -143,61 +143,48 @@ Non-goals:
 - Automatic policy mutation.
 - Automatic Runes Wiki writes.
 
-## S7 — Read-only PLUR discovery / status check
+## S7 — Read-only PLUR discovery / status check design
 
-S7 adds a local helper:
+S7 is design-only for now. It should define how a future read-only status check may work, but v0.7.4-dev should not add a new runtime helper until there is a clear need.
 
-```bash
-python3 tools/importer/plur_runtime_bridge.py status --json
-```
+A future status check, if implemented, should only inspect safe local availability signals:
 
-The status helper is read-only. It checks only safe local availability signals:
+- Python module names discoverable through a non-invasive check.
+- CLI command names discoverable on `PATH`.
+- PLUR-related environment variable prefixes, without printing values.
 
-- Python module names are discoverable through `importlib.util.find_spec`.
-- CLI command names are discoverable on `PATH`.
-- PLUR-related environment variable prefixes exist, without printing values.
+It must not:
 
-It does not:
-
-- import PLUR modules
+- import PLUR modules merely for discovery
 - execute PLUR commands
 - read PLUR memory
 - write PLUR memory
 - print environment variable values
 - mutate Hermes Agent settings
+- become part of every normal Hermes Agent interaction
 
-In `--provider auto` mode, the helper intentionally selects `noop` in v0.7.4-dev S7-S9. This keeps existing deployed PLUR memory untouched until a later explicit read-only summary step is approved.
+## S8 — Runtime memory provider abstraction / Noop provider design
 
-## S8 — Runtime memory provider abstraction / Noop provider
+S8 is design-only for now.
 
-S8 adds the minimal provider boundary in:
-
-```text
-tools/importer/plur_runtime_bridge.py
-```
-
-Provider contract for v0.7.4-dev S7-S9:
+The intended future provider boundary is intentionally tiny:
 
 ```text
 RuntimeMemoryProvider.status() -> ProviderStatus
 ```
 
-Current providers:
+Potential providers:
 
-- `noop`: always available safe fallback; performs no memory read/write.
-- `plur`: read-only availability detector; performs no memory read/write.
+- `noop`: safe fallback, always available, no memory read/write.
+- `plur`: read-only detector first; no memory read/write until explicitly approved in a later step.
 
-The Noop provider is part of the implementation, not only a test fixture. It preserves detachable behavior when PLUR is absent, disabled, unavailable, or intentionally not selected.
+The Noop provider is a design requirement to preserve detachable behavior when PLUR is absent, disabled, unavailable, or intentionally not selected.
 
-## S9 — PLUR memory schema mapping
+## S9 — PLUR memory schema mapping design
 
-S9 exposes the schema contract without reading PLUR memory:
+S9 is design-only for now.
 
-```bash
-python3 tools/importer/plur_runtime_bridge.py schema --json
-```
-
-The schema maps the runtime roles:
+The schema should map the runtime roles:
 
 ```text
 engram     = compact behavioral/runtime memory
@@ -237,6 +224,5 @@ A v0.7.4-dev verification pass should confirm:
 - Candidate forge requires explicit user approval.
 - Existing PLUR memory is not bulk migrated or deleted.
 - Core Runes workflows remain usable when PLUR is unavailable.
-- S7 status check is read-only and selects Noop by default.
-- S8 Noop provider is available without PLUR.
-- S9 schema mapping exposes engram, episode, checkpoint, and candidate roles.
+- S7-S9 remain design-only until a future implementation is explicitly approved.
+- No new runtime helper is required for normal Hermes Runes MD Wiki use.
