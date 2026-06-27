@@ -202,6 +202,99 @@ Global rules:
 - stale checkpoints are marked `superseded` or `inactive` instead of heavy purge
 - existing deployed PLUR memory is not bulk migrated, bulk deleted, or assumed canonical
 
+## S10 — Read-only PLUR context summary pause
+
+S10 is paused.
+
+The value of a dedicated PLUR read-only context summary is not clear enough yet. Until there is a concrete use case, v0.7.4-dev should not add a context-summary helper, automatic prompt injection, every-turn PLUR scan, or additional Hermes Agent burden.
+
+Current decision:
+
+```text
+Do not implement S10.
+Do not add a read-only PLUR context summary tool.
+Do not inject PLUR context by default.
+Revisit only if a concrete user-visible failure shows native Hermes Agent runtime memory is insufficient.
+```
+
+## S11 — Candidate dry-run flow design
+
+S11 is design-only.
+
+The goal is to define a plain candidate proposal format before any runtime integration exists. A candidate dry-run is only a proposal that says, "this information may deserve formal Runes Wiki memory later." It does not write PLUR, write Runes Wiki, run forge, or promote anything automatically.
+
+Candidate dry-run flow:
+
+```text
+Current conversation / runtime observation / possible PLUR checkpoint
+        ↓
+Hermes Agent or Lark bot notices a possible durable memory candidate
+        ↓
+Agent presents a candidate proposal only
+        ↓
+User accepts, rejects, or asks to revise
+        ↓
+Only after explicit approval can a future Runes Shield / forge path be used
+```
+
+Suggested candidate card:
+
+```text
+Candidate:
+- Type: decision | preference | project-state | warning | procedure | open-question
+- Scope: <project/workspace/user scope>
+- Source: current-conversation | user-instruction | PLUR-checkpoint | Runes-Wiki-reference | other
+- Proposed target: wiki/<workspace>/... or undecided
+- Proposal: <short memory statement>
+- Why preserve: <why this should survive the current session>
+- Risk: low | medium | high
+- Approval state: pending
+- Writes performed: none
+```
+
+Rules:
+
+- Candidate dry-run is proposal-only.
+- No wiki write occurs during dry-run.
+- No PLUR write occurs during dry-run.
+- No PLUR read is required for the design.
+- No automatic promotion is allowed.
+- User approval is necessary but not equal to forge completion.
+- Runes Shield remains the protected forge gate if the candidate later becomes a durable wiki change.
+
+## S12 — Smoke / verification / docs sync design
+
+S12 is design-only and is about keeping the repo honest.
+
+It does not add a new smoke suite. It defines the manual verification checklist for this PLUR bridge line:
+
+```bash
+cd ~/workspace/hermes-runes-md-wiki
+git pull
+git status
+./bin/runes-wiki-migration-guard plan --no-fetch
+./bin/hermes-memory-smoke
+```
+
+Expected result:
+
+```text
+git status clean
+migration guard SAFE
+Core FTS smoke PASS
+no PLUR runtime helper required
+no PLUR smoke required
+embedding profile SKIP remains acceptable when not installed
+```
+
+Documentation consistency checks:
+
+- `CHANGELOG.md` says S10 is paused and S11-S12 are design-only.
+- `dev/wiki-history/k6-freelancer/next-actions.md` points to design-only S11-S12, not runtime implementation.
+- No documentation claims PLUR memory was read, written, migrated, deleted, or promoted.
+- No documentation claims a new Hermes Agent tool was added.
+- No documentation treats PLUR as canonical memory.
+
 ## Existing deployed PLUR memory caution
 
 v0.7.4-dev is being developed after Hermes Agent + Hermes Runes MD Wiki + PLUR were already deployed together.
@@ -225,4 +318,6 @@ A v0.7.4-dev verification pass should confirm:
 - Existing PLUR memory is not bulk migrated or deleted.
 - Core Runes workflows remain usable when PLUR is unavailable.
 - S7-S9 remain design-only until a future implementation is explicitly approved.
+- S10 is paused because value is not clear enough.
+- S11-S12 are design-only and add no runtime helper.
 - No new runtime helper is required for normal Hermes Runes MD Wiki use.
