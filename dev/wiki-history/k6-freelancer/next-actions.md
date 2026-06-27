@@ -1,34 +1,37 @@
-## N-20260627-v0.7.4-dev-plur-s7-s9-runtime-bridge
+## N-20260627-v0.7.4-dev-plur-s7-s9-design-only
 
-Status: IMPLEMENTED / pending local pull verification
+Status: DESIGN-ONLY / no runtime tool added
 
-Implemented scope:
+Decision:
 
 ```text
-S7  PLUR read-only discovery / status check
-S8  Runtime memory provider abstraction / Noop provider
-S9  PLUR memory schema mapping
+S7-S9 remain design-only for now.
+Do not add a new PLUR runtime helper, smoke test, or Hermes Agent tool surface until explicitly approved.
 ```
 
-Implementation artifacts:
+Design scope:
+
+```text
+S7  PLUR read-only discovery / status check design
+S8  Runtime memory provider abstraction / Noop provider design
+S9  PLUR memory schema mapping design
+```
+
+Reason:
+
+- v0.7.4-dev should stay simple and personal-use oriented.
+- The project should avoid adding unnecessary runtime surface.
+- Hermes Agent should not carry extra tool burden for a bridge that is not yet needed at runtime.
+- Existing deployed PLUR memory must remain untouched.
+
+Explicitly removed from this line:
 
 ```text
 tools/importer/plur_runtime_bridge.py
 tools/importer/smoke/eval_smoke_plur_bridge.py
-bin/hermes-memory-smoke
-docs/plur-runtime-memory-bridge.md
-CHANGELOG.md
+S7-S9 implemented verification note
+PLUR bridge invocation from ./bin/hermes-memory-smoke
 ```
-
-Behavior:
-
-- `status --provider auto` intentionally selects `noop` in S7-S9.
-- PLUR availability detection checks only safe local signals.
-- PLUR modules are not imported.
-- PLUR commands are not executed.
-- PLUR memory is not read or written.
-- Environment variable values are not printed.
-- Existing deployed PLUR memory is not bulk migrated, bulk deleted, or assumed canonical.
 
 Local verification requested:
 
@@ -36,15 +39,25 @@ Local verification requested:
 cd ~/workspace/hermes-runes-md-wiki
 git pull
 git status
-python3 tools/importer/plur_runtime_bridge.py status --json
-python3 tools/importer/plur_runtime_bridge.py schema --json
+./bin/runes-wiki-migration-guard plan --no-fetch
 ./bin/hermes-memory-smoke
 ```
 
-Next selected work after S7-S9 verification:
+Expected result:
 
 ```text
-S10 Read-only PLUR context summary design, still no injection and no writes by default.
+git status clean
+migration guard SAFE
+Core FTS smoke PASS
+no PLUR bridge smoke runs
+embedding profile skip remains acceptable when embedding profile is not installed
+```
+
+Next selected work:
+
+```text
+S10 design discussion only: when and whether a read-only PLUR context summary is worth implementing.
+No runtime implementation until explicitly approved.
 ```
 
 ---
@@ -101,7 +114,7 @@ docs/plur-runtime-memory-bridge.md
 Next selected work:
 
 ```text
-S7-S9 PLUR read-only discovery, Noop provider, and schema mapping.
+S7-S9 PLUR read-only discovery, Noop provider, and schema mapping design only.
 ```
 
 ---
