@@ -17,6 +17,8 @@ This project uses SemVer-style versioning during Open Beta.
 - Require human-in-the-loop approval before any PLUR candidate is forged into Runes Wiki.
 - Add minimal PLUR memory hygiene suitable for personal/local use: required scope, no default episode injection, governance hint pointers, no auto-promotion, superseded checkpoints, and cautious handling of already-deployed PLUR memory.
 - Keep S7-S9 as design-only until a future implementation is explicitly approved.
+- Pause S10 until PLUR read-only context summary value becomes clear.
+- Keep S11-S12 as design-only candidate dry-run and verification/docs sync guidance.
 
 ### S7-S9 design-only scope
 
@@ -30,6 +32,20 @@ This project uses SemVer-style versioning during Open Beta.
   - engram, episode, checkpoint, and candidate roles are documented
   - episode injection remains disabled by default
   - candidate auto-promotion remains disabled
+
+### S10-S12 design-only scope
+
+- S10 read-only PLUR context summary is paused because the value is not clear enough.
+- S11 candidate dry-run flow is documented as proposal-only:
+  - no wiki write
+  - no PLUR write
+  - no PLUR read requirement
+  - no automatic promotion
+  - explicit user approval is required before any future forge path
+- S12 verification/docs sync is documented as manual consistency checking:
+  - normal smoke remains unchanged
+  - no PLUR helper or PLUR smoke is added
+  - documentation must not claim runtime behavior that does not exist
 
 ### Non-goals
 
@@ -45,6 +61,8 @@ This project uses SemVer-style versioning during Open Beta.
 - Added `docs/plur-runtime-memory-bridge.md` as the primary v0.7.4-dev planning artifact.
 - Updated `dev/wiki-history/k6-freelancer/next-actions.md` with S1-S6 PLUR bridge scope.
 - Updated `docs/plur-runtime-memory-bridge.md` with S7-S9 design-only notes.
+- Updated `docs/plur-runtime-memory-bridge.md` with S10 pause and S11-S12 design-only notes.
+- Added `dev/wiki-history/k6-freelancer/verification/verification-s10-s12-v0.7.4-dev-design-only.md`.
 
 ## [0.7.0] - 2026-06-08
 
