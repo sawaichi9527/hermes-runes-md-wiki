@@ -51,6 +51,29 @@ Human approval remains the trust boundary for turning proposed knowledge into tr
 
 ---
 
+## Two-Layer Boundary: Read Index vs Controlled Write
+
+Runes Shield exposes two separate agent-facing surfaces:
+
+1. **Read / discovery surface** (`tools/runes_shield/runes_shield_tool_index.json` + `runes_shield_invocation.py`): the allowlisted read-only tools (`proposal_registry.*`, `proposal_review_queue.*`, governance reads). `write: false` everywhere. These read `tools/runes_shield/fixtures/` and `tools/runes_shield/drafts/`, which are **test surfaces** — not the real proposal lifecycle.
+
+2. **Controlled write surface** (`tools/importer/forge.py` create-flat|approve|reject, wrapped by `bin/hermes-forge` / `bin/hermes-agent-propose-memory`): the real governed write path. Governed by `tools/importer/write_guard.py` — only `wiki/<project>/forge-inbox/*.md` is writable (P0 boundary), every write/approve/reject logs an operation manifest under `var/operations/`, and a file lock serializes writes. This surface is intentionally NOT in the read-only tool index.
+
+Real proposal lifecycle (source of truth):
+
+```text
+forge.py create-flat --write   -> wiki/<project>/forge-inbox/<slug>-<op>.md  (status: draft)
+forge.py approve               -> status: draft -> approved
+forge.py reject                -> status: draft -> rejected  (+ reject_reason)
+operation manifest             -> var/operations/<op_id>.json  (per operation)
+```
+
+`proposal_registry` / `proposal_review_queue` / `proposal_draft_store` inspect fixtures/drafts for validation and queue demos; they do not read `forge-inbox/`. Agents that need to track real proposals must read the forge-inbox files + operation manifests through the forge wrappers.
+
+The legacy `bin/hermes-runes forge|evoke|inscribe` CLI is an M15.3 scaffold and must not be used as the write path.
+
+---
+
 ## Supported P0 Interaction Classes
 
 ### 1. Discovery
