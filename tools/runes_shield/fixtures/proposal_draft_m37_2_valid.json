@@ -1,0 +1,31 @@
+{
+  "proposal_id": "proposal-m37.2-fixture-001",
+  "status": "pending_human_review",
+  "author_role": "Hermes-agent",
+  "assessment_role": "Runes Shield",
+  "reviewer_role": "Human",
+  "source_summary": "M37.2 fixture validates that proposal drafts remain external, review-gated, and non-writing.",
+  "candidate_claims": [
+    "Hermes-agent may draft candidate memory proposals.",
+    "Runes Shield validates proposal structure and governance boundaries.",
+    "Human review remains required before trusted memory promotion."
+  ],
+  "assessment": {
+    "credibility_level": "medium",
+    "risk_level": "low",
+    "source_evidence": [
+      "M37.1 proposal schema validator",
+      "P0 governed proposal boundary"
+    ],
+    "policy_notes": [
+      "Fixture must not encode approved, applied, promoted, or trusted status.",
+      "Fixture must not imply trusted wiki write or database mutation capability.",
+      "Fixture is used for smoke/regression validation only."
+    ],
+    "quarantine_recommendation": false
+  },
+  "human_review": {
+    "status": "pending",
+    "notes": []
+  }
+}

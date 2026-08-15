@@ -1,0 +1,26 @@
+{
+  "proposal_id": "proposal-m37.3-negative-blocked-status",
+  "status": "approved",
+  "author_role": "Hermes-agent",
+  "assessment_role": "Runes Shield",
+  "reviewer_role": "Human",
+  "source_summary": "Negative fixture: status must be rejected.",
+  "candidate_claims": [
+    "This fixture intentionally uses a rejected status."
+  ],
+  "assessment": {
+    "credibility_level": "medium",
+    "risk_level": "low",
+    "source_evidence": [
+      "negative fixture"
+    ],
+    "policy_notes": [
+      "This fixture must fail validation."
+    ],
+    "quarantine_recommendation": false
+  },
+  "human_review": {
+    "status": "pending",
+    "notes": []
+  }
+}
