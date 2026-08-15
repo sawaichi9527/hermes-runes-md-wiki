@@ -4,6 +4,15 @@ All notable Hermes Runes MD Wiki Open Beta changes are recorded here.
 
 This project uses SemVer-style versioning during Open Beta.
 
+## [0.7.6-dev] - Unreleased
+
+### Planned
+
+- Continue from the v0.7.5 functional release (Runes Shield runtime restoration + OPC namespace).
+- Connect the runes-holder / coordinator / secretary Runes approval workflow (P3) using the restored `tools/runes_shield/` read-only tools.
+- Keep smoke / regression / trial assets under `dev/` (developer-only).
+- Keep the active mainline single-agent / agent-agnostic.
+
 ## [0.7.5] - 2026-08-15
 
 ### Added
