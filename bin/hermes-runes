@@ -219,9 +219,9 @@ def main() -> int:
     probe.add_argument("target", choices=["policy", "indexes", "links", "objectives", "metadata", "lock", "retrieval", "context"])
     probe.add_argument("--json", action="store_true")
 
-    sub.add_parser("forge", help="planned governed wiki write interface")
-    sub.add_parser("evoke", help="planned RAG recall alias/interface")
-    sub.add_parser("inscribe", help="planned import/embed/index lifecycle interface")
+    sub.add_parser("forge", help="DEPRECATED (M15.3 stub): use tools/importer/forge.py / bin/hermes-forge")
+    sub.add_parser("evoke", help="DEPRECATED (M15.3 stub)")
+    sub.add_parser("inscribe", help="DEPRECATED (M15.3 stub)")
 
     args = parser.parse_args()
 
