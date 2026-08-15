@@ -14,10 +14,10 @@ Hermes Agent performs final source comparison and judgment.
 
 Suggested baseline order:
 
-1. Current user instruction
-2. Current conversation context
-3. Hermes Agent runtime/native memory
-4. Hermes Runes MD Wiki
+1. Current user instruction / current conversation
+2. Hermes Agent runtime/native memory (runtime/preference/skill cache; non-canonical)
+3. Hermes Runes MD Wiki (governed long-term evidence)
+4. Plur (learned conventions, may decay; when conflicting with Runes, Runes wins and the engram is flagged for manual prune)
 5. Third-party RAG / third-party notes / Obsidian
 6. Web/external sources
 
@@ -87,3 +87,8 @@ Hermes Runes should not automatically merge conflicting memory.
 ## Change Log
 
 - 2026-06-01: Initial source priority policy.
+
+## Change Log
+
+- 2026-06-01: Initial source priority policy.
+- 2026-08-14: Insert Plur slot at #4 (OPC v4.1 §4).
