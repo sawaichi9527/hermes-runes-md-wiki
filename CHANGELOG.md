@@ -4,14 +4,39 @@ All notable Hermes Runes MD Wiki Open Beta changes are recorded here.
 
 This project uses SemVer-style versioning during Open Beta.
 
-## [0.7.5-dev] - Unreleased
+## [0.7.5] - 2026-08-15
 
-### Planned
+### Added
 
-- Continue from the v0.7.4 conservative PLUR bridge documentation/governance-boundary release.
-- Keep PLUR runtime implementation paused unless a concrete need appears.
-- Keep the active mainline single-agent / agent-agnostic.
-- Preserve Core FTS smoke as the lightweight required baseline.
+- Added `wiki/freelancer/opc/` governed namespace with 8 role READMEs (secretary, coordinator, researcher, writer, builder, runes-holder, aeon-builder, nim-researcher) for the OPC 8-profile agent set (v4.1).
+- Inserted Plur slot at #4 in `wiki/_system/source-priority.md` (OPC v4.1 §4): Plur is learned conventions that may decay; when conflicting with Runes, Runes wins and the engram is flagged for manual prune.
+- Added `tools/runes_shield/validate_proposal_fixture.py` and `tools/runes_shield/fixtures/` (4 proposal samples) to the runtime so `tools/runes_shield/` is self-contained and no longer depends on `dev/`.
+- Added `tools/runes_shield/DEPENDENCY_NOTES.md` mapping each runtime copy to its `dev/` source for future maintenance.
+- Added `docs/releases/v0.7.5.md` release notes.
+- Added v0.7.5 verification notes under `dev/wiki-history/k6-freelancer/verification/`.
+
+### Changed
+
+- Removed `smoke.*` tool entries from `tools/runes_shield/runes_shield_tools_index.json`; smoke scripts remain under `dev/` as developer-only assets (index_version → m40.1).
+- Ported the M5 OPC namespace from the K6 local mainline (commit `c16c96b`) into the formal mainline via PR #4.
+
+### Fixed
+
+- Fixed broken P0 read-only Runes Shield tools (`proposal_registry.py`, `proposal_review_queue.py`). Root cause: commit `e1cb587` moved `validate_proposal_fixture.py` and the proposal fixtures under `dev/`, but the runtime CLIs (`build_proposal_manifest.py`, `build_proposal_draft.py`, `proposal_draft_store.py`) still imported `validate_proposal_fixture` from the same directory, causing `ModuleNotFoundError`.
+
+### Boundaries
+
+- No Hermes Agent core patch.
+- No Hermes Agent native configuration change.
+- No daemon, queue, telemetry platform, enterprise approval workflow, heavy LLM judge, or every-turn full-memory scan.
+- No automatic PLUR-to-Runes Wiki promotion.
+- Smoke / regression / trial assets remain in `dev/` (developer-only) and are not part of the runtime surface.
+
+### Verification
+
+- Local (Acubens, Windows) + K6 verification: `proposal_registry` list/show, `proposal_review_queue` list/show, `proposal_draft_store` list/show, `build_proposal_draft` dry-run and write-draft all PASS.
+- `python -m compileall tools/runes_shield` OK.
+- K6 `git merge origin/main` converged to `3364607`; registry 4 entries / queue 1 / 8 OPC role READMEs present.
 
 ## [0.7.4] - 2026-06-27
 
