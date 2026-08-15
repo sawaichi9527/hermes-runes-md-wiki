@@ -1,35 +1,38 @@
-## N-20260627-v0.7.5-dev-opened
+## N-20260815-v0.7.6-dev-opened
 
-Status: READY / v0.7.5-dev opened
+Status: READY / v0.7.6-dev opened
 
 Current baseline:
 
 ```text
 main: single-agent / agent-agnostic active development baseline
-VERSION: 0.7.5-dev
-v0.7.4: final release commit pending tag
+VERSION: 0.7.6-dev
+v0.7.5: final release (runes_shield runtime restoration + OPC namespace)
+v0.7.4: released tag
 v0.7.3: released tag
-v0.7.2: archived release point
 archive/v0.7.2-opc: archived branch
 ```
 
 Carry-forward guidance:
 
+- Keep smoke / regression / trial assets under `dev/` (developer-only).
+- Keep `tools/runes_shield/` runtime self-contained; update `DEPENDENCY_NOTES.md` when syncing the validator/fixtures.
 - Keep PLUR runtime implementation paused unless a concrete need appears.
-- Keep S10 paused until PLUR read-only context summary value is clear.
-- Keep S11 candidate dry-run proposal-only unless explicitly approved for implementation.
-- Keep S12 as manual verification/docs sync; do not add a new PLUR smoke by default.
 - Preserve Core FTS smoke as the lightweight required baseline.
-- Do not restore OPC profile-agent architecture.
 - Do not add Hermes Agent core patches or heavy native customization.
 
 Next selected work:
 
 ```text
-Post-release local verification for v0.7.5-dev baseline.
+P3 Runes approval UX wiring: coordinator/secretary/runes-holder SOUL + tool whitelist,
+using the restored tools/runes_shield/ read-only tools.
 ```
 
 ---
+
+## N-20260627-v0.7.5-dev-opened
+
+Status: CLOSED / superseded by v0.7.5 final release
 
 ## N-20260627-v0.7.4-final-release
 
