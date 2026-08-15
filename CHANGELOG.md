@@ -15,6 +15,7 @@ This project uses SemVer-style versioning during Open Beta.
 
 ### Notes (P3 wiring correction, 2026-08-15)
 
+- **Deprecated (2026-08-15)**: the legacy `bin/hermes-runes` CLI. `forge` / `evoke` / `inscribe` and the unimplemented `probe` targets (`indexes`, `links`, `objectives`, `metadata`, `lock`, `retrieval`, `context`) are M15.3 stubs and must not be used as the write/index path. P0 write path = `tools/importer/forge.py` (via `bin/hermes-forge` / `bin/hermes-agent-propose-memory`); read = `tools/runes_shield/`. `decipher` + `probe policy` remain supported diagnostics.
 - The v0.7.5 fix restored the read-only Runes Shield tools, but those tools (`proposal_registry.py`, `proposal_review_queue.py`, `proposal_draft_store.py`) read **test surfaces only** (`tools/runes_shield/fixtures/*.json`, `tools/runes_shield/drafts/*.json`). They are NOT the real proposal lifecycle.
 - The real governed write lifecycle is `tools/importer/forge.py` (M18–M20): `create-flat` writes `wiki/<project>/forge-inbox/<slug>-<op>.md` (status: draft), `approve`/`reject` change status to `approved`/`rejected`, every operation writes an operation manifest under `var/operations/<op_id>.json`, and `tools/importer/write_guard.py` restricts writes to `forge-inbox/`.
 - The forge write path is governed by its own `write_guard` and is intentionally **outside** the read-only tool index (`runes_shield_tools_index.json`); the shield boundary contract is two-layer: read/discovery via the index, write via the controlled forge wrappers.

@@ -70,7 +70,7 @@ operation manifest             -> var/operations/<op_id>.json  (per operation)
 
 `proposal_registry` / `proposal_review_queue` / `proposal_draft_store` inspect fixtures/drafts for validation and queue demos; they do not read `forge-inbox/`. Agents that need to track real proposals must read the forge-inbox files + operation manifests through the forge wrappers.
 
-The legacy `bin/hermes-runes forge|evoke|inscribe` CLI is an M15.3 scaffold and must not be used as the write path.
+The legacy `bin/hermes-runes` CLI is **deprecated**. Its `forge` / `evoke` / `inscribe` subcommands and the unimplemented `probe` targets (`indexes`, `links`, `objectives`, `metadata`, `lock`, `retrieval`, `context`) are M15.3 stubs and must NOT be used as the write/index path. Use the P0 wrappers instead: `tools/importer/forge.py` (create-flat|approve|reject, via `bin/hermes-forge` / `bin/hermes-agent-propose-memory`) and the read-only `tools/runes_shield/` tools. The `decipher` and `probe policy` subcommands remain supported for diagnostics.
 
 ---
 
